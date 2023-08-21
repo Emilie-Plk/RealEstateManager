@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/property_item_image_view"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/tools_villa"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/property_item_type_text_view"
+        style="@style/Theme.RealEstateManager.PropertyTypeTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/property_item_image_view"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="House" />
+
+    <TextView
+        android:id="@+id/property_item_location_text_view"
+        style="@style/Theme.RealEstateManager.GrayTextSubheading"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        app:layout_constraintBottom_toTopOf="@id/property_item_price_text_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/property_item_image_view"
+        app:layout_constraintTop_toBottomOf="@id/property_item_type_text_view"
+        tools:text="Upper East Side" />
+
+    <TextView
+        android:id="@+id/property_item_price_text_view"
+        style="@style/Theme.RealEstateManager.PropertyPrice"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/property_item_image_view"
+        app:layout_constraintTop_toBottomOf="@id/property_item_location_text_view"
+        tools:text="$22,255,000" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
