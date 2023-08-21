@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horizontal_guideline_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.54" />
+
+    <TextView
+        android:id="@+id/empty_property_nothing_to_display_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No property to display"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/empty_property_add_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/horizontal_guideline_bottom" />
+
+    <TextView
+        android:id="@+id/empty_property_add_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add one?"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="@+id/empty_property_nothing_to_display_text"
+        app:layout_constraintStart_toStartOf="@+id/empty_property_nothing_to_display_text"
+        app:layout_constraintTop_toBottomOf="@id/empty_property_nothing_to_display_text" />
+
+    <Button
+        android:id="@+id/empty_property_button_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add property"
+        app:layout_constraintBottom_toTopOf="@+id/horizontal_guideline_top"
+        app:layout_constraintEnd_toEndOf="@+id/empty_property_add_text"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/empty_property_add_text" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horizontal_guideline_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.4" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

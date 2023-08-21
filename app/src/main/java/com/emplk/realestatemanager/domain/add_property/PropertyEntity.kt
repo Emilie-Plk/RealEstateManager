@@ -1,5 +1,8 @@
 package com.emplk.realestatemanager.domain.add_property
 
+import androidx.room.Entity
+
+@Entity(tableName = "properties")
 data class PropertyEntity(
     val id: Long,
     val type: String,
