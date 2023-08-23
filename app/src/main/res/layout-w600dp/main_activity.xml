@@ -5,16 +5,16 @@
     android:layout_height="match_parent">
 
     <FrameLayout
-        android:id="@+id/main_FrameLayout_container_mails"
+        android:id="@+id/main_FrameLayout_container_properties"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/main_GuideLine_mails"
+        app:layout_constraintEnd_toStartOf="@id/main_vertical_GuideLine_properties"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/main_GuideLine_mails"
+        android:id="@+id/main_vertical_GuideLine_properties"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
@@ -26,7 +26,7 @@
         android:layout_height="0dp"
         android:background="#aaa"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@id/main_GuideLine_mails"
+        app:layout_constraintStart_toStartOf="@id/main_vertical_GuideLine_properties"
         app:layout_constraintTop_toTopOf="parent" />
 
     <FrameLayout
@@ -35,7 +35,7 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/main_GuideLine_mails"
+        app:layout_constraintStart_toStartOf="@id/main_vertical_GuideLine_properties"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

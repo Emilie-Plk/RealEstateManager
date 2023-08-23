@@ -10,7 +10,9 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Inject
 
-class ContentProvider : ContentProvider() {
+class ContentProvider
+   : ContentProvider()
+{
 
 
     @Inject

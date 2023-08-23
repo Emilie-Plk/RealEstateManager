@@ -1,9 +1,12 @@
-package com.emplk.realestatemanager.data.utils
+package com.emplk.realestatemanager.data.utils.type_converters
 
+import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
 import java.time.LocalDateTime
 
+@ProvidedTypeConverter
 class LocalDateTimeTypeConverter {
+
     @TypeConverter
     fun toDate(dateString: String?): LocalDateTime? {
         return if (dateString == null) {
