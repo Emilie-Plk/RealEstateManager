@@ -12,8 +12,9 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PropertyDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(propertyEntity: PropertyEntity): Long
+
+    @Insert
+    suspend fun insert(propertyEntity: PropertyEntity)
 
     @Query("SELECT * FROM properties WHERE id = :propertyId")
     fun getPropertyById(propertyId: Long): Flow<PropertyEntity>
