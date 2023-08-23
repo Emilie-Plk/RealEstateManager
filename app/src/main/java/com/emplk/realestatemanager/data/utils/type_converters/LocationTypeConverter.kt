@@ -1,8 +1,10 @@
-package com.emplk.realestatemanager.data.utils
+package com.emplk.realestatemanager.data.utils.type_converters
 
+import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
 import com.emplk.realestatemanager.domain.add_property.entities.LocationEntity
 
+@ProvidedTypeConverter
 class LocationTypeConverter {
 
     @TypeConverter

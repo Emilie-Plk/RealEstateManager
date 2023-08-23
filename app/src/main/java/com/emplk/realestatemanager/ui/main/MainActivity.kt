@@ -1,4 +1,4 @@
-package com.emplk.realestatemanager.ui
+package com.emplk.realestatemanager.ui.main
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
