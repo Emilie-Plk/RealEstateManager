@@ -4,24 +4,32 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
-import com.emplk.realestatemanager.domain.add_property.PropertyEntity
+import com.emplk.realestatemanager.domain.add_property.entities.LocationEntity
+import com.emplk.realestatemanager.domain.add_property.entities.PropertyEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PropertyDao {
-
-    // CRUD ! Create, Read, Update, Delete
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(propertyEntity: PropertyEntity): Long
 
     @Query("SELECT * FROM properties WHERE id = :propertyId")
-    suspend fun getPropertyById(propertyId: Long): PropertyEntity
+    fun getPropertyById(propertyId: Long): Flow<PropertyEntity>
+
+    @Transaction
+    @Query("SELECT photos FROM properties WHERE id = :propertyId")
+    fun getPhotosByPropertyId(propertyId: Long): Flow<List<String>>
+
+    @Transaction
+    @Query("SELECT location FROM properties WHERE id = :propertyId")
+    fun getLocations(propertyId: Long): Flow<List<LocationEntity>>
+
+    @Transaction
+    @Query("SELECT * FROM properties")
+    fun getProperties(): Flow<List<PropertyEntity>>
 
     @Update
     suspend fun update(propertyEntity: PropertyEntity): Int
-
-    @Query("DELETE FROM properties WHERE id = :propertyId")
-    suspend fun delete(propertyId: Long): Int
-
-    @Query
 }

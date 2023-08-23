@@ -32,6 +32,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
         jvmTarget = "17"
@@ -47,9 +48,12 @@ dependencies {
     implementation("androidx.activity:activity-ktx:1.7.2")
     implementation("androidx.fragment:fragment-ktx:1.6.1")
 
+    // DESUGARING
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
+
     // GLIDE
     implementation("com.github.bumptech.glide:glide:4.15.1")
-    kapt("com.github.bumptech.glide:compiler:4.13.12")
+    kapt("com.github.bumptech.glide:compiler:4.15.1")
 
     // HILT
     implementation("com.google.dagger:hilt-android:2.46.1")
@@ -59,6 +63,9 @@ dependencies {
     implementation("androidx.room:room-runtime:2.5.2")
     kapt("androidx.room:room-compiler:2.5.2")
     implementation("androidx.room:room-ktx:2.5.2")
+
+    // GSON
+    implementation("com.google.code.gson:gson:2.9.1")
 
     // TEST
     testImplementation("junit:junit:4.13.2")
