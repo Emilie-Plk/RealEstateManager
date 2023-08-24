@@ -25,6 +25,7 @@ data class PropertyEntity(
     @ColumnInfo(name = "description")
     val description: String,
 
+    // TODO Utiliser relations + transaction
     @ColumnInfo(name = "photos")
     val photos: List<PropertyPictureEntity>,
 

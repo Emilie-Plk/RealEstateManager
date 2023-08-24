@@ -11,9 +11,6 @@ import androidx.work.WorkManager
 import androidx.work.workDataOf
 import com.emplk.realestatemanager.data.property.PropertyDao
 import com.emplk.realestatemanager.data.utils.type_converters.LocalDateTimeTypeConverter
-import com.emplk.realestatemanager.data.utils.type_converters.LocationEntityTypeConverter
-import com.emplk.realestatemanager.data.utils.type_converters.PointOfInterestListTypeConverter
-import com.emplk.realestatemanager.data.utils.type_converters.PropertyPictureListTypeConverter
 import com.emplk.realestatemanager.domain.entities.LocationEntity
 import com.emplk.realestatemanager.domain.entities.PointOfInterestEntity
 import com.emplk.realestatemanager.domain.entities.PropertyEntity
@@ -33,9 +30,6 @@ import java.time.LocalDateTime
     exportSchema = false
 )
 @TypeConverters(
-    LocationEntityTypeConverter::class,
-    PropertyPictureListTypeConverter::class,
-    PointOfInterestListTypeConverter::class,
     LocalDateTimeTypeConverter::class,
 )
 abstract class AppDatabase : RoomDatabase() {

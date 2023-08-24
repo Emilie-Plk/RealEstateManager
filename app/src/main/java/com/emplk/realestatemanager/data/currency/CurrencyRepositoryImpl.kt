@@ -11,19 +11,17 @@ import javax.inject.Inject
 class CurrencyRepositoryImpl @Inject constructor(
     val resources: Resources,
 ) : CurrencyRepository {
-    override fun getLocaleCurrencyFormatting(): Flow<CurrencyType> {
-        return flow {
-            val localeCountry =
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    resources.configuration.locales[0].country
-                } else {
-                    resources.configuration.locale.country
-                }
-            when (localeCountry) {
-                "US" -> emit(CurrencyType.DOLLAR)
-                "FR" -> emit(CurrencyType.EURO)
-                else -> emit(CurrencyType.DOLLAR)
-            }
+    override fun getLocaleCurrencyFormatting(): CurrencyType {
+        @Suppress("DEPRECATION")
+        val localeCountry = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            resources.configuration.locales[0].country
+        } else {
+            resources.configuration.locale.country
+        }
+        return when (localeCountry) {
+            "US" -> CurrencyType.DOLLAR
+            "FR" -> CurrencyType.EURO
+            else -> CurrencyType.DOLLAR
         }
     }
 }
