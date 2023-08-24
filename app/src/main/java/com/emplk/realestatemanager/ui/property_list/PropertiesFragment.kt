@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.DividerItemDecoration
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.PropertiesFragmentBinding
 import com.emplk.realestatemanager.ui.utils.viewBinding
@@ -20,15 +19,13 @@ class PropertiesFragment : Fragment(R.layout.properties_fragment) {
         super.onViewCreated(view, savedInstanceState)
         val adapter = PropertyListAdapter()
         binding.propertiesRv.adapter = adapter
-        binding.propertiesRv.addItemDecoration(
-            DividerItemDecoration(
-                requireContext(),
-                DividerItemDecoration.VERTICAL
-            )
-        )
 
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
             adapter.submitList(viewState)
+        }
+
+        binding.addPropertyFab.setOnClickListener {
+            viewModel.onAddPropertyClicked()
         }
     }
 }

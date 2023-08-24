@@ -20,7 +20,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-
         if (savedInstanceState == null) {
             supportFragmentManager.commitNow {
                 replace(binding.mainFrameLayoutContainerProperties.id, PropertiesFragment())
