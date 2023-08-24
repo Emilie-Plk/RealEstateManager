@@ -11,12 +11,17 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class PropertiesFragment : Fragment(R.layout.properties_fragment) {
-    // TODO: Rename and change types of parameters
 
     private val binding by viewBinding { PropertiesFragmentBinding.bind(it) }
     private val viewModel by viewModels<PropertyViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val adapter = PropertyListAdapter()
+        binding.propertiesRv.adapter = adapter
+
+        viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
+            adapter.submitList(viewState)
+        }
     }
 }

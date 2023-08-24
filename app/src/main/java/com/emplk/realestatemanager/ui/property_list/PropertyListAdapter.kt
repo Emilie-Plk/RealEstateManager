@@ -11,17 +11,17 @@ import com.emplk.realestatemanager.databinding.PropertyEmptyBinding
 import com.emplk.realestatemanager.databinding.PropertyItemBinding
 
 class PropertyListAdapter :
-    ListAdapter<PropertyViewStateItem, PropertyListAdapter.PropertyViewHolder>(PropertyDiffCallback) {
+    ListAdapter<PropertyViewState, PropertyListAdapter.PropertyViewHolder>(PropertyDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PropertyViewHolder =
-        when (PropertyViewStateItem.Type.values()[viewType]) {
-            PropertyViewStateItem.Type.PROPERTY -> PropertyViewHolder.Property.create(parent)
-            PropertyViewStateItem.Type.EMPTY_STATE -> PropertyViewHolder.EmptyState.create(parent)
+        when (PropertyViewState.Type.values()[viewType]) {
+            PropertyViewState.Type.PROPERTY -> PropertyViewHolder.Property.create(parent)
+            PropertyViewState.Type.EMPTY_STATE -> PropertyViewHolder.EmptyState.create(parent)
         }
 
     override fun onBindViewHolder(holder: PropertyViewHolder, position: Int) {
         when (holder) {
-            is PropertyViewHolder.Property -> holder.bind(item = getItem(position) as PropertyViewStateItem.Property)
+            is PropertyViewHolder.Property -> holder.bind(item = getItem(position) as PropertyViewState.Property)
             is PropertyViewHolder.EmptyState -> Unit
         }
     }
@@ -42,10 +42,10 @@ class PropertyListAdapter :
                 )
             }
 
-            fun bind(item: PropertyViewStateItem.Property) {
+            fun bind(item: PropertyViewState.Property) {
                 binding.root.setOnClickListener { item.onClickEvent.invoke() }
                 binding.propertyItemTypeTextView.text = item.typeOfProperty
-                binding.propertyItemLocationTextView.text = item.location
+                binding.propertyItemLocationTextView.text = item.address
                 binding.propertyItemPriceTextView.text = item.price
                 Glide.with(binding.propertyItemImageView)
                     .load(item.featuredPicture)
@@ -68,26 +68,26 @@ class PropertyListAdapter :
         }
     }
 
-    object PropertyDiffCallback : DiffUtil.ItemCallback<PropertyViewStateItem>() {
+    object PropertyDiffCallback : DiffUtil.ItemCallback<PropertyViewState>() {
         override fun areItemsTheSame(
-            oldItem: PropertyViewStateItem,
-            newItem: PropertyViewStateItem
+            oldItem: PropertyViewState,
+            newItem: PropertyViewState
         ): Boolean =
             when {
-                oldItem is PropertyViewStateItem.Property &&
-                        newItem is PropertyViewStateItem.Property ->
+                oldItem is PropertyViewState.Property &&
+                        newItem is PropertyViewState.Property ->
                     oldItem.id == newItem.id
 
-                oldItem is PropertyViewStateItem.EmptyState &&
-                        newItem is PropertyViewStateItem.EmptyState ->
+                oldItem is PropertyViewState.EmptyState &&
+                        newItem is PropertyViewState.EmptyState ->
                     true
 
                 else -> false
             }
 
         override fun areContentsTheSame(
-            oldItem: PropertyViewStateItem,
-            newItem: PropertyViewStateItem
+            oldItem: PropertyViewState,
+            newItem: PropertyViewState
         ): Boolean = oldItem == newItem
     }
 }
