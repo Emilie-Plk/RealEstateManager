@@ -10,11 +10,35 @@
         android:id="@+id/detail_featured_image"
         android:layout_width="match_parent"
         android:layout_height="160dp"
+        android:contentDescription="@string/detail_fragment_featured_picture_a11y"
         android:scaleType="centerCrop"
         android:src="@drawable/tools_villa"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/detail_fragment_featured_picture_a11y" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/detail_type"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toStartOf="@id/detail_price"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detail_featured_image"
+        tools:text="Villa" />
+
+    <TextView
+        android:id="@+id/detail_price"
+        style="@style/Theme.RealEstateManager.PropertyPrice"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="12dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/detail_type"
+        app:layout_constraintTop_toBottomOf="@+id/detail_featured_image"
+        tools:text="500000€" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
