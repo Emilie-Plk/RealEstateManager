@@ -41,8 +41,9 @@ class PropertyViewModel @Inject constructor(
                             id = it.id,
                             typeOfProperty = it.type,
                             featuredPicture = it.photos.find { photo -> photo.isThumbnail }?.uri ?: "",
-                            address = it.address,
+                            address = it.location.address,
                             price = it.price.toString(),
+                            isSold = it.isSold,
                             onClickEvent = EquatableCallback {
                                 PropertyViewEvent.NavigateToDetailActivity(it.id)
                             }

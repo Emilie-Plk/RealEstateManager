@@ -11,7 +11,7 @@ import androidx.work.WorkManager
 import androidx.work.workDataOf
 import com.emplk.realestatemanager.data.property.PropertyDao
 import com.emplk.realestatemanager.data.utils.type_converters.LocalDateTimeTypeConverter
-import com.emplk.realestatemanager.data.utils.type_converters.LocationTypeConverter
+import com.emplk.realestatemanager.data.utils.type_converters.LocationEntityTypeConverter
 import com.emplk.realestatemanager.data.utils.type_converters.PointOfInterestListTypeConverter
 import com.emplk.realestatemanager.data.utils.type_converters.PropertyPictureListTypeConverter
 import com.emplk.realestatemanager.domain.entities.LocationEntity
@@ -33,7 +33,7 @@ import java.time.LocalDateTime
     exportSchema = false
 )
 @TypeConverters(
-    LocationTypeConverter::class,
+    LocationEntityTypeConverter::class,
     PropertyPictureListTypeConverter::class,
     PointOfInterestListTypeConverter::class,
     LocalDateTimeTypeConverter::class,
@@ -62,14 +62,14 @@ abstract class AppDatabase : RoomDatabase() {
                         listOf(
                             PropertyEntity(
                                 id = 0,
-                                type = "House",
+                                type = "Flat",
                                 price = 100000,
                                 surface = 150,
                                 rooms = 5,
                                 description = "Discover luxury living at its finest with this stunning and spacious home. Boasting elegant design, high-end finishes, and a prime location, this property offers everything you need for a comfortable and lavish lifestyle.",
                                 photos = listOf(
                                     PropertyPictureEntity(
-                                        uri = "https://random.imagecdn.app/300/300",
+                                        uri = "https://img.zumpercdn.com/486165561/1280x960?fit=crop&h=300&w=300",
                                         description = "Front view",
                                         isThumbnail = true
                                     ),
@@ -79,10 +79,13 @@ abstract class AppDatabase : RoomDatabase() {
                                         isThumbnail = false
                                     ),
                                 ),
-                                address = "1234 Main St",
                                 location = LocationEntity(
-                                    latitude = 37.7749,
-                                    longitude = -122.4194
+                                    latitude = 40.765076,
+                                    longitude = -73.976693,
+                                    address = "Chambers Street",
+                                    city = "New York City",
+                                    neighborhood = "Midtown Manhattan",
+                                    postalCode = "10019",
                                 ),
                                 pointsOfInterest = listOf(
                                     PointOfInterestEntity(
@@ -93,6 +96,7 @@ abstract class AppDatabase : RoomDatabase() {
                                 isAvailableForSale = true,
                                 entryDate = LocalDateTime.of(2023, 8, 24, 10, 0),
                                 saleDate = null,
+                                isSold = false,
                                 agent = "John Doe"
                             ),
                             PropertyEntity(
@@ -104,15 +108,19 @@ abstract class AppDatabase : RoomDatabase() {
                                 description = " Experience the epitome of modern luxury in this exquisite villa that seamlessly blends sophistication with comfort. This architectural masterpiece features sleek lines, floor-to-ceiling windows, and cutting-edge design elements that create an unparalleled living experience. Enjoy spacious living areas, a state-of-the-art kitchen, and breathtaking panoramic views of the surrounding landscape. With its private infinity pool, landscaped gardens, and smart home technology, this villa offers the ultimate retreat for those seeking a contemporary and lavish lifestyle.",
                                 photos = listOf(
                                     PropertyPictureEntity(
-                                        uri = "https://random.imagecdn.app/300/300",
+                                        uri = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmlsbGF8ZW58MHx8MHx8fDA%3D&w=300&q=300",
                                         description = "A cool villa",
                                         isThumbnail = true
                                     )
                                 ),
-                                address = "5678 Main St",
                                 location = LocationEntity(
-                                    latitude = 34.0522,
-                                    longitude = -118.2437
+                                    latitude = 40.710525,
+                                    longitude = -74.008368,
+                                    address = "Fulton Street",
+                                    city = "New York City",
+                                    postalCode = "10038",
+                                    neighborhood = "Financial District",
+
                                 ),
                                 pointsOfInterest = listOf(
                                     PointOfInterestEntity(
@@ -123,6 +131,7 @@ abstract class AppDatabase : RoomDatabase() {
                                 isAvailableForSale = true,
                                 entryDate = LocalDateTime.of(2023, 8, 25, 10, 0),
                                 saleDate = null,
+                                isSold = false,
                                 agent = "Jane Smith"
                             ),
                         )

@@ -13,5 +13,17 @@ data class LocationEntity(
     val latitude: Double,
 
     @ColumnInfo(name = "longitude")
-    val longitude: Double
+    val longitude: Double,
+
+    @ColumnInfo(name = "address")
+    val address: String,
+
+    @ColumnInfo(name = "city")
+    val city: String,
+
+    @ColumnInfo(name = "neighborhood")
+    val neighborhood: String,
+
+    @ColumnInfo(name = "postal_code")
+    val postalCode: String,
 )
