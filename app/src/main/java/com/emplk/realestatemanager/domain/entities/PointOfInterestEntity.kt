@@ -1,4 +1,4 @@
-package com.emplk.realestatemanager.domain.add_property.entities
+package com.emplk.realestatemanager.domain.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

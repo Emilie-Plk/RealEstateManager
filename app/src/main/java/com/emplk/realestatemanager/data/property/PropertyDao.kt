@@ -6,8 +6,8 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.emplk.realestatemanager.domain.add_property.entities.LocationEntity
-import com.emplk.realestatemanager.domain.add_property.entities.PropertyEntity
+import com.emplk.realestatemanager.domain.entities.LocationEntity
+import com.emplk.realestatemanager.domain.entities.PropertyEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

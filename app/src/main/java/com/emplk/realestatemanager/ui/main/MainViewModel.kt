@@ -14,10 +14,9 @@ class MainViewModel @Inject constructor(
 
     private val isTabletMutableStateFlow = MutableStateFlow(false)
 
-    val isTabletLiveData = isTabletMutableStateFlow.asStateFlow()
 
     fun onResume(isTablet: Boolean) {
         isTabletMutableStateFlow.value = isTablet
-        Log.d("COUCOU", "onResume: isTablet = $isTablet")
+        Log.d("MainViewModel", "onResume: isTablet = $isTablet")
     }
 }

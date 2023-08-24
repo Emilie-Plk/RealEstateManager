@@ -1,12 +1,10 @@
 package com.emplk.realestatemanager.data.utils.type_converters
 
-import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
-import com.emplk.realestatemanager.domain.add_property.entities.PointOfInterestEntity
+import com.emplk.realestatemanager.domain.entities.PointOfInterestEntity
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-@ProvidedTypeConverter
 class PointOfInterestListTypeConverter {
 
     private val gson = Gson()
