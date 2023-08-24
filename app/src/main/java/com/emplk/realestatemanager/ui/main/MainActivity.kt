@@ -25,6 +25,10 @@ class MainActivity : AppCompatActivity() {
                 replace(binding.mainFrameLayoutContainerProperties.id, PropertiesFragment())
             }
         }
+
+        binding.addPropertyFab?.setOnClickListener {
+            viewModel.onAddPropertyClicked()
+        }
     }
 
     override fun onResume() {

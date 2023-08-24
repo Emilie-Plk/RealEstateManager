@@ -17,14 +17,4 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/property_item" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/add_property_fab"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_margin="16dp"
-        android:contentDescription="@string/main_fab_add_new_property_a11y"
-        android:src="@drawable/baseline_add_home_24"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
