@@ -35,4 +35,9 @@
         <item name="android:textColor">@color/secondary_dark</item>
         <item name="android:maxLines">1</item>
     </style>
+
+    <style name="Theme.RealEstateManager.PropertyItemCardView">
+        <item name="cardBackgroundColor">@color/almost_white</item>
+        <item name="cardCornerRadius">4dp</item>
+    </style>
 </resources>
