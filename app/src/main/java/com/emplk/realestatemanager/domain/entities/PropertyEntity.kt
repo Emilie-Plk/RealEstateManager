@@ -28,9 +28,6 @@ data class PropertyEntity(
     @ColumnInfo(name = "photos")
     val photos: List<PropertyPictureEntity>,
 
-    @ColumnInfo(name = "address")
-    val address: String,
-
     @ColumnInfo(name = "location")
     val location: LocationEntity,
 
@@ -45,6 +42,9 @@ data class PropertyEntity(
 
     @ColumnInfo(name = "sale_date")
     val saleDate: LocalDateTime?,
+
+    @ColumnInfo(name = "isSold")
+    val isSold: Boolean,
 
     @ColumnInfo(name = "agent_name")
     val agent: String,
