@@ -15,7 +15,6 @@ class PropertyRepositoryRoom @Inject constructor(
 ) : PropertyRepository {
 
     override suspend fun add(propertyEntity: PropertyEntity) = withContext(coroutineDispatcherProvider.io) {
-        Log.d("COUCOU", "add: " + propertyEntity.toString())
         propertyDao.insert(propertyEntity)
     }
 
