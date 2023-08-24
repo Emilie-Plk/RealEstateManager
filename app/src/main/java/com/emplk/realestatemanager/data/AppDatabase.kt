@@ -64,20 +64,25 @@ abstract class AppDatabase : RoomDatabase() {
                                 id = 0,
                                 type = "House",
                                 price = 100000,
-                                surface = 100,
+                                surface = 150,
                                 rooms = 5,
-                                description = "A beautiful house",
+                                description = "Discover luxury living at its finest with this stunning and spacious home. Boasting elegant design, high-end finishes, and a prime location, this property offers everything you need for a comfortable and lavish lifestyle.",
                                 photos = listOf(
                                     PropertyPictureEntity(
                                         uri = "https://random.imagecdn.app/300/300",
-                                        description = "A beautiful house",
+                                        description = "Front view",
                                         isThumbnail = true
-                                    )
+                                    ),
+                                    PropertyPictureEntity(
+                                        uri = "https://random.imagecdn.app/300/300",
+                                        description = "Back view",
+                                        isThumbnail = false
+                                    ),
                                 ),
                                 address = "1234 Main St",
                                 location = LocationEntity(
-                                    latitude = 0.0,
-                                    longitude = 0.0
+                                    latitude = 37.7749,
+                                    longitude = -122.4194
                                 ),
                                 pointsOfInterest = listOf(
                                     PointOfInterestEntity(
@@ -86,7 +91,7 @@ abstract class AppDatabase : RoomDatabase() {
                                     )
                                 ),
                                 isAvailableForSale = true,
-                                entryDate = LocalDateTime.now(),
+                                entryDate = LocalDateTime.of(2023, 8, 24, 10, 0),
                                 saleDate = null,
                                 agent = "John Doe"
                             ),
@@ -96,7 +101,7 @@ abstract class AppDatabase : RoomDatabase() {
                                 price = 5000000,
                                 surface = 200,
                                 rooms = 8,
-                                description = "A beautiful villa",
+                                description = " Experience the epitome of modern luxury in this exquisite villa that seamlessly blends sophistication with comfort. This architectural masterpiece features sleek lines, floor-to-ceiling windows, and cutting-edge design elements that create an unparalleled living experience. Enjoy spacious living areas, a state-of-the-art kitchen, and breathtaking panoramic views of the surrounding landscape. With its private infinity pool, landscaped gardens, and smart home technology, this villa offers the ultimate retreat for those seeking a contemporary and lavish lifestyle.",
                                 photos = listOf(
                                     PropertyPictureEntity(
                                         uri = "https://random.imagecdn.app/300/300",
@@ -106,8 +111,8 @@ abstract class AppDatabase : RoomDatabase() {
                                 ),
                                 address = "5678 Main St",
                                 location = LocationEntity(
-                                    latitude = 0.0,
-                                    longitude = 0.0
+                                    latitude = 34.0522,
+                                    longitude = -118.2437
                                 ),
                                 pointsOfInterest = listOf(
                                     PointOfInterestEntity(
@@ -116,9 +121,9 @@ abstract class AppDatabase : RoomDatabase() {
                                     )
                                 ),
                                 isAvailableForSale = true,
-                                entryDate = LocalDateTime.now(),
+                                entryDate = LocalDateTime.of(2023, 8, 25, 10, 0),
                                 saleDate = null,
-                                agent = "Jean Doe"
+                                agent = "Jane Smith"
                             ),
                         )
                     )
