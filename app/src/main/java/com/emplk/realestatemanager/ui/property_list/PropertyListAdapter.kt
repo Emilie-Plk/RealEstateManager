@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.PropertyEmptyBinding
 import com.emplk.realestatemanager.databinding.PropertyItemBinding
 
@@ -49,8 +50,9 @@ class PropertyListAdapter :
                 binding.propertyItemPriceTextView.text = item.price
                 Glide.with(binding.propertyItemImageView)
                     .load(item.featuredPicture)
+                    .centerCrop()
+                    .error(R.drawable.baseline_villa_24)
                     .into(binding.propertyItemImageView)
-
             }
         }
 
