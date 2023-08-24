@@ -12,6 +12,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.PropertyEmptyBinding
 import com.emplk.realestatemanager.databinding.PropertyItemBinding
+import com.emplk.realestatemanager.ui.utils.NativePhoto.Companion.load
 
 class PropertyListAdapter :
     ListAdapter<PropertyViewState, PropertyListAdapter.PropertyViewHolder>(PropertyDiffCallback) {
@@ -50,8 +51,8 @@ class PropertyListAdapter :
                 binding.propertyItemTypeTextView.text = item.typeOfProperty
                 binding.propertyItemLocationTextView.text = item.address
                 binding.propertyItemPriceTextView.text = item.price
-                Glide.with(binding.propertyItemImageView)
-                    .load(item.featuredPicture)
+                item.featuredPicture
+                    .load(binding.propertyItemImageView)
                     .transform(CenterCrop(), RoundedCorners(16))
                     .error(R.drawable.baseline_villa_24)
                     .into(binding.propertyItemImageView)

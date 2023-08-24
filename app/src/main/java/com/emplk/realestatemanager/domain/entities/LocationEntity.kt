@@ -4,10 +4,13 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+// TODO Utiliser Embedded
 @Entity(tableName = "locations")
 data class LocationEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
+
+
 
     @ColumnInfo(name = "latitude")
     val latitude: Double,
