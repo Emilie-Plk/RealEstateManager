@@ -8,7 +8,7 @@ import androidx.work.WorkerParameters
 import com.emplk.realestatemanager.data.utils.fromJson
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.add_property.AddPropertyUseCase
-import com.emplk.realestatemanager.domain.add_property.entities.PropertyEntity
+import com.emplk.realestatemanager.domain.entities.PropertyEntity
 import com.google.gson.Gson
 
 import dagger.assisted.Assisted

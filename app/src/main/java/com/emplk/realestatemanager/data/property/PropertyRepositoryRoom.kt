@@ -3,7 +3,7 @@ package com.emplk.realestatemanager.data.property
 import android.util.Log
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.PropertyRepository
-import com.emplk.realestatemanager.domain.add_property.entities.PropertyEntity
+import com.emplk.realestatemanager.domain.entities.PropertyEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
