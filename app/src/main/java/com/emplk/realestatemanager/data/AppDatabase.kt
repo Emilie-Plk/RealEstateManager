@@ -69,9 +69,9 @@ abstract class AppDatabase : RoomDatabase() {
                                 description = "A beautiful house",
                                 photos = listOf(
                                     PropertyPictureEntity(
-                                        uri = "https://cf.bstatic.com/xdata/images/hotel/max1024x768/295090917.jpg?k=d17621b71b0eaa0c7a37d8d8d02d33896cef75145f61e7d96d296d88375a7d39&o=&hp=1",
+                                        uri = "https://random.imagecdn.app/300/300",
                                         description = "A beautiful house",
-                                        isThumbnail = false
+                                        isThumbnail = true
                                     )
                                 ),
                                 address = "1234 Main St",
@@ -82,13 +82,43 @@ abstract class AppDatabase : RoomDatabase() {
                                 pointsOfInterest = listOf(
                                     PointOfInterestEntity(
                                         name = "School",
-                                        isSelected = false
+                                        isSelected = true
                                     )
                                 ),
                                 isAvailableForSale = true,
                                 entryDate = LocalDateTime.now(),
                                 saleDate = null,
                                 agent = "John Doe"
+                            ),
+                            PropertyEntity(
+                                id = 0,
+                                type = "Villa",
+                                price = 5000000,
+                                surface = 200,
+                                rooms = 8,
+                                description = "A beautiful villa",
+                                photos = listOf(
+                                    PropertyPictureEntity(
+                                        uri = "https://random.imagecdn.app/300/300",
+                                        description = "A cool villa",
+                                        isThumbnail = true
+                                    )
+                                ),
+                                address = "5678 Main St",
+                                location = LocationEntity(
+                                    latitude = 0.0,
+                                    longitude = 0.0
+                                ),
+                                pointsOfInterest = listOf(
+                                    PointOfInterestEntity(
+                                        name = "Hospital",
+                                        isSelected = false
+                                    )
+                                ),
+                                isAvailableForSale = true,
+                                entryDate = LocalDateTime.now(),
+                                saleDate = null,
+                                agent = "Jean Doe"
                             ),
                         )
                     )
