@@ -6,13 +6,10 @@ import androidx.lifecycle.liveData
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.get_properties.GetPropertiesAsFlowUseCase
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
+import com.emplk.realestatemanager.ui.utils.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,26 +18,36 @@ class PropertyViewModel @Inject constructor(
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : ViewModel() {
 
+    val viewEventLiveData: LiveData<Event<PropertyViewEvent>> = liveData {
+        getPropertiesAsFlowUseCase.invoke()
+            .map { properties ->
+                properties.map { property ->
+                    Event(PropertyViewEvent.NavigateToDetailActivity(id = property.id))
+                }
+            }
+            .collect { events ->
+                events.forEach { emit(it) }
+            }
+    }
+
     val viewState: LiveData<List<PropertyViewState>> = liveData(Dispatchers.IO) {
         getPropertiesAsFlowUseCase.invoke()
-            .flatMapLatest { properties ->
+            .map { properties ->
                 if (properties.isEmpty()) {
-                    flowOf(listOf(PropertyViewState.EmptyState))
+                    listOf(PropertyViewState.EmptyState)
                 } else {
-                    flowOf(
-                        properties.map {
-                            PropertyViewState.Property(
-                                id = it.id,
-                                typeOfProperty = it.type,
-                                featuredPicture = it.photos.find { photo -> photo.isThumbnail }?.uri ?: "",
-                                address = it.address,
-                                price = it.price.toString(),
-                                onClickEvent = EquatableCallback {
-                                        PropertyViewEvent.NavigateToDetailActivity
-                                }
-                            )
-                        }
-                    )
+                    properties.map {
+                        PropertyViewState.Property(
+                            id = it.id,
+                            typeOfProperty = it.type,
+                            featuredPicture = it.photos.find { photo -> photo.isThumbnail }?.uri ?: "",
+                            address = it.address,
+                            price = it.price.toString(),
+                            onClickEvent = EquatableCallback {
+                                PropertyViewEvent.NavigateToDetailActivity(it.id)
+                            }
+                        )
+                    }
                 }
             }
             .collect { emit(it) }

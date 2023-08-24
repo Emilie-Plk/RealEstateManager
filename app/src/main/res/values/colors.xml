@@ -12,4 +12,5 @@
     <color name="secondary_dark">#c98e2e</color>
     <color name="secondary_light">#fedeaa</color>
     <color name="secondary_super_light">#fff2dd</color>
+    <color name="error">#C51162</color>
 </resources>

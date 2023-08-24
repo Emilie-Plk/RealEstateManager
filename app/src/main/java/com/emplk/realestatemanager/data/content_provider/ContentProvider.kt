@@ -11,8 +11,7 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Inject
 
 class ContentProvider
-   : ContentProvider()
-{
+    : ContentProvider() {
 
 
     @Inject

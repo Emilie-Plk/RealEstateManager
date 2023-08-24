@@ -5,12 +5,11 @@ import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.emplk.realestatemanager.data.utils.fromJson
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
+import com.emplk.realestatemanager.data.utils.fromJson
 import com.emplk.realestatemanager.domain.add_property.AddPropertyUseCase
 import com.emplk.realestatemanager.domain.entities.PropertyEntity
 import com.google.gson.Gson
-
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.withContext

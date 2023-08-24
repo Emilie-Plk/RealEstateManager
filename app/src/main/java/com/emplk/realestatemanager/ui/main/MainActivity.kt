@@ -22,17 +22,10 @@ class MainActivity : AppCompatActivity() {
 
 
         if (savedInstanceState == null) {
-      supportFragmentManager.commitNow {
+            supportFragmentManager.commitNow {
                 replace(binding.mainFrameLayoutContainerProperties.id, PropertiesFragment())
-      }
+            }
         }
-
-      /*  val containerDetailsId = binding.mainFrameLayoutContainerDetail?.id
-        if (containerDetailsId != null && supportFragmentManager.findFragmentById(containerDetailsId) == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(containerDetailsId, PropertiesFragment())
-                .commitNow()
-        }*/
     }
 
     override fun onResume() {
