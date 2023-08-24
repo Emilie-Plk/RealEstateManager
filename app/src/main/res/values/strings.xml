@@ -5,4 +5,5 @@
     <string name="main_fab_add_new_property_a11y">Add new property</string>
     <string name="price_in_euro">%d\u20ac</string>
     <string name="price_in_dollar">\u0024%d</string>
+    <string name="detail_fragment_featured_picture_a11y">Picture of %s</string>
 </resources>
