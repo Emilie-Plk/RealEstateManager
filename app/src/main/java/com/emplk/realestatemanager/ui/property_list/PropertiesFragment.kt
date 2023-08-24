@@ -4,10 +4,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.PropertiesFragmentBinding
-import com.emplk.realestatemanager.ui.detail.DetailActivity
-import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,17 +20,15 @@ class PropertiesFragment : Fragment(R.layout.properties_fragment) {
         super.onViewCreated(view, savedInstanceState)
         val adapter = PropertyListAdapter()
         binding.propertiesRv.adapter = adapter
+        binding.propertiesRv.addItemDecoration(
+            DividerItemDecoration(
+                requireContext(),
+                DividerItemDecoration.VERTICAL
+            )
+        )
 
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
             adapter.submitList(viewState)
-        }
-
-        viewModel.viewEventLiveData.observeEvent(viewLifecycleOwner) { event ->
-            when (event) {
-                is PropertyViewEvent.NavigateToDetailActivity -> {
-                    startActivity(DetailActivity.navigate(requireContext()))
-                }
-            }
         }
     }
 }
