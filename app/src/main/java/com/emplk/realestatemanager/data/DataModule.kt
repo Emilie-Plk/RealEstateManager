@@ -1,6 +1,7 @@
 package com.emplk.realestatemanager.data
 
 import android.app.Application
+import android.content.res.Resources
 import androidx.work.WorkManager
 import com.emplk.realestatemanager.data.property.PropertyDao
 import com.google.gson.Gson
@@ -35,4 +36,8 @@ class DataModule {
     @Singleton
     @Provides
     fun providePropertyDao(appDatabase: AppDatabase): PropertyDao = appDatabase.getPropertyDao()
+
+    @Singleton
+    @Provides
+    fun provideResources(application: Application): Resources = application.resources
 }
