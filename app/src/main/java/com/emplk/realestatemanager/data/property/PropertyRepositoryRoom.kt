@@ -1,6 +1,5 @@
 package com.emplk.realestatemanager.data.property
 
-import android.util.Log
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.PropertyRepository
 import com.emplk.realestatemanager.domain.entities.PropertyEntity

@@ -121,7 +121,7 @@ abstract class AppDatabase : RoomDatabase() {
                                     postalCode = "10038",
                                     neighborhood = "Financial District",
 
-                                ),
+                                    ),
                                 pointsOfInterest = listOf(
                                     PointOfInterestEntity(
                                         name = "Hospital",

@@ -23,9 +23,5 @@ class PropertiesFragment : Fragment(R.layout.properties_fragment) {
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
             adapter.submitList(viewState)
         }
-
-        binding.addPropertyFab.setOnClickListener {
-            viewModel.onAddPropertyClicked()
-        }
     }
 }
