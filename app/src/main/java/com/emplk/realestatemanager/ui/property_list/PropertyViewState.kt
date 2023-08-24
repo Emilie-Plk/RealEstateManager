@@ -17,6 +17,7 @@ sealed class PropertyViewState(val type: Type) {
         val featuredPicture: String,
         val address: String,
         val price: String,
+        val isSold: Boolean,
         val onClickEvent: EquatableCallback,
     ) : PropertyViewState(Type.PROPERTY)
 }
