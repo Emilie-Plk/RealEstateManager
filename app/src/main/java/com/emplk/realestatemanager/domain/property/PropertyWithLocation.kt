@@ -1,4 +1,4 @@
-package com.emplk.realestatemanager.domain.entities
+package com.emplk.realestatemanager.domain.property
 
 data class PropertyWithLocation(
     val id: Long,

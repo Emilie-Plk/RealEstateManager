@@ -1,6 +1,6 @@
 package com.emplk.realestatemanager.data.location
 
-import com.emplk.realestatemanager.domain.entities.LocationEntity
+import com.emplk.realestatemanager.domain.location.LocationEntity
 import com.emplk.realestatemanager.domain.location.LocationRepository
 import javax.inject.Inject
 

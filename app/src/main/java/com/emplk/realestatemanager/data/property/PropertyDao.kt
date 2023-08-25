@@ -2,21 +2,19 @@ package com.emplk.realestatemanager.data.property
 
 import androidx.room.Dao
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.emplk.realestatemanager.domain.entities.LocationEntity
-import com.emplk.realestatemanager.domain.entities.PictureEntity
-import com.emplk.realestatemanager.domain.entities.PropertiesWithPicturesAndLocationEntity
-import com.emplk.realestatemanager.domain.entities.PropertyEntity
+import com.emplk.realestatemanager.domain.location.LocationEntity
+import com.emplk.realestatemanager.domain.property.PropertiesWithPicturesAndLocationEntity
+import com.emplk.realestatemanager.domain.property.PropertyEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PropertyDao {
 
     @Insert
-    suspend fun insert(propertyEntity: PropertyEntity)
+    suspend fun insert(propertyEntity: PropertyEntity): Long
 
     @Transaction
     @Query("SELECT * FROM properties WHERE id = :propertyId")
@@ -37,5 +35,4 @@ interface PropertyDao {
 
     @Update
     suspend fun update(propertyEntity: PropertyEntity): Int
-
 }

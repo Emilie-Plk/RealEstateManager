@@ -6,4 +6,5 @@
     <string name="price_in_euro">%d\u20ac</string>
     <string name="price_in_dollar">\u0024%d</string>
     <string name="detail_fragment_featured_picture_a11y">Picture of %s</string>
+    <string name="number_of_rooms_logo_a11y">Number of rooms</string>
 </resources>

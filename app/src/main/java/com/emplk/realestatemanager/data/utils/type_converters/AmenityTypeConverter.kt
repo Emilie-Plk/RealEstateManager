@@ -1,7 +1,7 @@
 package com.emplk.realestatemanager.data.utils.type_converters
 
 import androidx.room.TypeConverter
-import com.emplk.realestatemanager.domain.entities.Amenity
+import com.emplk.realestatemanager.domain.amenity.Amenity
 
 class AmenityTypeConverter {
 

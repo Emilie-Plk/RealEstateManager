@@ -1,8 +1,9 @@
-package com.emplk.realestatemanager.domain.entities
+package com.emplk.realestatemanager.domain.property
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.emplk.realestatemanager.domain.amenity.Amenity
 import java.time.LocalDateTime
 
 @Entity(

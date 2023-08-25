@@ -2,6 +2,7 @@ package com.emplk.realestatemanager.ui.property_list
 
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.NativePhoto
+import com.emplk.realestatemanager.ui.utils.NativeText
 
 sealed class PropertyViewState(val type: Type) {
 
@@ -14,11 +15,13 @@ sealed class PropertyViewState(val type: Type) {
 
     data class Property(
         val id: Long,
-        val typeOfProperty: String,
+        val propertyType: String,
         val featuredPicture: NativePhoto,
         val address: String,
-        val price: String,
+        val price: NativeText,
         val isSold: Boolean,
+        val room: String?,
+        val surface: String?,
         val onClickEvent: EquatableCallback,
     ) : PropertyViewState(Type.PROPERTY)
 }

@@ -14,10 +14,10 @@ import com.emplk.realestatemanager.data.picture.PictureDao
 import com.emplk.realestatemanager.data.property.PropertyDao
 import com.emplk.realestatemanager.data.utils.type_converters.AmenityTypeConverter
 import com.emplk.realestatemanager.data.utils.type_converters.LocalDateTimeTypeConverter
-import com.emplk.realestatemanager.domain.entities.Amenity
-import com.emplk.realestatemanager.domain.entities.LocationEntity
-import com.emplk.realestatemanager.domain.entities.PictureEntity
-import com.emplk.realestatemanager.domain.entities.PropertyEntity
+import com.emplk.realestatemanager.domain.amenity.Amenity
+import com.emplk.realestatemanager.domain.location.LocationEntity
+import com.emplk.realestatemanager.domain.pictures.PictureEntity
+import com.emplk.realestatemanager.domain.property.PropertyEntity
 import com.google.gson.Gson
 import java.time.LocalDateTime
 

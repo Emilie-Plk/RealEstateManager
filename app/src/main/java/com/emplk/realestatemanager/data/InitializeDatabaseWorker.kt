@@ -7,10 +7,10 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.data.utils.fromJson
-import com.emplk.realestatemanager.domain.add_property.AddPropertyUseCase
-import com.emplk.realestatemanager.domain.entities.LocationEntity
-import com.emplk.realestatemanager.domain.entities.PictureEntity
-import com.emplk.realestatemanager.domain.entities.PropertyEntity
+import com.emplk.realestatemanager.domain.property.AddPropertyUseCase
+import com.emplk.realestatemanager.domain.location.LocationEntity
+import com.emplk.realestatemanager.domain.pictures.PictureEntity
+import com.emplk.realestatemanager.domain.property.PropertyEntity
 import com.emplk.realestatemanager.domain.location.AddLocationUseCase
 import com.emplk.realestatemanager.domain.pictures.AddPictureUseCase
 import com.google.gson.Gson

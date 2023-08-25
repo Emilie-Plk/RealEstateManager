@@ -1,9 +1,9 @@
 package com.emplk.realestatemanager.data.property
 
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
-import com.emplk.realestatemanager.domain.PropertyRepository
-import com.emplk.realestatemanager.domain.entities.PropertiesWithPicturesAndLocationEntity
-import com.emplk.realestatemanager.domain.entities.PropertyEntity
+import com.emplk.realestatemanager.domain.property.PropertyRepository
+import com.emplk.realestatemanager.domain.property.PropertiesWithPicturesAndLocationEntity
+import com.emplk.realestatemanager.domain.property.PropertyEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
@@ -14,12 +14,8 @@ class PropertyRepositoryRoom @Inject constructor(
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : PropertyRepository {
 
-    override suspend fun add(propertyEntity: PropertyEntity) = withContext(coroutineDispatcherProvider.io) {
+    override suspend fun add(propertyEntity: PropertyEntity): Long = withContext(coroutineDispatcherProvider.io) {
         propertyDao.insert(propertyEntity)
-    }
-
-    override suspend fun update(propertyEntity: PropertyEntity) = withContext(coroutineDispatcherProvider.io) {
-        propertyDao.update(propertyEntity)
     }
 
     override fun getPropertiesAsFlow(): Flow<List<PropertiesWithPicturesAndLocationEntity>> = propertyDao
@@ -29,4 +25,8 @@ class PropertyRepositoryRoom @Inject constructor(
     override fun getPropertyByIdAsFlow(propertyId: Long): Flow<PropertiesWithPicturesAndLocationEntity> = propertyDao
         .getPropertyById(propertyId)
         .flowOn(coroutineDispatcherProvider.io)
+
+    override suspend fun update(propertyEntity: PropertyEntity): Int = withContext(coroutineDispatcherProvider.io) {
+        propertyDao.update(propertyEntity)
+    }
 }

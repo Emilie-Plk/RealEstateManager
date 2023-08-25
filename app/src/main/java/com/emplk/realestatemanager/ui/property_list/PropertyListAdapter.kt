@@ -47,9 +47,10 @@ class PropertyListAdapter :
 
             fun bind(item: PropertyViewState.Property) {
                 binding.root.setOnClickListener { item.onClickEvent.invoke() }
-                binding.propertyItemTypeTextView.text = item.typeOfProperty
+                binding.propertyItemTypeTextView.text = item.propertyType
                 binding.propertyItemLocationTextView.text = item.address
-                binding.propertyItemPriceTextView.text = item.price
+                binding.propertyItemPriceTextView.text = item.price.toCharSequence(itemView.context)
+                binding.propertyItemRoomTextView?.text = item.room
                 item.featuredPicture
                     .load(binding.propertyItemImageView)
                     .transform(CenterCrop(), RoundedCorners(16))

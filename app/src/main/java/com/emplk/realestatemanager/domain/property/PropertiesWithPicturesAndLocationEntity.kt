@@ -1,7 +1,9 @@
-package com.emplk.realestatemanager.domain.entities
+package com.emplk.realestatemanager.domain.property
 
 import androidx.room.Embedded
 import androidx.room.Relation
+import com.emplk.realestatemanager.domain.location.LocationEntity
+import com.emplk.realestatemanager.domain.pictures.PictureEntity
 
 data class PropertiesWithPicturesAndLocationEntity(
     @Embedded

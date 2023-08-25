@@ -1,6 +1,5 @@
 package com.emplk.realestatemanager.domain.location
 
-import com.emplk.realestatemanager.domain.entities.LocationEntity
 import javax.inject.Inject
 
 class AddLocationUseCase @Inject constructor(

@@ -2,16 +2,15 @@ package com.emplk.realestatemanager.data.picture
 
 import androidx.room.Dao
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.emplk.realestatemanager.domain.entities.PictureEntity
+import com.emplk.realestatemanager.domain.pictures.PictureEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PictureDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     suspend fun insert(picture: PictureEntity)
 
     @Query("SELECT * FROM pictures WHERE property_id = :propertyId")

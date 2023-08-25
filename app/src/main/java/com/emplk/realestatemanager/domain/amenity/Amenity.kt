@@ -1,4 +1,4 @@
-package com.emplk.realestatemanager.domain.entities
+package com.emplk.realestatemanager.domain.amenity
 
 enum class Amenity {
     SCHOOL,
