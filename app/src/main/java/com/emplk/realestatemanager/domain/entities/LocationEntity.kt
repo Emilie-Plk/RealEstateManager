@@ -10,8 +10,6 @@ data class LocationEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
 
-
-
     @ColumnInfo(name = "latitude")
     val latitude: Double,
 

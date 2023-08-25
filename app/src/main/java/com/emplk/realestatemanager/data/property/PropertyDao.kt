@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.emplk.realestatemanager.domain.entities.LocationEntity
 import com.emplk.realestatemanager.domain.entities.PropertyEntity
 import com.emplk.realestatemanager.domain.entities.PropertyWithLocation
 import kotlinx.coroutines.flow.Flow
