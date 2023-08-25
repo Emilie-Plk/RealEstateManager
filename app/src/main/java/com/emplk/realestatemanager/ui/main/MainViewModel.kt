@@ -4,13 +4,13 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
-import com.emplk.realestatemanager.domain.property.AddPropertyUseCase
 import com.emplk.realestatemanager.domain.amenity.Amenity
-import com.emplk.realestatemanager.domain.location.LocationEntity
-import com.emplk.realestatemanager.domain.pictures.PictureEntity
-import com.emplk.realestatemanager.domain.property.PropertyEntity
 import com.emplk.realestatemanager.domain.location.AddLocationUseCase
+import com.emplk.realestatemanager.domain.location.LocationEntity
 import com.emplk.realestatemanager.domain.pictures.AddPictureUseCase
+import com.emplk.realestatemanager.domain.pictures.PictureEntity
+import com.emplk.realestatemanager.domain.property.AddPropertyUseCase
+import com.emplk.realestatemanager.domain.property.PropertyEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -35,6 +35,8 @@ class MainViewModel @Inject constructor(
                     price = 100000,
                     surface = 150,
                     rooms = 5,
+                    bedrooms = 3,
+                    bathrooms = 2,
                     description = "Discover luxury living at its finest with this stunning and spacious home. Boasting elegant design, high-end finishes, and a prime location, this property offers everything you need for a comfortable and lavish lifestyle.",
                     amenities = listOf(
                         Amenity.FITNESS_CENTER

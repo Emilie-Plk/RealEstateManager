@@ -1,13 +1,13 @@
 package com.emplk.realestatemanager.data
 
-import com.emplk.realestatemanager.data.currency.CurrencyRepositoryImpl
+import com.emplk.realestatemanager.data.currency.LocaleFormattingRepositoryImpl
 import com.emplk.realestatemanager.data.location.LocationRepositoryRoom
 import com.emplk.realestatemanager.data.picture.PictureRepositoryRoom
 import com.emplk.realestatemanager.data.property.PropertyRepositoryRoom
-import com.emplk.realestatemanager.domain.property.PropertyRepository
-import com.emplk.realestatemanager.domain.currency.CurrencyRepository
+import com.emplk.realestatemanager.domain.locale_formatting.LocaleFormattingRepository
 import com.emplk.realestatemanager.domain.location.LocationRepository
 import com.emplk.realestatemanager.domain.pictures.PictureRepository
+import com.emplk.realestatemanager.domain.property.PropertyRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -32,6 +32,6 @@ abstract class DataBindingModule {
 
     @Singleton
     @Binds
-    abstract fun bindCurrencyRepository(implementation: CurrencyRepositoryImpl): CurrencyRepository
+    abstract fun bindCurrencyRepository(implementation: LocaleFormattingRepositoryImpl): LocaleFormattingRepository
 
 }

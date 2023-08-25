@@ -65,6 +65,8 @@ abstract class AppDatabase : RoomDatabase() {
                                 price = 100000,
                                 surface = 150,
                                 rooms = 5,
+                                bathrooms = 2,
+                                bedrooms = 3,
                                 description = "Discover luxury living at its finest with this stunning and spacious home. Boasting elegant design, high-end finishes, and a prime location, this property offers everything you need for a comfortable and lavish lifestyle.",
                                 amenities = listOf(
                                     Amenity.LIBRARY,
@@ -85,6 +87,8 @@ abstract class AppDatabase : RoomDatabase() {
                                 price = 5000000,
                                 surface = 200,
                                 rooms = 8,
+                                bathrooms = 4,
+                                bedrooms = 4,
                                 description = " Experience the epitome of modern luxury in this exquisite villa that seamlessly blends sophistication with comfort. This architectural masterpiece features sleek lines, floor-to-ceiling windows, and cutting-edge design elements that create an unparalleled living experience. Enjoy spacious living areas, a state-of-the-art kitchen, and breathtaking panoramic views of the surrounding landscape. With its private infinity pool, landscaped gardens, and smart home technology, this villa offers the ultimate retreat for those seeking a contemporary and lavish lifestyle.",
                                 amenities = listOf(
                                     Amenity.FITNESS_CENTER,

@@ -1,9 +1,9 @@
 package com.emplk.realestatemanager.data.property
 
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
-import com.emplk.realestatemanager.domain.property.PropertyRepository
 import com.emplk.realestatemanager.domain.property.PropertiesWithPicturesAndLocationEntity
 import com.emplk.realestatemanager.domain.property.PropertyEntity
+import com.emplk.realestatemanager.domain.property.PropertyRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
