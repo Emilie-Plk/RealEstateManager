@@ -27,25 +27,33 @@ class PropertyViewModel @Inject constructor(
 
         getPropertiesAsFlowUseCase.invoke().collect { properties ->
             emit(
-                properties.map { property ->
-                    val photoUrl = property.photos.find { photo -> photo.isThumbnail }?.uri
+                properties.map { propertiesWithPicturesAndLocation ->
+                    val photoUrl =
+                        propertiesWithPicturesAndLocation.pictures.find { picture -> picture.isThumbnail }?.uri
 
                     PropertyViewState.Property(
-                        id = property.id,
-                        typeOfProperty = property.type,
+                        id = propertiesWithPicturesAndLocation.property.id,
+                        typeOfProperty = propertiesWithPicturesAndLocation.property.type,
                         featuredPicture = if (photoUrl != null) {
                             NativePhoto.Uri(photoUrl)
                         } else {
                             NativePhoto.Resource(R.drawable.baseline_villa_24)
                         },
-                        address = property.location.address,
+                        address = propertiesWithPicturesAndLocation.location.address,
                         price = when (currencyType) {
-                            CurrencyType.DOLLAR -> resources.getString(R.string.price_in_dollar, property.price)
-                            CurrencyType.EURO -> resources.getString(R.string.price_in_euro, property.price)
+                            CurrencyType.DOLLAR -> resources.getString(
+                                R.string.price_in_dollar,
+                                propertiesWithPicturesAndLocation.property.price
+                            )
+
+                            CurrencyType.EURO -> resources.getString(
+                                R.string.price_in_euro,
+                                propertiesWithPicturesAndLocation.property.price
+                            )
                         },
-                        isSold = property.isSold,
+                        isSold = propertiesWithPicturesAndLocation.property.isSold,
                         onClickEvent = EquatableCallback {
-                            PropertyViewEvent.NavigateToDetailActivity(property.id)
+                            PropertyViewEvent.NavigateToDetailActivity(propertiesWithPicturesAndLocation.property.id)
                         }
                     )
                 }

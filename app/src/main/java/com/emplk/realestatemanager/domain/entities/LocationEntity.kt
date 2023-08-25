@@ -4,27 +4,17 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-// TODO Utiliser Embedded
 @Entity(tableName = "locations")
 data class LocationEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-
-    @ColumnInfo(name = "latitude")
+    @ColumnInfo(name = "property_id")
+    val propertyId: Long,
     val latitude: Double,
-
-    @ColumnInfo(name = "longitude")
     val longitude: Double,
-
-    @ColumnInfo(name = "address")
     val address: String,
-
-    @ColumnInfo(name = "city")
     val city: String,
-
-    @ColumnInfo(name = "neighborhood")
     val neighborhood: String,
-
     @ColumnInfo(name = "postal_code")
     val postalCode: String,
 )
