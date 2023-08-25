@@ -2,11 +2,11 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Theme.RealEstateManager.PropertyItemCardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="8dp"
     android:layout_marginTop="4dp"
-    style="@style/Theme.RealEstateManager.PropertyItemCardView"
     android:layout_marginEnd="8dp"
     android:layout_marginBottom="4dp">
 
@@ -35,7 +35,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginTop="4dp"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/property_item_image_view"
             tools:text="House" />
@@ -46,11 +45,103 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            app:layout_constraintBottom_toTopOf="@id/property_item_price_text_view"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/property_item_type_text_view"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/property_item_type_text_view"
+            app:layout_constraintStart_toEndOf="@+id/property_item_type_text_view"
+            app:layout_constraintTop_toTopOf="@+id/property_item_type_text_view"
             tools:text="Upper East Side" />
+
+        <ImageView
+            android:id="@+id/property_item_room_logo"
+            style="@style/Theme.RealEstateManager.PropertyItemLogo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:contentDescription="@string/number_of_rooms_logo_a11y"
+            android:src="@drawable/round_home_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/horizontal_guideline" />
+
+        <TextView
+            android:id="@+id/property_item_room_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/property_item_room_logo"
+            app:layout_constraintTop_toTopOf="@+id/horizontal_guideline"
+            tools:text="5" />
+
+        <ImageView
+            android:id="@+id/property_item_bathroom_logo"
+            style="@style/Theme.RealEstateManager.PropertyItemLogo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/round_bathtub_24"
+            app:layout_constraintBottom_toBottomOf="@+id/property_item_room_text_view"
+            app:layout_constraintStart_toEndOf="@+id/property_item_room_text_view"
+            app:layout_constraintTop_toTopOf="@+id/property_item_room_text_view" />
+
+        <TextView
+            android:id="@+id/property_item_bathroom_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/property_item_bathroom_logo"
+            app:layout_constraintTop_toTopOf="@+id/horizontal_guideline"
+            tools:text="3" />
+
+        <ImageView
+            android:id="@+id/property_item_bedroom_logo"
+            style="@style/Theme.RealEstateManager.PropertyItemLogo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+
+            android:src="@drawable/round_king_bed_24"
+            app:layout_constraintBottom_toBottomOf="@+id/property_item_bathroom_text_view"
+            app:layout_constraintStart_toEndOf="@+id/property_item_bathroom_text_view"
+            app:layout_constraintTop_toTopOf="@+id/property_item_bathroom_text_view" />
+        />
+
+        <TextView
+            android:id="@+id/property_item_bedroom_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/property_item_bedroom_logo"
+            app:layout_constraintTop_toTopOf="@+id/horizontal_guideline"
+            tools:text="3" />
+
+        <ImageView
+            android:id="@+id/property_item_surface_logo"
+            style="@style/Theme.RealEstateManager.PropertyItemLogo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/round_square_foot_24"
+            app:layout_constraintBottom_toBottomOf="@+id/property_item_bedroom_text_view"
+            app:layout_constraintStart_toEndOf="@+id/property_item_bedroom_text_view"
+            app:layout_constraintTop_toTopOf="@+id/property_item_bedroom_text_view" />
+        />
+
+        <TextView
+            android:id="@+id/property_item_surface_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/property_item_surface_logo"
+            app:layout_constraintTop_toTopOf="@+id/horizontal_guideline"
+            tools:text="3" />
+
 
         <TextView
             android:id="@+id/property_item_price_text_view"
@@ -58,18 +149,19 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="4dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/property_item_location_text_view"
+            app:layout_constraintTop_toBottomOf="@id/horizontal_guideline"
             tools:text="$22,255,000" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
+            android:id="@+id/horizontal_guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="1.0" />
+            app:layout_constraintGuide_begin="151dp" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

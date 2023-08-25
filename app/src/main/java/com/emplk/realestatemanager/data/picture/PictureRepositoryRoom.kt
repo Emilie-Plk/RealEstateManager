@@ -1,7 +1,7 @@
 package com.emplk.realestatemanager.data.picture
 
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
-import com.emplk.realestatemanager.domain.entities.PictureEntity
+import com.emplk.realestatemanager.domain.pictures.PictureEntity
 import com.emplk.realestatemanager.domain.pictures.PictureRepository
 import javax.inject.Inject
 

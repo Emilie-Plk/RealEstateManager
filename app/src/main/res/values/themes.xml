@@ -40,4 +40,8 @@
         <item name="cardBackgroundColor">@color/almost_white</item>
         <item name="cardCornerRadius">4dp</item>
     </style>
+
+    <style name="Theme.RealEstateManager.PropertyItemLogo">
+        <item name="android:tint">@color/primary_dark</item>
+    </style>
 </resources>
