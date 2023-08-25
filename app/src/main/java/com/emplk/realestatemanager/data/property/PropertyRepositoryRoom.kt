@@ -2,6 +2,7 @@ package com.emplk.realestatemanager.data.property
 
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.PropertyRepository
+import com.emplk.realestatemanager.domain.entities.PropertiesWithPicturesAndLocationEntity
 import com.emplk.realestatemanager.domain.entities.PropertyEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
@@ -21,11 +22,11 @@ class PropertyRepositoryRoom @Inject constructor(
         propertyDao.update(propertyEntity)
     }
 
-    override fun getPropertiesAsFlow(): Flow<List<PropertyEntity>> = propertyDao
-        .getProperties()
+    override fun getPropertiesAsFlow(): Flow<List<PropertiesWithPicturesAndLocationEntity>> = propertyDao
+        .getPropertiesWithPicturesAndLocation()
         .flowOn(coroutineDispatcherProvider.io)
 
-    override fun getPropertyByIdAsFlow(propertyId: Long): Flow<PropertyEntity> = propertyDao
+    override fun getPropertyByIdAsFlow(propertyId: Long): Flow<PropertiesWithPicturesAndLocationEntity> = propertyDao
         .getPropertyById(propertyId)
         .flowOn(coroutineDispatcherProvider.io)
 }

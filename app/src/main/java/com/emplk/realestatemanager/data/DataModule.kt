@@ -3,6 +3,8 @@ package com.emplk.realestatemanager.data
 import android.app.Application
 import android.content.res.Resources
 import androidx.work.WorkManager
+import com.emplk.realestatemanager.data.location.LocationDao
+import com.emplk.realestatemanager.data.picture.PictureDao
 import com.emplk.realestatemanager.data.property.PropertyDao
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -36,6 +38,14 @@ class DataModule {
     @Singleton
     @Provides
     fun providePropertyDao(appDatabase: AppDatabase): PropertyDao = appDatabase.getPropertyDao()
+
+    @Singleton
+    @Provides
+    fun provideLocationDao(appDatabase: AppDatabase): LocationDao = appDatabase.getLocationDao()
+
+    @Singleton
+    @Provides
+    fun providePictureDao(appDatabase: AppDatabase): PictureDao = appDatabase.getPictureDao()
 
     @Singleton
     @Provides
