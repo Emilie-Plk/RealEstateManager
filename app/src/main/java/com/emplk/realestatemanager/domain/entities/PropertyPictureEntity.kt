@@ -9,6 +9,9 @@ data class PropertyPictureEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
 
+    @ColumnInfo(name = "property_id")
+    val propertyId: Long,
+
     @ColumnInfo(name = "uri")
     val uri: String,
 

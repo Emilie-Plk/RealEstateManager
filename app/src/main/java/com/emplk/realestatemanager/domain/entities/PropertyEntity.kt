@@ -25,28 +25,30 @@ data class PropertyEntity(
     @ColumnInfo(name = "description")
     val description: String,
 
-    // TODO Utiliser relations + transaction
+    // TODO Utiliser embedded et relations + transaction
     @ColumnInfo(name = "photos")
     val photos: List<PropertyPictureEntity>,
 
+    // TODO Utiliser  Utiliser embedded et relations + transaction
     @ColumnInfo(name = "location")
     val location: LocationEntity,
 
+    // TODO: Stocker plutôt une Enum pour Room et "mapper" côté business/app
     @ColumnInfo(name = "points_of_interest")
     val pointsOfInterest: List<PointOfInterestEntity>,
 
+    @ColumnInfo(name = "agent_name")
+    val agent: String,
+
     @ColumnInfo(name = "is_available_for_sale")
     val isAvailableForSale: Boolean,
+
+    @ColumnInfo(name = "is_sold")
+    val isSold: Boolean,
 
     @ColumnInfo(name = "entry_date")
     val entryDate: LocalDateTime,
 
     @ColumnInfo(name = "sale_date")
     val saleDate: LocalDateTime?,
-
-    @ColumnInfo(name = "isSold")
-    val isSold: Boolean,
-
-    @ColumnInfo(name = "agent_name")
-    val agent: String,
 )

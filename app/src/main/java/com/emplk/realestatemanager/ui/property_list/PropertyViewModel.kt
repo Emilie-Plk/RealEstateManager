@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.emplk.realestatemanager.R
-import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.currency.CurrencyType
 import com.emplk.realestatemanager.domain.currency.GetCurrencyTypeFormattingUseCase
 import com.emplk.realestatemanager.domain.get_properties.GetPropertiesAsFlowUseCase
