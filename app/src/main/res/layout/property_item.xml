@@ -138,6 +138,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            android:text="@string/property_item_surface_tv"
             app:layout_constraintStart_toEndOf="@id/property_item_surface_logo"
             app:layout_constraintTop_toTopOf="@+id/horizontal_guideline"
             tools:text="3" />

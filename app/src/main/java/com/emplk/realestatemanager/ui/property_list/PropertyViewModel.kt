@@ -4,9 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.emplk.realestatemanager.R
-import com.emplk.realestatemanager.domain.currency.CurrencyType
-import com.emplk.realestatemanager.domain.currency.GetCurrencyTypeFormattingUseCase
 import com.emplk.realestatemanager.domain.get_properties.GetPropertiesAsFlowUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
+import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.SurfaceUnitType
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.NativePhoto
 import com.emplk.realestatemanager.ui.utils.NativeText
@@ -17,11 +19,13 @@ import javax.inject.Inject
 @HiltViewModel
 class PropertyViewModel @Inject constructor(
     private val getPropertiesAsFlowUseCase: GetPropertiesAsFlowUseCase,
-    private val getCurrencyTypeFormattingUseCase: GetCurrencyTypeFormattingUseCase,
+    private val getCurrencyTypeUseCase: GetCurrencyTypeUseCase,
+    private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
 ) : ViewModel() {
 
     val viewState: LiveData<List<PropertyViewState>> = liveData(Dispatchers.IO) {
-        val currencyType = getCurrencyTypeFormattingUseCase.invoke()
+        val currencyType = getCurrencyTypeUseCase.invoke()
+        val surfaceUnitType = getSurfaceUnitUseCase.invoke()
 
         getPropertiesAsFlowUseCase.invoke().collect { properties ->
             emit(
@@ -51,7 +55,19 @@ class PropertyViewModel @Inject constructor(
                         },
                         isSold = propertiesWithPicturesAndLocation.property.isSold,
                         room = propertiesWithPicturesAndLocation.property.rooms.toString(),
-                        surface = propertiesWithPicturesAndLocation.property.surface.toString(),
+                        bathroom = propertiesWithPicturesAndLocation.property.bathrooms.toString(),
+                        bedroom = propertiesWithPicturesAndLocation.property.bedrooms.toString(),
+                        surface = when (surfaceUnitType) {
+                            SurfaceUnitType.SQUARE_FEET -> NativeText.Arguments(
+                                R.string.surface_in_square_feet,
+                                listOf(propertiesWithPicturesAndLocation.property.surface)
+                            )
+
+                            SurfaceUnitType.SQUARE_METER -> NativeText.Arguments(
+                                R.string.surface_in_square_meters,
+                                listOf(propertiesWithPicturesAndLocation.property.surface)
+                            )
+                        },
                         onClickEvent = EquatableCallback {
                             PropertyViewEvent.NavigateToDetailActivity(
                                 propertiesWithPicturesAndLocation.property.id

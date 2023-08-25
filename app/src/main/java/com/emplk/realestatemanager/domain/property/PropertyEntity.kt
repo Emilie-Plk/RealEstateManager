@@ -16,6 +16,8 @@ data class PropertyEntity(
     val price: Int,
     val surface: Int,
     val rooms: Int,
+    val bedrooms: Int,
+    val bathrooms: Int,
     val description: String,
     @ColumnInfo(name = "amenities")
     val amenities: List<Amenity>,

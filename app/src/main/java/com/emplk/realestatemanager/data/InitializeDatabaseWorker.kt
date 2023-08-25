@@ -7,12 +7,12 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.data.utils.fromJson
-import com.emplk.realestatemanager.domain.property.AddPropertyUseCase
-import com.emplk.realestatemanager.domain.location.LocationEntity
-import com.emplk.realestatemanager.domain.pictures.PictureEntity
-import com.emplk.realestatemanager.domain.property.PropertyEntity
 import com.emplk.realestatemanager.domain.location.AddLocationUseCase
+import com.emplk.realestatemanager.domain.location.LocationEntity
 import com.emplk.realestatemanager.domain.pictures.AddPictureUseCase
+import com.emplk.realestatemanager.domain.pictures.PictureEntity
+import com.emplk.realestatemanager.domain.property.AddPropertyUseCase
+import com.emplk.realestatemanager.domain.property.PropertyEntity
 import com.google.gson.Gson
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
