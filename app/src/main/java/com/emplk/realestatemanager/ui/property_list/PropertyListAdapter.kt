@@ -53,7 +53,7 @@ class PropertyListAdapter :
                 binding.propertyItemRoomTextView?.text = item.room
                 binding.propertyItemBathroomTextView?.text = item.bathroom
                 binding.propertyItemBedroomTextView?.text = item.bedroom
-                binding.propertyItemSurfaceTextView?.text = item.surface?.toCharSequence(itemView.context)
+                binding.propertyItemSurfaceTextView?.text = item.surface.toCharSequence(itemView.context)
                 item.featuredPicture
                     .load(binding.propertyItemImageView)
                     .transform(CenterCrop(), RoundedCorners(16))

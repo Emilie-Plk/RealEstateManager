@@ -10,4 +10,6 @@
     <string name="detail_fragment_featured_picture_a11y">Picture of %s</string>
     <string name="number_of_rooms_logo_a11y">Number of rooms</string>
     <string name="property_item_surface_tv">%1s %2s</string>
+    <string name="property_item_sold_banner_textview">SOLD</string>
+    <string name="property_item_sold_banner_a11y">Sold banner</string>
 </resources>
