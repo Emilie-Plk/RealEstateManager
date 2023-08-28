@@ -3,19 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:maxWidth="200dp"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:maxWidth="200dp">
 
     <ImageView
         android:id="@+id/property_item_image_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
         android:importantForAccessibility="no"
         android:scaleType="centerCrop"
         android:src="@drawable/tools_villa"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"
-        android:layout_marginStart="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,34 +26,37 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:adjustViewBounds="true"
+        android:contentDescription="@string/property_item_sold_banner_a11y"
         android:scaleType="centerCrop"
+        android:visibility="gone"
         android:src="@drawable/sold_banner"
         app:layout_constraintBottom_toBottomOf="@+id/property_item_image_view"
         app:layout_constraintEnd_toStartOf="@id/guideline"
         app:layout_constraintStart_toStartOf="@id/property_item_image_view"
-        app:layout_constraintTop_toTopOf="@id/property_item_image_view"
-        android:contentDescription="@string/property_item_sold_banner_a11y" />
+        app:layout_constraintTop_toTopOf="@id/property_item_image_view" />
 
 
     <TextView
         android:id="@+id/property_item_sold_text_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-      android:layout_marginTop="8dp"
+        android:layout_marginTop="8dp"
         android:rotation="-45"
         android:text="@string/property_item_sold_banner_textview"
         android:textColor="@color/white"
         android:textStyle="bold|italic"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="@id/property_item_sold_banner_image_view"
         app:layout_constraintTop_toTopOf="@id/property_item_sold_banner_image_view" />
+
     <TextView
         android:id="@+id/property_item_type_text_view"
-        android:textSize="14sp"
         style="@style/Theme.RealEstateManager.PropertyTypeTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="8dp"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/guideline"
         app:layout_constraintTop_toTopOf="parent"

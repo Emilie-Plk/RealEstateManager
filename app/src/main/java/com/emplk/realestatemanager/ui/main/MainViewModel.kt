@@ -44,7 +44,7 @@ class MainViewModel @Inject constructor(
                     isAvailableForSale = true,
                     entryDate = LocalDateTime.now(),
                     saleDate = null,
-                    isSold = false,
+                    isSold = true,
                     agent = "John Doe"
                 ),
             )
