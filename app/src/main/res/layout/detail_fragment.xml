@@ -1,44 +1,202 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
     tools:context=".ui.detail.DetailFragment">
 
-    <ImageView
-        android:id="@+id/detail_featured_image"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:contentDescription="@string/detail_fragment_featured_picture_a11y"
-        android:scaleType="centerCrop"
-        android:src="@drawable/tools_villa"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="0dp">
 
-    <TextView
-        android:id="@+id/detail_type"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toStartOf="@id/detail_price"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/detail_featured_image"
-        tools:text="Villa" />
+        <androidx.cardview.widget.CardView
+            android:id="@+id/detail_top_info_cardView"
+            style="@style/Theme.RealEstateManager.PropertyItemCardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/detail_price"
-        style="@style/Theme.RealEstateManager.PropertyPrice"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="12dp"
-        android:gravity="center"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/detail_type"
-        app:layout_constraintTop_toBottomOf="@+id/detail_featured_image"
-        tools:text="500000€" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                <ImageView
+                    android:id="@+id/detail_featured_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:contentDescription="@string/detail_fragment_featured_picture_a11y"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/tools_villa"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/detail_type"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintEnd_toStartOf="@id/detail_price"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/detail_featured_image"
+                    tools:text="Villa" />
+
+                <ImageView
+                    android:id="@+id/detail_location_logo"
+                    style="@style/Theme.RealEstateManager.PropertyItemLogoGray"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="8dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/baseline_location_on_24"
+                    app:layout_constraintStart_toStartOf="@id/detail_type"
+                    app:layout_constraintTop_toBottomOf="@id/detail_type" />
+
+                <TextView
+                    android:id="@+id/detail_location_textview"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintBottom_toBottomOf="@id/detail_location_logo"
+                    app:layout_constraintStart_toEndOf="@id/detail_location_logo"
+                    app:layout_constraintTop_toTopOf="@id/detail_location_logo"
+                    tools:text="123 Main Street, 12345 City" />
+
+                <TextView
+                    android:id="@+id/detail_entry_date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:textAlignment="textEnd"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/detail_location_textview"
+                    tools:text="Entry date: 01/01/2020" />
+
+                <TextView
+                    android:id="@+id/detail_manager_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/detail_manager_agent_name"
+                    android:textAlignment="textEnd"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/detail_entry_date"
+                    tools:text="Managed by John Doe" />
+
+
+                <TextView
+                    android:id="@+id/detail_sold_date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:textAlignment="textEnd"
+                    android:textAllCaps="true"
+                    android:textColor="@color/cherry_red"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/detail_manager_name"
+                    tools:text="Sold date: 01/01/2020" />
+
+                <TextView
+                    android:id="@+id/detail_price"
+                    style="@style/Theme.RealEstateManager.PropertyPrice"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="12dp"
+                    android:gravity="end"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/detail_type"
+                    app:layout_constraintTop_toBottomOf="@+id/detail_featured_image"
+                    tools:text="500000€" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <ImageView
+            android:id="@+id/detail_room_logo"
+            style="@style/Theme.RealEstateManager.PropertyItemLogo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:src="@drawable/round_home_24"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/detail_room_textview"
+            app:layout_constraintTop_toBottomOf="@id/detail_top_info_cardView" />
+
+        <TextView
+            android:id="@+id/detail_room_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            app:layout_constraintEnd_toStartOf="@id/detail_bedroom_logo"
+            android:text="@string/detail_number_of_room_textview"
+            app:layout_constraintBottom_toBottomOf="@id/detail_room_logo"
+            app:layout_constraintStart_toEndOf="@id/detail_room_logo"
+            app:layout_constraintTop_toTopOf="@id/detail_room_logo"
+            tools:text="5 rooms" />
+
+        <ImageView
+            android:id="@+id/detail_bedroom_logo"
+            style="@style/Theme.RealEstateManager.PropertyItemLogo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:src="@drawable/round_king_bed_24"
+            app:layout_constraintEnd_toStartOf="@id/detail_bedroom_textview"
+            app:layout_constraintStart_toEndOf="@id/detail_room_textview"
+            app:layout_constraintTop_toBottomOf="@id/detail_top_info_cardView" />
+
+        <TextView
+            android:id="@+id/detail_bedroom_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            app:layout_constraintEnd_toStartOf="@id/detail_bathroom_logo"
+            android:text="@string/detail_number_of_bedroom_textview"
+            app:layout_constraintBottom_toBottomOf="@id/detail_bedroom_logo"
+            app:layout_constraintStart_toEndOf="@id/detail_bedroom_logo"
+            app:layout_constraintTop_toTopOf="@id/detail_bedroom_logo"
+            tools:text="3 bedrooms" />
+
+        <ImageView
+            android:id="@+id/detail_bathroom_logo"
+            style="@style/Theme.RealEstateManager.PropertyItemLogo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintEnd_toStartOf="@id/detail_bathroom_textview"
+            android:src="@drawable/round_bathtub_24"
+            app:layout_constraintStart_toEndOf="@id/detail_bedroom_textview"
+            app:layout_constraintTop_toBottomOf="@id/detail_top_info_cardView" />
+
+        <TextView
+            android:id="@+id/detail_bathroom_textview"
+            android:layout_width="83dp"
+            android:layout_height="17dp"
+            android:layout_marginStart="4dp"
+            android:text="@string/detail_number_of_bathroom_textview"
+            app:layout_constraintBottom_toBottomOf="@id/detail_bathroom_logo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/detail_bathroom_logo"
+            app:layout_constraintTop_toTopOf="@id/detail_bathroom_logo"
+            tools:text="2 bathrooms" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
