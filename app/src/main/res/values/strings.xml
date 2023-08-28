@@ -12,4 +12,8 @@
     <string name="property_item_surface_tv">%1s %2s</string>
     <string name="property_item_sold_banner_textview">SOLD</string>
     <string name="property_item_sold_banner_a11y">Sold banner</string>
+    <string name="detail_manager_agent_name">Managed by %s</string>
+    <string name="detail_number_of_room_textview">%d rooms</string>
+    <string name="detail_number_of_bedroom_textview">d% bedrooms</string>
+    <string name="detail_number_of_bathroom_textview">%d bathrooms</string>
 </resources>

@@ -9,7 +9,7 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSurface">@color/white</item>
         <item name="colorOnSurface">@color/black</item>
-        <item name="colorError">@color/error</item>
+        <item name="colorError">@color/cherry_red</item>
     </style>
 
     <style name="Theme.RealEstateManager" parent="Base.Theme.RealEstateManager" />
@@ -43,5 +43,11 @@
 
     <style name="Theme.RealEstateManager.PropertyItemLogo">
         <item name="android:tint">@color/primary_dark</item>
+        <item name="android:importantForAccessibility">no</item>
+    </style>
+
+    <style name="Theme.RealEstateManager.PropertyItemLogoGray">
+        <item name="android:tint">@color/lighter_gray</item>
+        <item name="android:importantForAccessibility">no</item>
     </style>
 </resources>
