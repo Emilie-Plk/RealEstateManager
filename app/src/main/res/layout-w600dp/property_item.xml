@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:maxWidth="200dp"
     android:layout_height="wrap_content">
 
     <ImageView
@@ -20,12 +21,38 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/property_item_sold_banner_image_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/sold_banner"
+        app:layout_constraintBottom_toBottomOf="@+id/property_item_image_view"
+        app:layout_constraintEnd_toStartOf="@id/guideline"
+        app:layout_constraintStart_toStartOf="@id/property_item_image_view"
+        app:layout_constraintTop_toTopOf="@id/property_item_image_view"
+        android:contentDescription="@string/property_item_sold_banner_a11y" />
+
+
+    <TextView
+        android:id="@+id/property_item_sold_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+        android:rotation="-45"
+        android:text="@string/property_item_sold_banner_textview"
+        android:textColor="@color/white"
+        android:textStyle="bold|italic"
+        app:layout_constraintStart_toStartOf="@id/property_item_sold_banner_image_view"
+        app:layout_constraintTop_toTopOf="@id/property_item_sold_banner_image_view" />
     <TextView
         android:id="@+id/property_item_type_text_view"
+        android:textSize="14sp"
         style="@style/Theme.RealEstateManager.PropertyTypeTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="12dp"
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/guideline"
@@ -51,7 +78,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginBottom="8dp"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/guideline"
         app:layout_constraintTop_toBottomOf="@id/property_item_location_text_view"
         tools:text="$22,255,000" />
@@ -61,6 +90,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.29" />
+        app:layout_constraintGuide_percent="0.33" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

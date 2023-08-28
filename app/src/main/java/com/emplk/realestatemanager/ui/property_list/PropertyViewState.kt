@@ -20,10 +20,10 @@ sealed class PropertyViewState(val type: Type) {
         val address: String,
         val price: NativeText,
         val isSold: Boolean,
-        val room: String?,
-        val bathroom: String?,
-        val bedroom: String?,
-        val surface: NativeText?,
+        val room: String,
+        val bathroom: String,
+        val bedroom: String,
+        val surface: NativeText,
         val onClickEvent: EquatableCallback,
     ) : PropertyViewState(Type.PROPERTY)
 }
