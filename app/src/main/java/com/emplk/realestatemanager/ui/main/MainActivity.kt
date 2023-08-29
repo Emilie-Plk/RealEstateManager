@@ -8,10 +8,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commitNow
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.MainActivityBinding
-import com.emplk.realestatemanager.ui.detail.DetailActivity
 import com.emplk.realestatemanager.ui.property_list.PropertiesFragment
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.viewBinding
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -26,7 +26,10 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager.commitNow {
-                replace(binding.mainFrameLayoutContainerProperties.id, PropertiesFragment())
+                replace(
+                    binding.mainFrameLayoutContainerProperties.id,
+                    PropertiesFragment()
+                )
             }
         }
 
@@ -35,16 +38,17 @@ class MainActivity : AppCompatActivity() {
             viewModel.onAddPropertyClicked()
         }
 
-        viewModel.mainViewActionLiveData.observeEvent(this) {
-            when (it) {
-                MainViewEvent.NavigateToDetailActivity -> {
-                    Log.d("COUCOU", "Navigate to detail activity")
-                    startActivity(DetailActivity.navigate(this))
+        viewModel.mainViewEventLiveData.observeEvent(this) { event ->
+            when (event) {
+                is MainViewEvent.DoNothingForTheMoment -> {
+                  Snackbar.make(binding.root, "Do nothing for the moment", Snackbar.LENGTH_SHORT).show()
+                    Log.d("COUCOU Main", "Do nothing for the moment")
                 }
 
-                MainViewEvent.DoNothingForTheMoment -> Log.d("COUCOU", "Do nothing for the moment")
-
-                MainViewEvent.NavigateToAddPropertyActivity -> Log.d("COUCOU", "Navigate to add property activity")
+                is MainViewEvent.NavigateToAddPropertyActivity -> {
+                   Snackbar.make(binding.root, "NavigateToAddPropertyActivity", Snackbar.LENGTH_SHORT).show()
+                    Log.d("COUCOU Main", "NavigateToAddPropertyActivity")
+                }
             }
         }
     }

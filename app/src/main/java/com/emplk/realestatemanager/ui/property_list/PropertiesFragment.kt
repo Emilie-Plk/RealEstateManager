@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.PropertiesFragmentBinding
+import com.emplk.realestatemanager.ui.detail.DetailActivity
+import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -22,6 +24,14 @@ class PropertiesFragment : Fragment(R.layout.properties_fragment) {
 
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
             adapter.submitList(viewState)
+        }
+
+        viewModel.viewEventLiveData.observeEvent(this) { event ->
+            when (event) {
+                is PropertyViewEvent.NavigateToDetailActivity -> {
+                    startActivity(DetailActivity.navigate(requireContext(), event.id))
+                }
+            }
         }
     }
 }

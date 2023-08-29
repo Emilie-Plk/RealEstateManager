@@ -22,7 +22,7 @@ data class PropertyEntity(
     @ColumnInfo(name = "amenities")
     val amenities: List<Amenity>,
     @ColumnInfo(name = "agent_name")
-    val agent: String,
+    val agentName: String,
     @ColumnInfo(name = "is_available_for_sale")
     val isAvailableForSale: Boolean,
     @ColumnInfo(name = "is_sold")

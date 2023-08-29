@@ -10,10 +10,14 @@ import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCa
 import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.SurfaceUnitType
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
+import com.emplk.realestatemanager.ui.utils.Event
 import com.emplk.realestatemanager.ui.utils.NativePhoto
 import com.emplk.realestatemanager.ui.utils.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,6 +26,24 @@ class PropertyViewModel @Inject constructor(
     private val getCurrencyTypeUseCase: GetCurrencyTypeUseCase,
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
 ) : ViewModel() {
+
+    private val propertyIdMutableSharedFlow = MutableSharedFlow<Long>(1)
+
+    val viewEventLiveData: LiveData<Event<PropertyViewEvent>> = liveData(Dispatchers.IO) {
+        coroutineScope {
+            launch {
+                propertyIdMutableSharedFlow.collect { propertyId ->
+                    if (propertyId >= 0) {
+                        emit(
+                            Event(
+                                PropertyViewEvent.NavigateToDetailActivity(propertyId)
+                            )
+                        )
+                    }
+                }
+            }
+        }
+    }
 
     val viewState: LiveData<List<PropertyViewState>> = liveData(Dispatchers.IO) {
         val currencyType = getCurrencyTypeUseCase.invoke()
@@ -69,9 +91,7 @@ class PropertyViewModel @Inject constructor(
                             )
                         },
                         onClickEvent = EquatableCallback {
-                            PropertyViewEvent.NavigateToDetailActivity(
-                                propertiesWithPicturesAndLocation.property.id
-                            )
+                            propertyIdMutableSharedFlow.tryEmit(propertiesWithPicturesAndLocation.property.id)
                         }
                     )
                 }
