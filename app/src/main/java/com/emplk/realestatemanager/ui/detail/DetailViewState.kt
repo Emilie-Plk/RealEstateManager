@@ -1,0 +1,25 @@
+package com.emplk.realestatemanager.ui.detail
+
+data class DetailViewState(
+    val id: Long,
+    val type: String,
+    val price: String,
+    val surface: String,
+    val rooms: String,
+    val bathrooms: String,
+    val bedrooms: String,
+    val description: String,
+    val address: String,
+    val amenitySchool: Boolean,
+    val amenityPark: Boolean,
+    val amenityShoppingMall: Boolean,
+    val amenityRestaurant: Boolean,
+    val amenityFitnessCenter: Boolean,
+    val amenityPublicTransportation: Boolean,
+    val amenityHospital: Boolean,
+    val amenityLibrary: Boolean,
+    val entryDate: String,
+    val agentName: String,
+    val isSold: Boolean,
+    val saleDate: String,
+)

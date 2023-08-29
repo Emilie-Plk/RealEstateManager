@@ -33,5 +33,4 @@ abstract class DataBindingModule {
     @Singleton
     @Binds
     abstract fun bindCurrencyRepository(implementation: LocaleFormattingRepositoryImpl): LocaleFormattingRepository
-
 }

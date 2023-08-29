@@ -79,7 +79,7 @@ abstract class AppDatabase : RoomDatabase() {
                                 entryDate = LocalDateTime.of(2023, 8, 24, 10, 0),
                                 saleDate = null,
                                 isSold = false,
-                                agent = "John Doe"
+                                agentName = "John Doe"
                             ),
                             PropertyEntity(
                                 id = 0,
@@ -100,7 +100,7 @@ abstract class AppDatabase : RoomDatabase() {
                                 entryDate = LocalDateTime.of(2023, 8, 25, 10, 0),
                                 saleDate = null,
                                 isSold = false,
-                                agent = "Jane Smith"
+                                agentName = "Jane Smith"
                             ),
                         )
                     )

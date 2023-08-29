@@ -71,7 +71,6 @@ class PropertyListAdapter :
                         binding.propertyItemSoldBannerImageView.visibility = View.GONE
                         binding.propertyItemSoldTextView.visibility = View.GONE
                     }
-
                 }
                 item.featuredPicture
                     .load(binding.propertyItemImageView)
