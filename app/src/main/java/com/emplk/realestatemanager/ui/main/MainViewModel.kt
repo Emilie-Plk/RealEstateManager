@@ -25,7 +25,6 @@ class MainViewModel @Inject constructor(
     private val hasAddPropertyButtonBeenClickedMutableSharedFlow = MutableSharedFlow<Boolean>()
 
     val mainViewEventLiveData: LiveData<Event<MainViewEvent>> = liveData {
-        coroutineScope {
             combine(
                 isTabletMutableStateFlow,
                 hasAddPropertyButtonBeenClickedMutableSharedFlow.asSharedFlow(),
@@ -57,7 +56,6 @@ class MainViewModel @Inject constructor(
                     )
                 }
             }.collect()
-        }
     }
 
     fun onAddPropertyClicked() {
@@ -68,7 +66,7 @@ class MainViewModel @Inject constructor(
 
     fun onResume(isTablet: Boolean) {
         isTabletMutableStateFlow.value = isTablet
-      viewModelScope.launch(coroutineDispatcherProvider.io) {
+        viewModelScope.launch(coroutineDispatcherProvider.io) {
             hasAddPropertyButtonBeenClickedMutableSharedFlow.emit(false)
         }
         Log.d("COUCOU", "onResume: isTablet = $isTablet")

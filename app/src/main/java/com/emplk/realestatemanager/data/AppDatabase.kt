@@ -72,7 +72,7 @@ abstract class AppDatabase : RoomDatabase() {
                                     Amenity.LIBRARY,
                                     Amenity.PARK,
                                     Amenity.PUBLIC_TRANSPORTATION,
-                                    Amenity.FITNESS_CENTER,
+                                    Amenity.HOSPITAL,
                                     Amenity.SCHOOL,
                                 ),
                                 isAvailableForSale = true,
@@ -91,7 +91,7 @@ abstract class AppDatabase : RoomDatabase() {
                                 bedrooms = 4,
                                 description = " Experience the epitome of modern luxury in this exquisite villa that seamlessly blends sophistication with comfort. This architectural masterpiece features sleek lines, floor-to-ceiling windows, and cutting-edge design elements that create an unparalleled living experience. Enjoy spacious living areas, a state-of-the-art kitchen, and breathtaking panoramic views of the surrounding landscape. With its private infinity pool, landscaped gardens, and smart home technology, this villa offers the ultimate retreat for those seeking a contemporary and lavish lifestyle.",
                                 amenities = listOf(
-                                    Amenity.FITNESS_CENTER,
+                                    Amenity.CONCIERGE,
                                     Amenity.PARK,
                                     Amenity.SCHOOL,
                                     Amenity.RESTAURANT,

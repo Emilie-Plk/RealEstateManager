@@ -1,8 +1,10 @@
 package com.emplk.realestatemanager.ui.property_list
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.get_properties.GetPropertiesAsFlowUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
@@ -15,7 +17,6 @@ import com.emplk.realestatemanager.ui.utils.NativePhoto
 import com.emplk.realestatemanager.ui.utils.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,20 +28,17 @@ class PropertyViewModel @Inject constructor(
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
 ) : ViewModel() {
 
-    private val propertyIdMutableSharedFlow = MutableSharedFlow<Long>(1)
+    private val propertyIdMutableSharedFlow = MutableSharedFlow<Long>()
 
     val viewEventLiveData: LiveData<Event<PropertyViewEvent>> = liveData(Dispatchers.IO) {
-        coroutineScope {
-            launch {
-                propertyIdMutableSharedFlow.collect { propertyId ->
-                    if (propertyId >= 0) {
-                        emit(
-                            Event(
-                                PropertyViewEvent.NavigateToDetailActivity(propertyId)
-                            )
-                        )
-                    }
-                }
+        propertyIdMutableSharedFlow.collect { propertyId ->
+            if (propertyId >= 0) {
+                emit(
+                    Event(
+                        PropertyViewEvent.NavigateToDetailActivity(propertyId)
+                    )
+                )
+                Log.d("COUCOU", "NavigateToDetailActivity($propertyId)")
             }
         }
     }
@@ -91,7 +89,9 @@ class PropertyViewModel @Inject constructor(
                             )
                         },
                         onClickEvent = EquatableCallback {
-                            propertyIdMutableSharedFlow.tryEmit(propertiesWithPicturesAndLocation.property.id)
+                            viewModelScope.launch {
+                                propertyIdMutableSharedFlow.emit(propertiesWithPicturesAndLocation.property.id)
+                            }
                         }
                     )
                 }
