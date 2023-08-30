@@ -39,14 +39,36 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.mainViewEventLiveData.observeEvent(this) { event ->
             when (event) {
-                is MainViewEvent.DoNothingForTheMoment -> {
-                    Snackbar.make(binding.root, "Do nothing for the moment", Snackbar.LENGTH_SHORT).show()
-                    Log.d("COUCOU Main", "Do nothing for the moment")
+                is MainViewEvent.DisplayAddPropertyFragment -> {
+                    Snackbar.make(
+                        binding.root,
+                        "Display Add Property Fragment",
+                        Snackbar.LENGTH_SHORT
+                    ).show()
                 }
 
                 is MainViewEvent.NavigateToAddPropertyActivity -> {
-                    Snackbar.make(binding.root, "NavigateToAddPropertyActivity", Snackbar.LENGTH_SHORT).show()
-                    Log.d("COUCOU Main", "NavigateToAddPropertyActivity")
+                    Snackbar.make(
+                        binding.root,
+                        "Navigate To Add PropertyActivity",
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
+
+                is MainViewEvent.DidNotClickedAddPropertyButtonPhone -> {
+                    Snackbar.make(
+                        binding.root,
+                        "Phone - Did Not Clicked Add Property Button",
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
+
+                is MainViewEvent.DidNotClickedAddPropertyButtonTablet -> {
+                    Snackbar.make(
+                        binding.root,
+                        "Tablet - Did Not Clicked Add Property Button",
+                        Snackbar.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
