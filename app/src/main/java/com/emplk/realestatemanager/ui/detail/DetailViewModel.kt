@@ -35,7 +35,7 @@ class DetailViewModel @Inject constructor(
                         amenityPark = it.property.amenities.contains(Amenity.PARK),
                         amenityShoppingMall = it.property.amenities.contains(Amenity.SHOPPING_MALL),
                         amenityRestaurant = it.property.amenities.contains(Amenity.RESTAURANT),
-                        amenityFitnessCenter = it.property.amenities.contains(Amenity.FITNESS_CENTER),
+                        amenityConcierge = it.property.amenities.contains(Amenity.CONCIERGE),
                         amenityPublicTransportation = it.property.amenities.contains(Amenity.PUBLIC_TRANSPORTATION),
                         amenityHospital = it.property.amenities.contains(Amenity.HOSPITAL),
                         amenityLibrary = it.property.amenities.contains(Amenity.LIBRARY),

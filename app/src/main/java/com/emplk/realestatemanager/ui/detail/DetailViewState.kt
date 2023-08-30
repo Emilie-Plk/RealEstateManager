@@ -14,7 +14,7 @@ data class DetailViewState(
     val amenityPark: Boolean,
     val amenityShoppingMall: Boolean,
     val amenityRestaurant: Boolean,
-    val amenityFitnessCenter: Boolean,
+    val amenityConcierge: Boolean,
     val amenityPublicTransportation: Boolean,
     val amenityHospital: Boolean,
     val amenityLibrary: Boolean,

@@ -16,4 +16,13 @@
     <string name="detail_number_of_room_textview">%d rooms</string>
     <string name="detail_number_of_bedroom_textview">d% bedrooms</string>
     <string name="detail_number_of_bathroom_textview">%d bathrooms</string>
+    <string name="detail_amenities_school_tv">School</string>
+    <string name="detail_amenities_park_tv">Park</string>
+    <string name="detail_amenities_restaurant_tv">Restaurants</string>
+    <string name="detail_amenities_shopping_tv">Mall</string>
+    <string name="detail_amenities_transportation_tv">Transportation</string>
+    <string name="detail_amenities_hospital_tv">Hospital</string>
+    <string name="detail_amenities_library_tv">Library</string>
+    <string name="detail_amenities_concierge_tv">Concierge</string>
+    <string name="detail_amenities_flexbox_title_tv">Amenities</string>
 </resources>

@@ -30,7 +30,20 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.viewState.observe(viewLifecycleOwner) { detailViewState ->
-            binding.detailManagerName.text = detailViewState.agentName
+            val amenitiesMap = mapOf(
+                binding.detailAmenitiesConcierge to detailViewState.amenityConcierge,
+                binding.detailAmenitiesHospitalTv to detailViewState.amenityHospital,
+                binding.detailAmenitiesLibraryTv to detailViewState.amenityLibrary,
+                binding.detailAmenitiesParkTv to detailViewState.amenityPark,
+                binding.detailAmenitiesPublicTransportationTv to detailViewState.amenityPublicTransportation,
+                binding.detailAmenitiesRestaurantTv to detailViewState.amenityRestaurant,
+                binding.detailAmenitiesSchoolTv to detailViewState.amenitySchool,
+                binding.detailAmenitiesShoppingMallTv to detailViewState.amenityShoppingMall,
+            )
+
+            amenitiesMap.forEach { (tv, isAvailable) ->
+                tv.visibility = if (isAvailable) View.VISIBLE else View.GONE
+            }
         }
     }
 }

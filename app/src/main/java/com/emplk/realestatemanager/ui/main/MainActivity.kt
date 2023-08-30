@@ -2,7 +2,6 @@ package com.emplk.realestatemanager.ui.main
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commitNow
@@ -41,12 +40,12 @@ class MainActivity : AppCompatActivity() {
         viewModel.mainViewEventLiveData.observeEvent(this) { event ->
             when (event) {
                 is MainViewEvent.DoNothingForTheMoment -> {
-                  Snackbar.make(binding.root, "Do nothing for the moment", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(binding.root, "Do nothing for the moment", Snackbar.LENGTH_SHORT).show()
                     Log.d("COUCOU Main", "Do nothing for the moment")
                 }
 
                 is MainViewEvent.NavigateToAddPropertyActivity -> {
-                   Snackbar.make(binding.root, "NavigateToAddPropertyActivity", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(binding.root, "NavigateToAddPropertyActivity", Snackbar.LENGTH_SHORT).show()
                     Log.d("COUCOU Main", "NavigateToAddPropertyActivity")
                 }
             }

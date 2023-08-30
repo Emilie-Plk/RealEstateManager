@@ -55,6 +55,9 @@ dependencies {
     // DESUGARING
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
 
+    // FLEXBOX
+    implementation("com.google.android.flexbox:flexbox:3.0.0")
+
     // GLIDE
     implementation("com.github.bumptech.glide:glide:4.15.1")
     kapt("com.github.bumptech.glide:compiler:4.15.1")
