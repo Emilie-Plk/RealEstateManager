@@ -1,16 +1,18 @@
 package com.emplk.realestatemanager.ui.property_list
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.emplk.realestatemanager.R
+import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.get_properties.GetPropertiesAsFlowUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.SurfaceUnitType
+import com.emplk.realestatemanager.domain.screen_width.GetScreenWidthTypeFlowUseCase
+import com.emplk.realestatemanager.domain.screen_width.ScreenWidthType
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.Event
 import com.emplk.realestatemanager.ui.utils.NativePhoto
@@ -18,6 +20,8 @@ import com.emplk.realestatemanager.ui.utils.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,21 +30,45 @@ class PropertyViewModel @Inject constructor(
     private val getPropertiesAsFlowUseCase: GetPropertiesAsFlowUseCase,
     private val getCurrencyTypeUseCase: GetCurrencyTypeUseCase,
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
+    private val getScreenWidthTypeFlowUseCase: GetScreenWidthTypeFlowUseCase,
+    private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : ViewModel() {
 
     private val propertyIdMutableSharedFlow = MutableSharedFlow<Long>()
 
-    val viewEventLiveData: LiveData<Event<PropertyViewEvent>> = liveData(Dispatchers.IO) {
-        propertyIdMutableSharedFlow.collect { propertyId ->
+    val viewEventLiveData: LiveData<Event<PropertyViewEvent>> = liveData(coroutineDispatcherProvider.io) {
+        combine(
+            propertyIdMutableSharedFlow,
+            getScreenWidthTypeFlowUseCase.invoke()
+        ) { propertyId, screenWidthType ->
             if (propertyId >= 0) {
-                emit(
-                    Event(
-                        PropertyViewEvent.NavigateToDetailActivity(propertyId)
-                    )
-                )
-                Log.d("COUCOU", "NavigateToDetailActivity($propertyId)")
+                when (screenWidthType) {
+                    ScreenWidthType.TABLET -> {
+                        emit(
+                            Event(
+                                PropertyViewEvent.DisplayDetailFragment(
+                                    propertyId
+                                )
+                            )
+                        )
+                    }
+
+                    ScreenWidthType.PHONE -> {
+                        emit(
+                            Event(
+                                PropertyViewEvent.NavigateToDetailActivity(
+                                    propertyId
+                                )
+                            )
+                        )
+                    }
+
+                    ScreenWidthType.UNDEFINED -> {
+                        // Nothing to do
+                    }
+                }
             }
-        }
+        }.collect()
     }
 
     val viewState: LiveData<List<PropertyViewState>> = liveData(Dispatchers.IO) {
