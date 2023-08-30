@@ -63,14 +63,14 @@ class PropertyViewModel @Inject constructor(
                         },
                         address = propertiesWithPicturesAndLocation.location.address,
                         price = when (currencyType) {
-                            CurrencyType.DOLLAR -> NativeText.Arguments(
+                            CurrencyType.DOLLAR -> NativeText.Argument(
                                 R.string.price_in_dollar,
-                                listOf(propertiesWithPicturesAndLocation.property.price)
+                                propertiesWithPicturesAndLocation.property.price
                             )
 
-                            CurrencyType.EURO -> NativeText.Arguments(
+                            CurrencyType.EURO -> NativeText.Argument(
                                 R.string.price_in_euro,
-                                listOf(propertiesWithPicturesAndLocation.property.price)
+                                propertiesWithPicturesAndLocation.property.price
                             )
                         },
                         isSold = propertiesWithPicturesAndLocation.property.isSold,
@@ -78,14 +78,14 @@ class PropertyViewModel @Inject constructor(
                         bathroom = propertiesWithPicturesAndLocation.property.bathrooms.toString(),
                         bedroom = propertiesWithPicturesAndLocation.property.bedrooms.toString(),
                         surface = when (surfaceUnitType) {
-                            SurfaceUnitType.SQUARE_FEET -> NativeText.Arguments(
+                            SurfaceUnitType.SQUARE_FEET -> NativeText.Argument(
                                 R.string.surface_in_square_feet,
-                                listOf(propertiesWithPicturesAndLocation.property.surface)
+                                propertiesWithPicturesAndLocation.property.surface
                             )
 
-                            SurfaceUnitType.SQUARE_METER -> NativeText.Arguments(
+                            SurfaceUnitType.SQUARE_METER -> NativeText.Argument(
                                 R.string.surface_in_square_meters,
-                                listOf(propertiesWithPicturesAndLocation.property.surface)
+                                propertiesWithPicturesAndLocation.property.surface
                             )
                         },
                         onClickEvent = EquatableCallback {

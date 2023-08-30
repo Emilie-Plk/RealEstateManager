@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:rotation="-45"
-        android:text="@string/property_item_sold_banner_textview"
+        android:text="@string/property_item_sold_banner_tv"
         android:textColor="@color/white"
         android:textStyle="bold|italic"
         android:visibility="gone"

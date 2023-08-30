@@ -3,19 +3,19 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="main_fab_add_new_property_a11y">Add new property</string>
-    <string name="price_in_euro">%d\u20ac</string>
-    <string name="price_in_dollar">\u0024%d</string>
-    <string name="surface_in_square_feet">%d sq ft</string>
-    <string name="surface_in_square_meters">%d m²</string>
+    <string name="price_in_euro">%s\u20ac</string>
+    <string name="price_in_dollar">\u0024%s</string>
+    <string name="surface_in_square_feet">%s sq ft</string>
+    <string name="surface_in_square_meters">%s m²</string>
     <string name="detail_fragment_featured_picture_a11y">Picture of %s</string>
     <string name="number_of_rooms_logo_a11y">Number of rooms</string>
     <string name="property_item_surface_tv">%1s %2s</string>
-    <string name="property_item_sold_banner_textview">SOLD</string>
+    <string name="property_item_sold_banner_tv">SOLD</string>
     <string name="property_item_sold_banner_a11y">Sold banner</string>
     <string name="detail_manager_agent_name">Managed by %s</string>
-    <string name="detail_number_of_room_textview">%d rooms</string>
-    <string name="detail_number_of_bedroom_textview">d% bedrooms</string>
-    <string name="detail_number_of_bathroom_textview">%d bathrooms</string>
+    <string name="detail_number_of_room_textview">%s rooms</string>
+    <string name="detail_number_of_bedroom_textview">%s bedrooms</string>
+    <string name="detail_number_of_bathroom_textview">%s bathrooms</string>
     <string name="detail_amenities_school_tv">School</string>
     <string name="detail_amenities_park_tv">Park</string>
     <string name="detail_amenities_restaurant_tv">Restaurants</string>
@@ -24,5 +24,8 @@
     <string name="detail_amenities_hospital_tv">Hospital</string>
     <string name="detail_amenities_library_tv">Library</string>
     <string name="detail_amenities_concierge_tv">Concierge</string>
-    <string name="detail_amenities_flexbox_title_tv">Amenities</string>
+    <string name="detail_amenities_flexbox_title_tv">Nearby amenities</string>
+    <string name="detail_sold_date_tv">SOLD DATE:</string>
+    <string name="detail_location_tv">%1s\n%2s\n%3s\n%4s</string>
+    <string name="detail_entry_date_tv">Entry date: %s</string>
 </resources>
