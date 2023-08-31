@@ -60,7 +60,6 @@ abstract class AppDatabase : RoomDatabase() {
                     val propertiesAsJson = gson.toJson(
                         listOf(
                             PropertyEntity(
-                                id = 0,
                                 type = "Flat",
                                 price = 100000,
                                 surface = 150,
@@ -82,7 +81,6 @@ abstract class AppDatabase : RoomDatabase() {
                                 agentName = "John Doe"
                             ),
                             PropertyEntity(
-                                id = 0,
                                 type = "Villa",
                                 price = 5000000,
                                 surface = 200,
@@ -109,7 +107,6 @@ abstract class AppDatabase : RoomDatabase() {
                     val locationsAsJson = gson.toJson(
                         listOf(
                             LocationEntity(
-                                id = 1,
                                 propertyId = 1,
                                 latitude = 40.765076,
                                 longitude = -73.976693,
@@ -119,7 +116,6 @@ abstract class AppDatabase : RoomDatabase() {
                                 postalCode = "10019",
                             ),
                             LocationEntity(
-                                id = 2,
                                 propertyId = 2,
                                 latitude = 40.710525,
                                 longitude = -74.008368,

@@ -18,6 +18,8 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.joinAll
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @HiltWorker
@@ -49,21 +51,20 @@ class InitializeDatabaseWorker @AssistedInject constructor(
             val pictureEntities = gson.fromJson<List<PictureEntity>>(json = picturesAsJson)
 
             if (propertyEntities != null && locationEntities != null && pictureEntities != null) {
-                val locationJobs = locationEntities.map { locationEntity ->
-                    async { addLocationUseCase.invoke(locationEntity) }
+                val propertyInsertJobs = propertyEntities.map { propertyEntity ->
+                    launch { addPropertyUseCase.invoke(propertyEntity) }
                 }
 
-                val pictureJobs = pictureEntities.map { pictureEntity ->
-                    async { addPictureUseCase.invoke(pictureEntity) }
-                }
+                propertyInsertJobs.joinAll()
 
-                val propertyJobs = propertyEntities.map { propertyEntity ->
-                    async { addPropertyUseCase.invoke(propertyEntity) }
+                val childrenJobs = locationEntities.map { locationEntity ->
+                    launch { addLocationUseCase.invoke(locationEntity) }
+                } + pictureEntities.map { pictureEntity ->
+                    launch { addPictureUseCase.invoke(pictureEntity) }
                 }
 
                 // Wait for all jobs to complete
-                val allJobs = locationJobs + pictureJobs + propertyJobs
-                allJobs.awaitAll()
+                childrenJobs.joinAll()
                 Result.success()
             } else {
                 Log.e("COUCOU", "Gson can't parse properties : $propertiesAsJson")

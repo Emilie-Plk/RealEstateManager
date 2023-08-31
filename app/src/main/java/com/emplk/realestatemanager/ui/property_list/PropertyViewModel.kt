@@ -21,10 +21,10 @@ import com.emplk.realestatemanager.ui.utils.Event
 import com.emplk.realestatemanager.ui.utils.NativePhoto
 import com.emplk.realestatemanager.ui.utils.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -72,15 +72,21 @@ class PropertyViewModel @Inject constructor(
         }.collect()
     }
 
-    val viewState: LiveData<List<PropertyViewState>> = liveData(Dispatchers.IO) {
+    val viewState: LiveData<List<PropertyViewState>> = liveData {
         val currencyType = getCurrencyTypeUseCase.invoke()
         val surfaceUnitType = getSurfaceUnitUseCase.invoke()
 
-        getPropertiesAsFlowUseCase.invoke().collect { properties ->
+        val flowToto = flow { emit("toto") }
+
+        combine(
+            flowToto,
+            getPropertiesAsFlowUseCase.invoke(),
+        ) { toto, properties ->
             emit(
                 properties.map { propertiesWithPicturesAndLocation ->
-                    val photoUrl =
-                        propertiesWithPicturesAndLocation.pictures.find { picture -> picture.isThumbnail }?.uri
+                    val photoUrl = propertiesWithPicturesAndLocation.pictures.find { picture ->
+                        picture.isThumbnail
+                    }?.uri
 
                     PropertyViewState.Property(
                         id = propertiesWithPicturesAndLocation.property.id,
@@ -127,6 +133,6 @@ class PropertyViewModel @Inject constructor(
                     )
                 }
             )
-        }
+        }.collect()
     }
 }

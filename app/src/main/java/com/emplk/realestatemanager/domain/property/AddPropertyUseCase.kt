@@ -5,7 +5,5 @@ import javax.inject.Inject
 class AddPropertyUseCase @Inject constructor(
     private val propertyRepository: PropertyRepository,
 ) {
-    suspend fun invoke(property: PropertyEntity): Long {
-        return propertyRepository.add(property)
-    }
+    suspend fun invoke(property: PropertyEntity): Long = propertyRepository.add(property)
 }

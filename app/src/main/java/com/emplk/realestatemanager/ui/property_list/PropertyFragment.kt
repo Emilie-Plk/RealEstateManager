@@ -13,7 +13,7 @@ import com.emplk.realestatemanager.ui.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class PropertiesFragment : Fragment(R.layout.properties_fragment) {
+class PropertyFragment : Fragment(R.layout.properties_fragment) {
 
     private val binding by viewBinding { PropertiesFragmentBinding.bind(it) }
     private val viewModel by viewModels<PropertyViewModel>()
@@ -47,6 +47,6 @@ class PropertiesFragment : Fragment(R.layout.properties_fragment) {
     }
 
     companion object {
-        fun newInstance() = PropertiesFragment()
+        fun newInstance() = PropertyFragment()
     }
 }
