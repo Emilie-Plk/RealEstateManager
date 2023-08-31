@@ -25,7 +25,7 @@ class MainViewModel @Inject constructor(
     private val isTabletMutableStateFlow = MutableStateFlow(false)
     private val hasAddPropertyButtonBeenClickedMutableSharedFlow = MutableSharedFlow<Boolean>()
 
-    val mainViewEventLiveData: LiveData<Event<MainViewEvent>> = liveData {
+    val viewEventLiveData: LiveData<Event<MainViewEvent>> = liveData {
         combine(
             isTabletMutableStateFlow,
             hasAddPropertyButtonBeenClickedMutableSharedFlow.asSharedFlow(),
@@ -36,19 +36,11 @@ class MainViewModel @Inject constructor(
                 "isTablet: $isTablet hasButtonBeenClicked: $hasButtonBeenClicked"
             )
             if (hasButtonBeenClicked) {
-                if (!isTablet) {
-                    emit(
-                        Event(
-                            MainViewEvent.NavigateToAddPropertyActivity
-                        )
-                    )
-                } else {
                     emit(
                         Event(
                             MainViewEvent.DisplayAddPropertyFragment
                         )
                     )
-                }
             } else {
                 if (!isTablet) {
                     emit(

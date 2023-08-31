@@ -21,9 +21,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/detail_edit_fab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="4dp"
+                    android:contentDescription="TODO"
+                    android:src="@drawable/baseline_edit_24"
+                    app:fabSize="mini"
+                    app:layout_constraintBottom_toBottomOf="@id/detail_featured_image"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
                 <ImageView
                     android:id="@+id/detail_featured_image"
@@ -40,6 +53,7 @@
                     android:id="@+id/detail_type_tv"
                     style="@style/Theme.RealEstateManager.DetailTitle"
                     android:layout_width="0dp"
+                    android:textSize="18sp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="14dp"
@@ -48,32 +62,21 @@
                     app:layout_constraintTop_toBottomOf="@id/detail_featured_image"
                     tools:text="Villa" />
 
-                <ImageView
-                    android:id="@+id/detail_location_logo"
-                    style="@style/Theme.RealEstateManager.PropertyItemLogoGray"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-
-                    android:importantForAccessibility="no"
-                    app:layout_constraintEnd_toStartOf="@id/detail_location_tv"
-                    app:layout_constraintBottom_toBottomOf="@id/detail_location_tv"
-                    android:src="@drawable/baseline_location_on_24"
-                    app:layout_constraintStart_toStartOf="@id/detail_type_tv"
-                    app:layout_constraintTop_toBottomOf="@id/detail_type_tv" />
-
                 <TextView
                     android:id="@+id/detail_location_tv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
                     android:layout_marginEnd="16dp"
+                    android:drawablePadding="8dp"
                     android:ellipsize="end"
                     android:maxLines="5"
                     android:text="@string/detail_location_tv"
+                    app:drawableStartCompat="@drawable/baseline_location_on_24"
+                    app:drawableTint="@color/lighter_gray"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/detail_entry_date_tv"
-                    app:layout_constraintStart_toEndOf="@id/detail_location_logo"
-                    app:layout_constraintTop_toTopOf="@+id/detail_location_logo"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/detail_type_tv"
                     tools:text="123456789123\nMain Street\n12345\nSuper Long City Name City" />
 
                 <TextView
@@ -82,8 +85,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
-                    android:textAlignment="textEnd"
                     android:text="@string/detail_entry_date_tv"
+                    android:textAlignment="textEnd"
                     app:layout_constraintBottom_toTopOf="@id/detail_agent_name_tv"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/detail_price_tv"
@@ -254,11 +257,11 @@
         <TextView
             android:id="@+id/detail_amenities_tv"
             android:layout_width="0dp"
-            android:textStyle="bold"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginTop="16dp"
             android:text="@string/detail_amenities_flexbox_title_tv"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/horizontal_barrier" />
 
@@ -354,7 +357,7 @@
                 tools:visibility="visible" />
 
             <TextView
-                android:id="@+id/detail_amenities_concierge"
+                android:id="@+id/detail_amenities_concierge_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
@@ -363,9 +366,23 @@
                 android:text="@string/detail_amenities_concierge_tv"
                 app:drawableStartCompat="@drawable/sharp_doorbell_24"
                 tools:visibility="visible" />
-
-
         </com.google.android.flexbox.FlexboxLayout>
+
+        <ImageView
+            android:id="@+id/detail_map_iv"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:layout_marginStart="16dp"
+
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:src="@drawable/detail_dummy_map"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/detail_amenities_flexbox" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

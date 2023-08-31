@@ -8,6 +8,7 @@ import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.PropertiesFragmentBinding
 import com.emplk.realestatemanager.ui.detail.DetailActivity
 import com.emplk.realestatemanager.ui.detail.DetailFragment
+import com.emplk.realestatemanager.ui.main.MainActivity
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
