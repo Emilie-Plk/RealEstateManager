@@ -8,6 +8,7 @@ import androidx.fragment.app.viewModels
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.DetailFragmentBinding
 import com.emplk.realestatemanager.ui.edit.EditPropertyFragment
+import com.emplk.realestatemanager.ui.main.MainActivity
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.NativePhoto.Companion.load
 import com.emplk.realestatemanager.ui.utils.viewBinding
@@ -33,19 +34,24 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.viewEventLiveData.observeEvent(viewLifecycleOwner) { viewEvent ->
-            when (viewEvent) {
+        viewModel.viewEventLiveData.observeEvent(viewLifecycleOwner) { event ->
+            when (event) {
                 is DetailViewEvent.DisplayEditFragmentTablet -> {
                     Log.d("COUCOU DetailFragment", "DisplayEditFragmentTablet: ")
-                    parentFragmentManager.beginTransaction()
-                        .replace(R.id.main_FrameLayout_container_detail, EditPropertyFragment.newInstance(viewEvent.id))
-                        .addToBackStack(null)
-                        .commit()
+                    startActivity(
+                        MainActivity.newIntent(
+                            requireContext()
+                        )
+                    )
                 }
 
                 is DetailViewEvent.DisplayEditFragmentPhone -> {
                     Log.d("COUCOU DetailFragment", "DisplayEditFragmentPhone: ")
-                  //  startActivity(MainActivity.newIntent(requireContext(), viewEvent.id))
+                    startActivity(
+                        MainActivity.newIntent(
+                            requireContext()
+                        )
+                    )
                 }
             }
         }

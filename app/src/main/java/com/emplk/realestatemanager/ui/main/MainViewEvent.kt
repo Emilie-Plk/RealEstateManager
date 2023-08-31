@@ -1,8 +1,9 @@
 package com.emplk.realestatemanager.ui.main
 
 sealed class MainViewEvent {
-    object DisplayAddPropertyFragment : MainViewEvent()
+    object DisplayPropertyListFragment : MainViewEvent()
+    object DisplayAddPropertyFragmentOnPhone : MainViewEvent()
+    object DisplayAddPropertyFragmentOnTablet : MainViewEvent()
     data class DisplayEditPropertyFragment(val id: Long) : MainViewEvent()
-    object DidNotClickedAddPropertyButtonPhone : MainViewEvent()
-    object DidNotClickedAddPropertyButtonTablet : MainViewEvent()
+    object DisplayBlankFragment : MainViewEvent()
 }

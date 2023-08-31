@@ -1,76 +1,99 @@
 package com.emplk.realestatemanager.ui.main
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
-import androidx.lifecycle.viewModelScope
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
+import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdFlowUseCase
+import com.emplk.realestatemanager.domain.navigation.GetNavigationTypeUseCase
+import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
+import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.screen_width.SetScreenWidthTypeUseCase
 import com.emplk.realestatemanager.ui.utils.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val setScreenWidthTypeUseCase: SetScreenWidthTypeUseCase,
-    private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
+    private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
+    private val getNavigationTypeUseCase: GetNavigationTypeUseCase,
+    private val getCurrentPropertyIdFlowUseCase: GetCurrentPropertyIdFlowUseCase,
+    coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : ViewModel() {
     private val isTabletMutableStateFlow = MutableStateFlow(false)
     private val hasAddPropertyButtonBeenClickedMutableSharedFlow = MutableSharedFlow<Boolean>()
 
-    val viewEventLiveData: LiveData<Event<MainViewEvent>> = liveData {
+    val viewEventLiveData: LiveData<Event<MainViewEvent>> = liveData(coroutineDispatcherProvider.io) {
         combine(
-            isTabletMutableStateFlow,
-            hasAddPropertyButtonBeenClickedMutableSharedFlow.asSharedFlow(),
-        )
-        { isTablet, hasButtonBeenClicked ->
-            Log.d(
-                "COUCOU",
-                "isTablet: $isTablet hasButtonBeenClicked: $hasButtonBeenClicked"
-            )
-            if (hasButtonBeenClicked) {
+            isTabletMutableStateFlow.asStateFlow(),
+            getNavigationTypeUseCase.invoke(),
+            getCurrentPropertyIdFlowUseCase.invoke(),
+        ) { isTablet, navigationType, currentPropertyId ->
+            when (navigationType) {
+                NavigationFragmentType.LIST_FRAGMENT ->
                     emit(
                         Event(
-                            MainViewEvent.DisplayAddPropertyFragment
+                            MainViewEvent.DisplayPropertyListFragment
                         )
                     )
-            } else {
-                if (!isTablet) {
-                    emit(
-                        Event(
-                            MainViewEvent.DidNotClickedAddPropertyButtonPhone
+
+                NavigationFragmentType.ADD_FRAGMENT ->
+                    if (!isTablet) {
+                        emit(
+                            Event(
+                                MainViewEvent.DisplayAddPropertyFragmentOnPhone
+                            )
                         )
-                    )
-                } else {
-                    emit(
-                        Event(
-                            MainViewEvent.DidNotClickedAddPropertyButtonTablet
+                    } else {
+                        emit(
+                            Event(
+                                MainViewEvent.DisplayAddPropertyFragmentOnTablet
+                            )
                         )
-                    )
-                }
+                    }
+
+                NavigationFragmentType.EDIT_FRAGMENT ->
+                    if (currentPropertyId >= 1) {
+                        emit(
+                            Event(
+                                MainViewEvent.DisplayEditPropertyFragment(
+                                    currentPropertyId
+                                )
+                            )
+                        )
+                    } else {
+                        emit(
+                            Event(
+                                MainViewEvent.DisplayBlankFragment
+                            )
+                        )
+                    }
+
             }
         }.collect()
     }
 
     fun onAddPropertyClicked() {
-        viewModelScope.launch(coroutineDispatcherProvider.io) {
-            hasAddPropertyButtonBeenClickedMutableSharedFlow.emit(true)
-        }
+        setNavigationTypeUseCase.invoke(
+            NavigationFragmentType.ADD_FRAGMENT
+        )
+        /*       viewModelScope.launch(coroutineDispatcherProvider.io) {
+                   hasAddPropertyButtonBeenClickedMutableSharedFlow.emit(true)
+               }*/
     }
 
     fun onResume(isTablet: Boolean) {
         isTabletMutableStateFlow.value = isTablet
         setScreenWidthTypeUseCase.invoke(isTablet)
-        viewModelScope.launch(coroutineDispatcherProvider.io) {
-            hasAddPropertyButtonBeenClickedMutableSharedFlow.emit(false)
-        }
-        Log.d("COUCOU", "onResume: isTablet = $isTablet")
+        /*    viewModelScope.launch(coroutineDispatcherProvider.io) {
+                hasAddPropertyButtonBeenClickedMutableSharedFlow.emit(false)  // TODO: NINO je suis obligée de faire ça sinon ça garde "true"
+            }*/
     }
 }

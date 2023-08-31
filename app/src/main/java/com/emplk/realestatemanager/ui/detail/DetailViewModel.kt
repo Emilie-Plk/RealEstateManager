@@ -4,21 +4,26 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
-import androidx.lifecycle.viewModelScope
 import com.emplk.realestatemanager.R
+import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.amenity.Amenity
+import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdFlowUseCase
 import com.emplk.realestatemanager.domain.get_properties.GetPropertyByItsIdUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.SurfaceUnitType
+import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
+import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
+import com.emplk.realestatemanager.domain.screen_width.GetScreenWidthTypeFlowUseCase
+import com.emplk.realestatemanager.domain.screen_width.ScreenWidthType
 import com.emplk.realestatemanager.ui.utils.Event
 import com.emplk.realestatemanager.ui.utils.NativePhoto
 import com.emplk.realestatemanager.ui.utils.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import javax.inject.Inject
@@ -28,27 +33,56 @@ class DetailViewModel @Inject constructor(
     private val getPropertyByItsIdUseCase: GetPropertyByItsIdUseCase,
     private val getCurrencyTypeUseCase: GetCurrencyTypeUseCase,
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
-    private val savedStateHandle: SavedStateHandle,  // TODO: NINO ou passer par repo ? cf line 41
+    private val getScreenWidthTypeFlowUseCase: GetScreenWidthTypeFlowUseCase,
+    private val getCurrentPropertyIdFlowUseCase: GetCurrentPropertyIdFlowUseCase,
+    private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
+    coroutineDispatcherProvider: CoroutineDispatcherProvider,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-
     private val id = savedStateHandle.get<Long>(DetailFragment.EXTRA_ESTATE_ID)
-    private val hasEditButtonBeenClickedMutableSharedFlow = MutableSharedFlow<Boolean>()
 
-    val viewEventLiveData: LiveData<Event<DetailViewEvent>> = liveData(Dispatchers.IO) {
-        hasEditButtonBeenClickedMutableSharedFlow.collect {
-            emit(
-                Event(
-                    DetailViewEvent.DisplayEditFragmentTablet(
-                        id ?: -1
-                    )
-                )
-            )
-        }
+    val viewEventLiveData: LiveData<Event<DetailViewEvent>> = liveData(coroutineDispatcherProvider.io) {
+        combine(
+            getScreenWidthTypeFlowUseCase.invoke(),
+            getCurrentPropertyIdFlowUseCase.invoke(),
+        ) { screenWidthType, currentId ->
+            if (currentId >= 0) {
+                when (screenWidthType) {
+                    ScreenWidthType.TABLET ->
+                        emit(
+                            Event(
+                                DetailViewEvent.DisplayEditFragmentTablet(
+                                    currentId
+                                )
+                            )
+                        )
+
+                    ScreenWidthType.PHONE ->
+                        emit(
+                            Event(
+                                DetailViewEvent.DisplayEditFragmentPhone(
+                                    currentId
+                                )
+                            )
+                        )
+
+                    ScreenWidthType.UNDEFINED -> {
+                        emit(
+                            Event(
+                                DetailViewEvent.DisplayEditFragmentPhone(
+                                    currentId
+                                )
+                            )
+                        )
+                    }
+                }
+            }
+        }.collect()
     }
 
     val viewState: LiveData<DetailViewState> = liveData(Dispatchers.IO) {
         id?.let { propertyId ->
-            getPropertyByItsIdUseCase.invoke(propertyId).collect() {
+            getPropertyByItsIdUseCase.invoke(propertyId).collect {
                 val currencyType = getCurrencyTypeUseCase.invoke()
                 val surfaceUnitType = getSurfaceUnitUseCase.invoke()
                 emit(
@@ -145,8 +179,6 @@ class DetailViewModel @Inject constructor(
     }
 
     fun onEditClicked() {
-        viewModelScope.launch {
-            hasEditButtonBeenClickedMutableSharedFlow.emit(true)
-        }
+        setNavigationTypeUseCase.invoke(NavigationFragmentType.EDIT_FRAGMENT)
     }
 }
