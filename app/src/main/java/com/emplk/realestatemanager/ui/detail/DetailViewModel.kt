@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.amenity.Amenity
 import com.emplk.realestatemanager.domain.get_properties.GetPropertyByItsIdUseCase
@@ -11,10 +12,13 @@ import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.SurfaceUnitType
+import com.emplk.realestatemanager.ui.utils.Event
 import com.emplk.realestatemanager.ui.utils.NativePhoto
 import com.emplk.realestatemanager.ui.utils.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import javax.inject.Inject
@@ -24,11 +28,25 @@ class DetailViewModel @Inject constructor(
     private val getPropertyByItsIdUseCase: GetPropertyByItsIdUseCase,
     private val getCurrencyTypeUseCase: GetCurrencyTypeUseCase,
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,  // TODO: NINO ou passer par repo ? cf line 41
 ) : ViewModel() {
-    val viewState: LiveData<DetailViewState> = liveData(Dispatchers.IO) {
 
-        val id = savedStateHandle.get<Long>(DetailFragment.EXTRA_ESTATE_ID)
+    private val id = savedStateHandle.get<Long>(DetailFragment.EXTRA_ESTATE_ID)
+    private val hasEditButtonBeenClickedMutableSharedFlow = MutableSharedFlow<Boolean>()
+
+    val viewEventLiveData: LiveData<Event<DetailViewEvent>> = liveData(Dispatchers.IO) {
+        hasEditButtonBeenClickedMutableSharedFlow.collect {
+            emit(
+                Event(
+                    DetailViewEvent.DisplayEditFragmentTablet(
+                        id ?: -1
+                    )
+                )
+            )
+        }
+    }
+
+    val viewState: LiveData<DetailViewState> = liveData(Dispatchers.IO) {
         id?.let { propertyId ->
             getPropertyByItsIdUseCase.invoke(propertyId).collect() {
                 val currencyType = getCurrencyTypeUseCase.invoke()
@@ -123,6 +141,12 @@ class DetailViewModel @Inject constructor(
                     )
                 )
             }
+        }
+    }
+
+    fun onEditClicked() {
+        viewModelScope.launch {
+            hasEditButtonBeenClickedMutableSharedFlow.emit(true)
         }
     }
 }

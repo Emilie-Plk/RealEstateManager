@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commitNow
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.MainActivityBinding
+import com.emplk.realestatemanager.ui.add.AddPropertyFragment
+import com.emplk.realestatemanager.ui.edit.EditPropertyFragment
 import com.emplk.realestatemanager.ui.property_list.PropertiesFragment
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.viewBinding
@@ -33,26 +35,29 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.addPropertyFab?.setOnClickListener {
-            Log.d("COUCOU", "addPropertyFab clicked")
             viewModel.onAddPropertyClicked()
         }
 
-        viewModel.mainViewEventLiveData.observeEvent(this) { event ->
+        viewModel.viewEventLiveData.observeEvent(this) { event ->
             when (event) {
                 is MainViewEvent.DisplayAddPropertyFragment -> {
-                    Snackbar.make(
-                        binding.root,
-                        "Display Add Property Fragment",
-                        Snackbar.LENGTH_SHORT
-                    ).show()
+                    Log.d("COUCOU MainActivity", "DisplayAddPropertyFragment: ")
+                    supportFragmentManager.commitNow {
+                        replace(
+                            binding.mainFrameLayoutContainerProperties.id,
+                            AddPropertyFragment()
+                        )
+                    }
                 }
 
-                is MainViewEvent.NavigateToAddPropertyActivity -> {
-                    Snackbar.make(
-                        binding.root,
-                        "Navigate To Add PropertyActivity",
-                        Snackbar.LENGTH_SHORT
-                    ).show()
+                is MainViewEvent.DisplayEditPropertyFragment -> {
+                    Log.d("COUCOU MainActivity", "DisplayEditPropertyFragment: ")
+                    supportFragmentManager.commitNow {
+                        replace(
+                            binding.mainFrameLayoutContainerProperties.id,
+                            AddPropertyFragment()
+                        )
+                    }
                 }
 
                 is MainViewEvent.DidNotClickedAddPropertyButtonPhone -> {
