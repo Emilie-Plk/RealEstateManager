@@ -37,9 +37,7 @@ class DetailViewModel @Inject constructor(
     private val getCurrentPropertyIdFlowUseCase: GetCurrentPropertyIdFlowUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     coroutineDispatcherProvider: CoroutineDispatcherProvider,
-    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-    private val id = savedStateHandle.get<Long>(DetailFragment.EXTRA_ESTATE_ID)
 
     val viewEventLiveData: LiveData<Event<DetailViewEvent>> = liveData(coroutineDispatcherProvider.io) {
         combine(
@@ -81,7 +79,7 @@ class DetailViewModel @Inject constructor(
     }
 
     val viewState: LiveData<DetailViewState> = liveData(Dispatchers.IO) {
-        id?.let { propertyId ->
+        getCurrentPropertyIdFlowUseCase.invoke().collect { propertyId ->
             getPropertyByItsIdUseCase.invoke(propertyId).collect {
                 val currencyType = getCurrencyTypeUseCase.invoke()
                 val surfaceUnitType = getSurfaceUnitUseCase.invoke()

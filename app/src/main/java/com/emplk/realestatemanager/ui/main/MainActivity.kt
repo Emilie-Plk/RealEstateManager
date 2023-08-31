@@ -11,6 +11,7 @@ import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.MainActivityBinding
 import com.emplk.realestatemanager.ui.add.AddPropertyFragment
 import com.emplk.realestatemanager.ui.blank.BlankFragment
+import com.emplk.realestatemanager.ui.detail.DetailFragment
 import com.emplk.realestatemanager.ui.property_list.PropertiesFragment
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.viewBinding
@@ -51,7 +52,7 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.commitNow {
                         replace(
                             binding.mainFrameLayoutContainerProperties.id,
-                            PropertiesFragment()
+                            PropertiesFragment.newInstance()
                         )
                     }
                 }
@@ -61,7 +62,7 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.commitNow {
                         replace(
                             binding.mainFrameLayoutContainerProperties.id,
-                            AddPropertyFragment()
+                            AddPropertyFragment.newInstance()
                         )
                     }
                 }
@@ -71,14 +72,14 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.commitNow {
                         replace(
                             binding.mainFrameLayoutContainerProperties.id,
-                            BlankFragment()
+                            BlankFragment.newInstance()
                         )
                     }
                     supportFragmentManager.commitNow {
                         binding.mainFrameLayoutContainerDetail?.let {
                             replace(
                                 it.id,
-                                AddPropertyFragment()
+                                AddPropertyFragment.newInstance()
                             )
                         }
                     }
@@ -90,7 +91,7 @@ class MainActivity : AppCompatActivity() {
                         binding.mainFrameLayoutContainerDetail?.let {
                             replace(
                                 it.id,
-                                AddPropertyFragment()
+                                AddPropertyFragment.newInstance()
                             )
                         }
                     }
@@ -101,8 +102,20 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.commitNow {
                         replace(
                             binding.mainFrameLayoutContainerProperties.id,
-                            BlankFragment()
+                            BlankFragment.newInstance()
                         )
+                    }
+                }
+
+                is MainViewEvent.DisplayDetailFragment -> {
+                    Log.d("COUCOU MainActivity", "DisplayDetailFragment: ")
+                    supportFragmentManager.commitNow {
+                        binding.mainFrameLayoutContainerDetail?.let {
+                            replace(
+                                it.id,
+                                DetailFragment.newInstance()
+                            )
+                        }
                     }
                 }
             }
