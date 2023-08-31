@@ -12,6 +12,8 @@ import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.SurfaceUnitType
+import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
+import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.screen_width.GetScreenWidthTypeFlowUseCase
 import com.emplk.realestatemanager.domain.screen_width.ScreenWidthType
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
@@ -33,6 +35,7 @@ class PropertyViewModel @Inject constructor(
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
     private val getScreenWidthTypeFlowUseCase: GetScreenWidthTypeFlowUseCase,
     private val setCurrentPropertyIdUseCase: SetCurrentPropertyIdUseCase,
+    private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : ViewModel() {
 
@@ -48,9 +51,7 @@ class PropertyViewModel @Inject constructor(
                     ScreenWidthType.TABLET -> {
                         emit(
                             Event(
-                                PropertyViewEvent.DisplayDetailFragment(
-                                    propertyId
-                                )
+                                PropertyViewEvent.DisplayDetailFragment
                             )
                         )
                     }
@@ -58,9 +59,7 @@ class PropertyViewModel @Inject constructor(
                     ScreenWidthType.PHONE -> {
                         emit(
                             Event(
-                                PropertyViewEvent.NavigateToDetailActivity(
-                                    propertyId
-                                )
+                                PropertyViewEvent.NavigateToDetailActivity
                             )
                         )
                     }
@@ -121,6 +120,8 @@ class PropertyViewModel @Inject constructor(
                         onClickEvent = EquatableCallback {
                             viewModelScope.launch {
                                 propertyIdMutableSharedFlow.emit(propertiesWithPicturesAndLocation.property.id)
+                                setNavigationTypeUseCase.invoke(NavigationFragmentType.DETAIL_FRAGMENT)
+                                setCurrentPropertyIdUseCase.invoke(propertiesWithPicturesAndLocation.property.id)
                             }
                         }
                     )

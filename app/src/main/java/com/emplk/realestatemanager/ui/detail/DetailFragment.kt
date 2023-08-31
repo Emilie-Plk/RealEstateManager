@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.DetailFragmentBinding
-import com.emplk.realestatemanager.ui.edit.EditPropertyFragment
 import com.emplk.realestatemanager.ui.main.MainActivity
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.NativePhoto.Companion.load
@@ -21,14 +20,7 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
     private val viewModel by viewModels<DetailViewModel>()
 
     companion object {
-        const val EXTRA_ESTATE_ID = "EXTRA_ESTATE_ID"
-        fun newInstance(id: Long): DetailFragment {
-            val args = Bundle()
-            args.putLong(EXTRA_ESTATE_ID, id)
-            val fragment = DetailFragment()
-            fragment.arguments = args
-            return fragment
-        }
+        fun newInstance() = DetailFragment()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -37,21 +29,21 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
         viewModel.viewEventLiveData.observeEvent(viewLifecycleOwner) { event ->
             when (event) {
                 is DetailViewEvent.DisplayEditFragmentTablet -> {
-                    Log.d("COUCOU DetailFragment", "DisplayEditFragmentTablet: ")
+               /*     Log.d("COUCOU DetailFragment", "DisplayEditFragmentTablet: ")
                     startActivity(
                         MainActivity.newIntent(
                             requireContext()
                         )
-                    )
+                    )*/
                 }
 
                 is DetailViewEvent.DisplayEditFragmentPhone -> {
-                    Log.d("COUCOU DetailFragment", "DisplayEditFragmentPhone: ")
+                   /* Log.d("COUCOU DetailFragment", "DisplayEditFragmentPhone: ")
                     startActivity(
                         MainActivity.newIntent(
                             requireContext()
                         )
-                    )
+                    )*/
                 }
             }
         }

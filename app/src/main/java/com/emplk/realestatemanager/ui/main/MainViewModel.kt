@@ -28,7 +28,6 @@ class MainViewModel @Inject constructor(
     coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : ViewModel() {
     private val isTabletMutableStateFlow = MutableStateFlow(false)
-    private val hasAddPropertyButtonBeenClickedMutableSharedFlow = MutableSharedFlow<Boolean>()
 
     val viewEventLiveData: LiveData<Event<MainViewEvent>> = liveData(coroutineDispatcherProvider.io) {
         combine(
@@ -63,9 +62,22 @@ class MainViewModel @Inject constructor(
                     if (currentPropertyId >= 1) {
                         emit(
                             Event(
-                                MainViewEvent.DisplayEditPropertyFragment(
-                                    currentPropertyId
-                                )
+                                MainViewEvent.DisplayEditPropertyFragment
+                            )
+                        )
+                    } else {
+                        emit(
+                            Event(
+                                MainViewEvent.DisplayBlankFragment
+                            )
+                        )
+                    }
+
+                NavigationFragmentType.DETAIL_FRAGMENT ->
+                    if (currentPropertyId >= 1) {
+                        emit(
+                            Event(
+                                MainViewEvent.DisplayDetailFragment
                             )
                         )
                     } else {

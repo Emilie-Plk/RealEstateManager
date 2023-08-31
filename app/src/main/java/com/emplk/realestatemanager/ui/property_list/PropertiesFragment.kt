@@ -31,16 +31,22 @@ class PropertiesFragment : Fragment(R.layout.properties_fragment) {
             when (event) {
                 is PropertyViewEvent.NavigateToDetailActivity ->
                     startActivity(
-                        DetailActivity.navigate(requireContext(), event.id)
+                        DetailActivity.newIntent(
+                            requireContext()
+                        )
                     )
 
                 is PropertyViewEvent.DisplayDetailFragment ->
                     parentFragmentManager.beginTransaction()
                         .replace(
-                            R.id.main_FrameLayout_container_detail, DetailFragment.newInstance(event.id)
+                            R.id.main_FrameLayout_container_detail, DetailFragment.newInstance()
                         )
                         .commitNow()
             }
         }
+    }
+
+    companion object {
+        fun newInstance() = PropertiesFragment()
     }
 }

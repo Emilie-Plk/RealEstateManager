@@ -4,6 +4,7 @@ sealed class MainViewEvent {
     object DisplayPropertyListFragment : MainViewEvent()
     object DisplayAddPropertyFragmentOnPhone : MainViewEvent()
     object DisplayAddPropertyFragmentOnTablet : MainViewEvent()
-    data class DisplayEditPropertyFragment(val id: Long) : MainViewEvent()
+    object DisplayEditPropertyFragment : MainViewEvent()
     object DisplayBlankFragment : MainViewEvent()
+    object DisplayDetailFragment : MainViewEvent()
 }
