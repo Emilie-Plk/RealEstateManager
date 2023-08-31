@@ -17,7 +17,4 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
         fun newInstance() = AddPropertyFragment()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
 }

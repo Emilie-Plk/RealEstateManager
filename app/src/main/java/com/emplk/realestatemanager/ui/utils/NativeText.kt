@@ -21,8 +21,10 @@ sealed class NativeText {
             context.resources.getQuantityString(id, number, *args.toTypedArray())
     }
 
-    data class Argument(@StringRes val id: Int,
-        val arg: Any) : NativeText() {
+    data class Argument(
+        @StringRes val id: Int,
+        val arg: Any
+    ) : NativeText() {
         override fun toCharSequence(context: Context): CharSequence = context.getString(id, arg)
     }
 

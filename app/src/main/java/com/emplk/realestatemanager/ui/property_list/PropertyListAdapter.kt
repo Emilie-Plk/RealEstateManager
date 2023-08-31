@@ -67,7 +67,7 @@ class PropertyListAdapter :
                     }
 
                     else -> {
-                    //    binding.root.foreground = null
+                        //    binding.root.foreground = null
                         binding.propertyItemSoldBannerImageView.visibility = View.GONE
                         binding.propertyItemSoldTextView.visibility = View.GONE
                     }
