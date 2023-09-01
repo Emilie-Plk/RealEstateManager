@@ -4,8 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.commitNow
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.MainActivityBinding
@@ -24,12 +28,15 @@ class MainActivity : AppCompatActivity() {
     private val viewModel by viewModels<MainViewModel>()
 
     companion object {
-        fun newIntent(requireContext: Context): Intent = Intent(requireContext, MainActivity::class.java)
+        fun newIntent(requireContext: Context) = Intent(requireContext, MainActivity::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        setupToolbar()
+        setupMenu()
 
         if (savedInstanceState == null) {
             supportFragmentManager.commitNow {
@@ -39,6 +46,7 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         }
+
 
         binding.addPropertyFab?.setOnClickListener {
             viewModel.onAddPropertyClicked()
@@ -120,6 +128,56 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.main_menu_map_view -> {
+                Log.d("COUCOU MainActivity", "DisplayMapFragment: ")
+                true
+            }
+
+            R.id.main_menu_property_filter -> {
+                Log.d("COUCOU MainActivity", "DisplayFilterFragment: ")
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun setupToolbar() {
+        val toolbar = binding.mainToolbar
+        toolbar.setTitle(R.string.app_name)
+        setSupportActionBar(toolbar)
+    }
+
+    private fun setupMenu() {
+        addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.menu, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean = when (menuItem.itemId) {
+                R.id.main_menu_property_filter -> {
+                    Log.d("COUCOU MainActivity", "DisplayFilterFragment: ")
+                    true
+                }
+
+                R.id.main_menu_map_view -> {
+                    Log.d("COUCOU MainActivity", "DisplayMapFragment: ")
+                    true
+                }
+
+                R.id.main_menu_add_property -> {
+                    viewModel.onAddPropertyClicked()
+                    true
+                }
+
+                else -> false
+            }
+        })
     }
 
     override fun onResume() {

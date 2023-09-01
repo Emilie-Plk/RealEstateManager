@@ -1,8 +1,9 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Base.Theme.RealEstateManager" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Base.Theme.RealEstateManager" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/primary_dark</item>
+        <item name="android:statusBarColor">@color/primary_dark</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorSecondary">@color/secondary</item>
         <item name="colorSecondaryVariant">@color/secondary_dark</item>
@@ -13,6 +14,13 @@
     </style>
 
     <style name="Theme.RealEstateManager" parent="Base.Theme.RealEstateManager" />
+
+    <style name="Theme.RealEstateManager.Toolbar" parent="Widget.Material3.Toolbar">
+        <item name="titleTextColor">@color/almost_white</item>
+        <item name="colorOnPrimary">@color/almost_white</item>
+        <item name="navigationIconTint">@color/almost_white</item>
+
+    </style>
 
     <style name="Theme.RealEstateManager.PropertyTypeTitle">
         <item name="android:textSize">16sp</item>
