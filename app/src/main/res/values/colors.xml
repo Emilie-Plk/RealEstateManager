@@ -10,9 +10,11 @@
     <color name="primary_dark">#2d3246</color>
     <color name="primary_light">#677491</color>
     <color name="secondary">#fcb332</color>
+    <color name="secondary_translucent">#17FCB332</color>
     <color name="secondary_dark">#c98e2e</color>
     <color name="secondary_light">#fedeaa</color>
     <color name="secondary_super_light">#fff2dd</color>
     <color name="almost_white">#F6F6F5</color>
     <color name="cherry_red">#C51162</color>
+    <color name="transparent">#00FFFFFF</color>
 </resources>

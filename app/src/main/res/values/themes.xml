@@ -65,4 +65,30 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+   <!-- ADD PROPERTY-->
+    <style name="Theme.RealEstateManager.PropertyTypeRadioButton">
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Theme.RealEstateManager.AddPropertyTitle">
+        <item name="android:textColor">@color/primary</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Theme.RealEstateManager.AddPropertySubtitle">
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_marginTop">14sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Theme.RealEstateManager.AddPropertyTextInputLayout">
+        <item name="boxBackgroundColor">@color/secondary_translucent</item>
+        <item name="android:background">@color/secondary_translucent</item>
+
+    </style>
+
 </resources>

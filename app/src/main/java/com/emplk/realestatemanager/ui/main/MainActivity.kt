@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
@@ -35,6 +36,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
+
         setupToolbar()
         setupMenu()
 
@@ -48,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        binding.addPropertyFab?.setOnClickListener {
+        binding.mainAddPropertyFab?.setOnClickListener {
             viewModel.onAddPropertyClicked()
         }
 
@@ -63,6 +66,7 @@ class MainActivity : AppCompatActivity() {
                             PropertiesFragment.newInstance()
                         )
                     }
+                    binding.mainAddPropertyFab?.visibility = View.VISIBLE
                 }
 
                 is MainViewEvent.DisplayAddPropertyFragmentOnPhone -> {
@@ -73,6 +77,7 @@ class MainActivity : AppCompatActivity() {
                             AddPropertyFragment.newInstance()
                         )
                     }
+                    binding.mainAddPropertyFab?.visibility = View.GONE
                 }
 
                 is MainViewEvent.DisplayAddPropertyFragmentOnTablet -> {
@@ -103,6 +108,7 @@ class MainActivity : AppCompatActivity() {
                             )
                         }
                     }
+                    binding.mainAddPropertyFab?.visibility = View.GONE
                 }
 
                 is MainViewEvent.DisplayBlankFragment -> {
@@ -179,6 +185,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
     }
+
 
     override fun onResume() {
         super.onResume()

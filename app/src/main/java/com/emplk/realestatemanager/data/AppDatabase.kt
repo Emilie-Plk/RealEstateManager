@@ -82,7 +82,6 @@ abstract class AppDatabase : RoomDatabase() {
                                 agentName = "John Doe"
                             ),
                             PropertyEntity(
-                                id = 0,
                                 type = "Villa",
                                 price = 5000000,
                                 surface = 200,
