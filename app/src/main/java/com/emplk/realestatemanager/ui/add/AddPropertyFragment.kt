@@ -1,7 +1,5 @@
 package com.emplk.realestatemanager.ui.add
 
-import android.os.Bundle
-import android.view.View
 import androidx.fragment.app.Fragment
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.AddPropertyFragmentBinding
@@ -15,6 +13,12 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
 
     companion object {
         fun newInstance() = AddPropertyFragment()
+
     }
 
+    override fun onResume() {
+        super.onResume()
+
+    }
 }
+

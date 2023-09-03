@@ -1,15 +1,470 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.add.AddPropertyFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="ADD/EDIT PROPERTY FRAGMENT" />
+        android:layout_height="0dp"
+        android:layout_margin="8dp">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/add_property_title_tv"
+            style="@style/Theme.RealEstateManager.AddPropertyTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Add new property"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/add_property_type_radioGroup_tv"
+            style="@style/Theme.RealEstateManager.AddPropertySubtitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/add_property_type_radioGroup_tv"
+            android:textColor="@color/primary_dark"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/add_property_title_tv" />
+
+
+        <HorizontalScrollView
+            android:id="@+id/add_property_type_radioGroup_scrollView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/add_property_type_radioGroup_tv">-->
+
+
+            <RadioGroup
+                android:id="@+id/add_property_type_radioGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="parent">
+
+                <RadioButton
+                    android:id="@+id/add_property_type_radioGroup_penthouse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:text="Penthouse" />
+
+                <RadioButton
+                    android:id="@+id/add_property_type_radioGroup_townhouse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:text="Townhouse" />
+
+                <RadioButton
+                    android:id="@+id/add_property_type_radioGroup_villa"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:text="Villa" />
+
+                <RadioButton
+                    android:id="@+id/add_property_type_radioGroup_loft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:text="Loft" />
+
+
+                <RadioButton
+                    android:id="@+id/add_property_type_radioGroup_manor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:text="Manor" />
+
+                <RadioButton
+                    android:id="@+id/add_property_type_radioGroup_other"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Other" />
+            </RadioGroup>
+        </HorizontalScrollView>
+
+
+        <TextView
+            android:id="@+id/add_property_address_tv"
+            style="@style/Theme.RealEstateManager.AddPropertySubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Address"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/add_property_type_radioGroup_scrollView" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/add_property_address_textInputLayout"
+            style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:endIconMode="clear_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/add_property_address_tv">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/add_property_address_textInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionDone"
+                android:inputType="textCapSentences"
+                android:lines="1"
+                android:padding="16dp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/add_property_price_tv"
+            style="@style/Theme.RealEstateManager.AddPropertySubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Price"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/add_property_address_textInputLayout" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/add_property_price_textInputLayout"
+            style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:endIconMode="clear_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/add_property_price_tv">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/add_property_price_textInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionDone"
+                android:inputType="number"
+                android:lines="1"
+                android:padding="16dp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/add_property_surface_tv"
+            style="@style/Theme.RealEstateManager.AddPropertySubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Surface"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/add_property_price_textInputLayout" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/add_property_surface_textInputLayout"
+            style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:endIconMode="clear_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/add_property_surface_tv">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/add_property_surface_textInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionDone"
+                android:inputType="number"
+                android:lines="1"
+                android:padding="16dp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/add_property_rooms_tv"
+            style="@style/Theme.RealEstateManager.AddPropertySubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rooms"
+            app:layout_constraintEnd_toEndOf="@+id/add_property_rooms_incrementButton"
+            app:layout_constraintStart_toStartOf="@+id/add_property_rooms_decrementButton"
+            app:layout_constraintTop_toBottomOf="@id/add_property_surface_textInputLayout" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/add_property_rooms_textInputLayout"
+            style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toStartOf="@id/add_property_rooms_incrementButton"
+            app:layout_constraintStart_toEndOf="@id/add_property_rooms_decrementButton"
+            app:layout_constraintTop_toBottomOf="@id/add_property_rooms_tv">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/add_property_rooms_editText"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:imeOptions="actionDone"
+                android:inputType="numberDecimal" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/add_property_rooms_decrementButton"
+            style="@style/Widget.AppCompat.Button.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-"
+            app:layout_constraintBottom_toBottomOf="@id/add_property_rooms_textInputLayout"
+            app:layout_constraintEnd_toStartOf="@+id/add_property_rooms_textInputLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/add_property_rooms_textInputLayout" />
+
+        <Button
+            android:id="@+id/add_property_rooms_incrementButton"
+            style="@style/Widget.AppCompat.Button.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="+"
+            app:layout_constraintBottom_toBottomOf="@id/add_property_rooms_textInputLayout"
+            app:layout_constraintEnd_toStartOf="@id/add_property_bedrooms_decrementButton"
+            app:layout_constraintStart_toEndOf="@+id/add_property_rooms_textInputLayout"
+            app:layout_constraintTop_toTopOf="@id/add_property_rooms_textInputLayout" />
+
+        <TextView
+            android:id="@+id/add_property_bedrooms_tv"
+            style="@style/Theme.RealEstateManager.AddPropertySubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bedrooms"
+            app:layout_constraintEnd_toEndOf="@+id/add_property_bedrooms_incrementButton"
+            app:layout_constraintStart_toStartOf="@+id/add_property_bedrooms_decrementButton"
+            app:layout_constraintTop_toBottomOf="@+id/add_property_surface_textInputLayout" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/add_property_bedrooms_textInputLayout"
+            style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toStartOf="@id/add_property_bedrooms_incrementButton"
+            app:layout_constraintStart_toEndOf="@id/add_property_bedrooms_decrementButton"
+            app:layout_constraintTop_toBottomOf="@id/add_property_bedrooms_tv">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/add_property_bedrooms_editText"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:imeOptions="actionDone"
+                android:inputType="numberDecimal" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/add_property_bedrooms_decrementButton"
+            style="@style/Widget.AppCompat.Button.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-"
+            app:layout_constraintBottom_toBottomOf="@id/add_property_bedrooms_textInputLayout"
+            app:layout_constraintEnd_toStartOf="@id/add_property_bedrooms_textInputLayout"
+            app:layout_constraintStart_toEndOf="@id/add_property_rooms_incrementButton"
+            app:layout_constraintTop_toTopOf="@+id/add_property_bedrooms_textInputLayout" />
+
+        <Button
+            android:id="@+id/add_property_bedrooms_incrementButton"
+            style="@style/Widget.AppCompat.Button.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+"
+            app:layout_constraintBottom_toBottomOf="@id/add_property_bedrooms_textInputLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/add_property_bedrooms_textInputLayout"
+            app:layout_constraintTop_toTopOf="@id/add_property_bedrooms_textInputLayout" />
+
+        <TextView
+            android:id="@+id/add_property_bathrooms_tv"
+            style="@style/Theme.RealEstateManager.AddPropertySubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bathrooms"
+            app:layout_constraintEnd_toEndOf="@+id/add_property_bathrooms_incrementButton"
+            app:layout_constraintStart_toStartOf="@+id/add_property_bathrooms_decrementButton"
+            app:layout_constraintTop_toBottomOf="@+id/add_property_bedrooms_textInputLayout" />
+        />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/add_property_bathrooms_textInputLayout"
+            style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toStartOf="@id/add_property_bathrooms_incrementButton"
+            app:layout_constraintStart_toEndOf="@id/add_property_bathrooms_decrementButton"
+            app:layout_constraintTop_toBottomOf="@id/add_property_bathrooms_tv">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/add_property_bathrooms_editText"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:imeOptions="actionDone"
+                android:inputType="numberDecimal" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/add_property_bathrooms_decrementButton"
+            style="@style/Widget.AppCompat.Button.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-"
+            app:layout_constraintBottom_toBottomOf="@id/add_property_bathrooms_textInputLayout"
+            app:layout_constraintEnd_toStartOf="@id/add_property_bathrooms_textInputLayout"
+            app:layout_constraintStart_toStartOf="@+id/add_property_rooms_decrementButton"
+            app:layout_constraintTop_toTopOf="@+id/add_property_bathrooms_textInputLayout" />
+
+        <Button
+            android:id="@+id/add_property_bathrooms_incrementButton"
+            style="@style/Widget.AppCompat.Button.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+"
+            app:layout_constraintBottom_toBottomOf="@id/add_property_bathrooms_textInputLayout"
+            app:layout_constraintEnd_toEndOf="@+id/add_property_rooms_incrementButton"
+            app:layout_constraintStart_toEndOf="@id/add_property_bathrooms_textInputLayout"
+            app:layout_constraintTop_toTopOf="@id/add_property_bathrooms_textInputLayout" />
+
+
+        <TextView
+            android:id="@+id/add_property_description_tv"
+            style="@style/Theme.RealEstateManager.AddPropertySubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Description"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/add_property_bathrooms_decrementButton" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/add_property_description_textInputLayout"
+            style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="Be creative!"
+            app:endIconMode="clear_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/add_property_description_tv">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/add_property_description_textInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start|top"
+                android:imeOptions="actionDone"
+                android:inputType="textMultiLine"
+                android:lines="5" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/add_property_amenities_tv"
+            style="@style/Theme.RealEstateManager.AddPropertySubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Amenities"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/add_property_description_textInputLayout" />
+
+        <com.google.android.flexbox.FlexboxLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:orientation="horizontal"
+            app:flexWrap="wrap"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/add_property_amenities_tv">
+
+
+            <CheckBox
+                android:id="@+id/add_property_amenities_school_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="School" />
+
+            <CheckBox
+                android:id="@+id/add_property_amenities_park_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="Park" />
+
+            <CheckBox
+                android:id="@+id/add_property_amenities_shopping_mall_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="Mall" />
+
+            <CheckBox
+                android:id="@+id/add_property_amenities_restaurant_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="Restaurant" />
+
+            <CheckBox
+                android:id="@+id/add_property_amenities_concierge_service_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="Concierge" />
+
+            <CheckBox
+                android:id="@+id/add_property_amenities_gym_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="Gym" />
+
+            <CheckBox
+                android:id="@+id/add_property_amenities_public_transportation_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="Public transp." />
+
+            <CheckBox
+                android:id="@+id/add_property_amenities_hospital_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="Hospital" />
+
+            <CheckBox
+                android:id="@+id/add_property_amenities_library_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="Library" />
+
+        </com.google.android.flexbox.FlexboxLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

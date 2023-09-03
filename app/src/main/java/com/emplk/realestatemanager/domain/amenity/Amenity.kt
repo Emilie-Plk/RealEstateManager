@@ -6,6 +6,7 @@ enum class Amenity {
     SHOPPING_MALL,
     RESTAURANT,
     CONCIERGE,
+    GYM,
     PUBLIC_TRANSPORTATION,
     HOSPITAL,
     LIBRARY

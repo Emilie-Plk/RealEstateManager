@@ -12,6 +12,7 @@
         android:layout_height="100dp"
         android:layout_gravity="center"
         android:layout_weight="1"
+        android:layout_marginTop="16dp"
         android:contentDescription="@string/realestatemanager_logo_a11y"
         android:src="@drawable/logo_no_background" />
 
