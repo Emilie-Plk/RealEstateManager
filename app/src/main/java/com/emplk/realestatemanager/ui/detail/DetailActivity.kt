@@ -3,9 +3,7 @@ package com.emplk.realestatemanager.ui.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
-import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.DetailActivityBinding

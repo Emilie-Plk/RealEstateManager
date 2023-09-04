@@ -6,7 +6,6 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import com.emplk.realestatemanager.data.location.LocationDtoEntity
-import com.emplk.realestatemanager.domain.property.PropertyWithDetailsEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

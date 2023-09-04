@@ -2,8 +2,9 @@ package com.emplk.realestatemanager.data.amenity
 
 import com.emplk.realestatemanager.domain.amenity.AmenityEntity
 import com.emplk.realestatemanager.domain.amenity.AmenityType
+import javax.inject.Inject
 
-class AmenityDtoEntityMapper {
+class AmenityDtoEntityMapper @Inject constructor() {
 
     fun mapToDtoEntity(amenities: List<AmenityEntity>, propertyId: Long): List<AmenityDtoEntity> = amenities
         .map {

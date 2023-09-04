@@ -78,76 +78,94 @@ class DetailViewModel @Inject constructor(
 
     val viewState: LiveData<DetailViewState> = liveData {
         getCurrentPropertyIdFlowUseCase.invoke().collect { propertyId ->
-            getPropertyByItsIdUseCase.invoke(propertyId).collect {
+            getPropertyByItsIdUseCase.invoke(propertyId).collect { propertyEntity ->
                 val currencyType = getCurrencyTypeUseCase.invoke()
                 val surfaceUnitType = getSurfaceUnitUseCase.invoke()
                 emit(
                     DetailViewState(
-                        id = it.property.id,
-                        type = it.property.type,
+                        id = propertyEntity.id,
+                        type = propertyEntity.type,
                         featuredPicture = NativePhoto.Uri(
-                            it.pictures.first { picture ->
+                            propertyEntity.pictures.first { picture ->
                                 picture.isThumbnail
                             }.uri
                         ),
-                        pictures = it.pictures.map { picture ->
+                        pictures = propertyEntity.pictures.map { picture ->
                             picture.uri
                         },
                         price = when (currencyType) {
                             CurrencyType.DOLLAR -> NativeText.Argument(
                                 R.string.price_in_dollar,
-                                it.property.price
+                                propertyEntity.price
                             )
 
                             CurrencyType.EURO -> NativeText.Argument(
                                 R.string.price_in_euro,
-                                it.property.price
+                                propertyEntity.price
                             )
                         },
                         surface = when (surfaceUnitType) {
                             SurfaceUnitType.SQUARE_FEET -> NativeText.Argument(
                                 R.string.surface_in_square_feet,
-                                it.property.surface
+                                propertyEntity.surface
                             )
 
                             SurfaceUnitType.SQUARE_METER -> NativeText.Argument(
                                 R.string.surface_in_square_meters,
-                                it.property.surface
+                                propertyEntity.surface
                             )
                         },
                         rooms = NativeText.Argument(
                             R.string.detail_number_of_room_textview,
-                            it.property.rooms
+                            propertyEntity.rooms
                         ),
                         bathrooms = NativeText.Argument(
                             R.string.detail_number_of_bathroom_textview,
-                            it.property.bathrooms
+                            propertyEntity.bathrooms
                         ),
                         bedrooms = NativeText.Argument(
                             R.string.detail_number_of_bedroom_textview,
-                            it.property.bedrooms
+                            propertyEntity.bedrooms
                         ),
-                        description = it.property.description,
+                        description = propertyEntity.description,
                         address = NativeText.Arguments(
                             R.string.detail_location_tv,
                             listOf(
-                                it.location.neighborhood,
-                                it.location.address,
-                                it.location.postalCode,
-                                it.location.city,
+                                propertyEntity.location.address,
+                                propertyEntity.location.postalCode,
+                                propertyEntity.location.city,
                             )
                         ),
-                        amenitySchool = it.property.amenities.contains(AmenityType.SCHOOL),
-                        amenityPark = it.property.amenities.contains(AmenityType.PARK),
-                        amenityShoppingMall = it.property.amenities.contains(AmenityType.SHOPPING_MALL),
-                        amenityRestaurant = it.property.amenities.contains(AmenityType.RESTAURANT),
-                        amenityConcierge = it.property.amenities.contains(AmenityType.CONCIERGE),
-                        amenityPublicTransportation = it.property.amenities.contains(AmenityType.PUBLIC_TRANSPORTATION),
-                        amenityHospital = it.property.amenities.contains(AmenityType.HOSPITAL),
-                        amenityLibrary = it.property.amenities.contains(AmenityType.LIBRARY),
+                        amenitySchool = propertyEntity.amenities.any {
+                            it.type == AmenityType.SCHOOL
+                        },
+                        amenityPark = propertyEntity.amenities.any {
+                            it.type == AmenityType.PARK
+                        },
+                        amenityShoppingMall = propertyEntity.amenities.any {
+                            it.type == AmenityType.SHOPPING_MALL
+                        },
+                        amenityRestaurant = propertyEntity.amenities.any {
+                            it.type == AmenityType.RESTAURANT
+                        },
+                        amenityConcierge = propertyEntity.amenities.any {
+                            it.type == AmenityType.CONCIERGE
+                        },
+                        amenityPublicTransportation = propertyEntity.amenities.any {
+                            it.type == AmenityType.PUBLIC_TRANSPORTATION
+                        },
+                        amenityHospital = propertyEntity.amenities.any {
+                            it.type == AmenityType.HOSPITAL
+                        },
+                        amenityLibrary = propertyEntity.amenities.any {
+                            it.type == AmenityType.LIBRARY
+                        },
+                        amenityGym = propertyEntity.amenities.any {
+                            it.type == AmenityType.GYM
+                        },
                         entryDate = NativeText.Argument(
                             R.string.detail_entry_date_tv,
-                            it.property.entryDate.format(
+                            propertyEntity.entryDate.format(
                                 DateTimeFormatter.ofLocalizedDate(
                                     FormatStyle.SHORT
                                 )
@@ -155,10 +173,10 @@ class DetailViewModel @Inject constructor(
                         ),
                         agentName = NativeText.Argument(
                             R.string.detail_manager_agent_name,
-                            it.property.agentName
+                            propertyEntity.agentName
                         ),
-                        isSold = it.property.isSold,
-                        saleDate = it.property.saleDate?.let { saleDate ->
+                        isSold = propertyEntity.isSold,
+                        saleDate = propertyEntity.saleDate?.let { saleDate ->
                             NativeText.Argument(
                                 R.string.detail_sold_date_tv,
                                 saleDate.format(

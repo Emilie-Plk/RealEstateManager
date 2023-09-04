@@ -23,6 +23,7 @@ data class DetailViewState(
     val amenityPublicTransportation: Boolean,
     val amenityHospital: Boolean,
     val amenityLibrary: Boolean,
+    val amenityGym: Boolean,
     val entryDate: NativeText,
     val agentName: NativeText,
     val isSold: Boolean,

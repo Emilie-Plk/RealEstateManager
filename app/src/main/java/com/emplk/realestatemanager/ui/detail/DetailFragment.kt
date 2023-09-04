@@ -1,13 +1,11 @@
 package com.emplk.realestatemanager.ui.detail
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.DetailFragmentBinding
-import com.emplk.realestatemanager.ui.main.MainActivity
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.NativePhoto.Companion.load
 import com.emplk.realestatemanager.ui.utils.viewBinding
@@ -29,21 +27,21 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
         viewModel.viewEventLiveData.observeEvent(viewLifecycleOwner) { event ->
             when (event) {
                 is DetailViewEvent.DisplayEditFragmentTablet -> {
-               /*     Log.d("COUCOU DetailFragment", "DisplayEditFragmentTablet: ")
-                    startActivity(
-                        MainActivity.newIntent(
-                            requireContext()
-                        )
-                    )*/
+                    /*     Log.d("COUCOU DetailFragment", "DisplayEditFragmentTablet: ")
+                         startActivity(
+                             MainActivity.newIntent(
+                                 requireContext()
+                             )
+                         )*/
                 }
 
                 is DetailViewEvent.DisplayEditFragmentPhone -> {
-                   /* Log.d("COUCOU DetailFragment", "DisplayEditFragmentPhone: ")
-                    startActivity(
-                        MainActivity.newIntent(
-                            requireContext()
-                        )
-                    )*/
+                    /* Log.d("COUCOU DetailFragment", "DisplayEditFragmentPhone: ")
+                     startActivity(
+                         MainActivity.newIntent(
+                             requireContext()
+                         )
+                     )*/
                 }
             }
         }
