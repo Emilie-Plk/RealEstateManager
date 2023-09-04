@@ -1,17 +1,9 @@
 package com.emplk.realestatemanager.domain.pictures
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-
-@Entity(tableName = "pictures")
 data class PictureEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
-    @ColumnInfo(name = "property_id")
+    val id: Long,
     val propertyId: Long,
-    val uri: String,
     val description: String,
-    @ColumnInfo(name = "is_thumbnail")
-    val isThumbnail: Boolean
+    val uri: String,
+    val isThumbnail: Boolean,
 )

@@ -6,6 +6,16 @@
     <string name="price_in_euro">%s\u20ac</string>
     <string name="price_in_dollar">\u0024%s</string>
     <string name="surface_in_square_feet">%s sq ft</string>
+    <string name="amenity_school">School</string>
+    <string name="amenity_park">Park</string>
+    <string name="amenity_shopping_mall">Mall</string>
+    <string name="amenity_restaurant">Restaurant</string>
+    <string name="amenity_concierge_service">Concierge</string>
+    <string name="amenity_gym">Gym</string>
+    <string name="amenity_public_transportation">Transportation</string>
+    <string name="amenity_hospital">Hospital</string>
+    <string name="amenity_library">Library</string>
+
     <string name="surface_in_square_meters">%s m²</string>
     <string name="detail_fragment_featured_picture_a11y">Picture of %s</string>
     <string name="number_of_rooms_logo_a11y">Number of rooms</string>
@@ -19,6 +29,7 @@
     <string name="detail_amenities_school_tv">School</string>
     <string name="detail_amenities_park_tv">Park</string>
     <string name="detail_amenities_restaurant_tv">Restaurants</string>
+    <string name="detail_amenities_gym_tv">Gym</string>
     <string name="detail_amenities_shopping_tv">Mall</string>
     <string name="detail_amenities_transportation_tv">Transportation</string>
     <string name="detail_amenities_hospital_tv">Hospital</string>

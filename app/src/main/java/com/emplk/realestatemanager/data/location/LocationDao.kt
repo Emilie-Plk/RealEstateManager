@@ -4,18 +4,17 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.emplk.realestatemanager.domain.location.LocationEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface LocationDao {
 
     @Insert
-    suspend fun insert(locationEntity: LocationEntity)
+    suspend fun insert(locationDtoEntity: LocationDtoEntity)
 
     @Query("SELECT * FROM locations WHERE property_id = :propertyId")
-    fun getLocationAsFlow(propertyId: Long): Flow<LocationEntity>
+    fun getLocationAsFlow(propertyId: Long): Flow<LocationDtoEntity>
 
     @Update
-    suspend fun update(locationEntity: LocationEntity): Int
+    suspend fun update(locationDtoEntity: LocationDtoEntity): Int
 }

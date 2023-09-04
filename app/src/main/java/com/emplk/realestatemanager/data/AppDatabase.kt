@@ -15,9 +15,9 @@ import com.emplk.realestatemanager.data.picture.PictureDao
 import com.emplk.realestatemanager.data.property.PropertyDao
 import com.emplk.realestatemanager.data.utils.type_converters.BigDecimalTypeConverter
 import com.emplk.realestatemanager.data.utils.type_converters.LocalDateTimeTypeConverter
-import com.emplk.realestatemanager.domain.location.LocationEntity
-import com.emplk.realestatemanager.domain.pictures.PictureEntity
-import com.emplk.realestatemanager.domain.property.PropertyEntity
+import com.emplk.realestatemanager.data.location.LocationDtoEntity
+import com.emplk.realestatemanager.data.picture.PictureDtoEntity
+import com.emplk.realestatemanager.data.property.PropertyDtoEntity
 import com.google.gson.Gson
 import java.math.BigDecimal
 import java.time.LocalDateTime
@@ -25,9 +25,9 @@ import java.time.LocalDateTime
 
 @Database(
     entities = [
-        PropertyEntity::class,
-        PictureEntity::class,
-        LocationEntity::class,
+        PropertyDtoEntity::class,
+        PictureDtoEntity::class,
+        LocationDtoEntity::class,
     ],
     version = 1,
     exportSchema = false
@@ -61,7 +61,7 @@ abstract class AppDatabase : RoomDatabase() {
                 override fun onCreate(db: SupportSQLiteDatabase) {
                     val propertiesAsJson = gson.toJson(
                         listOf(
-                            PropertyEntity(
+                            PropertyDtoEntity(
                                 type = "Flat",
                                 price = BigDecimal(1000000),
                                 surface = 150,
@@ -76,7 +76,7 @@ abstract class AppDatabase : RoomDatabase() {
                                 isSold = false,
                                 agentName = "John Doe"
                             ),
-                            PropertyEntity(
+                            PropertyDtoEntity(
                                 type = "Villa",
                                 price = BigDecimal(5000000),
                                 surface = 200,
@@ -95,7 +95,7 @@ abstract class AppDatabase : RoomDatabase() {
 
                     val locationsAsJson = gson.toJson(
                         listOf(
-                            LocationEntity(
+                            LocationDtoEntity(
                                 propertyId = 1,
                                 latitude = 40.765076,
                                 longitude = -73.976693,
@@ -104,7 +104,7 @@ abstract class AppDatabase : RoomDatabase() {
                                 neighborhood = "Midtown Manhattan",
                                 postalCode = "10019",
                             ),
-                            LocationEntity(
+                            LocationDtoEntity(
                                 propertyId = 2,
                                 latitude = 40.710525,
                                 longitude = -74.008368,
@@ -118,13 +118,13 @@ abstract class AppDatabase : RoomDatabase() {
 
                     val picturesAsJson = gson.toJson(
                         listOf(
-                            PictureEntity(
+                            PictureDtoEntity(
                                 uri = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmlsbGF8ZW58MHx8MHx8fDA%3D&w=300&q=300",
                                 propertyId = 1,
                                 description = "Front view",
                                 isThumbnail = true,
                             ),
-                            PictureEntity(
+                            PictureDtoEntity(
                                 uri = "https://img.freepik.com/photos-gratuite/maison-design-villa-moderne-salon-decloisonne-chambre-privee-aile-grande-terrasse-intimite_1258-169741.jpg?w=300",
                                 propertyId = 2,
                                 description = "Front view",
