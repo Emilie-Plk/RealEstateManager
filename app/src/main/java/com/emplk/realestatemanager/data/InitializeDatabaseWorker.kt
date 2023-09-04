@@ -8,18 +8,16 @@ import androidx.work.WorkerParameters
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.data.utils.fromJson
 import com.emplk.realestatemanager.domain.location.AddLocationUseCase
-import com.emplk.realestatemanager.domain.location.LocationEntity
+import com.emplk.realestatemanager.data.location.LocationDtoEntity
 import com.emplk.realestatemanager.domain.pictures.AddPictureUseCase
-import com.emplk.realestatemanager.domain.pictures.PictureEntity
+import com.emplk.realestatemanager.data.picture.PictureDtoEntity
 import com.emplk.realestatemanager.domain.property.AddPropertyUseCase
-import com.emplk.realestatemanager.domain.property.PropertyEntity
+import com.emplk.realestatemanager.data.property.PropertyDtoEntity
 import com.google.gson.Gson
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.joinAll
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @HiltWorker
@@ -46,9 +44,9 @@ class InitializeDatabaseWorker @AssistedInject constructor(
         Log.d("COUCOU", "entitiesAsJson : $propertiesAsJson")
 
         if (propertiesAsJson != null && locationsAsJson != null && picturesAsJson != null) {
-            val propertyEntities = gson.fromJson<List<PropertyEntity>>(json = propertiesAsJson)
-            val locationEntities = gson.fromJson<List<LocationEntity>>(json = locationsAsJson)
-            val pictureEntities = gson.fromJson<List<PictureEntity>>(json = picturesAsJson)
+            val propertyEntities = gson.fromJson<List<PropertyDtoEntity>>(json = propertiesAsJson)
+            val locationEntities = gson.fromJson<List<LocationDtoEntity>>(json = locationsAsJson)
+            val pictureEntities = gson.fromJson<List<PictureDtoEntity>>(json = picturesAsJson)
 
             if (propertyEntities != null && locationEntities != null && pictureEntities != null) {
                 val locationJobs = locationEntities.map { locationEntity ->

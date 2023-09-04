@@ -1,7 +1,9 @@
 package com.emplk.realestatemanager.domain.location
 
-interface LocationRepository {
-    suspend fun add(location: LocationEntity)
+import com.emplk.realestatemanager.data.location.LocationDtoEntity
 
-    suspend fun update(locationEntity: LocationEntity)
+interface LocationRepository {
+    suspend fun add(location: LocationDtoEntity)
+
+    suspend fun update(locationDtoEntity: LocationDtoEntity)
 }

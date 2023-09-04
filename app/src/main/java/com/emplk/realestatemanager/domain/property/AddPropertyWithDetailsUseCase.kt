@@ -1,24 +1,25 @@
 package com.emplk.realestatemanager.domain.property
 
+import com.emplk.realestatemanager.data.property.PropertyDtoEntity
 import com.emplk.realestatemanager.domain.location.AddLocationUseCase
-import com.emplk.realestatemanager.domain.location.LocationEntity
+import com.emplk.realestatemanager.data.location.LocationDtoEntity
 import com.emplk.realestatemanager.domain.pictures.AddPictureUseCase
-import com.emplk.realestatemanager.domain.pictures.PictureEntity
+import com.emplk.realestatemanager.data.picture.PictureDtoEntity
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class AddAllPropertyInfoUseCase @Inject constructor(
+class AddPropertyWithDetailsUseCase @Inject constructor(
     private val addPropertyUseCase: AddPropertyUseCase,
     private val addPictureUseCase: AddPictureUseCase,
     private val addLocationUseCase: AddLocationUseCase,
 ) {
     suspend fun invoke(
-        property: PropertyEntity,
-        pictures: List<PictureEntity>,
-        location: LocationEntity
+        property: PropertyDtoEntity,
+        pictures: List<PictureDtoEntity>,
+        location: LocationDtoEntity
     ) {
         coroutineScope {
             val deferredPropertyId = async {
