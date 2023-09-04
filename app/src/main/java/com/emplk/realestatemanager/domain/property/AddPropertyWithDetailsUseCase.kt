@@ -1,10 +1,9 @@
 package com.emplk.realestatemanager.domain.property
 
-import com.emplk.realestatemanager.data.property.PropertyDtoEntity
 import com.emplk.realestatemanager.domain.location.AddLocationUseCase
-import com.emplk.realestatemanager.data.location.LocationDtoEntity
+import com.emplk.realestatemanager.domain.location.LocationEntity
 import com.emplk.realestatemanager.domain.pictures.AddPictureUseCase
-import com.emplk.realestatemanager.data.picture.PictureDtoEntity
+import com.emplk.realestatemanager.domain.pictures.PictureEntity
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.joinAll
@@ -17,23 +16,23 @@ class AddPropertyWithDetailsUseCase @Inject constructor(
     private val addLocationUseCase: AddLocationUseCase,
 ) {
     suspend fun invoke(
-        property: PropertyDtoEntity,
-        pictures: List<PictureDtoEntity>,
-        location: LocationDtoEntity
+        propertyEntity: PropertyEntity,
+        pictureEntities: List<PictureEntity>,
+        locationEntity: LocationEntity
     ) {
         coroutineScope {
             val deferredPropertyId = async {
-                addPropertyUseCase.invoke(property)
+                addPropertyUseCase.invoke(propertyEntity)
             }
 
             val generatedPropertyId = deferredPropertyId.await()
 
-            val childrenJobs = pictures.map { picture ->
+            val childrenJobs = pictureEntities.map { picture ->
                 launch {
                     addPictureUseCase.invoke(picture.copy(propertyId = generatedPropertyId))
                 }
             } + launch {
-                addLocationUseCase.invoke(location.copy(propertyId = generatedPropertyId))
+                addLocationUseCase.invoke(locationEntity.copy(propertyId = generatedPropertyId))
             }
             childrenJobs.joinAll()
         }

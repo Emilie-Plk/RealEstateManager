@@ -21,7 +21,6 @@ import com.emplk.realestatemanager.ui.utils.Event
 import com.emplk.realestatemanager.ui.utils.NativePhoto
 import com.emplk.realestatemanager.ui.utils.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
@@ -72,56 +71,56 @@ class PropertyViewModel @Inject constructor(
         }.collect()
     }
 
-    val viewState: LiveData<List<PropertyViewState>> = liveData {
+    val viewState: LiveData<List<PropertyViewState>> = liveData(coroutineDispatcherProvider.io) {
         val currencyType = getCurrencyTypeUseCase.invoke()
         val surfaceUnitType = getSurfaceUnitUseCase.invoke()
 
         getPropertiesAsFlowUseCase.invoke().collect { properties ->
             emit(
-                properties.map { propertiesWithPicturesAndLocation ->
+                properties.map { property ->
                     val photoUrl =
-                        propertiesWithPicturesAndLocation.pictures.find { picture -> picture.isThumbnail }?.uri
+                        property.pictures.find { picture -> picture.isThumbnail }?.uri
 
                     PropertyViewState.Property(
-                        id = propertiesWithPicturesAndLocation.property.id,
-                        propertyType = propertiesWithPicturesAndLocation.property.type,
+                        id = property.id,
+                        propertyType = property.type,
                         featuredPicture = if (photoUrl != null) {
                             NativePhoto.Uri(photoUrl)
                         } else {
                             NativePhoto.Resource(R.drawable.baseline_villa_24)
                         },
-                        address = propertiesWithPicturesAndLocation.location.address,
+                        address = property.location.address,
                         price = when (currencyType) {
                             CurrencyType.DOLLAR -> NativeText.Argument(
                                 R.string.price_in_dollar,
-                                propertiesWithPicturesAndLocation.property.price
+                                property.price
                             )
 
                             CurrencyType.EURO -> NativeText.Argument(
                                 R.string.price_in_euro,
-                                propertiesWithPicturesAndLocation.property.price
+                                property.price
                             )
                         },
-                        isSold = propertiesWithPicturesAndLocation.property.isSold,
-                        room = propertiesWithPicturesAndLocation.property.rooms.toString(),
-                        bathroom = propertiesWithPicturesAndLocation.property.bathrooms.toString(),
-                        bedroom = propertiesWithPicturesAndLocation.property.bedrooms.toString(),
+                        isSold = property.isSold,
+                        room = property.rooms.toString(),
+                        bathroom = property.bathrooms.toString(),
+                        bedroom = property.bedrooms.toString(),
                         surface = when (surfaceUnitType) {
                             SurfaceUnitType.SQUARE_FEET -> NativeText.Argument(
                                 R.string.surface_in_square_feet,
-                                propertiesWithPicturesAndLocation.property.surface
+                                property.surface
                             )
 
                             SurfaceUnitType.SQUARE_METER -> NativeText.Argument(
                                 R.string.surface_in_square_meters,
-                                propertiesWithPicturesAndLocation.property.surface
+                                property.surface
                             )
                         },
                         onClickEvent = EquatableCallback {
                             viewModelScope.launch {
-                                propertyIdMutableSharedFlow.emit(propertiesWithPicturesAndLocation.property.id)
+                                propertyIdMutableSharedFlow.emit(property.id)
                                 setNavigationTypeUseCase.invoke(NavigationFragmentType.DETAIL_FRAGMENT)
-                                setCurrentPropertyIdUseCase.invoke(propertiesWithPicturesAndLocation.property.id)
+                                setCurrentPropertyIdUseCase.invoke(property.id)
                             }
                         }
                     )

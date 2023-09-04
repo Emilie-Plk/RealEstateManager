@@ -11,13 +11,13 @@ class AmenityRepositoryRoom @Inject constructor(
 ) : AmenityRepository {
     override suspend fun addAmenity(amenityDtoEntity: AmenityDtoEntity) {
         withContext(coroutineDispatcherProvider.io) {
-            amenityDao.insertAmenity(amenityDtoEntity)
+            amenityDao.insert(amenityDtoEntity)
         }
     }
 
     override suspend fun updateAmenity(amenityDtoEntity: AmenityDtoEntity) {
         withContext(coroutineDispatcherProvider.io) {
-            amenityDao.updateAmenity(amenityDtoEntity)
+            amenityDao.update(amenityDtoEntity)
         }
     }
 }

@@ -1,23 +1,28 @@
 package com.emplk.realestatemanager.data.picture
 
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
+import com.emplk.realestatemanager.domain.pictures.PictureEntity
 import com.emplk.realestatemanager.domain.pictures.PictureRepository
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class PictureRepositoryRoom @Inject constructor(
     private val pictureDao: PictureDao,
+    private val pictureDtoEntityMapper: PictureDtoEntityMapper,
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : PictureRepository {
-    override suspend fun addPicture(picture: PictureDtoEntity) {
+
+    override suspend fun addPicture(pictureEntity: PictureEntity) {
         withContext(coroutineDispatcherProvider.io) {
-            pictureDao.insert(picture)
+            val pictureDtoEntity = pictureDtoEntityMapper.mapToDtoEntity(pictureEntity)
+            pictureDao.insert(pictureDtoEntity)
         }
     }
 
-    override suspend fun updatePicture(picture: PictureDtoEntity) {
+    override suspend fun updatePicture(pictureEntity: PictureEntity) {
         withContext(coroutineDispatcherProvider.io) {
-            pictureDao.update(picture)
+            val pictureDtoEntity = pictureDtoEntityMapper.mapToDtoEntity(pictureEntity)
+            pictureDao.update(pictureDtoEntity)
         }
     }
 }

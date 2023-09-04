@@ -5,33 +5,37 @@ import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.emplk.realestatemanager.data.amenity.AmenityDao
+import com.emplk.realestatemanager.data.amenity.AmenityDtoEntity
+import com.emplk.realestatemanager.data.location.LocationDao
+import com.emplk.realestatemanager.data.location.LocationDtoEntity
+import com.emplk.realestatemanager.data.picture.PictureDao
+import com.emplk.realestatemanager.data.picture.PictureDtoEntity
+import com.emplk.realestatemanager.data.property.PropertyDao
+import com.emplk.realestatemanager.data.property.PropertyDtoEntity
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.data.utils.fromJson
-import com.emplk.realestatemanager.domain.location.AddLocationUseCase
-import com.emplk.realestatemanager.data.location.LocationDtoEntity
-import com.emplk.realestatemanager.domain.pictures.AddPictureUseCase
-import com.emplk.realestatemanager.data.picture.PictureDtoEntity
-import com.emplk.realestatemanager.domain.property.AddPropertyUseCase
-import com.emplk.realestatemanager.data.property.PropertyDtoEntity
 import com.google.gson.Gson
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.joinAll
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @HiltWorker
 class InitializeDatabaseWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
-    private val addPropertyUseCase: AddPropertyUseCase,
-    private val addLocationUseCase: AddLocationUseCase,
-    private val addPictureUseCase: AddPictureUseCase,
+    private val propertyDao: PropertyDao,
+    private val pictureDao: PictureDao,
+    private val locationDao: LocationDao,
+    private val amenityDao: AmenityDao,
     private val gson: Gson,
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : CoroutineWorker(context, workerParams) {
 
     companion object {
+        const val KEY_INPUT_DATA_AMENITIES = "KEY_INPUT_DATA_AMENITIES"
         const val KEY_INPUT_DATA_PROPERTIES = "KEY_INPUT_DATA_PROPERTIES"
         const val KEY_INPUT_DATA_LOCATIONS = "KEY_INPUT_DATA_LOCATIONS"
         const val KEY_INPUT_DATA_PICTURES = "KEY_INPUT_DATA_PICTURES"
@@ -41,29 +45,30 @@ class InitializeDatabaseWorker @AssistedInject constructor(
         val propertiesAsJson = inputData.getString(KEY_INPUT_DATA_PROPERTIES)
         val locationsAsJson = inputData.getString(KEY_INPUT_DATA_LOCATIONS)
         val picturesAsJson = inputData.getString(KEY_INPUT_DATA_PICTURES)
-        Log.d("COUCOU", "entitiesAsJson : $propertiesAsJson")
+        val amenitiesAsJson = inputData.getString(KEY_INPUT_DATA_AMENITIES)
 
-        if (propertiesAsJson != null && locationsAsJson != null && picturesAsJson != null) {
+        if (propertiesAsJson != null && locationsAsJson != null && picturesAsJson != null && amenitiesAsJson != null) {
             val propertyEntities = gson.fromJson<List<PropertyDtoEntity>>(json = propertiesAsJson)
             val locationEntities = gson.fromJson<List<LocationDtoEntity>>(json = locationsAsJson)
             val pictureEntities = gson.fromJson<List<PictureDtoEntity>>(json = picturesAsJson)
+            val amenityEntities = gson.fromJson<List<AmenityDtoEntity>>(json = amenitiesAsJson)
 
-            if (propertyEntities != null && locationEntities != null && pictureEntities != null) {
-                val locationJobs = locationEntities.map { locationEntity ->
-                    async { addLocationUseCase.invoke(locationEntity) }
+            if (propertyEntities != null && locationEntities != null && pictureEntities != null && amenityEntities != null) {
+                val propertyInsertJobs = propertyEntities.map { propertyDto ->
+                    launch { propertyDao.insert(propertyDto) }
+                }
+                propertyInsertJobs.joinAll()
+
+                val childrenJobs = pictureEntities.map { pictureDto ->
+                    launch { pictureDao.insert(pictureDto) }
+                } + locationEntities.map { locationDto ->
+                    launch { locationDao.insert(locationDto) }
+                } + amenityEntities.map { amenityDto ->
+                    launch { amenityDao.insert(amenityDto) }
                 }
 
-                val pictureJobs = pictureEntities.map { pictureEntity ->
-                    async { addPictureUseCase.invoke(pictureEntity) }
-                }
-
-                val propertyJobs = propertyEntities.map { propertyEntity ->
-                    async { addPropertyUseCase.invoke(propertyEntity) }
-                }
-
-                // Wait for all jobs to complete
-                val allJobs = locationJobs + pictureJobs + propertyJobs
-                allJobs.awaitAll()
+                // wait for all children jobs to finish
+                childrenJobs.joinAll()
                 Result.success()
             } else {
                 Log.e("COUCOU", "Gson can't parse properties : $propertiesAsJson")

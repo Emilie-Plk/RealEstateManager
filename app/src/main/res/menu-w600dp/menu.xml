@@ -19,6 +19,6 @@
         android:icon="@drawable/baseline_add_home_24"
         android:orderInCategory="3"
         android:title="@string/main_fab_add_new_property_a11y"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
 
 </menu>

@@ -10,14 +10,16 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
 import com.emplk.realestatemanager.data.amenity.AmenityDao
+import com.emplk.realestatemanager.data.amenity.AmenityDtoEntity
 import com.emplk.realestatemanager.data.location.LocationDao
+import com.emplk.realestatemanager.data.location.LocationDtoEntity
 import com.emplk.realestatemanager.data.picture.PictureDao
+import com.emplk.realestatemanager.data.picture.PictureDtoEntity
 import com.emplk.realestatemanager.data.property.PropertyDao
+import com.emplk.realestatemanager.data.property.PropertyDtoEntity
 import com.emplk.realestatemanager.data.utils.type_converters.BigDecimalTypeConverter
 import com.emplk.realestatemanager.data.utils.type_converters.LocalDateTimeTypeConverter
-import com.emplk.realestatemanager.data.location.LocationDtoEntity
-import com.emplk.realestatemanager.data.picture.PictureDtoEntity
-import com.emplk.realestatemanager.data.property.PropertyDtoEntity
+import com.emplk.realestatemanager.domain.amenity.AmenityType
 import com.google.gson.Gson
 import java.math.BigDecimal
 import java.time.LocalDateTime
@@ -28,6 +30,7 @@ import java.time.LocalDateTime
         PropertyDtoEntity::class,
         PictureDtoEntity::class,
         LocationDtoEntity::class,
+        AmenityDtoEntity::class,
     ],
     version = 1,
     exportSchema = false
@@ -101,7 +104,6 @@ abstract class AppDatabase : RoomDatabase() {
                                 longitude = -73.976693,
                                 address = "Chambers Street",
                                 city = "New York City",
-                                neighborhood = "Midtown Manhattan",
                                 postalCode = "10019",
                             ),
                             LocationDtoEntity(
@@ -111,7 +113,6 @@ abstract class AppDatabase : RoomDatabase() {
                                 address = "Fulton Street",
                                 city = "New York City",
                                 postalCode = "10038",
-                                neighborhood = "Financial District",
                             ),
                         )
                     )
@@ -125,11 +126,66 @@ abstract class AppDatabase : RoomDatabase() {
                                 isThumbnail = true,
                             ),
                             PictureDtoEntity(
+                                uri = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmlsbGF8ZW58MHx8MHx8fDA%3D&w=300&q=300",
+                                propertyId = 1,
+                                description = "Living room",
+                                isThumbnail = false,
+                            ),
+                            PictureDtoEntity(
+                                uri = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmlsbGF8ZW58MHx8MHx8fDA%3D&w=300&q=300",
+                                propertyId = 1,
+                                description = "Kitchen",
+                                isThumbnail = false,
+                            ),
+                            PictureDtoEntity(
                                 uri = "https://img.freepik.com/photos-gratuite/maison-design-villa-moderne-salon-decloisonne-chambre-privee-aile-grande-terrasse-intimite_1258-169741.jpg?w=300",
                                 propertyId = 2,
                                 description = "Front view",
                                 isThumbnail = true,
                             ),
+                            PictureDtoEntity(
+                                uri = "https://img.freepik.com/photos-gratuite/maison-design-villa-moderne-salon-decloisonne-chambre-privee-aile-grande-terrasse-intimite_1258-169741.jpg?w=300",
+                                propertyId = 2,
+                                description = "Living room",
+                                isThumbnail = false,
+                            )
+                        )
+                    )
+
+                    val amenitiesAsJson = gson.toJson(
+                        listOf(
+                            AmenityDtoEntity(
+                                name = AmenityType.PARK.name,
+                                propertyId = 1,
+                            ),
+                            AmenityDtoEntity(
+                                name = AmenityType.GYM.name,
+                                propertyId = 1,
+                            ),
+                            AmenityDtoEntity(
+                                name = AmenityType.HOSPITAL.name,
+                                propertyId = 1,
+                            ),
+                            AmenityDtoEntity(
+                                name = AmenityType.RESTAURANT.name,
+                                propertyId = 1,
+                            ),
+                            AmenityDtoEntity(
+                                name = AmenityType.SCHOOL.name,
+                                propertyId = 2,
+                            ),
+                            AmenityDtoEntity(
+                                name = AmenityType.SHOPPING_MALL.name,
+                                propertyId = 2,
+                            ),
+                            AmenityDtoEntity(
+                                name = AmenityType.PUBLIC_TRANSPORTATION.name,
+                                propertyId = 2,
+                            ),
+                            AmenityDtoEntity(
+                                name = AmenityType.LIBRARY.name,
+                                propertyId = 2,
+                            )
                         )
                     )
 
@@ -140,6 +196,7 @@ abstract class AppDatabase : RoomDatabase() {
                                     InitializeDatabaseWorker.KEY_INPUT_DATA_PROPERTIES to propertiesAsJson,
                                     InitializeDatabaseWorker.KEY_INPUT_DATA_LOCATIONS to locationsAsJson,
                                     InitializeDatabaseWorker.KEY_INPUT_DATA_PICTURES to picturesAsJson,
+                                    InitializeDatabaseWorker.KEY_INPUT_DATA_AMENITIES to amenitiesAsJson,
                                 )
                             )
                             .build()
