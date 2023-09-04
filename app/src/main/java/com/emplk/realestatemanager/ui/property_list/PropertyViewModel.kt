@@ -41,7 +41,7 @@ class PropertyViewModel @Inject constructor(
 
     private val propertyIdMutableSharedFlow = MutableSharedFlow<Long>()
 
-    val viewEventLiveData: LiveData<Event<PropertyViewEvent>> = liveData(coroutineDispatcherProvider.io) {
+    val viewEventLiveData: LiveData<Event<PropertyViewEvent>> = liveData {
         combine(
             propertyIdMutableSharedFlow,
             getScreenWidthTypeFlowUseCase.invoke()
@@ -72,7 +72,7 @@ class PropertyViewModel @Inject constructor(
         }.collect()
     }
 
-    val viewState: LiveData<List<PropertyViewState>> = liveData(Dispatchers.IO) {
+    val viewState: LiveData<List<PropertyViewState>> = liveData {
         val currencyType = getCurrencyTypeUseCase.invoke()
         val surfaceUnitType = getSurfaceUnitUseCase.invoke()
 
