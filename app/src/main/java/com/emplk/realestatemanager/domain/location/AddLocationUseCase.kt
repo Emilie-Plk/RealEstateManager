@@ -6,6 +6,6 @@ class AddLocationUseCase @Inject constructor(
     private val locationRepository: LocationRepository,
 ) {
     suspend fun invoke(location: LocationEntity) {
-        locationRepository.addLocation(location)
+        locationRepository.add(location)
     }
 }

@@ -9,13 +9,12 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
+import com.emplk.realestatemanager.data.amenity.AmenityDao
 import com.emplk.realestatemanager.data.location.LocationDao
 import com.emplk.realestatemanager.data.picture.PictureDao
 import com.emplk.realestatemanager.data.property.PropertyDao
-import com.emplk.realestatemanager.data.utils.type_converters.AmenityTypeConverter
 import com.emplk.realestatemanager.data.utils.type_converters.BigDecimalTypeConverter
 import com.emplk.realestatemanager.data.utils.type_converters.LocalDateTimeTypeConverter
-import com.emplk.realestatemanager.domain.amenity.Amenity
 import com.emplk.realestatemanager.domain.location.LocationEntity
 import com.emplk.realestatemanager.domain.pictures.PictureEntity
 import com.emplk.realestatemanager.domain.property.PropertyEntity
@@ -35,7 +34,6 @@ import java.time.LocalDateTime
 )
 @TypeConverters(
     LocalDateTimeTypeConverter::class,
-    AmenityTypeConverter::class,
     BigDecimalTypeConverter::class,
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -43,6 +41,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun getPropertyDao(): PropertyDao
     abstract fun getLocationDao(): LocationDao
     abstract fun getPictureDao(): PictureDao
+    abstract fun getAmenityDao(): AmenityDao
 
     companion object {
         private const val DATABASE_NAME = "RealEstateManager_database"
@@ -70,13 +69,7 @@ abstract class AppDatabase : RoomDatabase() {
                                 bathrooms = 2,
                                 bedrooms = 3,
                                 description = "Discover luxury living at its finest with this stunning and spacious home. Boasting elegant design, high-end finishes, and a prime location, this property offers everything you need for a comfortable and lavish lifestyle.",
-                                amenities = listOf(
-                                    Amenity.LIBRARY,
-                                    Amenity.PARK,
-                                    Amenity.PUBLIC_TRANSPORTATION,
-                                    Amenity.HOSPITAL,
-                                    Amenity.SCHOOL,
-                                ),
+
                                 isAvailableForSale = true,
                                 entryDate = LocalDateTime.of(2023, 8, 24, 10, 0),
                                 saleDate = null,
@@ -91,12 +84,6 @@ abstract class AppDatabase : RoomDatabase() {
                                 bathrooms = 4,
                                 bedrooms = 4,
                                 description = " Experience the epitome of modern luxury in this exquisite villa that seamlessly blends sophistication with comfort. This architectural masterpiece features sleek lines, floor-to-ceiling windows, and cutting-edge design elements that create an unparalleled living experience. Enjoy spacious living areas, a state-of-the-art kitchen, and breathtaking panoramic views of the surrounding landscape. With its private infinity pool, landscaped gardens, and smart home technology, this villa offers the ultimate retreat for those seeking a contemporary and lavish lifestyle.",
-                                amenities = listOf(
-                                    Amenity.CONCIERGE,
-                                    Amenity.PARK,
-                                    Amenity.SCHOOL,
-                                    Amenity.RESTAURANT,
-                                ),
                                 isAvailableForSale = false,
                                 entryDate = LocalDateTime.of(2023, 8, 25, 10, 0),
                                 saleDate = LocalDateTime.of(2023, 9, 3, 11, 0),
@@ -105,7 +92,6 @@ abstract class AppDatabase : RoomDatabase() {
                             ),
                         )
                     )
-
 
                     val locationsAsJson = gson.toJson(
                         listOf(

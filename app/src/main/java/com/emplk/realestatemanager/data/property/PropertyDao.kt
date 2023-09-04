@@ -6,7 +6,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import com.emplk.realestatemanager.domain.location.LocationEntity
-import com.emplk.realestatemanager.domain.property.PropertiesWithPicturesAndLocationEntity
+import com.emplk.realestatemanager.domain.property.PropertyWithDetailsEntity
 import com.emplk.realestatemanager.domain.property.PropertyEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -18,7 +18,7 @@ interface PropertyDao {
 
     @Transaction
     @Query("SELECT * FROM properties WHERE id = :propertyId")
-    fun getPropertyById(propertyId: Long): Flow<PropertiesWithPicturesAndLocationEntity>
+    fun getPropertyById(propertyId: Long): Flow<PropertyWithDetailsEntity>
 
     @Query("SELECT uri FROM pictures WHERE property_id = :propertyId")
     fun getPhotosByPropertyId(propertyId: Long): Flow<List<String>>
@@ -31,7 +31,7 @@ interface PropertyDao {
 
     @Transaction
     @Query("SELECT * FROM properties")
-    fun getPropertiesWithPicturesAndLocation(): Flow<List<PropertiesWithPicturesAndLocationEntity>>
+    fun getPropertiesWithPicturesAndLocation(): Flow<List<PropertyWithDetailsEntity>>
 
     @Update
     suspend fun update(propertyEntity: PropertyEntity): Int

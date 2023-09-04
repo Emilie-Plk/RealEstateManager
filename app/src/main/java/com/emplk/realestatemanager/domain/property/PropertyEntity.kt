@@ -3,7 +3,6 @@ package com.emplk.realestatemanager.domain.property
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.emplk.realestatemanager.domain.amenity.Amenity
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
@@ -20,8 +19,6 @@ data class PropertyEntity(
     val bedrooms: Int,
     val bathrooms: Int,
     val description: String,
-    @ColumnInfo(name = "amenities")
-    val amenities: List<Amenity>,
     @ColumnInfo(name = "agent_name")
     val agentName: String,
     @ColumnInfo(name = "is_available_for_sale")

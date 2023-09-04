@@ -1,6 +1,6 @@
 package com.emplk.realestatemanager.domain.amenity
 
-enum class Amenity {
+enum class AmenityType {
     SCHOOL,
     PARK,
     SHOPPING_MALL,
