@@ -1,13 +1,11 @@
 package com.emplk.realestatemanager.data.property
 
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
-import com.emplk.realestatemanager.domain.property.PropertiesWithPicturesAndLocationEntity
+import com.emplk.realestatemanager.domain.property.PropertyWithDetailsEntity
 import com.emplk.realestatemanager.domain.property.PropertyEntity
 import com.emplk.realestatemanager.domain.property.PropertyRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -20,11 +18,11 @@ class PropertyRepositoryRoom @Inject constructor(
         propertyDao.insert(propertyEntity)
     }
 
-    override fun getPropertiesAsFlow(): Flow<List<PropertiesWithPicturesAndLocationEntity>> = propertyDao
+    override fun getPropertiesAsFlow(): Flow<List<PropertyWithDetailsEntity>> = propertyDao
         .getPropertiesWithPicturesAndLocation()
         .flowOn(coroutineDispatcherProvider.io)
 
-    override fun getPropertyByIdAsFlow(propertyId: Long): Flow<PropertiesWithPicturesAndLocationEntity> = propertyDao
+    override fun getPropertyByIdAsFlow(propertyId: Long): Flow<PropertyWithDetailsEntity> = propertyDao
         .getPropertyById(propertyId)
         .flowOn(coroutineDispatcherProvider.io)
 

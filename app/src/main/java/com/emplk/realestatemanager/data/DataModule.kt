@@ -3,6 +3,7 @@ package com.emplk.realestatemanager.data
 import android.app.Application
 import android.content.res.Resources
 import androidx.work.WorkManager
+import com.emplk.realestatemanager.data.amenity.AmenityDao
 import com.emplk.realestatemanager.data.location.LocationDao
 import com.emplk.realestatemanager.data.picture.PictureDao
 import com.emplk.realestatemanager.data.property.PropertyDao
@@ -46,6 +47,10 @@ class DataModule {
     @Singleton
     @Provides
     fun providePictureDao(appDatabase: AppDatabase): PictureDao = appDatabase.getPictureDao()
+
+    @Singleton
+    @Provides
+    fun provideAmenityDao(appDatabase: AppDatabase): AmenityDao = appDatabase.getAmenityDao()
 
     @Singleton
     @Provides

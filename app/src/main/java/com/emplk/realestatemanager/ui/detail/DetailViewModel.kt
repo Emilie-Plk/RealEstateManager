@@ -1,12 +1,11 @@
 package com.emplk.realestatemanager.ui.detail
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
-import com.emplk.realestatemanager.domain.amenity.Amenity
+import com.emplk.realestatemanager.domain.amenity.AmenityType
 import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdFlowUseCase
 import com.emplk.realestatemanager.domain.get_properties.GetPropertyByItsIdUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
@@ -21,7 +20,6 @@ import com.emplk.realestatemanager.ui.utils.Event
 import com.emplk.realestatemanager.ui.utils.NativePhoto
 import com.emplk.realestatemanager.ui.utils.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import java.time.format.DateTimeFormatter
@@ -139,14 +137,14 @@ class DetailViewModel @Inject constructor(
                                 it.location.city,
                             )
                         ),
-                        amenitySchool = it.property.amenities.contains(Amenity.SCHOOL),
-                        amenityPark = it.property.amenities.contains(Amenity.PARK),
-                        amenityShoppingMall = it.property.amenities.contains(Amenity.SHOPPING_MALL),
-                        amenityRestaurant = it.property.amenities.contains(Amenity.RESTAURANT),
-                        amenityConcierge = it.property.amenities.contains(Amenity.CONCIERGE),
-                        amenityPublicTransportation = it.property.amenities.contains(Amenity.PUBLIC_TRANSPORTATION),
-                        amenityHospital = it.property.amenities.contains(Amenity.HOSPITAL),
-                        amenityLibrary = it.property.amenities.contains(Amenity.LIBRARY),
+                        amenitySchool = it.property.amenities.contains(AmenityType.SCHOOL),
+                        amenityPark = it.property.amenities.contains(AmenityType.PARK),
+                        amenityShoppingMall = it.property.amenities.contains(AmenityType.SHOPPING_MALL),
+                        amenityRestaurant = it.property.amenities.contains(AmenityType.RESTAURANT),
+                        amenityConcierge = it.property.amenities.contains(AmenityType.CONCIERGE),
+                        amenityPublicTransportation = it.property.amenities.contains(AmenityType.PUBLIC_TRANSPORTATION),
+                        amenityHospital = it.property.amenities.contains(AmenityType.HOSPITAL),
+                        amenityLibrary = it.property.amenities.contains(AmenityType.LIBRARY),
                         entryDate = NativeText.Argument(
                             R.string.detail_entry_date_tv,
                             it.property.entryDate.format(
