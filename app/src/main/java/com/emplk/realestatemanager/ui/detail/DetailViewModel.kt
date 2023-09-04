@@ -39,7 +39,7 @@ class DetailViewModel @Inject constructor(
     coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : ViewModel() {
 
-    val viewEventLiveData: LiveData<Event<DetailViewEvent>> = liveData(coroutineDispatcherProvider.io) {
+    val viewEventLiveData: LiveData<Event<DetailViewEvent>> = liveData {
         combine(
             getScreenWidthTypeFlowUseCase.invoke(),
             getCurrentPropertyIdFlowUseCase.invoke(),
@@ -78,7 +78,7 @@ class DetailViewModel @Inject constructor(
         }.collect()
     }
 
-    val viewState: LiveData<DetailViewState> = liveData(Dispatchers.IO) {
+    val viewState: LiveData<DetailViewState> = liveData {
         getCurrentPropertyIdFlowUseCase.invoke().collect { propertyId ->
             getPropertyByItsIdUseCase.invoke(propertyId).collect {
                 val currencyType = getCurrencyTypeUseCase.invoke()

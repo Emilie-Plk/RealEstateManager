@@ -13,12 +13,14 @@ import com.emplk.realestatemanager.data.location.LocationDao
 import com.emplk.realestatemanager.data.picture.PictureDao
 import com.emplk.realestatemanager.data.property.PropertyDao
 import com.emplk.realestatemanager.data.utils.type_converters.AmenityTypeConverter
+import com.emplk.realestatemanager.data.utils.type_converters.BigDecimalTypeConverter
 import com.emplk.realestatemanager.data.utils.type_converters.LocalDateTimeTypeConverter
 import com.emplk.realestatemanager.domain.amenity.Amenity
 import com.emplk.realestatemanager.domain.location.LocationEntity
 import com.emplk.realestatemanager.domain.pictures.PictureEntity
 import com.emplk.realestatemanager.domain.property.PropertyEntity
 import com.google.gson.Gson
+import java.math.BigDecimal
 import java.time.LocalDateTime
 
 
@@ -34,6 +36,7 @@ import java.time.LocalDateTime
 @TypeConverters(
     LocalDateTimeTypeConverter::class,
     AmenityTypeConverter::class,
+    BigDecimalTypeConverter::class,
 )
 abstract class AppDatabase : RoomDatabase() {
 
@@ -60,9 +63,8 @@ abstract class AppDatabase : RoomDatabase() {
                     val propertiesAsJson = gson.toJson(
                         listOf(
                             PropertyEntity(
-                                id = 0,
                                 type = "Flat",
-                                price = 100000,
+                                price = BigDecimal(1000000),
                                 surface = 150,
                                 rooms = 5,
                                 bathrooms = 2,
@@ -83,7 +85,7 @@ abstract class AppDatabase : RoomDatabase() {
                             ),
                             PropertyEntity(
                                 type = "Villa",
-                                price = 5000000,
+                                price = BigDecimal(5000000),
                                 surface = 200,
                                 rooms = 8,
                                 bathrooms = 4,
@@ -95,10 +97,10 @@ abstract class AppDatabase : RoomDatabase() {
                                     Amenity.SCHOOL,
                                     Amenity.RESTAURANT,
                                 ),
-                                isAvailableForSale = true,
+                                isAvailableForSale = false,
                                 entryDate = LocalDateTime.of(2023, 8, 25, 10, 0),
-                                saleDate = null,
-                                isSold = false,
+                                saleDate = LocalDateTime.of(2023, 9, 3, 11, 0),
+                                isSold = true,
                                 agentName = "Jane Smith"
                             ),
                         )
@@ -108,7 +110,6 @@ abstract class AppDatabase : RoomDatabase() {
                     val locationsAsJson = gson.toJson(
                         listOf(
                             LocationEntity(
-                                id = 1,
                                 propertyId = 1,
                                 latitude = 40.765076,
                                 longitude = -73.976693,
@@ -118,7 +119,6 @@ abstract class AppDatabase : RoomDatabase() {
                                 postalCode = "10019",
                             ),
                             LocationEntity(
-                                id = 2,
                                 propertyId = 2,
                                 latitude = 40.710525,
                                 longitude = -74.008368,

@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.emplk.realestatemanager.domain.amenity.Amenity
+import java.math.BigDecimal
 import java.time.LocalDateTime
 
 @Entity(
@@ -13,7 +14,7 @@ data class PropertyEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val type: String,
-    val price: Int,
+    val price: BigDecimal,
     val surface: Int,
     val rooms: Int,
     val bedrooms: Int,

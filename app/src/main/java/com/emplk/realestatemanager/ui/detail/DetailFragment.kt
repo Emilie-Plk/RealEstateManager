@@ -58,6 +58,13 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
                 viewModel.onEditClicked()
             }
 
+            if (detailViewState.isSold) {
+                binding.detailSoldDateTv.visibility = View.VISIBLE
+                binding.detailSoldDateTv.text = detailViewState.saleDate?.toCharSequence(requireContext())
+            } else {
+                binding.detailSoldDateTv.visibility = View.GONE
+            }
+
             binding.detailTypeTv.text = detailViewState.type
             binding.detailPriceTv.text = detailViewState.price.toCharSequence(requireContext())
             binding.detailDescriptionTv.text = detailViewState.description
