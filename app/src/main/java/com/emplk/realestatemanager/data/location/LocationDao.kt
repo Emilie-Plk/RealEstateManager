@@ -12,7 +12,7 @@ interface LocationDao {
     @Insert
     suspend fun insert(locationDtoEntity: LocationDtoEntity)
 
-    @Query("SELECT * FROM locations WHERE property_id = :propertyId")
+    @Query("SELECT * FROM locations WHERE property_id = :propertyId LIMIT 1")
     fun getLocationAsFlow(propertyId: Long): Flow<LocationDtoEntity>
 
     @Update

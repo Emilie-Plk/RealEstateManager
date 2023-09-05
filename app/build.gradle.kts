@@ -77,7 +77,7 @@ dependencies {
     implementation("androidx.hilt:hilt-compiler:1.0.0")
 
     // GSON
-    implementation("com.google.code.gson:gson:2.9.1")
+    implementation("com.google.code.gson:gson:2.10")
 
     // TEST
     testImplementation("junit:junit:4.13.2")

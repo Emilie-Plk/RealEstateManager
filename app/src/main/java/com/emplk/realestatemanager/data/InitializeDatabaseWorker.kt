@@ -18,6 +18,7 @@ import com.emplk.realestatemanager.data.utils.fromJson
 import com.google.gson.Gson
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.async
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -60,11 +61,11 @@ class InitializeDatabaseWorker @AssistedInject constructor(
                 propertyInsertJobs.joinAll()
 
                 val childrenJobs = pictureEntities.map { pictureDto ->
-                    launch { pictureDao.insert(pictureDto) }
+                    async { pictureDao.insert(pictureDto) }
                 } + locationEntities.map { locationDto ->
-                    launch { locationDao.insert(locationDto) }
+                    async { locationDao.insert(locationDto) }
                 } + amenityEntities.map { amenityDto ->
-                    launch { amenityDao.insert(amenityDto) }
+                    async { amenityDao.insert(amenityDto) }
                 }
 
                 // wait for all children jobs to finish

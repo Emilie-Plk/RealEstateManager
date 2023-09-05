@@ -12,16 +12,13 @@ data class PropertyWithDetailsEntity(
     @Relation(
         parentColumn = "id",
         entityColumn = "property_id"
-    )
-    val pictures: List<PictureDtoEntity>,
+    ) val pictures: List<PictureDtoEntity>,
     @Relation(
         parentColumn = "id",
         entityColumn = "property_id"
-    )
-    val amenities: List<AmenityDtoEntity> = emptyList(),
+    ) val location: LocationDtoEntity,
     @Relation(
         parentColumn = "id",
         entityColumn = "property_id"
-    )
-    val location: LocationDtoEntity,
+    ) val amenities: List<AmenityDtoEntity> = emptyList(),
 )

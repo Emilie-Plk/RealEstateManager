@@ -72,7 +72,6 @@ abstract class AppDatabase : RoomDatabase() {
                                 bathrooms = 2,
                                 bedrooms = 3,
                                 description = "Discover luxury living at its finest with this stunning and spacious home. Boasting elegant design, high-end finishes, and a prime location, this property offers everything you need for a comfortable and lavish lifestyle.",
-
                                 isAvailableForSale = true,
                                 entryDate = LocalDateTime.of(2023, 8, 24, 10, 0),
                                 saleDate = null,
@@ -92,6 +91,20 @@ abstract class AppDatabase : RoomDatabase() {
                                 saleDate = LocalDateTime.of(2023, 9, 3, 11, 0),
                                 isSold = true,
                                 agentName = "Jane Smith"
+                            ),
+                            PropertyDtoEntity(
+                                type = "Penthouse",
+                                price = BigDecimal(2000000),
+                                surface = 100,
+                                rooms = 3,
+                                bathrooms = 2,
+                                bedrooms = 2,
+                                description = "This stunning penthouse offers the ultimate in luxury living with its sleek design, high-end finishes, and breathtaking views. The open floor plan features a spacious living area, a gourmet kitchen, and a private terrace that overlooks the city skyline. The master suite boasts a spa-like bathroom with a soaking tub and walk-in shower. With its prime location and modern amenities, this penthouse is perfect for those seeking an upscale lifestyle.",
+                                isAvailableForSale = true,
+                                entryDate = LocalDateTime.of(2023, 8, 26, 10, 0),
+                                saleDate = null,
+                                isSold = false,
+                                agentName = "John Doe"
                             ),
                         )
                     )
@@ -113,6 +126,14 @@ abstract class AppDatabase : RoomDatabase() {
                                 address = "Fulton Street",
                                 city = "New York City",
                                 postalCode = "10038",
+                            ),
+                            LocationDtoEntity(
+                                propertyId = 3,
+                                latitude = 40.765076,
+                                longitude = -73.976693,
+                                address = "Chambers Street",
+                                city = "New York City",
+                                postalCode = "10019",
                             ),
                         )
                     )
@@ -148,7 +169,31 @@ abstract class AppDatabase : RoomDatabase() {
                                 propertyId = 2,
                                 description = "Living room",
                                 isThumbnail = false,
-                            )
+                            ),
+                            PictureDtoEntity(
+                                uri = "https://img.freepik.com/photos-gratuite/maison-design-villa-moderne-salon-decloisonne-chambre-privee-aile-grande-terrasse-intimite_1258-169741.jpg?w=300",
+                                propertyId = 2,
+                                description = "Kitchen",
+                                isThumbnail = false,
+                            ),
+                            PictureDtoEntity(
+                                uri = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmlsbGF8ZW58MHx8MHx8fDA%3D&w=300&q=300",
+                                propertyId = 3,
+                                description = "Front view",
+                                isThumbnail = true,
+                            ),
+                            PictureDtoEntity(
+                                uri = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmlsbGF8ZW58MHx8MHx8fDA%3D&w=300&q=300",
+                                propertyId = 3,
+                                description = "Living room",
+                                isThumbnail = false,
+                            ),
+                            PictureDtoEntity(
+                                uri = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmlsbGF8ZW58MHx8MHx8fDA%3D&w=300&q=300",
+                                propertyId = 3,
+                                description = "Kitchen",
+                                isThumbnail = false,
+                            ),
                         )
                     )
 
@@ -160,10 +205,6 @@ abstract class AppDatabase : RoomDatabase() {
                             ),
                             AmenityDtoEntity(
                                 name = AmenityType.GYM.name,
-                                propertyId = 1,
-                            ),
-                            AmenityDtoEntity(
-                                name = AmenityType.HOSPITAL.name,
                                 propertyId = 1,
                             ),
                             AmenityDtoEntity(
@@ -183,9 +224,21 @@ abstract class AppDatabase : RoomDatabase() {
                                 propertyId = 2,
                             ),
                             AmenityDtoEntity(
-                                name = AmenityType.LIBRARY.name,
-                                propertyId = 2,
-                            )
+                                name = AmenityType.PARK.name,
+                                propertyId = 3,
+                            ),
+                            AmenityDtoEntity(
+                                name = AmenityType.GYM.name,
+                                propertyId = 3,
+                            ),
+                            AmenityDtoEntity(
+                                name = AmenityType.HOSPITAL.name,
+                                propertyId = 3,
+                            ),
+                            AmenityDtoEntity(
+                                name = AmenityType.SCHOOL.name,
+                                propertyId = 3,
+                            ),
                         )
                     )
 

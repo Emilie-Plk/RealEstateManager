@@ -21,9 +21,9 @@ class PropertyRepositoryRoom @Inject constructor(
     }
 
     override fun getPropertiesAsFlow(): Flow<List<PropertyEntity>> = propertyDao
-        .getPropertiesWithPicturesAndLocation()
-        .map { propertyWithDetailsEntityList ->
-            propertyWithDetailsEntityList.map { propertyWithDetailsEntity ->
+        .getPropertiesWithDetailsFlow()
+        .map { propertyWithDetailsEntities ->
+            propertyWithDetailsEntities.map { propertyWithDetailsEntity ->
                 propertyDtoEntityMapper.mapToDomainEntity(
                     propertyWithDetailsEntity.property,
                     propertyWithDetailsEntity.location,

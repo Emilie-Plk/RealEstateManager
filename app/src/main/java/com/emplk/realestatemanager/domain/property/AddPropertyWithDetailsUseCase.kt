@@ -1,5 +1,7 @@
 package com.emplk.realestatemanager.domain.property
 
+import com.emplk.realestatemanager.domain.amenity.AddAmenityUseCase
+import com.emplk.realestatemanager.domain.amenity.AmenityEntity
 import com.emplk.realestatemanager.domain.location.AddLocationUseCase
 import com.emplk.realestatemanager.domain.location.LocationEntity
 import com.emplk.realestatemanager.domain.pictures.AddPictureUseCase
@@ -14,10 +16,12 @@ class AddPropertyWithDetailsUseCase @Inject constructor(
     private val addPropertyUseCase: AddPropertyUseCase,
     private val addPictureUseCase: AddPictureUseCase,
     private val addLocationUseCase: AddLocationUseCase,
+    private val addAmenityUseCase: AddAmenityUseCase,
 ) {
     suspend fun invoke(
         propertyEntity: PropertyEntity,
         pictureEntities: List<PictureEntity>,
+        amenityEntities: List<AmenityEntity>,
         locationEntity: LocationEntity
     ) {
         coroutineScope {
@@ -33,6 +37,10 @@ class AddPropertyWithDetailsUseCase @Inject constructor(
                 }
             } + launch {
                 addLocationUseCase.invoke(locationEntity.copy(propertyId = generatedPropertyId))
+            } + amenityEntities.map { amenity ->
+                launch {
+                    addAmenityUseCase.invoke(amenity.copy(propertyId = generatedPropertyId))
+                }
             }
             childrenJobs.joinAll()
         }

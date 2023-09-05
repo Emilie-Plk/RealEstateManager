@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.current_property.SetCurrentPropertyIdUseCase
-import com.emplk.realestatemanager.domain.get_properties.GetPropertiesAsFlowUseCase
+import com.emplk.realestatemanager.domain.property.GetPropertiesAsFlowUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
@@ -35,7 +35,6 @@ class PropertyViewModel @Inject constructor(
     private val getScreenWidthTypeFlowUseCase: GetScreenWidthTypeFlowUseCase,
     private val setCurrentPropertyIdUseCase: SetCurrentPropertyIdUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
-    private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : ViewModel() {
 
     private val propertyIdMutableSharedFlow = MutableSharedFlow<Long>()
@@ -71,7 +70,7 @@ class PropertyViewModel @Inject constructor(
         }.collect()
     }
 
-    val viewState: LiveData<List<PropertyViewState>> = liveData(coroutineDispatcherProvider.io) {
+    val viewState: LiveData<List<PropertyViewState>> = liveData {
         val currencyType = getCurrencyTypeUseCase.invoke()
         val surfaceUnitType = getSurfaceUnitUseCase.invoke()
 
@@ -89,7 +88,7 @@ class PropertyViewModel @Inject constructor(
                         } else {
                             NativePhoto.Resource(R.drawable.baseline_villa_24)
                         },
-                        address = property.location.address,
+                        address = property.location.city,
                         price = when (currencyType) {
                             CurrencyType.DOLLAR -> NativeText.Argument(
                                 R.string.price_in_dollar,
@@ -124,7 +123,7 @@ class PropertyViewModel @Inject constructor(
                             }
                         }
                     )
-                }
+                }.sortedBy { it.isSold }
             )
         }
     }
