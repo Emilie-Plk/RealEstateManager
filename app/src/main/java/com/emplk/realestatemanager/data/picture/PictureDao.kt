@@ -10,13 +10,13 @@ import kotlinx.coroutines.flow.Flow
 interface PictureDao {
 
     @Insert
-    suspend fun insert(picture: PictureDtoEntity)
+    suspend fun insert(pictureDtoEntity: PictureDtoEntity)
 
-    @Query("SELECT * FROM pictures WHERE property_id = :propertyId")
-    fun getPicturesAsFlow(propertyId: Long): Flow<List<PictureDtoEntity>>
+    @Query("SELECT uri FROM pictures WHERE property_id = :propertyId")
+    fun getPicturesAsFlow(propertyId: Long): Flow<List<String>>
 
     @Update
-    suspend fun update(picture: PictureDtoEntity): Int
+    suspend fun update(pictureDtoEntity: PictureDtoEntity): Int
 
     @Query("DELETE FROM pictures WHERE id = :pictureId")
     suspend fun delete(pictureId: Long): Int

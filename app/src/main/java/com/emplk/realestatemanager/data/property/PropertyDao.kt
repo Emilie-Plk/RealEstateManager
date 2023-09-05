@@ -18,18 +18,12 @@ interface PropertyDao {
     @Query("SELECT * FROM properties WHERE id = :propertyId")
     fun getPropertyById(propertyId: Long): Flow<PropertyWithDetailsEntity>
 
-    @Query("SELECT uri FROM pictures WHERE property_id = :propertyId")
-    fun getPhotosByPropertyId(propertyId: Long): Flow<List<String>>
-
-    @Query("SELECT * FROM locations WHERE property_id = :propertyId")
-    fun getLocations(propertyId: Long): Flow<LocationDtoEntity>
-
     @Query("SELECT * FROM properties")
     fun getProperties(): Flow<List<PropertyDtoEntity>>
 
     @Transaction
     @Query("SELECT * FROM properties")
-    fun getPropertiesWithPicturesAndLocation(): Flow<List<PropertyWithDetailsEntity>>
+    fun getPropertiesWithDetailsFlow(): Flow<List<PropertyWithDetailsEntity>>
 
     @Update
     suspend fun update(propertyDtoEntity: PropertyDtoEntity): Int

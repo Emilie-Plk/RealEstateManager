@@ -6,21 +6,20 @@ import javax.inject.Inject
 
 class AmenityDtoEntityMapper @Inject constructor() {
 
-    fun mapToDtoEntity(amenities: List<AmenityEntity>, propertyId: Long): List<AmenityDtoEntity> = amenities
-        .map {
-            AmenityDtoEntity(
-                name = it.type.name,
-                propertyId = propertyId,
-            )
-        }
+    fun mapToDtoEntity(amenity: AmenityEntity) =
+        AmenityDtoEntity(
+            id = amenity.id,
+            name = amenity.type.name,
+            propertyId = amenity.propertyId,
+        )
 
+    fun mapToDomainEntities(amenityDtoEntities: List<AmenityDtoEntity>) =
+        amenityDtoEntities.map { mapToDomainEntity(it) }
 
-    fun mapToDomainEntity(amenityDtoEntities: List<AmenityDtoEntity>): List<AmenityEntity> = amenityDtoEntities
-        .map {
-            AmenityEntity(
-                id = it.id,
-                type = AmenityType.valueOf(it.name),
-            )
-        }
-
+    private fun mapToDomainEntity(amenityDtoEntity: AmenityDtoEntity) =
+        AmenityEntity(
+            id = amenityDtoEntity.id,
+            type = AmenityType.valueOf(amenityDtoEntity.name),
+            propertyId = amenityDtoEntity.propertyId,
+        )
 }

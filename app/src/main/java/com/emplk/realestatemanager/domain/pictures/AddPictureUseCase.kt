@@ -6,6 +6,6 @@ class AddPictureUseCase @Inject constructor(
     private val pictureRepository: PictureRepository,
 ) {
     suspend fun invoke(picture: PictureEntity) {
-        pictureRepository.addPicture(picture)
+        pictureRepository.add(picture)
     }
 }

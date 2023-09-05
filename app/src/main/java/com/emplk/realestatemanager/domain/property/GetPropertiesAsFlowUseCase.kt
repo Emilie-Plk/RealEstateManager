@@ -1,6 +1,5 @@
-package com.emplk.realestatemanager.domain.get_properties
+package com.emplk.realestatemanager.domain.property
 
-import com.emplk.realestatemanager.domain.property.PropertyRepository
 import javax.inject.Inject
 
 class GetPropertiesAsFlowUseCase @Inject constructor(

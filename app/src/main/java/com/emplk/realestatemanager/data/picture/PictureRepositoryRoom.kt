@@ -12,14 +12,14 @@ class PictureRepositoryRoom @Inject constructor(
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : PictureRepository {
 
-    override suspend fun addPicture(pictureEntity: PictureEntity) {
+    override suspend fun add(pictureEntity: PictureEntity) {
         withContext(coroutineDispatcherProvider.io) {
             val pictureDtoEntity = pictureDtoEntityMapper.mapToDtoEntity(pictureEntity)
             pictureDao.insert(pictureDtoEntity)
         }
     }
 
-    override suspend fun updatePicture(pictureEntity: PictureEntity) {
+    override suspend fun update(pictureEntity: PictureEntity) {
         withContext(coroutineDispatcherProvider.io) {
             val pictureDtoEntity = pictureDtoEntityMapper.mapToDtoEntity(pictureEntity)
             pictureDao.update(pictureDtoEntity)

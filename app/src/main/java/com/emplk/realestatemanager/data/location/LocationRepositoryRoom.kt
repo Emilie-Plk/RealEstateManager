@@ -25,5 +25,4 @@ class LocationRepositoryRoom @Inject constructor(
             locationDao.update(locationDtoEntity)
         }
     }
-
 }
