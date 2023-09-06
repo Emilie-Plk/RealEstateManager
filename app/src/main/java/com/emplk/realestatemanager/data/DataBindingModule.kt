@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.data
 
+import com.emplk.realestatemanager.data.add_property.AddPropertyRepositoryImpl
 import com.emplk.realestatemanager.data.amenity.AmenityRepositoryRoom
 import com.emplk.realestatemanager.data.currency.LocaleFormattingRepositoryImpl
 import com.emplk.realestatemanager.data.current_property.CurrentPropertyRepositoryImpl
@@ -8,6 +9,7 @@ import com.emplk.realestatemanager.data.navigation.NavigationRepositoryImpl
 import com.emplk.realestatemanager.data.picture.PictureRepositoryRoom
 import com.emplk.realestatemanager.data.property.PropertyRepositoryRoom
 import com.emplk.realestatemanager.data.screen_width.ScreenWidthTypeRepositoryImpl
+import com.emplk.realestatemanager.domain.add_property.AddPropertyRepository
 import com.emplk.realestatemanager.domain.amenity.AmenityRepository
 import com.emplk.realestatemanager.domain.current_property.CurrentPropertyRepository
 import com.emplk.realestatemanager.domain.locale_formatting.LocaleFormattingRepository
@@ -57,4 +59,8 @@ abstract class DataBindingModule {
     @Singleton
     @Binds
     abstract fun bindAmenityRepository(implementation: AmenityRepositoryRoom): AmenityRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindAddPropertyRepository(implementation: AddPropertyRepositoryImpl): AddPropertyRepository
 }
