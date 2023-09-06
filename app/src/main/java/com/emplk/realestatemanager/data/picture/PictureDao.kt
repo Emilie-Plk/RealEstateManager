@@ -12,8 +12,8 @@ interface PictureDao {
     @Insert
     suspend fun insert(pictureDtoEntity: PictureDtoEntity)
 
-    @Query("SELECT uri FROM pictures WHERE property_id = :propertyId")
-    fun getPicturesAsFlow(propertyId: Long): Flow<List<String>>
+    @Query("SELECT * FROM pictures WHERE property_id = :propertyId")
+    fun getPicturesAsFlow(propertyId: Long): Flow<List<PictureDtoEntity>>
 
     @Update
     suspend fun update(pictureDtoEntity: PictureDtoEntity): Int

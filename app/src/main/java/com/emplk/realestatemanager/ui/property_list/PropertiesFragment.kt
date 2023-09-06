@@ -1,8 +1,11 @@
 package com.emplk.realestatemanager.ui.property_list
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
+import androidx.fragment.app.commitNow
 import androidx.fragment.app.viewModels
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.PropertiesFragmentBinding
@@ -21,10 +24,12 @@ class PropertiesFragment : Fragment(R.layout.properties_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val adapter = PropertyListAdapter()
+        Log.d("COUCOU", "onViewCreated: ${viewModel.viewState.value?.size}")
         binding.propertiesRv.adapter = adapter
 
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
             adapter.submitList(viewState)
+            Log.d("COUCOU", "onViewCreated: ${viewState.size}")
         }
 
         viewModel.viewEventLiveData.observeEvent(this) { event ->
@@ -37,11 +42,12 @@ class PropertiesFragment : Fragment(R.layout.properties_fragment) {
                     )
 
                 is PropertyViewEvent.DisplayDetailFragment ->
-                    parentFragmentManager.beginTransaction()
-                        .replace(
-                            R.id.main_FrameLayout_container_detail, DetailFragment.newInstance()
+                    parentFragmentManager.commit {
+                        replace(
+                            R.id.main_FrameLayout_container_detail,
+                            DetailFragment.newInstance()
                         )
-                        .commitNow()
+                    }
             }
         }
     }

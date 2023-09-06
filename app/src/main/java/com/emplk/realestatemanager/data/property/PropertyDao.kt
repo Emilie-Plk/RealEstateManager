@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.emplk.realestatemanager.data.location.LocationDtoEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -16,14 +15,14 @@ interface PropertyDao {
 
     @Transaction
     @Query("SELECT * FROM properties WHERE id = :propertyId")
-    fun getPropertyById(propertyId: Long): Flow<PropertyWithDetailsEntity>
+    fun getPropertyById(propertyId: Long): Flow<PropertyWithDetails>
 
     @Query("SELECT * FROM properties")
     fun getProperties(): Flow<List<PropertyDtoEntity>>
 
     @Transaction
     @Query("SELECT * FROM properties")
-    fun getPropertiesWithDetailsFlow(): Flow<List<PropertyWithDetailsEntity>>
+    fun getPropertiesWithDetailsFlow(): Flow<List<PropertyWithDetails>>
 
     @Update
     suspend fun update(propertyDtoEntity: PropertyDtoEntity): Int

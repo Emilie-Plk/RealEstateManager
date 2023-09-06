@@ -83,9 +83,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="82dp"
             app:layout_constraintBottom_toBottomOf="@+id/property_item_type_text_view"
-            app:layout_constraintEnd_toStartOf="@+id/property_item_price_text_view"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/property_item_type_text_view"
             app:layout_constraintTop_toTopOf="@+id/property_item_type_text_view"
             tools:text="Upper East Side" />

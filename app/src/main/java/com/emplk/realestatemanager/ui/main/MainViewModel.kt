@@ -56,20 +56,6 @@ class MainViewModel @Inject constructor(
                         )
                     }
 
-                NavigationFragmentType.EDIT_FRAGMENT ->
-                    if (currentPropertyId >= 1) {
-                        emit(
-                            Event(
-                                MainViewEvent.DisplayEditPropertyFragment
-                            )
-                        )
-                    } else {
-                        emit(
-                            Event(
-                                MainViewEvent.DisplayBlankFragment
-                            )
-                        )
-                    }
 
                 NavigationFragmentType.DETAIL_FRAGMENT ->
                     if (currentPropertyId >= 1) {
@@ -86,6 +72,7 @@ class MainViewModel @Inject constructor(
                         )
                     }
 
+                else -> {}
             }
         }.collect()
     }
@@ -94,16 +81,10 @@ class MainViewModel @Inject constructor(
         setNavigationTypeUseCase.invoke(
             NavigationFragmentType.ADD_FRAGMENT
         )
-        /*       viewModelScope.launch(coroutineDispatcherProvider.io) {
-                   hasAddPropertyButtonBeenClickedMutableSharedFlow.emit(true)
-               }*/
     }
 
     fun onResume(isTablet: Boolean) {
         isTabletMutableStateFlow.value = isTablet
         setScreenWidthTypeUseCase.invoke(isTablet)
-        /*    viewModelScope.launch(coroutineDispatcherProvider.io) {
-                hasAddPropertyButtonBeenClickedMutableSharedFlow.emit(false)  // TODO: NINO je suis obligée de faire ça sinon ça garde "true"
-            }*/
     }
 }
