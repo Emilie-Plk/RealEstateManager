@@ -19,6 +19,7 @@ import com.google.gson.Gson
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -55,12 +56,10 @@ class InitializeDatabaseWorker @AssistedInject constructor(
             val amenityEntities = gson.fromJson<List<AmenityDtoEntity>>(json = amenitiesAsJson)
 
             if (propertyEntities != null && locationEntities != null && pictureEntities != null && amenityEntities != null) {
-                val propertyInsertJobs = propertyEntities.map { propertyDto ->
-                    launch { propertyDao.insert(propertyDto) }
-                }
-                propertyInsertJobs.joinAll()
-
-                val childrenJobs = pictureEntities.map { pictureDto ->
+                val allJobs =
+                    propertyEntities.map { propertyDto ->
+                    async { propertyDao.insert(propertyDto) }
+                } + pictureEntities.map { pictureDto ->
                     async { pictureDao.insert(pictureDto) }
                 } + locationEntities.map { locationDto ->
                     async { locationDao.insert(locationDto) }
@@ -68,8 +67,7 @@ class InitializeDatabaseWorker @AssistedInject constructor(
                     async { amenityDao.insert(amenityDto) }
                 }
 
-                // wait for all children jobs to finish
-                childrenJobs.joinAll()
+                allJobs.awaitAll()
                 Result.success()
             } else {
                 Log.e("COUCOU", "Gson can't parse properties : $propertiesAsJson")

@@ -14,10 +14,10 @@
         <TextView
             android:id="@+id/add_property_title_tv"
             style="@style/Theme.RealEstateManager.AddPropertyTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Add new property"
+            android:text="@string/add_property_title_tv"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -301,10 +301,11 @@
             style="@style/Theme.RealEstateManager.AddPropertySubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
             android:text="Bathrooms"
             app:layout_constraintEnd_toEndOf="@+id/add_property_bathrooms_incrementButton"
             app:layout_constraintStart_toStartOf="@+id/add_property_bathrooms_decrementButton"
-            app:layout_constraintTop_toBottomOf="@+id/add_property_bedrooms_textInputLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/add_property_rooms_textInputLayout" />
         />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -391,6 +392,7 @@
             app:layout_constraintTop_toBottomOf="@id/add_property_description_textInputLayout" />
 
         <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/add_property_amenities_flexboxLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="start"
@@ -465,6 +467,54 @@
                 android:text="Library" />
 
         </com.google.android.flexbox.FlexboxLayout>
+
+        <TextView
+            android:id="@+id/add_property_pictures_tv"
+            style="@style/Theme.RealEstateManager.AddPropertySubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pictures"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/add_property_amenities_flexboxLayout" />
+
+        <Button
+            android:id="@+id/add_property_pictures_from_storage_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Import picture"
+            app:layout_constraintEnd_toStartOf="@id/add_property_from_camera_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/add_property_pictures_tv" />
+
+        <Button
+            android:id="@+id/add_property_from_camera_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/baseline_photo_camera_24"
+            android:text="Take picture"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/add_property_pictures_from_storage_button"
+            app:layout_constraintTop_toTopOf="@id/add_property_pictures_from_storage_button" />
+
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/add_property_pictures_flexboxLayout"
+            android:layout_width="match_parent"
+            app:layout_flexGrow="1"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:flexDirection="row"
+            app:justifyContent="space_between"
+            app:flexWrap="wrap"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/add_property_pictures_from_storage_button">
+
+
+        </com.google.android.flexbox.FlexboxLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </ScrollView>

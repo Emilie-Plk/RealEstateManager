@@ -6,7 +6,7 @@ import com.emplk.realestatemanager.data.amenity.AmenityDtoEntity
 import com.emplk.realestatemanager.data.location.LocationDtoEntity
 import com.emplk.realestatemanager.data.picture.PictureDtoEntity
 
-data class PropertyWithDetailsEntity(
+data class PropertyWithDetails(
     @Embedded
     val property: PropertyDtoEntity,
     @Relation(

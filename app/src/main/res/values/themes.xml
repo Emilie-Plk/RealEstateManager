@@ -86,9 +86,20 @@
     </style>
 
     <style name="Theme.RealEstateManager.AddPropertyTextInputLayout">
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
         <item name="boxBackgroundColor">@color/secondary_translucent</item>
         <item name="android:background">@color/secondary_translucent</item>
+    </style>
 
+    <style name="Theme.RealEstateManager.AddPropertyPreviewImageView">
+        <item name="android:layout_width">140dp</item>
+        <item name="android:layout_height">120dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
     </style>
 
 </resources>

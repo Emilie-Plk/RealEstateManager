@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.commit
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.DetailActivityBinding
 import com.emplk.realestatemanager.ui.utils.viewBinding
@@ -27,12 +29,12 @@ class DetailActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(
+            supportFragmentManager.commit {
+                replace(
                     binding.detailFrameLayout.id,
                     DetailFragment.newInstance()
                 )
-                .commitNow()
+            }
         }
     }
 
@@ -41,5 +43,13 @@ class DetailActivity : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
-
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+           //     viewModel.onBackClicked()
+              finish()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 }

@@ -11,6 +11,7 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.commit
 import androidx.fragment.app.commitNow
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.MainActivityBinding
@@ -41,79 +42,55 @@ class MainActivity : AppCompatActivity() {
         setupToolbar()
         setupMenu()
 
-        if (savedInstanceState == null) {
-            supportFragmentManager.commitNow {
-                replace(
-                    binding.mainFrameLayoutContainerProperties.id,
-                    PropertiesFragment()
-                )
-            }
-        }
-
-
         binding.mainAddPropertyFab?.setOnClickListener {
             viewModel.onAddPropertyClicked()
         }
 
         viewModel.viewEventLiveData.observeEvent(this) { event ->
             when (event) {
-
                 is MainViewEvent.DisplayPropertyListFragment -> {
-                    Log.d("COUCOU MainActivity", "DisplayPropertiesFragment: ")
-                    supportFragmentManager.commitNow {
+                    Log.d("COUCOU MainActivity", "DisplayPropertyListFragment: ")
+                    supportFragmentManager.commit {
                         replace(
                             binding.mainFrameLayoutContainerProperties.id,
                             PropertiesFragment.newInstance()
-                        )
+                        ).addToBackStack(null)
                     }
                     binding.mainAddPropertyFab?.visibility = View.VISIBLE
                 }
 
                 is MainViewEvent.DisplayAddPropertyFragmentOnPhone -> {
-                    Log.d("COUCOU MainActivity", "DisplayAddPropertyFragment: ")
-                    supportFragmentManager.commitNow {
+                    Log.d("COUCOU MainActivity", "DisplayAddPropertyFragmentOnPhone: ")
+                    supportFragmentManager.commit {
                         replace(
                             binding.mainFrameLayoutContainerProperties.id,
                             AddPropertyFragment.newInstance()
-                        )
+                        ).addToBackStack(null)
                     }
                     binding.mainAddPropertyFab?.visibility = View.GONE
                 }
 
                 is MainViewEvent.DisplayAddPropertyFragmentOnTablet -> {
-                    Log.d("COUCOU MainActivity", "DisplayAddPropertyFragment: ")
-                    supportFragmentManager.commitNow {
+                    Log.d("COUCOU MainActivity", "DisplayAddPropertyFragmentOnTablet: ")
+                    supportFragmentManager.commit {
                         replace(
                             binding.mainFrameLayoutContainerProperties.id,
                             BlankFragment.newInstance()
-                        )
+                        ).addToBackStack(null)
                     }
-                    supportFragmentManager.commitNow {
+                    supportFragmentManager.commit {
                         binding.mainFrameLayoutContainerDetail?.let {
                             replace(
                                 it.id,
                                 AddPropertyFragment.newInstance()
-                            )
+                            ).addToBackStack(null)
                         }
                     }
-                }
-
-                is MainViewEvent.DisplayEditPropertyFragment -> {
-                    Log.d("COUCOU MainActivity", "DisplayEditPropertyFragment: ")
-                    supportFragmentManager.commitNow {
-                        binding.mainFrameLayoutContainerDetail?.let {
-                            replace(
-                                it.id,
-                                AddPropertyFragment.newInstance()
-                            )
-                        }
-                    }
-                    binding.mainAddPropertyFab?.visibility = View.GONE
                 }
 
                 is MainViewEvent.DisplayBlankFragment -> {
                     Log.d("COUCOU MainActivity", "DisplayBlankFragment: ")
-                    supportFragmentManager.commitNow {
+                    supportFragmentManager.commit {
                         replace(
                             binding.mainFrameLayoutContainerProperties.id,
                             BlankFragment.newInstance()
@@ -123,12 +100,12 @@ class MainActivity : AppCompatActivity() {
 
                 is MainViewEvent.DisplayDetailFragment -> {
                     Log.d("COUCOU MainActivity", "DisplayDetailFragment: ")
-                    supportFragmentManager.commitNow {
+                    supportFragmentManager.commit {
                         binding.mainFrameLayoutContainerDetail?.let {
                             replace(
                                 it.id,
                                 DetailFragment.newInstance()
-                            )
+                            ).addToBackStack(null)
                         }
                     }
                 }

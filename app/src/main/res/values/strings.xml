@@ -45,4 +45,5 @@
     <string name="logo_slogan_tv">Where dreams\nfind their address</string>
     <string name="realestatemanager_logo_a11y">RealEstateManager logo</string>
     <string name="add_property_type_radioGroup_tv">Property type</string>
+    <string name="add_property_title_tv">Add new property</string>
 </resources>

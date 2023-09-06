@@ -1,11 +1,14 @@
 package com.emplk.realestatemanager.ui.detail
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.DetailFragmentBinding
+import com.emplk.realestatemanager.ui.edit.EditPropertyFragment
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.NativePhoto.Companion.load
 import com.emplk.realestatemanager.ui.utils.viewBinding
@@ -27,21 +30,21 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
         viewModel.viewEventLiveData.observeEvent(viewLifecycleOwner) { event ->
             when (event) {
                 is DetailViewEvent.DisplayEditFragmentTablet -> {
-                    /*     Log.d("COUCOU DetailFragment", "DisplayEditFragmentTablet: ")
-                         startActivity(
-                             MainActivity.newIntent(
-                                 requireContext()
-                             )
-                         )*/
+                    parentFragmentManager.commit {
+                        replace(
+                            R.id.main_FrameLayout_container_detail,
+                            EditPropertyFragment.newInstance()
+                        )
+                    }
                 }
 
                 is DetailViewEvent.DisplayEditFragmentPhone -> {
-                    /* Log.d("COUCOU DetailFragment", "DisplayEditFragmentPhone: ")
-                     startActivity(
-                         MainActivity.newIntent(
-                             requireContext()
-                         )
-                     )*/
+                    parentFragmentManager.commit {
+                        replace(
+                            R.id.detail_FrameLayout,
+                            EditPropertyFragment.newInstance()
+                        )
+                    }
                 }
             }
         }
@@ -53,6 +56,7 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
                 .into(binding.detailFeaturedImage)
 
             binding.detailEditFab.setOnClickListener {
+                Log.d("COUCOU", "onEditClicked: setonclicklistener")
                 viewModel.onEditClicked()
             }
 
