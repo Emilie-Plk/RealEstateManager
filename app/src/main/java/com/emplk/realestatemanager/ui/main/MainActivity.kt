@@ -17,6 +17,7 @@ import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.MainActivityBinding
 import com.emplk.realestatemanager.ui.add.AddPropertyFragment
 import com.emplk.realestatemanager.ui.blank.BlankFragment
+import com.emplk.realestatemanager.ui.detail.DetailActivity
 import com.emplk.realestatemanager.ui.detail.DetailFragment
 import com.emplk.realestatemanager.ui.property_list.PropertiesFragment
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
@@ -48,13 +49,35 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.viewEventLiveData.observeEvent(this) { event ->
             when (event) {
-                is MainViewEvent.DisplayPropertyListFragment -> {
-                    Log.d("COUCOU MainActivity", "DisplayPropertyListFragment: ")
+
+                is MainViewEvent.DisplayPropertyListFragmentOnPhone -> {
+                    Log.d("COUCOU MainActivity", "DisplayPropertyListFragmentOnPhone: ")
                     supportFragmentManager.commit {
                         replace(
                             binding.mainFrameLayoutContainerProperties.id,
                             PropertiesFragment.newInstance()
                         ).addToBackStack(null)
+                    }
+                    binding.mainAddPropertyFab?.visibility = View.VISIBLE
+                }
+
+                is MainViewEvent.DisplayPropertyListFragmentOnTablet -> {
+                    Log.d("COUCOU MainActivity", "DisplayPropertyListFragmentOnTablet: ")
+                    supportFragmentManager.commit {
+                        replace(
+                            binding.mainFrameLayoutContainerProperties.id,
+                            PropertiesFragment.newInstance()
+                        ).addToBackStack(null)
+                        binding.mainAddPropertyFab?.visibility = View.GONE
+                    }
+
+                    supportFragmentManager.commit {
+                        binding.mainFrameLayoutContainerDetail?.let {
+                            replace(
+                                it.id,
+                                BlankFragment.newInstance()
+                            ).addToBackStack(null)
+                        }
                     }
                     binding.mainAddPropertyFab?.visibility = View.VISIBLE
                 }
@@ -108,6 +131,11 @@ class MainActivity : AppCompatActivity() {
                             ).addToBackStack(null)
                         }
                     }
+                }
+
+                is MainViewEvent.StartDetailActivity -> {
+                    Log.d("COUCOU MainActivity", "StartDetailActivity: ")
+                    startActivity(DetailActivity.newIntent(this))
                 }
             }
         }

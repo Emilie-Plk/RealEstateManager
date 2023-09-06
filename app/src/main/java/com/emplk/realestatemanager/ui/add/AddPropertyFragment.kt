@@ -1,12 +1,9 @@
 package com.emplk.realestatemanager.ui.add
 
 import android.os.Bundle
-import android.view.ContextThemeWrapper
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.ImageView
-import androidx.core.view.marginBottom
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.emplk.realestatemanager.R
@@ -32,7 +29,6 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
             val imageView = ImageView(requireActivity())
 
             imageView.apply {
-                // Apply style attributes programmatically
                 imageView.setImageResource(R.drawable.tools_villa)
                 imageView.layoutParams = ViewGroup.MarginLayoutParams(
                     500,
