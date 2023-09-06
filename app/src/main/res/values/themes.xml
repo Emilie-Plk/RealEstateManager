@@ -1,6 +1,6 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Base.Theme.RealEstateManager" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.RealEstateManager" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/primary_dark</item>
         <item name="android:statusBarColor">@color/primary_dark</item>
@@ -11,15 +11,19 @@
         <item name="colorSurface">@color/white</item>
         <item name="colorOnSurface">@color/black</item>
         <item name="colorError">@color/cherry_red</item>
+        <item name="colorPrimaryContainer">@color/almost_white</item>
+        <item name="colorOnPrimaryContainer">@color/secondary</item>
     </style>
-
-    <style name="Theme.RealEstateManager" parent="Base.Theme.RealEstateManager" />
 
     <style name="Theme.RealEstateManager.Toolbar" parent="Widget.Material3.Toolbar">
         <item name="titleTextColor">@color/almost_white</item>
-        <item name="colorOnPrimary">@color/almost_white</item>
-        <item name="navigationIconTint">@color/almost_white</item>
+        <item name="android:background">@color/primary_dark</item>
+        <item name="navigationIconTint">@color/secondary_dark</item>
+    </style>
 
+    <style name="Theme.RealEstateManager.YellowFab" parent="Widget.Material3.FloatingActionButton.Primary">
+        <item name="backgroundTint">@color/secondary</item>
+        <item name="tint">@color/white</item>
     </style>
 
     <style name="Theme.RealEstateManager.PropertyTypeTitle">

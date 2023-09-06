@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
 import com.emplk.realestatemanager.R
@@ -17,6 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class DetailActivity : AppCompatActivity() {
 
     private val binding by viewBinding { DetailActivityBinding.inflate(it) }
+    private val viewModel by viewModels<DetailActivityViewModel>()
 
     companion object {
         fun newIntent(requireContext: Context): Intent = Intent(requireContext, DetailActivity::class.java)
@@ -51,5 +53,10 @@ class DetailActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.onResume(resources.getBoolean(R.bool.isTablet))
     }
 }

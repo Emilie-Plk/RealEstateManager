@@ -35,41 +35,27 @@ class MainViewModel @Inject constructor(
         ) { isTablet, navigationType, currentPropertyId ->
             when (navigationType) {
                 NavigationFragmentType.LIST_FRAGMENT ->
-                    emit(
-                        Event(
-                            MainViewEvent.DisplayPropertyListFragment
-                        )
-                    )
+                    if (!isTablet) {
+                        emit(Event(MainViewEvent.DisplayPropertyListFragmentOnPhone))
+                    } else {
+                        emit(Event(MainViewEvent.DisplayPropertyListFragmentOnTablet))
+                    }
 
                 NavigationFragmentType.ADD_FRAGMENT ->
                     if (!isTablet) {
-                        emit(
-                            Event(
-                                MainViewEvent.DisplayAddPropertyFragmentOnPhone
-                            )
-                        )
+                        emit(Event(MainViewEvent.DisplayAddPropertyFragmentOnPhone))
                     } else {
-                        emit(
-                            Event(
-                                MainViewEvent.DisplayAddPropertyFragmentOnTablet
-                            )
-                        )
+                        emit(Event(MainViewEvent.DisplayAddPropertyFragmentOnTablet))
                     }
-
 
                 NavigationFragmentType.DETAIL_FRAGMENT ->
                     if (currentPropertyId >= 1) {
-                        emit(
-                            Event(
-                                MainViewEvent.DisplayDetailFragment
-                            )
-                        )
-                    } else {
-                        emit(
-                            Event(
-                                MainViewEvent.DisplayBlankFragment
-                            )
-                        )
+                        if (!isTablet) {
+                            emit(Event(MainViewEvent.DisplayDetailFragment))
+                        }
+                        else  {
+                            emit(Event(MainViewEvent.StartDetailActivity))
+                        }
                     }
 
                 else -> {}
