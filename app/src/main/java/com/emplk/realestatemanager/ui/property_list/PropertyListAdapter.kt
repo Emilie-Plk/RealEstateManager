@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.emplk.realestatemanager.R
+import com.emplk.realestatemanager.databinding.LoadingStateBinding
 import com.emplk.realestatemanager.databinding.PropertyEmptyBinding
 import com.emplk.realestatemanager.databinding.PropertyItemBinding
 import com.emplk.realestatemanager.ui.utils.NativePhoto.Companion.load
@@ -21,13 +22,15 @@ class PropertyListAdapter :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PropertyViewHolder =
         when (PropertiesViewState.Type.values()[viewType]) {
-            PropertiesViewState.Type.PROPERTY -> PropertyViewHolder.Property.create(parent)
+            PropertiesViewState.Type.PROPERTIES -> PropertyViewHolder.Property.create(parent)
+            PropertiesViewState.Type.LOADING -> PropertyViewHolder.LoadingState.create(parent)
             PropertiesViewState.Type.EMPTY_STATE -> PropertyViewHolder.EmptyState.create(parent)
         }
 
     override fun onBindViewHolder(holder: PropertyViewHolder, position: Int) {
         when (holder) {
             is PropertyViewHolder.Property -> holder.bind(item = getItem(position) as PropertiesViewState.Properties)
+            is PropertyViewHolder.LoadingState -> Unit
             is PropertyViewHolder.EmptyState -> Unit
         }
     }
@@ -92,6 +95,20 @@ class PropertyListAdapter :
                 )
             }
         }
+
+        class LoadingState(private val binding: LoadingStateBinding) :
+            PropertyViewHolder(binding.root) {
+            companion object {
+                fun create(parent: ViewGroup) = LoadingState(
+                    binding = LoadingStateBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    )
+                )
+            }
+        }
+        }
     }
 
     object PropertyDiffCallback : DiffUtil.ItemCallback<PropertiesViewState>() {
@@ -103,6 +120,10 @@ class PropertyListAdapter :
                 oldItem is PropertiesViewState.Properties &&
                         newItem is PropertiesViewState.Properties ->
                     oldItem.id == newItem.id
+
+                oldItem is PropertiesViewState.LoadingState &&
+                        newItem is PropertiesViewState.LoadingState ->
+                    true
 
                 oldItem is PropertiesViewState.EmptyState &&
                         newItem is PropertiesViewState.EmptyState ->
@@ -116,4 +137,3 @@ class PropertyListAdapter :
             newItem: PropertiesViewState
         ): Boolean = oldItem == newItem
     }
-}

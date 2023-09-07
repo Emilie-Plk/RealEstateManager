@@ -7,11 +7,10 @@ import com.emplk.realestatemanager.ui.utils.NativeText
 sealed class PropertiesViewState(val type: Type) {
 
     enum class Type {
-        PROPERTY,
+        PROPERTIES,
+        LOADING,
         EMPTY_STATE,
     }
-
-    object EmptyState : PropertiesViewState(Type.EMPTY_STATE)
 
     data class Properties(
         val id: Long,
@@ -25,5 +24,9 @@ sealed class PropertiesViewState(val type: Type) {
         val bedroom: String,
         val surface: NativeText,
         val onClickEvent: EquatableCallback,
-    ) : PropertiesViewState(Type.PROPERTY)
+    ) : PropertiesViewState(Type.PROPERTIES)
+
+    object LoadingState : PropertiesViewState(Type.LOADING)
+
+    object EmptyState : PropertiesViewState(Type.EMPTY_STATE)
 }
