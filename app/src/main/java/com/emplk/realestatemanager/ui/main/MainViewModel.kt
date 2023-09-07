@@ -2,6 +2,7 @@ package com.emplk.realestatemanager.ui.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.liveData
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdFlowUseCase
@@ -11,9 +12,11 @@ import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.screen_width.SetScreenWidthTypeUseCase
 import com.emplk.realestatemanager.ui.utils.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
@@ -51,14 +54,22 @@ class MainViewModel @Inject constructor(
                 NavigationFragmentType.DETAIL_FRAGMENT ->
                     if (currentPropertyId >= 1) {
                         if (!isTablet) {
-                            emit(Event(MainViewEvent.DisplayDetailFragment))
+                            emit(Event(MainViewEvent.StartDetailActivity))
                         }
                         else  {
-                            emit(Event(MainViewEvent.StartDetailActivity))
+                            emit(Event(MainViewEvent.DisplayDetailFragment))
                         }
                     }
 
-                else -> {}
+            NavigationFragmentType.EDIT_FRAGMENT ->
+                if (currentPropertyId >= 1) {
+                    if (!isTablet) {
+                        emit(Event(MainViewEvent.DisplayEditPropertyFragmentOnPhone))
+                    }
+                    else  {
+                        emit(Event(MainViewEvent.DisplayEditPropertyFragmentOnTablet))
+                    }
+                }
             }
         }.collect()
     }

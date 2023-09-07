@@ -5,15 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.emplk.realestatemanager.R
-import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.current_property.SetCurrentPropertyIdUseCase
-import com.emplk.realestatemanager.domain.property.GetPropertiesAsFlowUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.SurfaceUnitType
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
+import com.emplk.realestatemanager.domain.property.GetPropertiesAsFlowUseCase
 import com.emplk.realestatemanager.domain.screen_width.GetScreenWidthTypeFlowUseCase
 import com.emplk.realestatemanager.domain.screen_width.ScreenWidthType
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
@@ -28,7 +27,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PropertyViewModel @Inject constructor(
+class PropertiesViewModel @Inject constructor(
     private val getPropertiesAsFlowUseCase: GetPropertiesAsFlowUseCase,
     private val getCurrencyTypeUseCase: GetCurrencyTypeUseCase,
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
@@ -39,7 +38,7 @@ class PropertyViewModel @Inject constructor(
 
     private val propertyIdMutableSharedFlow = MutableSharedFlow<Long>()
 
-    val viewEventLiveData: LiveData<Event<PropertyViewEvent>> = liveData {
+    val viewEventLiveData: LiveData<Event<PropertiesViewEvent>> = liveData {
         combine(
             propertyIdMutableSharedFlow,
             getScreenWidthTypeFlowUseCase.invoke()
@@ -49,7 +48,7 @@ class PropertyViewModel @Inject constructor(
                     ScreenWidthType.TABLET -> {
                         emit(
                             Event(
-                                PropertyViewEvent.DisplayDetailFragment
+                                PropertiesViewEvent.DisplayDetailFragment
                             )
                         )
                     }
@@ -57,7 +56,7 @@ class PropertyViewModel @Inject constructor(
                     ScreenWidthType.PHONE -> {
                         emit(
                             Event(
-                                PropertyViewEvent.NavigateToDetailActivity
+                                PropertiesViewEvent.NavigateToDetailActivity
                             )
                         )
                     }
@@ -70,17 +69,23 @@ class PropertyViewModel @Inject constructor(
         }.collect()
     }
 
-    val viewState: LiveData<List<PropertyViewState>> = liveData {
+    val viewState: LiveData<List<PropertiesViewState>> = liveData {
         val currencyType = getCurrencyTypeUseCase.invoke()
         val surfaceUnitType = getSurfaceUnitUseCase.invoke()
-
+        if (latestValue == null) {
+            emit(listOf(PropertiesViewState.EmptyState))
+        }
         getPropertiesAsFlowUseCase.invoke().collect { properties ->
+            if (properties.isEmpty()) {
+                emit(listOf(PropertiesViewState.EmptyState))
+                return@collect
+            }
             emit(
                 properties.map { property ->
                     val photoUrl =
                         property.pictures.find { picture -> picture.isThumbnail }?.uri
 
-                    PropertyViewState.Property(
+                    PropertiesViewState.Properties(
                         id = property.id,
                         propertyType = property.type,
                         featuredPicture = if (photoUrl != null) {

@@ -24,7 +24,9 @@ import com.emplk.realestatemanager.ui.utils.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -51,7 +53,7 @@ class DetailViewModel @Inject constructor(
                 getScreenWidthTypeFlowUseCase.invoke(),
                 getCurrentPropertyIdFlowUseCase.invoke(),
             ) { screenWidthType, currentId ->
-                Log.d("COUCOU", "we enter the combine") // we don't enter here
+                Log.d("COUCOU", "we enter the combine")
                 if (currentId >= 0) {
                     when (screenWidthType) {
                         ScreenWidthType.TABLET -> {
@@ -60,13 +62,12 @@ class DetailViewModel @Inject constructor(
                         }
 
                         ScreenWidthType.PHONE -> {
-                            emit(Event(DetailViewEvent.DisplayEditFragmentPhone))
+                            emit(Event(DetailViewEvent.NavigateToMainActivity))
                             setNavigationTypeUseCase.invoke(NavigationFragmentType.EDIT_FRAGMENT)
                         }
 
                         // Should never occur
                         ScreenWidthType.UNDEFINED -> {
-                            emit(Event(DetailViewEvent.DisplayEditFragmentPhone))
                         }
                     }
                 }

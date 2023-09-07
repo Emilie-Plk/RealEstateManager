@@ -21,7 +21,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -45,7 +44,7 @@
                     android:layout_height="160dp"
                     android:contentDescription="@string/detail_fragment_featured_picture_a11y"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/tools_villa"
+                    tools:src="@drawable/tools_villa"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -103,7 +102,6 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/detail_entry_date_tv"
                     tools:text="Managed by John Doe" />
-
 
                 <TextView
                     android:id="@+id/detail_sold_date_tv"
@@ -170,7 +168,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:text="@string/detail_number_of_room_textview"
             app:layout_constraintBottom_toBottomOf="@id/detail_room_logo"
             app:layout_constraintEnd_toStartOf="@id/detail_bedroom_logo"
             app:layout_constraintStart_toEndOf="@id/detail_room_logo"
@@ -194,7 +191,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:text="@string/detail_number_of_bedroom_textview"
             app:layout_constraintBottom_toBottomOf="@id/detail_bedroom_logo"
             app:layout_constraintEnd_toStartOf="@id/detail_bathroom_logo"
             app:layout_constraintStart_toEndOf="@id/detail_bedroom_logo"
@@ -219,7 +215,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:maxLines="2"
-            android:text="@string/detail_number_of_bathroom_textview"
             app:layout_constraintBottom_toBottomOf="@id/detail_bathroom_logo"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/detail_bathroom_logo"
@@ -383,7 +378,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/detail_amenities_flexbox" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

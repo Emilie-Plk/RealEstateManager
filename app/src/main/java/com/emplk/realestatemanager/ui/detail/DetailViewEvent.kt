@@ -2,5 +2,5 @@ package com.emplk.realestatemanager.ui.detail
 
 sealed class DetailViewEvent {
     object DisplayEditFragmentTablet : DetailViewEvent()
-    object DisplayEditFragmentPhone : DetailViewEvent()
+    object NavigateToMainActivity : DetailViewEvent()
 }

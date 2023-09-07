@@ -3,6 +3,7 @@ package com.emplk.realestatemanager.ui.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
@@ -10,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.DetailActivityBinding
+import com.emplk.realestatemanager.ui.main.MainActivity
 import com.emplk.realestatemanager.ui.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -30,14 +32,22 @@ class DetailActivity : AppCompatActivity() {
         setSupportActionBar(binding.detailToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        if (savedInstanceState == null) {
-            supportFragmentManager.commit {
-                replace(
-                    binding.detailFrameLayout.id,
-                    DetailFragment.newInstance()
-                )
+        viewModel.isTabletLiveData.observe(this) { isTablet ->
+            if (isTablet) {
+                Log.d("COUCOU DetailActivity", "isTablet: ")
+                startActivity(MainActivity.newIntent(this))
+                finish()
+            } else {
+                Log.d("COUCOU DetailActivity", "isPhone: ")
+                supportFragmentManager.commit {
+                    replace(
+                        R.id.detail_FrameLayout,
+                        DetailFragment.newInstance()
+                    )
+                }
             }
         }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -48,8 +58,7 @@ class DetailActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-           //     viewModel.onBackClicked()
-              finish()
+                viewModel.onBackPressed()
             }
         }
         return super.onOptionsItemSelected(item)
