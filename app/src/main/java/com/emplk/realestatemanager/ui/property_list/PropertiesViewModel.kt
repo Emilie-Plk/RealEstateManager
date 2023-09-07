@@ -21,6 +21,7 @@ import com.emplk.realestatemanager.ui.utils.NativePhoto
 import com.emplk.realestatemanager.ui.utils.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
@@ -36,11 +37,11 @@ class PropertiesViewModel @Inject constructor(
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
 ) : ViewModel() {
 
-    private val propertyIdMutableSharedFlow = MutableSharedFlow<Long>()
+    private val propertyIdMutableSharedFlow = MutableSharedFlow<Long>(extraBufferCapacity = 1)
 
     val viewEventLiveData: LiveData<Event<PropertiesViewEvent>> = liveData {
         combine(
-            propertyIdMutableSharedFlow,
+            propertyIdMutableSharedFlow.asSharedFlow(),
             getScreenWidthTypeFlowUseCase.invoke()
         ) { propertyId, screenWidthType ->
             if (propertyId >= 0) {
@@ -122,7 +123,7 @@ class PropertiesViewModel @Inject constructor(
                         },
                         onClickEvent = EquatableCallback {
                             viewModelScope.launch {
-                                propertyIdMutableSharedFlow.emit(property.id)
+                                propertyIdMutableSharedFlow.tryEmit(property.id)
                                 setNavigationTypeUseCase.invoke(NavigationFragmentType.DETAIL_FRAGMENT)
                                 setCurrentPropertyIdUseCase.invoke(property.id)
                             }

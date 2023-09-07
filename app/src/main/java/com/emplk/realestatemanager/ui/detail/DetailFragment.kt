@@ -55,6 +55,7 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
                     binding.root.isVisible = false
                     binding.detailProgressBar.isVisible = true
                 }
+
                 is DetailViewState.PropertyDetail -> {
                     binding.detailProgressBar.isVisible = false
                     binding.root.isVisible = true

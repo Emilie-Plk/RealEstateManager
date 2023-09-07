@@ -20,8 +20,6 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.joinAll
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @HiltWorker
@@ -58,14 +56,14 @@ class InitializeDatabaseWorker @AssistedInject constructor(
             if (propertyEntities != null && locationEntities != null && pictureEntities != null && amenityEntities != null) {
                 val allJobs =
                     propertyEntities.map { propertyDto ->
-                    async { propertyDao.insert(propertyDto) }
-                } + pictureEntities.map { pictureDto ->
-                    async { pictureDao.insert(pictureDto) }
-                } + locationEntities.map { locationDto ->
-                    async { locationDao.insert(locationDto) }
-                } + amenityEntities.map { amenityDto ->
-                    async { amenityDao.insert(amenityDto) }
-                }
+                        async { propertyDao.insert(propertyDto) }
+                    } + pictureEntities.map { pictureDto ->
+                        async { pictureDao.insert(pictureDto) }
+                    } + locationEntities.map { locationDto ->
+                        async { locationDao.insert(locationDto) }
+                    } + amenityEntities.map { amenityDto ->
+                        async { amenityDao.insert(amenityDto) }
+                    }
 
                 allJobs.awaitAll()
                 Result.success()
