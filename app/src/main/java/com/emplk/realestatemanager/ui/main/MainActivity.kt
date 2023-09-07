@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.commit
+import androidx.fragment.app.commitNow
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.MainActivityBinding
 import com.emplk.realestatemanager.ui.add.AddPropertyFragment
@@ -43,6 +44,17 @@ class MainActivity : AppCompatActivity() {
         setupToolbar()
         setupMenu()
 
+        if (savedInstanceState == null) {
+            supportFragmentManager.commitNow {
+                Log.d("COUCOU MainActivity", "supportFragmentManager onCreate: ")
+                add(
+                    binding.mainFrameLayoutContainerProperties.id,
+                    PropertiesFragment.newInstance(),
+                    PropertiesFragment::class.java.simpleName
+                )
+            }
+        }
+
         binding.mainAddPropertyFab?.setOnClickListener {
             viewModel.onAddPropertyClicked()
         }
@@ -54,12 +66,16 @@ class MainActivity : AppCompatActivity() {
         viewModel.viewEventLiveData.observeEvent(this) { event ->
             when (event) {
                 MainViewEvent.DisplayPropertyListFragmentOnPhone -> {
-                    Log.d("COUCOU MainActivity", "DisplayPropertyListFragmentOnPhone: ")
-                    supportFragmentManager.commit {
-                        replace(
-                            binding.mainFrameLayoutContainerProperties.id,
-                            PropertiesFragment.newInstance()
-                        )
+                    val existingFrag =
+                        supportFragmentManager.findFragmentByTag(PropertiesFragment::class.java.simpleName)
+                    if (existingFrag == null) {
+                        Log.d("COUCOU MainActivity", "DisplayPropertyListFragmentOnPhone: ")
+                        supportFragmentManager.commit {
+                            replace(
+                                binding.mainFrameLayoutContainerProperties.id,
+                                PropertiesFragment.newInstance()
+                            ).addToBackStack(null)
+                        }
                     }
                 }
 

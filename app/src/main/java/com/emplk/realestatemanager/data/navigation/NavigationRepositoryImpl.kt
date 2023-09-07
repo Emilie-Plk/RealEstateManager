@@ -9,6 +9,7 @@ import javax.inject.Inject
 
 class NavigationRepositoryImpl @Inject constructor() : NavigationRepository {
     private val navigationFragmentTypeMutableStateFlow = MutableStateFlow(NavigationFragmentType.LIST_FRAGMENT)
+    // TODO: Event not State?
 
     override fun getNavigationFragmentType(): Flow<NavigationFragmentType> =
         navigationFragmentTypeMutableStateFlow.asStateFlow()
