@@ -8,9 +8,21 @@
     android:layout_marginEnd="8dp"
     tools:context=".ui.detail.DetailFragment">
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp">
+
+
+        <ProgressBar
+            android:id="@+id/detail_progressBar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/detail_top_info_cardView"
@@ -380,4 +392,5 @@
             app:layout_constraintTop_toBottomOf="@id/detail_amenities_flexbox" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </ScrollView>

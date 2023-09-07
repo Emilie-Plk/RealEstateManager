@@ -40,7 +40,6 @@ class DetailViewModel @Inject constructor(
     private val getScreenWidthTypeFlowUseCase: GetScreenWidthTypeFlowUseCase,
     private val getCurrentPropertyIdFlowUseCase: GetCurrentPropertyIdFlowUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
-    private val getNavigationTypeUseCase: GetNavigationTypeUseCase,
     coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : ViewModel() {
 
@@ -77,14 +76,18 @@ class DetailViewModel @Inject constructor(
 
     val viewState: LiveData<DetailViewState> = liveData(coroutineDispatcherProvider.io) {
         getCurrentPropertyIdFlowUseCase.invoke().flatMapLatest { propertyId ->
+            if (latestValue == null) {
+                emit(DetailViewState.LoadingState)
+            }
             getPropertyByItsIdUseCase.invoke(propertyId)
-        }.collect { propertyEntity ->
+        }.collectLatest { propertyEntity ->
             val currencyType = getCurrencyTypeUseCase.invoke()
             val surfaceUnitType = getSurfaceUnitUseCase.invoke()
+
             emit(
-                DetailViewState(
+                DetailViewState.PropertyDetail(
                     id = propertyEntity.id,
-                    type = propertyEntity.type,
+                    propertyType = propertyEntity.type,
                     featuredPicture = NativePhoto.Uri(
                         propertyEntity.pictures.first { picture ->
                             picture.isThumbnail
