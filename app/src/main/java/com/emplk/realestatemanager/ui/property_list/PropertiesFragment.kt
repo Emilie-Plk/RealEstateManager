@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
-import androidx.fragment.app.commitNow
 import androidx.fragment.app.viewModels
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.PropertiesFragmentBinding
@@ -19,7 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class PropertiesFragment : Fragment(R.layout.properties_fragment) {
 
     private val binding by viewBinding { PropertiesFragmentBinding.bind(it) }
-    private val viewModel by viewModels<PropertyViewModel>()
+    private val viewModel by viewModels<PropertiesViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -34,14 +33,14 @@ class PropertiesFragment : Fragment(R.layout.properties_fragment) {
 
         viewModel.viewEventLiveData.observeEvent(this) { event ->
             when (event) {
-                is PropertyViewEvent.NavigateToDetailActivity ->
+                is PropertiesViewEvent.NavigateToDetailActivity ->
                     startActivity(
                         DetailActivity.newIntent(
                             requireContext()
                         )
                     )
 
-                is PropertyViewEvent.DisplayDetailFragment ->
+                is PropertiesViewEvent.DisplayDetailFragment ->
                     parentFragmentManager.commit {
                         replace(
                             R.id.main_FrameLayout_container_detail,

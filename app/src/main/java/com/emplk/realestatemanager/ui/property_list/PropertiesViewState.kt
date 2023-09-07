@@ -4,16 +4,16 @@ import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.NativePhoto
 import com.emplk.realestatemanager.ui.utils.NativeText
 
-sealed class PropertyViewState(val type: Type) {
+sealed class PropertiesViewState(val type: Type) {
 
     enum class Type {
         PROPERTY,
         EMPTY_STATE,
     }
 
-    object EmptyState : PropertyViewState(Type.EMPTY_STATE)
+    object EmptyState : PropertiesViewState(Type.EMPTY_STATE)
 
-    data class Property(
+    data class Properties(
         val id: Long,
         val propertyType: String,
         val featuredPicture: NativePhoto,
@@ -25,5 +25,5 @@ sealed class PropertyViewState(val type: Type) {
         val bedroom: String,
         val surface: NativeText,
         val onClickEvent: EquatableCallback,
-    ) : PropertyViewState(Type.PROPERTY)
+    ) : PropertiesViewState(Type.PROPERTY)
 }
