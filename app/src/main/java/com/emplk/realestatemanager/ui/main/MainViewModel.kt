@@ -2,7 +2,6 @@ package com.emplk.realestatemanager.ui.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.liveData
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdFlowUseCase
@@ -12,7 +11,6 @@ import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.screen_width.SetScreenWidthTypeUseCase
 import com.emplk.realestatemanager.ui.utils.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
@@ -29,6 +27,18 @@ class MainViewModel @Inject constructor(
     coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : ViewModel() {
     private val isTabletMutableStateFlow = MutableStateFlow(false)
+
+    val isFabVisibleLiveData: LiveData<Boolean> = liveData(coroutineDispatcherProvider.io) {
+        combine(
+            isTabletMutableStateFlow.asStateFlow(),
+            getNavigationTypeUseCase.invoke(),
+        ) { isTablet, navigationType ->
+            when (navigationType) {
+                NavigationFragmentType.LIST_FRAGMENT -> !isTablet
+                else -> false
+            }
+        }.collectLatest { emit(it) }
+    }
 
     val viewEventLiveData: LiveData<Event<MainViewEvent>> = liveData(coroutineDispatcherProvider.io) {
         combine(
@@ -55,21 +65,19 @@ class MainViewModel @Inject constructor(
                     if (currentPropertyId >= 1) {
                         if (!isTablet) {
                             emit(Event(MainViewEvent.StartDetailActivity))
-                        }
-                        else  {
+                        } else {
                             emit(Event(MainViewEvent.DisplayDetailFragment))
                         }
                     }
 
-            NavigationFragmentType.EDIT_FRAGMENT ->
-                if (currentPropertyId >= 1) {
-                    if (!isTablet) {
-                        emit(Event(MainViewEvent.DisplayEditPropertyFragmentOnPhone))
+                NavigationFragmentType.EDIT_FRAGMENT ->
+                    if (currentPropertyId >= 1) {
+                        if (!isTablet) {
+                            emit(Event(MainViewEvent.DisplayEditPropertyFragmentOnPhone))
+                        } else {
+                            emit(Event(MainViewEvent.DisplayEditPropertyFragmentOnTablet))
+                        }
                     }
-                    else  {
-                        emit(Event(MainViewEvent.DisplayEditPropertyFragmentOnTablet))
-                    }
-                }
             }
         }.collect()
     }

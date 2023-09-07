@@ -4,7 +4,6 @@ import com.emplk.realestatemanager.domain.screen_width.ScreenWidthType
 import com.emplk.realestatemanager.domain.screen_width.ScreenWidthTypeRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 class ScreenWidthTypeRepositoryImpl @Inject constructor() : ScreenWidthTypeRepository {

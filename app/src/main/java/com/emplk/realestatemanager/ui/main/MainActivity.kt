@@ -7,13 +7,11 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.commit
-import androidx.fragment.app.commitNow
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.MainActivityBinding
 import com.emplk.realestatemanager.ui.add.AddPropertyFragment
@@ -49,9 +47,12 @@ class MainActivity : AppCompatActivity() {
             viewModel.onAddPropertyClicked()
         }
 
+        viewModel.isFabVisibleLiveData.observe(this) { isVisible ->
+            binding.mainAddPropertyFab?.isVisible = isVisible
+        }
+
         viewModel.viewEventLiveData.observeEvent(this) { event ->
             when (event) {
-
                 MainViewEvent.DisplayPropertyListFragmentOnPhone -> {
                     Log.d("COUCOU MainActivity", "DisplayPropertyListFragmentOnPhone: ")
                     supportFragmentManager.commit {
@@ -60,7 +61,6 @@ class MainActivity : AppCompatActivity() {
                             PropertiesFragment.newInstance()
                         )
                     }
-                    binding.mainAddPropertyFab?.visibility = View.VISIBLE
                 }
 
                 MainViewEvent.DisplayPropertyListFragmentOnTablet -> {
@@ -70,7 +70,6 @@ class MainActivity : AppCompatActivity() {
                             binding.mainFrameLayoutContainerProperties.id,
                             PropertiesFragment.newInstance()
                         )
-                        binding.mainAddPropertyFab?.isVisible = false
                     }
 
                     supportFragmentManager.commit {
@@ -81,7 +80,6 @@ class MainActivity : AppCompatActivity() {
                             )
                         }
                     }
-                    binding.mainAddPropertyFab?.visibility = View.VISIBLE
                 }
 
                 MainViewEvent.DisplayAddPropertyFragmentOnPhone -> {
@@ -92,7 +90,6 @@ class MainActivity : AppCompatActivity() {
                             AddPropertyFragment.newInstance()
                         ).addToBackStack(null)
                     }
-                    binding.mainAddPropertyFab?.isVisible = false
                 }
 
                 MainViewEvent.DisplayAddPropertyFragmentOnTablet -> {
@@ -153,9 +150,9 @@ class MainActivity : AppCompatActivity() {
                             binding.mainFrameLayoutContainerProperties.id,
                             EditPropertyFragment.newInstance()
                         )
-                        binding.mainAddPropertyFab?.isVisible = false
                     }
                 }
+
                 MainViewEvent.DisplayEditPropertyFragmentOnTablet -> {
                     Log.d("COUCOU MainActivity", "DisplayEditPropertyFragmentOnTablet: ")
                     supportFragmentManager.commit {

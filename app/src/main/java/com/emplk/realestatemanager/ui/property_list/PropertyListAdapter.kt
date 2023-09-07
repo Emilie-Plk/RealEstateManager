@@ -108,32 +108,32 @@ class PropertyListAdapter :
                 )
             }
         }
+    }
+}
+
+object PropertyDiffCallback : DiffUtil.ItemCallback<PropertiesViewState>() {
+    override fun areItemsTheSame(
+        oldItem: PropertiesViewState,
+        newItem: PropertiesViewState
+    ): Boolean =
+        when {
+            oldItem is PropertiesViewState.Properties &&
+                    newItem is PropertiesViewState.Properties ->
+                oldItem.id == newItem.id
+
+            oldItem is PropertiesViewState.LoadingState &&
+                    newItem is PropertiesViewState.LoadingState ->
+                true
+
+            oldItem is PropertiesViewState.EmptyState &&
+                    newItem is PropertiesViewState.EmptyState ->
+                true
+
+            else -> false
         }
-    }
 
-    object PropertyDiffCallback : DiffUtil.ItemCallback<PropertiesViewState>() {
-        override fun areItemsTheSame(
-            oldItem: PropertiesViewState,
-            newItem: PropertiesViewState
-        ): Boolean =
-            when {
-                oldItem is PropertiesViewState.Properties &&
-                        newItem is PropertiesViewState.Properties ->
-                    oldItem.id == newItem.id
-
-                oldItem is PropertiesViewState.LoadingState &&
-                        newItem is PropertiesViewState.LoadingState ->
-                    true
-
-                oldItem is PropertiesViewState.EmptyState &&
-                        newItem is PropertiesViewState.EmptyState ->
-                    true
-
-                else -> false
-            }
-
-        override fun areContentsTheSame(
-            oldItem: PropertiesViewState,
-            newItem: PropertiesViewState
-        ): Boolean = oldItem == newItem
-    }
+    override fun areContentsTheSame(
+        oldItem: PropertiesViewState,
+        newItem: PropertiesViewState
+    ): Boolean = oldItem == newItem
+}

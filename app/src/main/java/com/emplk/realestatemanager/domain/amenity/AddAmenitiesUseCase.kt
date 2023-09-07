@@ -1,6 +1,5 @@
 package com.emplk.realestatemanager.domain.amenity
 
-import com.emplk.realestatemanager.data.amenity.AmenityDtoEntity
 import javax.inject.Inject
 
 class AddAmenitiesUseCase @Inject constructor(
