@@ -73,7 +73,7 @@ class PropertiesViewModel @Inject constructor(
         val currencyType = getCurrencyTypeUseCase.invoke()
         val surfaceUnitType = getSurfaceUnitUseCase.invoke()
         if (latestValue == null) {
-            emit(listOf(PropertiesViewState.EmptyState))
+            emit(listOf(PropertiesViewState.LoadingState))
         }
         getPropertiesAsFlowUseCase.invoke().collect { properties ->
             if (properties.isEmpty()) {
