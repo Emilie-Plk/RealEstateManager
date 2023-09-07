@@ -1,11 +1,9 @@
 package com.emplk.realestatemanager.ui.property_list
 
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
-import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -51,7 +49,6 @@ class PropertyListAdapter :
                 )
             }
 
-            @RequiresApi(Build.VERSION_CODES.M)
             fun bind(item: PropertiesViewState.Properties) {
                 binding.root.setOnClickListener { item.onClickEvent.invoke() }
                 binding.propertyItemTypeTextView.text = item.propertyType
@@ -63,14 +60,13 @@ class PropertyListAdapter :
                 binding.propertyItemSurfaceTextView?.text = item.surface.toCharSequence(itemView.context)
                 when (item.isSold) {
                     true -> {
-                        binding.root.foreground =
-                            AppCompatResources.getDrawable(itemView.context, R.drawable.shade_overlay)
+                        binding.propertyItemSoldShade.isVisible = true
                         binding.propertyItemSoldBannerImageView.visibility = View.VISIBLE
                         binding.propertyItemSoldTextView.visibility = View.VISIBLE
                     }
 
                     else -> {
-                        //    binding.root.foreground = null
+                        binding.propertyItemSoldShade.isVisible = false
                         binding.propertyItemSoldBannerImageView.visibility = View.GONE
                         binding.propertyItemSoldTextView.visibility = View.GONE
                     }

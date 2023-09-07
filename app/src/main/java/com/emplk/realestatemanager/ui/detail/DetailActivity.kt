@@ -47,7 +47,6 @@ class DetailActivity : AppCompatActivity() {
                 }
             }
         }
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -59,6 +58,7 @@ class DetailActivity : AppCompatActivity() {
         when (item.itemId) {
             android.R.id.home -> {
                 viewModel.onBackPressed()
+                finish()
             }
         }
         return super.onOptionsItemSelected(item)

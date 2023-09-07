@@ -28,7 +28,7 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
     private val isTabletMutableStateFlow = MutableStateFlow(false)
 
-    val isFabVisibleLiveData: LiveData<Boolean> = liveData(coroutineDispatcherProvider.io) {
+    val isFabVisibleLiveData: LiveData<Boolean> = liveData(coroutineDispatcherProvider.main) {
         combine(
             isTabletMutableStateFlow.asStateFlow(),
             getNavigationTypeUseCase.invoke(),

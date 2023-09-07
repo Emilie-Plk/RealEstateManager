@@ -16,5 +16,6 @@
     <color name="secondary_super_light">#fff2dd</color>
     <color name="almost_white">#F6F6F5</color>
     <color name="cherry_red">#C51162</color>
+    <color name="grey_overlay">#5EBEC1C3</color>
     <color name="transparent">#00FFFFFF</color>
 </resources>
