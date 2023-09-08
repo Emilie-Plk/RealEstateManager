@@ -12,6 +12,7 @@
     <color name="primary_light">#677491</color>
     <color name="secondary">#fcb332</color>
     <color name="secondary_translucent">#17FCB332</color>
+    <color name="secondary_slightly_opaque">#ABFCB332</color>
     <color name="secondary_dark">#c98e2e</color>
     <color name="secondary_light">#fedeaa</color>
     <color name="secondary_super_light">#fff2dd</color>
