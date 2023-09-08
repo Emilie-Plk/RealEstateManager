@@ -46,4 +46,14 @@
     <string name="realestatemanager_logo_a11y">RealEstateManager logo</string>
     <string name="add_property_type_radioGroup_tv">Property type</string>
     <string name="add_property_title_tv">Add new property</string>
+    <string name="checkbox_amenity_restaurant">Restaurant</string>
+    <string name="checkbox_amenity_mall">Mall</string>
+    <string name="checkbox_amenity_park">Park</string>
+    <string name="checkbox_amenity_school">School</string>
+    <string name="checkbox_amenity_concierge">Concierge</string>
+    <string name="checkbox_amenity_gym">Gym</string>
+    <string name="checkbox_amenity_public_transp">Public transp.</string>
+    <string name="checkbox_amenity_hospital">Hospital</string>
+    <string name="checkbox_amenity_library">Library</string>
+    <string name="add_property_unit_surface_tv">(in %s)</string>
 </resources>

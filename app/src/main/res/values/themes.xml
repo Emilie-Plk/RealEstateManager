@@ -63,9 +63,9 @@
         <item name="android:importantForAccessibility">no</item>
     </style>
 
-    <style name="Theme.RealEstateManager.DetailTitle">
+    <style name="Theme.RealEstateManager.TitleTV">
         <item name="android:textColor">@color/gray</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
@@ -104,6 +104,14 @@
         <item name="android:scaleType">centerCrop</item>
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
+    </style>
+
+    <style name="Theme.RealEstateManager.FilterPropertySubtitle">
+        <item name="android:textColor">@color/medium_gray</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_marginStart">8sp</item>
+        <item name="android:layout_marginTop">14sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
 </resources>

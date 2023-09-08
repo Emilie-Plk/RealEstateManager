@@ -40,7 +40,7 @@ class MainViewModel @Inject constructor(
         }.collectLatest { emit(it) }
     }
 
-    val viewEventLiveData: LiveData<Event<MainViewEvent>> = liveData(coroutineDispatcherProvider.io) {
+    val viewEventLiveData: LiveData<Event<MainViewEvent>> = liveData {
         combine(
             isTabletMutableStateFlow.asStateFlow(),
             getNavigationTypeUseCase.invoke(),
@@ -78,6 +78,13 @@ class MainViewModel @Inject constructor(
                             emit(Event(MainViewEvent.DisplayEditPropertyFragmentOnTablet))
                         }
                     }
+
+                NavigationFragmentType.FILTER_FRAGMENT ->
+                    if (!isTablet) {
+                        emit(Event(MainViewEvent.DisplayFilterPropertiesFragmentOnPhone))
+                    } else {
+                        emit(Event(MainViewEvent.DisplayFilterPropertiesFragmentOnTablet))
+                    }
             }
         }.collect()
     }
@@ -91,5 +98,11 @@ class MainViewModel @Inject constructor(
     fun onResume(isTablet: Boolean) {
         isTabletMutableStateFlow.value = isTablet
         setScreenWidthTypeUseCase.invoke(isTablet)
+    }
+
+    fun onFilterPropertiesClicked() {
+        setNavigationTypeUseCase.invoke(
+            NavigationFragmentType.FILTER_FRAGMENT
+        )
     }
 }

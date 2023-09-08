@@ -13,7 +13,7 @@
 
         <TextView
             android:id="@+id/add_property_title_tv"
-            style="@style/Theme.RealEstateManager.AddPropertyTitle"
+            style="@style/Theme.RealEstateManager.TitleTV"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -41,7 +41,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/add_property_type_radioGroup_tv">-->
+            app:layout_constraintTop_toBottomOf="@id/add_property_type_radioGroup_tv">
 
 
             <RadioGroup
