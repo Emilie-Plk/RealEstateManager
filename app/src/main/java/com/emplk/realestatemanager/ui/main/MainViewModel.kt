@@ -71,9 +71,9 @@ class MainViewModel @Inject constructor(
                 DETAIL_FRAGMENT ->
                     if (currentPropertyId >= 1) {
                         if (!isTablet) {
-                            emit(Event(MainViewEvent.StartDetailActivity))
+                            emit(Event(MainViewEvent.DisplayDetailFragmentOnPhone))
                         } else {
-                            emit(Event(MainViewEvent.DisplayDetailFragment))
+                            emit(Event(MainViewEvent.DisplayDetailFragmentOnTablet))
                         }
                     }
 

@@ -4,9 +4,7 @@ import android.app.Activity
 import android.app.Application
 import android.os.Bundle
 import androidx.hilt.work.HiltWorkerFactory
-import androidx.lifecycle.LifecycleOwner
 import androidx.work.Configuration
-import com.emplk.realestatemanager.domain.screen_width.GetScreenWidthTypeFlowUseCase
 import com.emplk.realestatemanager.domain.screen_width.SetScreenWidthTypeUseCase
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
@@ -30,11 +28,6 @@ class MainApplication : Application(), Configuration.Provider, Application.Activ
         registerActivityLifecycleCallbacks(this)
     }
 
-    override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
-        super.onConfigurationChanged(newConfig)
-        setScreenWidthTypeFlowUseCase.invoke(resources.getBoolean(R.bool.isTablet))
-    }
-
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
     }
 
@@ -43,7 +36,6 @@ class MainApplication : Application(), Configuration.Provider, Application.Activ
 
     override fun onActivityResumed(activity: Activity) {
         setScreenWidthTypeFlowUseCase.invoke(resources.getBoolean(R.bool.isTablet))
-
     }
 
     override fun onActivityPaused(activity: Activity) {
