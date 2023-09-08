@@ -252,7 +252,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="Sale state"
+            android:text="Available for sale"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/filter_property_entry_date_radioGroup" />
 
@@ -260,6 +260,8 @@
             android:id="@+id/filter_property_entry_sale_state_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:thumbIconTint="@color/secondary"
+            app:thumbTint="@color/secondary"
 
             android:layout_marginStart="8dp"
             app:layout_constraintBottom_toBottomOf="@+id/filter_property_entry_sale_state_tv"

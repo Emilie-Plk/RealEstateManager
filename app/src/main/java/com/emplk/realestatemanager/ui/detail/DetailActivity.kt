@@ -29,8 +29,14 @@ class DetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
         setSupportActionBar(binding.detailToolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+       supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        viewModel.toolbarSubtitleLiveData.observe(this) {
+            Log.d("COUCOU kiki", "updateToolbar from Detail: $it ")
+            binding.detailToolbar.subtitle = it // returns null
+        }
 
         viewModel.isTabletLiveData.observe(this) { isTablet ->
             if (isTablet) {
@@ -47,11 +53,6 @@ class DetailActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.detail_menu, menu)
-        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

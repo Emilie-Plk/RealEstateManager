@@ -10,7 +10,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.commit
-import androidx.fragment.app.commitNow
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.MainActivityBinding
 import com.emplk.realestatemanager.ui.add.AddPropertyFragment
@@ -39,19 +38,20 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        setSupportActionBar(binding.mainToolbar)
 
-        setupToolbar()
+        updateToolbar()
 
-       /* if (savedInstanceState == null) {
-            supportFragmentManager.commitNow {
-                Log.d("COUCOU MainActivity", "supportFragmentManager onCreate: ")
-                add(
-                    binding.mainFrameLayoutContainerProperties.id,
-                    PropertiesFragment.newInstance(),
-                    PropertiesFragment::class.java.simpleName
-                )
-            }
-        }*/
+        /* if (savedInstanceState == null) {
+             supportFragmentManager.commitNow {
+                 Log.d("COUCOU MainActivity", "supportFragmentManager onCreate: ")
+                 add(
+                     binding.mainFrameLayoutContainerProperties.id,
+                     PropertiesFragment.newInstance(),
+                     PropertiesFragment::class.java.simpleName
+                 )
+             }
+         }*/
 
         binding.mainAddPropertyFab?.setOnClickListener {
             viewModel.onAddPropertyClicked()
@@ -64,14 +64,15 @@ class MainActivity : AppCompatActivity() {
         viewModel.viewEventLiveData.observeEvent(this) { event ->
             when (event) {
                 MainViewEvent.DisplayPropertyListFragmentOnPhone -> {
-                        Log.d("COUCOU MainActivity", "DisplayPropertyListFragmentOnPhone: ")
-                        supportFragmentManager.commit {
-                            replace(
-                                binding.mainFrameLayoutContainerProperties.id,
-                                PropertiesFragment.newInstance(),
-                                PropertiesFragment::class.java.simpleName
-                            )
+                    Log.d("COUCOU MainActivity", "DisplayPropertyListFragmentOnPhone: ")
+                    supportFragmentManager.commit {
+                        replace(
+                            binding.mainFrameLayoutContainerProperties.id,
+                            PropertiesFragment.newInstance(),
+                            PropertiesFragment::class.java.simpleName
+                        )
                     }
+
                 }
 
                 MainViewEvent.DisplayPropertyListFragmentOnTablet -> {
@@ -162,15 +163,16 @@ class MainActivity : AppCompatActivity() {
                             EditPropertyFragment.newInstance()
                         )
                     }
+
                 }
 
                 MainViewEvent.DisplayEditPropertyFragmentOnTablet -> {
                     Log.d("COUCOU MainActivity", "DisplayEditPropertyFragmentOnTablet: ")
                     supportFragmentManager.commit {
-                            replace(
-                                binding.mainFrameLayoutContainerProperties.id,
-                                BlankFragment.newInstance()
-                            )
+                        replace(
+                            binding.mainFrameLayoutContainerProperties.id,
+                            BlankFragment.newInstance()
+                        )
                     }
                     supportFragmentManager.commit {
                         binding.mainFrameLayoutContainerDetail?.let {
@@ -190,7 +192,7 @@ class MainActivity : AppCompatActivity() {
                             FilterPropertiesFragment.newInstance()
                         )
                     }
-                    binding.mainToolbar.subtitle = "Filter properties"
+
                 }
 
                 MainViewEvent.DisplayFilterPropertiesFragmentOnTablet -> {
@@ -210,6 +212,13 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+    }
+
+    private fun updateToolbar() {
+        viewModel.toolbarSubtitleLiveData.observe(this) {
+            Log.d("COUCOU kiki", "updateToolbar: $it ")
+            binding.mainToolbar.subtitle = it
         }
     }
 
@@ -238,12 +247,6 @@ class MainActivity : AppCompatActivity() {
 
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    private fun setupToolbar() {
-        val toolbar = binding.mainToolbar
-        toolbar.setTitle(R.string.app_name)
-        setSupportActionBar(toolbar)
     }
 
 
