@@ -50,17 +50,15 @@ class DetailViewModel @Inject constructor(
                 getScreenWidthTypeFlowUseCase.invoke(),
                 getCurrentPropertyIdFlowUseCase.invoke(),
             ) { screenWidthType, currentId ->
-                Log.d("COUCOU", "we enter the combine")
+                Log.d("COUCOU DetailVM", "we enter the combine")
                 if (currentId >= 0) {
                     when (screenWidthType) {
                         ScreenWidthType.TABLET -> {
                             emit(Event(DetailViewEvent.DisplayEditFragmentTablet))
-                            setNavigationTypeUseCase.invoke(NavigationFragmentType.EDIT_FRAGMENT)
                         }
 
                         ScreenWidthType.PHONE -> {
                             emit(Event(DetailViewEvent.NavigateToMainActivity))
-                            setNavigationTypeUseCase.invoke(NavigationFragmentType.EDIT_FRAGMENT)
                         }
 
                         // Should never occur
@@ -194,5 +192,6 @@ class DetailViewModel @Inject constructor(
 
     fun onEditClicked() {
         onEditButtonClickedMutableSharedFlow.tryEmit(Unit)
+        setNavigationTypeUseCase.invoke(NavigationFragmentType.EDIT_FRAGMENT)
     }
 }

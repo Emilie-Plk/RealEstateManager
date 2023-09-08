@@ -1,270 +1,296 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="8dp">
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginEnd="8dp">
 
-    <TextView
-        android:id="@+id/filter_property_filter_tv"
-        style="@style/Theme.RealEstateManager.TitleTV"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Filter properties"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/filter_property_price_tv"
-        style="@style/Theme.RealEstateManager.FilterPropertySubtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Price"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/filter_property_filter_tv" />
-
-    <TextView
-        android:id="@+id/filter_property_price_unit_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/filter_property_price_tv"
-        app:layout_constraintStart_toEndOf="@+id/filter_property_price_tv"
-        app:layout_constraintTop_toTopOf="@+id/filter_property_price_tv"
-        tools:text="(in $)" />
+        android:layout_height="wrap_content">
 
 
-    <com.google.android.material.slider.RangeSlider
-        android:id="@+id/filter_property_price_rangeSlider"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/filter_property_price_tv"
-        tools:valueFrom="0"
-        tools:valueTo="100.0" />
+        <TextView
+            android:id="@+id/filter_property_price_tv"
+            style="@style/Theme.RealEstateManager.FilterPropertySubtitle"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="0dp"
+            android:layout_height="wrap_content"
+            android:text="Price"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/filter_property_type_tv"
-        style="@style/Theme.RealEstateManager.FilterPropertySubtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Type"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/filter_property_price_rangeSlider" />
-
-
-    <com.google.android.flexbox.FlexboxLayout
-        android:id="@+id/filter_property_type_flexboxLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="start"
-        android:orientation="horizontal"
-        app:flexWrap="wrap"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/filter_property_type_tv">
-
-        <CheckBox
-            android:id="@+id/filter_property_amenities_school_checkbox"
+        <TextView
+            android:id="@+id/filter_property_price_unit_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:text="@string/checkbox_amenity_school" />
-
-        <CheckBox
-            android:id="@+id/filter_property_amenities_park_checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:text="@string/checkbox_amenity_park" />
-
-        <CheckBox
-            android:id="@+id/filter_property_amenities_shopping_mall_checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:text="@string/checkbox_amenity_mall" />
-
-        <CheckBox
-            android:id="@+id/filter_property_amenities_restaurant_checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:text="@string/checkbox_amenity_restaurant" />
-
-        <CheckBox
-            android:id="@+id/filter_property_amenities_concierge_service_checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:text="@string/checkbox_amenity_concierge" />
-
-        <CheckBox
-            android:id="@+id/filter_property_amenities_gym_checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:text="@string/checkbox_amenity_gym" />
-
-        <CheckBox
-            android:id="@+id/filter_property_amenities_public_transportation_checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:text="@string/checkbox_amenity_public_transp" />
-
-        <CheckBox
-            android:id="@+id/filter_property_amenities_hospital_checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:text="@string/checkbox_amenity_hospital" />
-
-        <CheckBox
-            android:id="@+id/filter_property_amenities_library_checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:text="@string/checkbox_amenity_library" />
-
-    </com.google.android.flexbox.FlexboxLayout>
-
-    <TextView
-        android:id="@+id/filter_property_surface_tv"
-        style="@style/Theme.RealEstateManager.FilterPropertySubtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Surface"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/filter_property_type_flexboxLayout" />
-
-    <TextView
-        android:id="@+id/filter_property_surface_unit_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="@id/filter_property_surface_tv"
-        app:layout_constraintStart_toEndOf="@id/filter_property_surface_tv"
-        app:layout_constraintTop_toTopOf="@id/filter_property_surface_tv"
-        tools:text="(in m²)" />
-
-    <com.google.android.material.slider.RangeSlider
-        android:id="@+id/filter_property_surface_rangeSlider"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/filter_property_surface_tv"
-        tools:valueFrom="0"
-        tools:valueTo="100.0" />
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/filter_property_price_tv"
+            app:layout_constraintStart_toEndOf="@+id/filter_property_price_tv"
+            app:layout_constraintTop_toTopOf="@+id/filter_property_price_tv"
+            tools:text="(in $)" />
 
 
-    <TextView
-        android:id="@+id/filter_property_city_tv"
-        style="@style/Theme.RealEstateManager.FilterPropertySubtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="City"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/filter_property_surface_rangeSlider" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/filter_property_city_textInputLayout"
-        style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/filter_property_city_tv">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/filter_property_city_editText"
+        <com.google.android.material.slider.RangeSlider
+            android:id="@+id/filter_property_price_rangeSlider"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_height="0dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/filter_property_price_tv"
+            tools:valueFrom="1"
+            tools:valueTo="100.0" />
 
-    <TextView
-        android:id="@+id/filter_property_entry_date_tv"
-        style="@style/Theme.RealEstateManager.FilterPropertySubtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Entry date"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/filter_property_city_textInputLayout" />
-
-    <RadioGroup
-        android:id="@+id/filter_property_entry_date_radioGroup"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/filter_property_entry_date_tv">
-
-        <RadioButton
-            android:id="@+id/filter_property_more_than_6_months_radio"
+        <TextView
+            android:id="@+id/filter_property_type_tv"
+            style="@style/Theme.RealEstateManager.FilterPropertySubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
-            android:text="+ 6mths" />
+            android:text="Type"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/filter_property_price_rangeSlider" />
 
-        <RadioButton
-            android:id="@+id/filter_property_entry_date_less_than_6_months_radio"
+
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/filter_property_type_flexboxLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:orientation="horizontal"
+            app:flexWrap="wrap"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/filter_property_type_tv">
+
+            <CheckBox
+                android:id="@+id/filter_property_amenities_school_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/checkbox_amenity_school" />
+
+            <CheckBox
+                android:id="@+id/filter_property_amenities_park_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/checkbox_amenity_park" />
+
+            <CheckBox
+                android:id="@+id/filter_property_amenities_shopping_mall_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/checkbox_amenity_mall" />
+
+            <CheckBox
+                android:id="@+id/filter_property_amenities_restaurant_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/checkbox_amenity_restaurant" />
+
+            <CheckBox
+                android:id="@+id/filter_property_amenities_concierge_service_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/checkbox_amenity_concierge" />
+
+            <CheckBox
+                android:id="@+id/filter_property_amenities_gym_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/checkbox_amenity_gym" />
+
+            <CheckBox
+                android:id="@+id/filter_property_amenities_public_transportation_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/checkbox_amenity_public_transp" />
+
+            <CheckBox
+                android:id="@+id/filter_property_amenities_hospital_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/checkbox_amenity_hospital" />
+
+            <CheckBox
+                android:id="@+id/filter_property_amenities_library_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/checkbox_amenity_library" />
+
+        </com.google.android.flexbox.FlexboxLayout>
+
+        <TextView
+            android:id="@+id/filter_property_surface_tv"
+            style="@style/Theme.RealEstateManager.FilterPropertySubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
-            android:text="&lt; 3mths" />
+            android:text="Surface"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/filter_property_type_flexboxLayout" />
 
-        <RadioButton
-            android:id="@+id/filter_property_entry_date_less_than_1_month_radio"
+        <TextView
+            android:id="@+id/filter_property_surface_unit_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
-            android:text="&lt; 1mth" />
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@id/filter_property_surface_tv"
+            app:layout_constraintStart_toEndOf="@id/filter_property_surface_tv"
+            app:layout_constraintTop_toTopOf="@id/filter_property_surface_tv"
+            tools:text="(in m²)" />
 
-        <RadioButton
-            android:id="@+id/filter_property_entry_date_less_than_1_week_radio"
+        <com.google.android.material.slider.RangeSlider
+            android:id="@+id/filter_property_surface_rangeSlider"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/filter_property_surface_tv"
+            tools:valueFrom="0"
+            tools:valueTo="100.0" />
+
+
+        <TextView
+            android:id="@+id/filter_property_city_tv"
+            style="@style/Theme.RealEstateManager.FilterPropertySubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
-            android:text="&lt; 1 week" />
+            android:text="City"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/filter_property_surface_rangeSlider" />
 
-    </RadioGroup>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/filter_property_city_textInputLayout"
+            style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/filter_property_city_tv">
 
-    <TextView
-        android:id="@+id/filter_property_entry_sale_state_tv"
-        style="@style/Theme.RealEstateManager.FilterPropertySubtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sale state"
-        android:layout_marginTop="24dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/filter_property_entry_date_radioGroup" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/filter_property_city_editText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.materialswitch.MaterialSwitch
-        android:id="@+id/filter_property_entry_sale_state_switch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        <TextView
+            android:id="@+id/filter_property_entry_date_tv"
+            style="@style/Theme.RealEstateManager.FilterPropertySubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Entry date"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/filter_property_city_textInputLayout" />
 
-        android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/filter_property_entry_sale_state_tv"
-        app:layout_constraintStart_toEndOf="@+id/filter_property_entry_sale_state_tv"
-        app:layout_constraintTop_toTopOf="@+id/filter_property_entry_sale_state_tv" />
+        <RadioGroup
+            android:id="@+id/filter_property_entry_date_radioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/filter_property_entry_date_tv">
+
+            <RadioButton
+                android:id="@+id/filter_property_more_than_6_months_radio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:text="+ 6mths" />
+
+            <RadioButton
+                android:id="@+id/filter_property_entry_date_less_than_6_months_radio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:text="&lt; 3mths" />
+
+            <RadioButton
+                android:id="@+id/filter_property_entry_date_less_than_1_month_radio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:text="&lt; 1mth" />
+
+            <RadioButton
+                android:id="@+id/filter_property_entry_date_less_than_1_week_radio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:text="&lt; 1 week" />
+
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/filter_property_entry_sale_state_tv"
+            style="@style/Theme.RealEstateManager.FilterPropertySubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Sale state"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/filter_property_entry_date_radioGroup" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/filter_property_entry_sale_state_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/filter_property_entry_sale_state_tv"
+            app:layout_constraintStart_toEndOf="@+id/filter_property_entry_sale_state_tv"
+            app:layout_constraintTop_toTopOf="@+id/filter_property_entry_sale_state_tv" />
+
+
+        <Button
+            android:id="@+id/filter_property_cancel_btn"
+            style="@style/Theme.RealEstateManager.CancelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:layout_marginBottom="12dp"
+            android:text="Cancel"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/filter_property_filter_btn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/filter_property_entry_sale_state_tv" />
+
+        <Button
+            android:id="@+id/filter_property_filter_btn"
+            style="@style/Theme.RealEstateManager.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Filter"
+            app:icon="@drawable/baseline_filter_list_24"
+            app:layout_constraintBottom_toBottomOf="@+id/filter_property_cancel_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/filter_property_cancel_btn"
+            app:layout_constraintTop_toTopOf="@id/filter_property_cancel_btn" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
