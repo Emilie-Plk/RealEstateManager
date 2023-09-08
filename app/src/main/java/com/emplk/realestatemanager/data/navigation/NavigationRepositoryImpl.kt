@@ -9,9 +9,7 @@ import javax.inject.Inject
 
 class NavigationRepositoryImpl @Inject constructor() : NavigationRepository {
     private val navigationFragmentTypeMutableSharedFlow =
-        MutableSharedFlow<NavigationFragmentType>(replay = 1).apply {
-            tryEmit(NavigationFragmentType.LIST_FRAGMENT)
-        }  // TODO: NINO I think I should eventify it...
+        MutableSharedFlow<NavigationFragmentType>(extraBufferCapacity = 1)
 
     override fun getNavigationFragmentType(): Flow<NavigationFragmentType> =
         navigationFragmentTypeMutableSharedFlow.asSharedFlow()

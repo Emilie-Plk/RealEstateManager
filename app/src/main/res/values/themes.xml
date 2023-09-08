@@ -16,13 +16,13 @@
     </style>
 
     <style name="Theme.RealEstateManager.Toolbar" parent="Widget.Material3.Toolbar">
+        <item name="title">@string/app_name</item>
         <item name="titleTextColor">@color/almost_white</item>
         <item name="subtitleTextColor">@color/almost_white</item>
-        <item name="subtitleCentered">@bool/isTablet</item>
-        <item name="subtitleTextAppearance">@bool/isTablet</item>
         <item name="android:background">@color/primary_dark</item>
         <item name="navigationIconTint">@color/secondary_dark</item>
     </style>
+
 
     <style name="Theme.RealEstateManager.YellowFab" parent="Widget.Material3.FloatingActionButton.Primary">
         <item name="backgroundTint">@color/secondary</item>
