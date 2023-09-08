@@ -163,7 +163,6 @@ class MainActivity : AppCompatActivity() {
                             EditPropertyFragment.newInstance()
                         )
                     }
-
                 }
 
                 MainViewEvent.DisplayEditPropertyFragmentOnTablet -> {
@@ -192,7 +191,6 @@ class MainActivity : AppCompatActivity() {
                             FilterPropertiesFragment.newInstance()
                         )
                     }
-
                 }
 
                 MainViewEvent.DisplayFilterPropertiesFragmentOnTablet -> {
@@ -252,6 +250,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.onResume(resources.getBoolean(R.bool.isTablet))
+     viewModel.onResume(resources.getBoolean(R.bool.isTablet))
     }
 }

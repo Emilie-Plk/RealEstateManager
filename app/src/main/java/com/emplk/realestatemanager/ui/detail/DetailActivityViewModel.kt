@@ -12,6 +12,8 @@ import com.emplk.realestatemanager.domain.screen_width.GetScreenWidthTypeFlowUse
 import com.emplk.realestatemanager.domain.screen_width.ScreenWidthType
 import com.emplk.realestatemanager.domain.screen_width.SetScreenWidthTypeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.lastOrNull
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,15 +27,12 @@ class DetailActivityViewModel @Inject constructor(
 
     val isTabletLiveData: LiveData<Boolean> = liveData(coroutineDispatcherProvider.io) {
         getScreenWidthTypeFlowUseCase.invoke().collect { screenWidthType ->
+            setNavigationTypeUseCase.invoke(NavigationFragmentType.DETAIL_FRAGMENT)
             emit(screenWidthType == ScreenWidthType.TABLET)
         }
     }
 
-    val toolbarSubtitleLiveData: LiveData<String?> = getToolbarSubtitleUseCase.invoke().asLiveData()
-
-    fun onResume(isTablet: Boolean) {
-        setScreenWidthTypeFlowUseCase.invoke(isTablet)
-    }
+    val toolbarSubtitleLiveData: LiveData<String?> = getToolbarSubtitleUseCase.invoke().asLiveData(coroutineDispatcherProvider.main)
 
     fun onBackPressed() {
         setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)

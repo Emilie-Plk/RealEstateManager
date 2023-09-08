@@ -54,10 +54,12 @@ class DetailViewModel @Inject constructor(
                 if (currentId >= 0) {
                     when (screenWidthType) {
                         ScreenWidthType.TABLET -> {
+                            setNavigationTypeUseCase.invoke(NavigationFragmentType.EDIT_FRAGMENT)
                             emit(Event(DetailViewEvent.DisplayEditFragmentTablet))
                         }
 
                         ScreenWidthType.PHONE -> {
+                            setNavigationTypeUseCase.invoke(NavigationFragmentType.EDIT_FRAGMENT)
                             emit(Event(DetailViewEvent.NavigateToMainActivity))
                         }
 
@@ -192,6 +194,5 @@ class DetailViewModel @Inject constructor(
 
     fun onEditClicked() {
         onEditButtonClickedMutableSharedFlow.tryEmit(Unit)
-        setNavigationTypeUseCase.invoke(NavigationFragmentType.EDIT_FRAGMENT)
     }
 }
