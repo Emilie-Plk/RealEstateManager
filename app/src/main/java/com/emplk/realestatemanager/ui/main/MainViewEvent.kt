@@ -10,4 +10,6 @@ sealed class MainViewEvent {
     object DisplayBlankFragment : MainViewEvent()
     object DisplayDetailFragment : MainViewEvent()
     object StartDetailActivity : MainViewEvent()
+    object DisplayFilterPropertiesFragmentOnPhone : MainViewEvent()
+    object DisplayFilterPropertiesFragmentOnTablet : MainViewEvent()
 }

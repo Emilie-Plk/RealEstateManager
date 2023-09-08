@@ -5,11 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.commit
 import androidx.fragment.app.commitNow
@@ -20,6 +18,7 @@ import com.emplk.realestatemanager.ui.blank.BlankFragment
 import com.emplk.realestatemanager.ui.detail.DetailActivity
 import com.emplk.realestatemanager.ui.detail.DetailFragment
 import com.emplk.realestatemanager.ui.edit.EditPropertyFragment
+import com.emplk.realestatemanager.ui.filter.FilterPropertiesFragment
 import com.emplk.realestatemanager.ui.property_list.PropertiesFragment
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.viewBinding
@@ -42,7 +41,6 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
         setupToolbar()
-        setupMenu()
 
         if (savedInstanceState == null) {
             supportFragmentManager.commitNow {
@@ -69,6 +67,7 @@ class MainActivity : AppCompatActivity() {
                     val existingFrag =
                         supportFragmentManager.findFragmentByTag(PropertiesFragment::class.java.simpleName)
                     if (existingFrag == null) {
+
                         Log.d("COUCOU MainActivity", "DisplayPropertyListFragmentOnPhone: ")
                         supportFragmentManager.commit {
                             replace(
@@ -188,8 +187,40 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 }
+
+                MainViewEvent.DisplayFilterPropertiesFragmentOnPhone -> {
+                    Log.d("COUCOU MainActivity", "DisplayFilterPropertiesFragmentOnPhone: ")
+                    supportFragmentManager.commit {
+                        replace(
+                            binding.mainFrameLayoutContainerProperties.id,
+                            FilterPropertiesFragment.newInstance()
+                        ).addToBackStack(null)
+                    }
+                }
+
+                MainViewEvent.DisplayFilterPropertiesFragmentOnTablet -> {
+                    supportFragmentManager.commit {
+                        replace(
+                            binding.mainFrameLayoutContainerProperties.id,
+                            PropertiesFragment.newInstance()
+                        ).addToBackStack(null)
+                    }
+                    supportFragmentManager.commit {
+                        binding.mainFrameLayoutContainerDetail?.let {
+                            replace(
+                                it.id,
+                                FilterPropertiesFragment.newInstance()
+                            )
+                        }
+                    }
+                }
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -201,6 +232,12 @@ class MainActivity : AppCompatActivity() {
 
             R.id.main_menu_property_filter -> {
                 Log.d("COUCOU MainActivity", "DisplayFilterFragment: ")
+                viewModel.onFilterPropertiesClicked()
+                true
+            }
+
+            R.id.main_menu_add_property -> {
+                viewModel.onAddPropertyClicked()
                 true
             }
 
@@ -212,33 +249,6 @@ class MainActivity : AppCompatActivity() {
         val toolbar = binding.mainToolbar
         toolbar.setTitle(R.string.app_name)
         setSupportActionBar(toolbar)
-    }
-
-    private fun setupMenu() {
-        addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.menu, menu)
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean = when (menuItem.itemId) {
-                R.id.main_menu_property_filter -> {
-                    Log.d("COUCOU MainActivity", "DisplayFilterFragment: ")
-                    true
-                }
-
-                R.id.main_menu_map_view -> {
-                    Log.d("COUCOU MainActivity", "DisplayMapFragment: ")
-                    true
-                }
-
-                R.id.main_menu_add_property -> {
-                    viewModel.onAddPropertyClicked()
-                    true
-                }
-
-                else -> false
-            }
-        })
     }
 
 

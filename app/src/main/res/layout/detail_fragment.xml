@@ -63,7 +63,7 @@
 
                 <TextView
                     android:id="@+id/detail_type_tv"
-                    style="@style/Theme.RealEstateManager.DetailTitle"
+                    style="@style/Theme.RealEstateManager.TitleTV"
                     android:layout_width="0dp"
                     android:textSize="18sp"
                     android:layout_height="wrap_content"
