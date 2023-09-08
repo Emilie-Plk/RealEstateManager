@@ -10,11 +10,11 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.commit
+import androidx.fragment.app.commitNow
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.MainActivityBinding
 import com.emplk.realestatemanager.ui.add.AddPropertyFragment
 import com.emplk.realestatemanager.ui.blank.BlankFragment
-import com.emplk.realestatemanager.ui.detail.DetailActivity
 import com.emplk.realestatemanager.ui.detail.DetailFragment
 import com.emplk.realestatemanager.ui.edit.EditPropertyFragment
 import com.emplk.realestatemanager.ui.filter.FilterPropertiesFragment
@@ -31,6 +31,15 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         fun newIntent(requireContext: Context) = Intent(requireContext, MainActivity::class.java)
+
+        private const val PROPERTIES_FRAGMENT_TAG = "PROPERTIES_FRAGMENT_TAG"
+        private const val DETAIL_FRAGMENT_PHONE_TAG = "DETAIL_FRAGMENT_PHONE_TAG"
+        private const val DETAIL_FRAGMENT_TABLET_TAG = "DETAIL_FRAGMENT_TABLET_TAG"
+        private const val ADD_FRAGMENT_PHONE_TAG = "ADD_FRAGMENT_PHONE_TAG"
+        private const val ADD_FRAGMENT_TABLET_TAG = "ADD_FRAGMENT_TABLET_TAG"
+        private const val EDIT_FRAGMENT_PHONE_TAG = "EDIT_FRAGMENT_PHONE_TAG"
+        private const val EDIT_FRAGMENT_TABLET_TAG = "EDIT_FRAGMENT_TABLET_TAG"
+        private const val BLANK_FRAGMENT_TAG = "BLANK_FRAGMENT_TAG"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,16 +51,16 @@ class MainActivity : AppCompatActivity() {
 
         updateToolbar()
 
-        /* if (savedInstanceState == null) {
-             supportFragmentManager.commitNow {
-                 Log.d("COUCOU MainActivity", "supportFragmentManager onCreate: ")
-                 add(
-                     binding.mainFrameLayoutContainerProperties.id,
-                     PropertiesFragment.newInstance(),
-                     PropertiesFragment::class.java.simpleName
-                 )
-             }
-         }*/
+        if (savedInstanceState == null) {
+            supportFragmentManager.commitNow {
+                Log.d("COUCOU MainActivity", "supportFragmentManager onCreate: ")
+                replace(
+                    binding.mainFrameLayoutContainerProperties.id,
+                    PropertiesFragment.newInstance(),
+                    PropertiesFragment::class.java.simpleName
+                )
+            }
+        }
 
         binding.mainAddPropertyFab?.setOnClickListener {
             viewModel.onAddPropertyClicked()
@@ -64,13 +73,17 @@ class MainActivity : AppCompatActivity() {
         viewModel.viewEventLiveData.observeEvent(this) { event ->
             when (event) {
                 MainViewEvent.DisplayPropertyListFragmentOnPhone -> {
-                    Log.d("COUCOU MainActivity", "DisplayPropertyListFragmentOnPhone: ")
-                    supportFragmentManager.commit {
-                        replace(
-                            binding.mainFrameLayoutContainerProperties.id,
-                            PropertiesFragment.newInstance(),
-                            PropertiesFragment::class.java.simpleName
-                        )
+                    val existingFragment =
+                        supportFragmentManager.findFragmentByTag(PropertiesFragment::class.java.simpleName)
+                    if (existingFragment == null) {
+                        Log.d("COUCOU MainActivity", "DisplayPropertyListFragmentOnPhone: ")
+                        supportFragmentManager.commit {
+                            replace(
+                                binding.mainFrameLayoutContainerProperties.id,
+                                PropertiesFragment.newInstance(),
+                                PropertiesFragment::class.java.simpleName
+                            )
+                        }
                     }
 
                 }
@@ -132,8 +145,19 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-                MainViewEvent.DisplayDetailFragment -> {
-                    Log.d("COUCOU MainActivity", "DisplayDetailFragment: ")
+
+                MainViewEvent.DisplayDetailFragmentOnPhone -> {
+                    Log.d("COUCOU MainActivity", "DisplayDetailFragmentOnPhone: ")
+                    supportFragmentManager.commit {
+                        replace(
+                            binding.mainFrameLayoutContainerProperties.id,
+                            DetailFragment.newInstance()
+                        )
+                    }
+                }
+
+                MainViewEvent.DisplayDetailFragmentOnTablet -> {
+                    Log.d("COUCOU MainActivity", "DisplayDetailFragmentOnTablet: ")
                     supportFragmentManager.commit {
                         binding.mainFrameLayoutContainerDetail?.let {
                             replace(
@@ -150,10 +174,6 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-                MainViewEvent.StartDetailActivity -> {
-                    Log.d("COUCOU MainActivity", "StartDetailActivity: ")
-                    startActivity(DetailActivity.newIntent(this))
-                }
 
                 MainViewEvent.DisplayEditPropertyFragmentOnPhone -> {
                     Log.d("COUCOU MainActivity", "DisplayEditPropertyFragmentOnPhone: ")
@@ -250,6 +270,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-     viewModel.onResume(resources.getBoolean(R.bool.isTablet))
+        viewModel.onResume(resources.getBoolean(R.bool.isTablet))
     }
 }

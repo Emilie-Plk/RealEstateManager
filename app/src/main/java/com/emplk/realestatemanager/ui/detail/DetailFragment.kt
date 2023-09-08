@@ -30,36 +30,6 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.viewEventLiveData.observeEvent(this) { event ->
-            when (event) {
-
-                DetailViewEvent.DisplayEditFragmentPhone -> {
-                    Log.d("COUCOU DetFrag", "DisplayEditFragmentPhone: ")
-                    startActivity(MainActivity.newIntent(requireContext()))
-                }
-
-                DetailViewEvent.DisplayEditFragmentTablet -> {
-                    Log.d("COUCOU DetFrag", "DisplayEditFragmentTablet: ")
-                    parentFragmentManager.commit {
-                        replace(
-                            R.id.main_FrameLayout_container_detail,
-                            EditPropertyFragment.newInstance()
-                        )
-                    }
-                }
-
-                DetailViewEvent.NavigateToMainActivity -> {
-                    Log.d("COUCOU DetFrag pipi", "NavigateToMainActivity: ")
-                    startActivity(MainActivity.newIntent(requireContext()))
-                }
-
-                DetailViewEvent.DisplayDetailFragmentPhone -> {
-                    Log.d("COUCOU DetFrag pipi", "DisplayDetailFragmentPhone: ")
-                    // Is this normally managed by DetActivity?
-                }
-            }
-        }
-
         viewModel.viewState.observe(viewLifecycleOwner) { detailViewState ->
             when (detailViewState) {
                 is DetailViewState.LoadingState -> {
@@ -111,9 +81,7 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
                         tv.visibility = if (isAvailable) View.VISIBLE else View.GONE
                     }
                 }
-
             }
-
         }
     }
 }

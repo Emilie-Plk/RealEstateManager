@@ -8,8 +8,8 @@ sealed class MainViewEvent {
     object DisplayEditPropertyFragmentOnPhone : MainViewEvent()
     object DisplayEditPropertyFragmentOnTablet : MainViewEvent()
     object DisplayBlankFragment : MainViewEvent()
-    object DisplayDetailFragment : MainViewEvent()
-    object StartDetailActivity : MainViewEvent()
+    object DisplayDetailFragmentOnPhone : MainViewEvent()
+    object DisplayDetailFragmentOnTablet : MainViewEvent()
     object DisplayFilterPropertiesFragmentOnPhone : MainViewEvent()
     object DisplayFilterPropertiesFragmentOnTablet : MainViewEvent()
 }

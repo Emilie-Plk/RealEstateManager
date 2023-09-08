@@ -47,19 +47,11 @@ class PropertiesViewModel @Inject constructor(
             if (propertyId >= 0) {
                 when (screenWidthType) {
                     ScreenWidthType.TABLET -> {
-                        emit(
-                            Event(
-                                PropertiesViewEvent.DisplayDetailFragment
-                            )
-                        )
+                        emit(Event(PropertiesViewEvent.DisplayDetailFragmentOnTablet))
                     }
 
                     ScreenWidthType.PHONE -> {
-                        emit(
-                            Event(
-                                PropertiesViewEvent.NavigateToDetailActivity
-                            )
-                        )
+                        emit(Event(PropertiesViewEvent.DisplayDetailFragmentOnPhone))
                     }
 
                     ScreenWidthType.UNDEFINED -> {
