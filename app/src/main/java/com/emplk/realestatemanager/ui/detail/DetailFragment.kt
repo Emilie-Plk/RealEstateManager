@@ -11,6 +11,7 @@ import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.DetailFragmentBinding
 import com.emplk.realestatemanager.ui.edit.EditPropertyFragment
 import com.emplk.realestatemanager.ui.main.MainActivity
+import com.emplk.realestatemanager.ui.property_list.PropertiesFragment
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.NativePhoto.Companion.load
 import com.emplk.realestatemanager.ui.utils.viewBinding
@@ -31,7 +32,13 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
 
         viewModel.viewEventLiveData.observeEvent(this) { event ->
             when (event) {
-                is DetailViewEvent.DisplayEditFragmentTablet -> {
+
+                DetailViewEvent.DisplayEditFragmentPhone -> {
+                    Log.d("COUCOU DetFrag", "DisplayEditFragmentPhone: ")
+                    startActivity(MainActivity.newIntent(requireContext()))
+                }
+
+                DetailViewEvent.DisplayEditFragmentTablet -> {
                     Log.d("COUCOU DetFrag", "DisplayEditFragmentTablet: ")
                     parentFragmentManager.commit {
                         replace(
@@ -41,10 +48,14 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
                     }
                 }
 
-                is DetailViewEvent.NavigateToMainActivity -> {
-                    Log.d("COUCOU DetFrag", "NavigateToMainActivity: ")
+                DetailViewEvent.NavigateToMainActivity -> {
+                    Log.d("COUCOU DetFrag pipi", "NavigateToMainActivity: ")
                     startActivity(MainActivity.newIntent(requireContext()))
-                    requireActivity().finish()
+                }
+
+                DetailViewEvent.DisplayDetailFragmentPhone -> {
+                    Log.d("COUCOU DetFrag pipi", "DisplayDetailFragmentPhone: ")
+                    // Is this normally managed by DetActivity?
                 }
             }
         }

@@ -1,6 +1,7 @@
 package com.emplk.realestatemanager.domain.screen_width
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import javax.inject.Inject
 
 

@@ -107,7 +107,7 @@ class MainViewModel @Inject constructor(
 
     fun onResume(isTablet: Boolean) {
         isTabletMutableStateFlow.value = isTablet
-        setScreenWidthTypeUseCase.invoke(isTablet)
+       // setScreenWidthTypeUseCase.invoke(isTablet)
     }
 
     fun onFilterPropertiesClicked() {

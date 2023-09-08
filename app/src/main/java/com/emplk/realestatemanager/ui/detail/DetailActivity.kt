@@ -35,7 +35,7 @@ class DetailActivity : AppCompatActivity() {
 
         viewModel.toolbarSubtitleLiveData.observe(this) {
             Log.d("COUCOU kiki", "updateToolbar from Detail: $it ")
-            binding.detailToolbar.subtitle = it // returns null
+            binding.detailToolbar.subtitle = it
         }
 
         viewModel.isTabletLiveData.observe(this) { isTablet ->
@@ -63,10 +63,5 @@ class DetailActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.onResume(resources.getBoolean(R.bool.isTablet))
     }
 }
