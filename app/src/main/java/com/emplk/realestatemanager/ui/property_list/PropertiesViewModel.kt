@@ -23,7 +23,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -45,22 +47,24 @@ class PropertiesViewModel @Inject constructor(
             getScreenWidthTypeFlowUseCase.invoke()
         ) { propertyId, screenWidthType ->
             if (propertyId >= 0) {
-                when (screenWidthType) {
+                val event = when (screenWidthType) {
                     ScreenWidthType.TABLET -> {
-                        emit(Event(PropertiesViewEvent.DisplayDetailFragmentOnTablet))
+                        Event(PropertiesViewEvent.DisplayDetailFragmentOnTablet)
                     }
 
                     ScreenWidthType.PHONE -> {
-                        emit(Event(PropertiesViewEvent.DisplayDetailFragmentOnPhone))
+                        Event(PropertiesViewEvent.DisplayDetailFragmentOnPhone)
                     }
 
                     ScreenWidthType.UNDEFINED -> {
-                        // Nothing to do
+                        return@combine
                     }
                 }
+                emit(event)
             }
-        }.collect()
+        }
     }
+
 
     val viewState: LiveData<List<PropertiesViewState>> = liveData {
         val currencyType = getCurrencyTypeUseCase.invoke()

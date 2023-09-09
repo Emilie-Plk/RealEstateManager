@@ -33,12 +33,10 @@ class MainActivity : AppCompatActivity() {
         fun newIntent(requireContext: Context) = Intent(requireContext, MainActivity::class.java)
 
         private const val PROPERTIES_FRAGMENT_TAG = "PROPERTIES_FRAGMENT_TAG"
-        private const val DETAIL_FRAGMENT_PHONE_TAG = "DETAIL_FRAGMENT_PHONE_TAG"
-        private const val DETAIL_FRAGMENT_TABLET_TAG = "DETAIL_FRAGMENT_TABLET_TAG"
-        private const val ADD_FRAGMENT_PHONE_TAG = "ADD_FRAGMENT_PHONE_TAG"
-        private const val ADD_FRAGMENT_TABLET_TAG = "ADD_FRAGMENT_TABLET_TAG"
-        private const val EDIT_FRAGMENT_PHONE_TAG = "EDIT_FRAGMENT_PHONE_TAG"
-        private const val EDIT_FRAGMENT_TABLET_TAG = "EDIT_FRAGMENT_TABLET_TAG"
+        private const val DETAIL_FRAGMENT_TAG = "DETAIL_FRAGMENT_TAG"
+        private const val ADD_FRAGMENT_TAG = "ADD_FRAGMENT_TAG"
+        private const val EDIT_FRAGMENT_TAG = "EDIT_FRAGMENT_TAG"
+        private const val FILTER_FRAGMENT_TAG = "FILTER_FRAGMENT_TAG"
         private const val BLANK_FRAGMENT_TAG = "BLANK_FRAGMENT_TAG"
     }
 
@@ -57,7 +55,7 @@ class MainActivity : AppCompatActivity() {
                 replace(
                     binding.mainFrameLayoutContainerProperties.id,
                     PropertiesFragment.newInstance(),
-                    PropertiesFragment::class.java.simpleName
+                    PROPERTIES_FRAGMENT_TAG
                 )
             }
         }
@@ -74,34 +72,39 @@ class MainActivity : AppCompatActivity() {
             when (event) {
                 MainViewEvent.DisplayPropertyListFragmentOnPhone -> {
                     val existingFragment =
-                        supportFragmentManager.findFragmentByTag(PropertiesFragment::class.java.simpleName)
+                        supportFragmentManager.findFragmentByTag(PROPERTIES_FRAGMENT_TAG)
                     if (existingFragment == null) {
                         Log.d("COUCOU MainActivity", "DisplayPropertyListFragmentOnPhone: ")
                         supportFragmentManager.commit {
                             replace(
                                 binding.mainFrameLayoutContainerProperties.id,
                                 PropertiesFragment.newInstance(),
-                                PropertiesFragment::class.java.simpleName
+                                PROPERTIES_FRAGMENT_TAG
                             )
                         }
                     }
-
                 }
 
                 MainViewEvent.DisplayPropertyListFragmentOnTablet -> {
                     Log.d("COUCOU MainActivity", "DisplayPropertyListFragmentOnTablet: ")
-                    supportFragmentManager.commit {
-                        replace(
-                            binding.mainFrameLayoutContainerProperties.id,
-                            PropertiesFragment.newInstance()
-                        )
+                    val existingFragment =
+                        supportFragmentManager.findFragmentByTag(PROPERTIES_FRAGMENT_TAG)
+                    if (existingFragment == null) {
+                        supportFragmentManager.commit {
+                            replace(
+                                binding.mainFrameLayoutContainerProperties.id,
+                                PropertiesFragment.newInstance(),
+                                PROPERTIES_FRAGMENT_TAG
+                            )
+                        }
                     }
 
                     supportFragmentManager.commit {
                         binding.mainFrameLayoutContainerDetail?.let {
                             replace(
                                 it.id,
-                                BlankFragment.newInstance()
+                                BlankFragment.newInstance(),
+                                BLANK_FRAGMENT_TAG
                             )
                         }
                     }
@@ -112,7 +115,8 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.commit {
                         replace(
                             binding.mainFrameLayoutContainerProperties.id,
-                            AddPropertyFragment.newInstance()
+                            AddPropertyFragment.newInstance(),
+                            ADD_FRAGMENT_TAG
                         )
                     }
                 }
@@ -122,14 +126,16 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.commit {
                         replace(
                             binding.mainFrameLayoutContainerProperties.id,
-                            BlankFragment.newInstance()
+                            BlankFragment.newInstance(),
+                            BLANK_FRAGMENT_TAG
                         )
                     }
                     supportFragmentManager.commit {
                         binding.mainFrameLayoutContainerDetail?.let {
                             replace(
                                 it.id,
-                                AddPropertyFragment.newInstance()
+                                AddPropertyFragment.newInstance(),
+                                ADD_FRAGMENT_TAG
                             )
                         }
                     }
@@ -140,7 +146,8 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.commit {
                         replace(
                             binding.mainFrameLayoutContainerProperties.id,
-                            BlankFragment.newInstance()
+                            BlankFragment.newInstance(),
+                            BLANK_FRAGMENT_TAG
                         )
                     }
                 }
@@ -151,7 +158,8 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.commit {
                         replace(
                             binding.mainFrameLayoutContainerProperties.id,
-                            DetailFragment.newInstance()
+                            DetailFragment.newInstance(),
+                            DETAIL_FRAGMENT_TAG
                         )
                     }
                 }
@@ -162,13 +170,17 @@ class MainActivity : AppCompatActivity() {
                         binding.mainFrameLayoutContainerDetail?.let {
                             replace(
                                 it.id,
-                                DetailFragment.newInstance()
+                                DetailFragment.newInstance(),
+                                DETAIL_FRAGMENT_TAG
                             )
                         }
-                        binding.mainFrameLayoutContainerProperties.id.let {
+                        val existingFragment =
+                            supportFragmentManager.findFragmentByTag(PROPERTIES_FRAGMENT_TAG)
+                        if (existingFragment == null) {
                             replace(
-                                it,
-                                PropertiesFragment.newInstance()
+                                binding.mainFrameLayoutContainerProperties.id,
+                                PropertiesFragment.newInstance(),
+                                PROPERTIES_FRAGMENT_TAG
                             )
                         }
                     }
@@ -180,7 +192,8 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.commit {
                         replace(
                             binding.mainFrameLayoutContainerProperties.id,
-                            EditPropertyFragment.newInstance()
+                            EditPropertyFragment.newInstance(),
+                            EDIT_FRAGMENT_TAG
                         )
                     }
                 }
@@ -190,14 +203,16 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.commit {
                         replace(
                             binding.mainFrameLayoutContainerProperties.id,
-                            BlankFragment.newInstance()
+                            BlankFragment.newInstance(),
+                            BLANK_FRAGMENT_TAG
                         )
                     }
                     supportFragmentManager.commit {
                         binding.mainFrameLayoutContainerDetail?.let {
                             replace(
                                 it.id,
-                                EditPropertyFragment.newInstance()
+                                EditPropertyFragment.newInstance(),
+                                EDIT_FRAGMENT_TAG
                             )
                         }
                     }
@@ -208,7 +223,8 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.commit {
                         replace(
                             binding.mainFrameLayoutContainerProperties.id,
-                            FilterPropertiesFragment.newInstance()
+                            FilterPropertiesFragment.newInstance(),
+                            FILTER_FRAGMENT_TAG
                         )
                     }
                 }
@@ -217,14 +233,16 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.commit {
                         replace(
                             binding.mainFrameLayoutContainerProperties.id,
-                            PropertiesFragment.newInstance()
+                            PropertiesFragment.newInstance(),
+                            PROPERTIES_FRAGMENT_TAG
                         )
                     }
                     supportFragmentManager.commit {
                         binding.mainFrameLayoutContainerDetail?.let {
                             replace(
                                 it.id,
-                                FilterPropertiesFragment.newInstance()
+                                FilterPropertiesFragment.newInstance(),
+                                FILTER_FRAGMENT_TAG
                             )
                         }
                     }
