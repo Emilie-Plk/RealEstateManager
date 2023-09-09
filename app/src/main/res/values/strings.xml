@@ -56,4 +56,5 @@
     <string name="checkbox_amenity_hospital">Hospital</string>
     <string name="checkbox_amenity_library">Library</string>
     <string name="add_property_unit_surface_tv">(in %s)</string>
+    <string name="iv_preview_delete_property_btn">Delete property</string>
 </resources>

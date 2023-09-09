@@ -23,6 +23,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -39,7 +40,9 @@ class DetailViewModel @Inject constructor(
 ) : ViewModel() {
 
 val viewState: LiveData<DetailViewState> = liveData(coroutineDispatcherProvider.io) {
-    getCurrentPropertyIdFlowUseCase.invoke().flatMapLatest { propertyId ->
+    getCurrentPropertyIdFlowUseCase.invoke()
+        .filterNotNull()
+        .flatMapLatest { propertyId ->
         if (latestValue == null) {
             emit(DetailViewState.LoadingState)
         }
