@@ -10,7 +10,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.commit
-import androidx.fragment.app.commitNow
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.MainActivityBinding
 import com.emplk.realestatemanager.ui.add.AddPropertyFragment
@@ -47,16 +46,13 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
         setSupportActionBar(binding.mainToolbar)
 
-        updateToolbar()
-
         if (savedInstanceState == null) {
-            supportFragmentManager.commitNow {
+            supportFragmentManager.commit {
                 Log.d("COUCOU MainActivity", "supportFragmentManager onCreate: ")
-                replace(
+                add(
                     binding.mainFrameLayoutContainerProperties.id,
-                    PropertiesFragment.newInstance(),
-                    PROPERTIES_FRAGMENT_TAG
-                )
+                    PropertiesFragment.newInstance()
+                ).addToBackStack(PROPERTIES_FRAGMENT_TAG)
             }
         }
 
@@ -64,38 +60,39 @@ class MainActivity : AppCompatActivity() {
             viewModel.onAddPropertyClicked()
         }
 
-        viewModel.isFabVisibleLiveData.observe(this) { isVisible ->
-            binding.mainAddPropertyFab?.isVisible = isVisible
+        viewModel.mainViewState.observe(this) { mainViewState ->
+            binding.mainToolbar.subtitle = mainViewState.subtitle
+            binding.mainAddPropertyFab?.isVisible = mainViewState.isAddFabVisible
         }
 
         viewModel.viewEventLiveData.observeEvent(this) { event ->
             when (event) {
                 MainViewEvent.DisplayPropertyListFragmentOnPhone -> {
-                    val existingFragment =
+                    val existingPropertiesFragment =
                         supportFragmentManager.findFragmentByTag(PROPERTIES_FRAGMENT_TAG)
-                    if (existingFragment == null) {
-                        Log.d("COUCOU MainActivity", "DisplayPropertyListFragmentOnPhone: ")
+                    if (existingPropertiesFragment == null) {
+                        Log.d("COUCOU MainActivity", "existing frag is null ! DisplayPropertyListFragmentOnPhone: ")
                         supportFragmentManager.commit {
                             replace(
                                 binding.mainFrameLayoutContainerProperties.id,
                                 PropertiesFragment.newInstance(),
                                 PROPERTIES_FRAGMENT_TAG
-                            )
+                            ).addToBackStack(PROPERTIES_FRAGMENT_TAG)
                         }
                     }
                 }
 
                 MainViewEvent.DisplayPropertyListFragmentOnTablet -> {
-                    Log.d("COUCOU MainActivity", "DisplayPropertyListFragmentOnTablet: ")
-                    val existingFragment =
+                    val existingPropertiesFragment =
                         supportFragmentManager.findFragmentByTag(PROPERTIES_FRAGMENT_TAG)
-                    if (existingFragment == null) {
+                    if (existingPropertiesFragment == null) {
+                        Log.d("COUCOU MainActivity", "existing frag is null ! DisplayPropertyListFragmentOnTablet: ")
                         supportFragmentManager.commit {
                             replace(
                                 binding.mainFrameLayoutContainerProperties.id,
                                 PropertiesFragment.newInstance(),
                                 PROPERTIES_FRAGMENT_TAG
-                            )
+                            ).addToBackStack(PROPERTIES_FRAGMENT_TAG)
                         }
                     }
 
@@ -122,7 +119,6 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 MainViewEvent.DisplayAddPropertyFragmentOnTablet -> {
-                    Log.d("COUCOU MainActivity", "DisplayAddPropertyFragmentOnTablet: ")
                     supportFragmentManager.commit {
                         replace(
                             binding.mainFrameLayoutContainerProperties.id,
@@ -152,7 +148,6 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-
                 MainViewEvent.DisplayDetailFragmentOnPhone -> {
                     Log.d("COUCOU MainActivity", "DisplayDetailFragmentOnPhone: ")
                     supportFragmentManager.commit {
@@ -177,29 +172,36 @@ class MainActivity : AppCompatActivity() {
                         val existingFragment =
                             supportFragmentManager.findFragmentByTag(PROPERTIES_FRAGMENT_TAG)
                         if (existingFragment == null) {
-                            replace(
-                                binding.mainFrameLayoutContainerProperties.id,
-                                PropertiesFragment.newInstance(),
-                                PROPERTIES_FRAGMENT_TAG
+                            Log.d(
+                                "COUCOU MainActivity",
+                                "existing frag is null (properties list) ! DisplayDetailFragmentOnPhone: "
                             )
+                            supportFragmentManager.commit {
+                                replace(
+                                    binding.mainFrameLayoutContainerProperties.id,
+                                    PropertiesFragment.newInstance(),
+                                    PROPERTIES_FRAGMENT_TAG
+                                )
+                            }
                         }
                     }
                 }
 
-
                 MainViewEvent.DisplayEditPropertyFragmentOnPhone -> {
-                    Log.d("COUCOU MainActivity", "DisplayEditPropertyFragmentOnPhone: ")
-                    supportFragmentManager.commit {
-                        replace(
-                            binding.mainFrameLayoutContainerProperties.id,
-                            EditPropertyFragment.newInstance(),
-                            EDIT_FRAGMENT_TAG
-                        )
+                    val existingEditFragment = supportFragmentManager.findFragmentByTag(EDIT_FRAGMENT_TAG)
+                    if (existingEditFragment == null) {
+                        Log.d("COUCOU MainActivity", "existing frag is null ! DisplayEditPropertyFragmentOnPhone: ")
+                        supportFragmentManager.commit {
+                            replace(
+                                binding.mainFrameLayoutContainerProperties.id,
+                                EditPropertyFragment.newInstance(),
+                                EDIT_FRAGMENT_TAG
+                            ).addToBackStack(EDIT_FRAGMENT_TAG)
+                        }
                     }
                 }
 
                 MainViewEvent.DisplayEditPropertyFragmentOnTablet -> {
-                    Log.d("COUCOU MainActivity", "DisplayEditPropertyFragmentOnTablet: ")
                     supportFragmentManager.commit {
                         replace(
                             binding.mainFrameLayoutContainerProperties.id,
@@ -251,12 +253,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateToolbar() {
-        viewModel.toolbarSubtitleLiveData.observe(this) {
-            Log.d("COUCOU kiki", "updateToolbar: $it ")
-            binding.mainToolbar.subtitle = it
-        }
-    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
@@ -266,12 +262,10 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.main_menu_map_view -> {
-                Log.d("COUCOU MainActivity", "DisplayMapFragment: ")
                 true
             }
 
             R.id.main_menu_property_filter -> {
-                Log.d("COUCOU MainActivity", "DisplayFilterFragment: ")
                 viewModel.onFilterPropertiesClicked()
                 true
             }

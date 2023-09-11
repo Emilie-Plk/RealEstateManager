@@ -511,6 +511,8 @@
             android:id="@+id/add_property_pictures_from_storage_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/primary_light"
+            app:icon="@drawable/baseline_drive_folder_upload_24"
             android:layout_marginTop="8dp"
             android:text="Import picture"
             app:layout_constraintEnd_toStartOf="@id/add_property_from_camera_button"
@@ -521,7 +523,8 @@
             android:id="@+id/add_property_from_camera_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/baseline_photo_camera_24"
+            android:backgroundTint="@color/primary_light"
+            app:icon="@drawable/baseline_photo_camera_24"
             android:text="Take picture"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/add_property_pictures_from_storage_button"
@@ -540,13 +543,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/add_property_pictures_from_storage_button"
             tools:itemCount="5"
-            tools:listitem="@layout/add_property_preview_picture_item" />
+            tools:listitem="@layout/property_preview_picture_item" />
 
         <Button
             android:id="@+id/add_property_submit_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:icon="@drawable/baseline_add_home_24"
+            android:layout_marginTop="12dp"
+      app:iconTint="@color/secondary"
             android:text="Create property"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

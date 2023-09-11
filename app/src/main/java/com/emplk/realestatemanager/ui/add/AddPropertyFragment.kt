@@ -24,25 +24,6 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        binding.addPropertyPicturesFromStorageButton.setOnClickListener {
-            val imageView = ImageView(requireActivity())
-
-            imageView.apply {
-                imageView.setImageResource(R.drawable.tools_villa)
-                imageView.layoutParams = ViewGroup.MarginLayoutParams(
-                    500,
-                    400
-                ).apply {
-                    setMargins(8, 8, 8, 8)
-                }
-                imageView.isClickable = true
-                imageView.isFocusable = true
-                imageView.scaleType = ImageView.ScaleType.CENTER_CROP
-                imageView.contentDescription = "A beautiful villa"
-            }
-            binding.addPropertyPicturesFlexboxLayout.addView(imageView)
-        }
     }
 }
 

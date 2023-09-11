@@ -20,7 +20,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
@@ -35,16 +34,89 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
     private val isTabletMutableStateFlow = MutableStateFlow(false)
 
-    val isFabVisibleLiveData: LiveData<Boolean> = liveData(coroutineDispatcherProvider.main) {
+    val mainViewState: LiveData<MainViewState> = liveData(coroutineDispatcherProvider.main) {
         combine(
             isTabletMutableStateFlow.asStateFlow(),
             getNavigationTypeUseCase.invoke(),
-        ) { isTablet, navigationType ->
+            getToolbarSubtitleUseCase.invoke(),
+        ) { isTablet, navigationType, toolbarSubtitle ->
             when (navigationType) {
-                LIST_FRAGMENT -> !isTablet
-                else -> false
+                LIST_FRAGMENT -> if (!isTablet) {
+                    emit(MainViewState(
+                        isAddFabVisible = true,
+                        isFilterAppBarButtonVisible = true,
+                        isAddAppBarButtonVisible = true,
+                        subtitle = toolbarSubtitle
+                    ))
+                } else {
+                    emit(MainViewState(
+                        isAddFabVisible = false,
+                        isFilterAppBarButtonVisible = true,
+                        isAddAppBarButtonVisible = true,
+                        subtitle = null
+                    ))
+                }
+
+                EDIT_FRAGMENT -> if (!isTablet) {
+                    emit(MainViewState(false,
+                        isFilterAppBarButtonVisible = false,
+                        isAddAppBarButtonVisible = false,
+                        subtitle = toolbarSubtitle
+                    ))
+                } else {
+                    emit(MainViewState(false,
+                        isFilterAppBarButtonVisible = true,
+                        isAddAppBarButtonVisible = true,
+                        subtitle = null
+                    ))
+                }
+
+                FILTER_FRAGMENT -> if (!isTablet) {
+                    emit(MainViewState(false,
+                        isFilterAppBarButtonVisible = false,
+                        isAddAppBarButtonVisible = false,
+                        subtitle = toolbarSubtitle
+                    ))
+                } else {
+                    emit(MainViewState(
+                        isAddFabVisible = false,
+                        isFilterAppBarButtonVisible = true,
+                        isAddAppBarButtonVisible = true,
+                        subtitle = null
+                    ))
+                }
+
+                ADD_FRAGMENT -> if (!isTablet) {
+                    emit(MainViewState(
+                        isAddFabVisible = false,
+                        isFilterAppBarButtonVisible = true,
+                        isAddAppBarButtonVisible = false,
+                        subtitle = toolbarSubtitle
+                    ))
+                } else {
+                    emit(MainViewState(
+                        isAddFabVisible = false,
+                        isFilterAppBarButtonVisible = true,
+                        isAddAppBarButtonVisible = false,
+                        subtitle = null
+                    ))
+                }
+
+                DETAIL_FRAGMENT -> if (!isTablet) {
+                    emit(MainViewState(false,
+                        isFilterAppBarButtonVisible = false,
+                        isAddAppBarButtonVisible = false,
+                        subtitle = toolbarSubtitle
+                    ))
+                } else {
+                    emit(MainViewState(false,
+                        isFilterAppBarButtonVisible = true,
+                        isAddAppBarButtonVisible = true,
+                        subtitle = null
+                    ))
+                }
             }
-        }.collectLatest { emit(it) }
+        }.collect()
     }
 
     val viewEventLiveData: LiveData<Event<MainViewEvent>> = liveData {
@@ -96,23 +168,20 @@ class MainViewModel @Inject constructor(
         }.collect()
     }
 
-    val toolbarSubtitleLiveData: LiveData<String?> = getToolbarSubtitleUseCase.invoke().asLiveData()
-
-
     fun onAddPropertyClicked() {
         setNavigationTypeUseCase.invoke(
             ADD_FRAGMENT
         )
     }
 
-    fun onResume(isTablet: Boolean) {
-        isTabletMutableStateFlow.value = isTablet
-       // setScreenWidthTypeUseCase.invoke(isTablet)
-    }
-
     fun onFilterPropertiesClicked() {
         setNavigationTypeUseCase.invoke(
             FILTER_FRAGMENT
         )
+    }
+
+    fun onResume(isTablet: Boolean) {
+        isTabletMutableStateFlow.value = isTablet
+        setScreenWidthTypeUseCase.invoke(isTablet)
     }
 }
