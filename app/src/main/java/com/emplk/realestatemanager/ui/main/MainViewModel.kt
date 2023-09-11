@@ -80,7 +80,7 @@ class MainViewModel @Inject constructor(
                 } else {
                     emit(MainViewState(
                         isAddFabVisible = false,
-                        isFilterAppBarButtonVisible = true,
+                        isFilterAppBarButtonVisible = false,
                         isAddAppBarButtonVisible = true,
                         subtitle = null
                     ))
