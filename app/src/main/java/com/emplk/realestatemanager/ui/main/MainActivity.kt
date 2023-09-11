@@ -63,6 +63,12 @@ class MainActivity : AppCompatActivity() {
         viewModel.mainViewState.observe(this) { mainViewState ->
             binding.mainToolbar.subtitle = mainViewState.subtitle
             binding.mainAddPropertyFab?.isVisible = mainViewState.isAddFabVisible
+            binding.mainToolbar.menu.findItem(R.id.main_menu_property_filter)?.let {
+                it.isVisible = mainViewState.isFilterAppBarButtonVisible
+            }
+            binding.mainToolbar.menu.findItem(R.id.main_menu_add_property)?.let {
+                it.isVisible = mainViewState.isAddAppBarButtonVisible
+            }
         }
 
         viewModel.viewEventLiveData.observeEvent(this) { event ->
