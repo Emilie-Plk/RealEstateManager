@@ -18,14 +18,17 @@
         tools:src="@drawable/tools_villa" />
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/preview_picture_title_textInputLayout"
+        style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/preview_picture_iv"
         app:layout_constraintTop_toBottomOf="@id/preview_picture_iv">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/preview_picture_title_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:lines="1" />
@@ -36,7 +39,6 @@
         android:id="@+id/preview_picture_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/secondary_translucent"
         app:layout_constraintBottom_toBottomOf="@+id/preview_picture_iv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/preview_picture_iv"
