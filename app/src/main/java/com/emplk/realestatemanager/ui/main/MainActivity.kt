@@ -1,7 +1,5 @@
 package com.emplk.realestatemanager.ui.main
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -28,9 +26,7 @@ class MainActivity : AppCompatActivity() {
     private val binding by viewBinding { MainActivityBinding.inflate(it) }
     private val viewModel by viewModels<MainViewModel>()
 
-    companion object {
-        fun newIntent(requireContext: Context) = Intent(requireContext, MainActivity::class.java)
-
+    private companion object {
         private const val PROPERTIES_FRAGMENT_TAG = "PROPERTIES_FRAGMENT_TAG"
         private const val DETAIL_FRAGMENT_TAG = "DETAIL_FRAGMENT_TAG"
         private const val ADD_FRAGMENT_TAG = "ADD_FRAGMENT_TAG"
@@ -51,7 +47,8 @@ class MainActivity : AppCompatActivity() {
                 Log.d("COUCOU MainActivity", "supportFragmentManager onCreate: ")
                 add(
                     binding.mainFrameLayoutContainerProperties.id,
-                    PropertiesFragment.newInstance()
+                    PropertiesFragment.newInstance(),
+                    PROPERTIES_FRAGMENT_TAG
                 ).addToBackStack(PROPERTIES_FRAGMENT_TAG)
             }
         }
@@ -89,6 +86,15 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 MainViewEvent.DisplayPropertyListFragmentOnTablet -> {
+                    val propertiesFragment = supportFragmentManager.findFragmentByTag(
+                        PROPERTIES_FRAGMENT_TAG
+                    )
+                    if (propertiesFragment != null) {
+                        supportFragmentManager.commit {
+                            remove(propertiesFragment)
+                        }
+                    }
+
                     val existingPropertiesFragment =
                         supportFragmentManager.findFragmentByTag(PROPERTIES_FRAGMENT_TAG)
                     if (existingPropertiesFragment == null) {
@@ -101,47 +107,49 @@ class MainActivity : AppCompatActivity() {
                             ).addToBackStack(PROPERTIES_FRAGMENT_TAG)
                         }
                     }
-
-                    supportFragmentManager.commit {
-                        binding.mainFrameLayoutContainerDetail?.let {
-                            replace(
-                                it.id,
-                                BlankFragment.newInstance(),
-                                BLANK_FRAGMENT_TAG
-                            )
-                        }
-                    }
                 }
 
                 MainViewEvent.DisplayAddPropertyFragmentOnPhone -> {
-                    Log.d("COUCOU MainActivity", "DisplayAddPropertyFragmentOnPhone: ")
-                    supportFragmentManager.commit {
-                        replace(
-                            binding.mainFrameLayoutContainerProperties.id,
-                            AddPropertyFragment.newInstance(),
-                            ADD_FRAGMENT_TAG
-                        )
+                    val existingAddFragment = supportFragmentManager.findFragmentByTag(ADD_FRAGMENT_TAG)
+                    if (existingAddFragment == null) {
+                        supportFragmentManager.commit {
+                            replace(
+                                R.id.main_FrameLayout_container_properties,
+                                AddPropertyFragment.newInstance(),
+                                ADD_FRAGMENT_TAG
+                            ).addToBackStack(ADD_FRAGMENT_TAG)
+                        }
                     }
                 }
 
                 MainViewEvent.DisplayAddPropertyFragmentOnTablet -> {
-                    supportFragmentManager.commit {
-                        replace(
-                            binding.mainFrameLayoutContainerProperties.id,
-                            BlankFragment.newInstance(),
-                            BLANK_FRAGMENT_TAG
-                        )
+                    val existingPropertiesFragment = supportFragmentManager.findFragmentByTag(PROPERTIES_FRAGMENT_TAG)
+                    if (existingPropertiesFragment != null && existingPropertiesFragment.isAdded) {
+                        supportFragmentManager.commit {
+                            detach(existingPropertiesFragment)
+                        }
                     }
-                    supportFragmentManager.commit {
-                        binding.mainFrameLayoutContainerDetail?.let {
-                            replace(
-                                it.id,
-                                AddPropertyFragment.newInstance(),
-                                ADD_FRAGMENT_TAG
-                            )
+
+                    val existingAddFragment = supportFragmentManager.findFragmentByTag(ADD_FRAGMENT_TAG)
+                    if (existingAddFragment == null) {
+                        supportFragmentManager.commit {
+                            binding.mainFrameLayoutContainerMainContent?.let {
+                                replace(
+                                    it.id,
+                                    AddPropertyFragment.newInstance(),
+                                    ADD_FRAGMENT_TAG
+                                ).addToBackStack(ADD_FRAGMENT_TAG)
+                            }
+                        }
+                    } else {
+                        supportFragmentManager.commit {
+                            binding.mainFrameLayoutContainerMainContent?.let {
+                                attach(existingAddFragment) // Attach the existing fragment to the new container
+                            }
                         }
                     }
                 }
+
 
                 MainViewEvent.DisplayBlankFragment -> {
                     Log.d("COUCOU MainActivity", "DisplayBlankFragment: ")
@@ -288,6 +296,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        val backStackCount = supportFragmentManager.backStackEntryCount
+        for (i in 0 until backStackCount) {
+            val entry = supportFragmentManager.getBackStackEntryAt(i)
+            Log.d("BackStackEntry $i", "Name: ${entry.name}, ID: ${entry.id}")
+        }
         viewModel.onResume(resources.getBoolean(R.bool.isTablet))
     }
 }

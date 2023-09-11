@@ -56,6 +56,35 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/filter_property_price_rangeSlider" />
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/filter_property_type_textInputLayout"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/filter_property_type_tv">
+
+            <AutoCompleteTextView
+                android:id="@+id/filter_property_type_actv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Type"
+                android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/filter_property_amenities_tv"
+            style="@style/Theme.RealEstateManager.FilterPropertySubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Amenities"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/filter_property_type_textInputLayout" />
+
 
         <com.google.android.flexbox.FlexboxLayout
             android:id="@+id/filter_property_type_flexboxLayout"
@@ -66,7 +95,7 @@
             app:flexWrap="wrap"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/filter_property_type_tv">
+            app:layout_constraintTop_toBottomOf="@+id/filter_property_amenities_tv">
 
             <CheckBox
                 android:id="@+id/filter_property_amenities_school_checkbox"
