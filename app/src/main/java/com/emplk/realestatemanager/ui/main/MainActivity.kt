@@ -6,12 +6,12 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.isVisible
 import androidx.fragment.app.commit
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.MainActivityBinding
 import com.emplk.realestatemanager.ui.add.AddPropertyFragment
-import com.emplk.realestatemanager.ui.blank.BlankFragment
 import com.emplk.realestatemanager.ui.detail.DetailFragment
 import com.emplk.realestatemanager.ui.edit.EditPropertyFragment
 import com.emplk.realestatemanager.ui.filter.FilterPropertiesFragment
@@ -32,7 +32,6 @@ class MainActivity : AppCompatActivity() {
         private const val ADD_FRAGMENT_TAG = "ADD_FRAGMENT_TAG"
         private const val EDIT_FRAGMENT_TAG = "EDIT_FRAGMENT_TAG"
         private const val FILTER_FRAGMENT_TAG = "FILTER_FRAGMENT_TAG"
-        private const val BLANK_FRAGMENT_TAG = "BLANK_FRAGMENT_TAG"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,15 +85,6 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 MainViewEvent.DisplayPropertyListFragmentOnTablet -> {
-                    val propertiesFragment = supportFragmentManager.findFragmentByTag(
-                        PROPERTIES_FRAGMENT_TAG
-                    )
-                    if (propertiesFragment != null) {
-                        supportFragmentManager.commit {
-                            remove(propertiesFragment)
-                        }
-                    }
-
                     val existingPropertiesFragment =
                         supportFragmentManager.findFragmentByTag(PROPERTIES_FRAGMENT_TAG)
                     if (existingPropertiesFragment == null) {
@@ -123,42 +113,17 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 MainViewEvent.DisplayAddPropertyFragmentOnTablet -> {
-                    val existingPropertiesFragment = supportFragmentManager.findFragmentByTag(PROPERTIES_FRAGMENT_TAG)
-                    if (existingPropertiesFragment != null && existingPropertiesFragment.isAdded) {
-                        supportFragmentManager.commit {
-                            detach(existingPropertiesFragment)
-                        }
-                    }
-
+                    binding.mainViewSeparator?.isVisible = false
                     val existingAddFragment = supportFragmentManager.findFragmentByTag(ADD_FRAGMENT_TAG)
                     if (existingAddFragment == null) {
+                        adjustConstraintSet(ADD_FRAGMENT_TAG)
                         supportFragmentManager.commit {
-                            binding.mainFrameLayoutContainerMainContent?.let {
-                                replace(
-                                    it.id,
-                                    AddPropertyFragment.newInstance(),
-                                    ADD_FRAGMENT_TAG
-                                ).addToBackStack(ADD_FRAGMENT_TAG)
-                            }
+                            replace(
+                                R.id.main_FrameLayout_container_properties,
+                                AddPropertyFragment.newInstance(),
+                                ADD_FRAGMENT_TAG
+                            ).addToBackStack(ADD_FRAGMENT_TAG)
                         }
-                    } else {
-                        supportFragmentManager.commit {
-                            binding.mainFrameLayoutContainerMainContent?.let {
-                                attach(existingAddFragment) // Attach the existing fragment to the new container
-                            }
-                        }
-                    }
-                }
-
-
-                MainViewEvent.DisplayBlankFragment -> {
-                    Log.d("COUCOU MainActivity", "DisplayBlankFragment: ")
-                    supportFragmentManager.commit {
-                        replace(
-                            binding.mainFrameLayoutContainerProperties.id,
-                            BlankFragment.newInstance(),
-                            BLANK_FRAGMENT_TAG
-                        )
                     }
                 }
 
@@ -174,7 +139,9 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 MainViewEvent.DisplayDetailFragmentOnTablet -> {
-                    Log.d("COUCOU MainActivity", "DisplayDetailFragmentOnTablet: ")
+                    val constraintSet = ConstraintSet()
+                    constraintSet.clear(R.id.main_FrameLayout_container_properties, ConstraintSet.END)
+
                     supportFragmentManager.commit {
                         binding.mainFrameLayoutContainerDetail?.let {
                             replace(
@@ -183,20 +150,15 @@ class MainActivity : AppCompatActivity() {
                                 DETAIL_FRAGMENT_TAG
                             )
                         }
-                        val existingFragment =
+
+                        val existingPropertiesFragment =
                             supportFragmentManager.findFragmentByTag(PROPERTIES_FRAGMENT_TAG)
-                        if (existingFragment == null) {
-                            Log.d(
-                                "COUCOU MainActivity",
-                                "existing frag is null (properties list) ! DisplayDetailFragmentOnPhone: "
+                        if (existingPropertiesFragment == null) {
+                            replace(
+                                binding.mainFrameLayoutContainerProperties.id,
+                                PropertiesFragment.newInstance(),
+                                PROPERTIES_FRAGMENT_TAG
                             )
-                            supportFragmentManager.commit {
-                                replace(
-                                    binding.mainFrameLayoutContainerProperties.id,
-                                    PropertiesFragment.newInstance(),
-                                    PROPERTIES_FRAGMENT_TAG
-                                )
-                            }
                         }
                     }
                 }
@@ -216,50 +178,69 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 MainViewEvent.DisplayEditPropertyFragmentOnTablet -> {
+                    val detailFragment = supportFragmentManager.findFragmentByTag(DETAIL_FRAGMENT_TAG)
+                    if (detailFragment != null) {
+                        Log.d("COUCOU MainActivity", "Detail  frag is null  ! DisplayEditPropertyFragmentOnTablet: ")
+                        supportFragmentManager.commit {
+                            remove(detailFragment)
+                        }
+                    }
+
                     supportFragmentManager.commit {
+                        Log.d(
+                            "COUCOU MainActivity",
+                            "Replace Edit Fg + adjust constraints DisplayEditPropertyFragmentOnTablet: "
+                        )
                         replace(
                             binding.mainFrameLayoutContainerProperties.id,
-                            BlankFragment.newInstance(),
-                            BLANK_FRAGMENT_TAG
+                            EditPropertyFragment.newInstance(),
+                            EDIT_FRAGMENT_TAG
                         )
+                        adjustConstraintSet(EDIT_FRAGMENT_TAG)
                     }
-                    supportFragmentManager.commit {
-                        binding.mainFrameLayoutContainerDetail?.let {
+                }
+
+                MainViewEvent.DisplayFilterPropertiesFragmentOnPhone -> {
+                    val existingFilterFragment = supportFragmentManager.findFragmentByTag(FILTER_FRAGMENT_TAG)
+                    if (existingFilterFragment == null) {
+                        Log.d(
+                            "COUCOU MainActivity",
+                            "Existing filter fragment is null:  DisplayFilterPropertiesFragmentOnPhone: "
+                        )
+                        supportFragmentManager.commit {
                             replace(
-                                it.id,
-                                EditPropertyFragment.newInstance(),
-                                EDIT_FRAGMENT_TAG
+                                binding.mainFrameLayoutContainerProperties.id,
+                                FilterPropertiesFragment.newInstance(),
+                                FILTER_FRAGMENT_TAG
                             )
                         }
                     }
                 }
 
-                MainViewEvent.DisplayFilterPropertiesFragmentOnPhone -> {
-                    Log.d("COUCOU MainActivity", "DisplayFilterPropertiesFragmentOnPhone: ")
-                    supportFragmentManager.commit {
-                        replace(
-                            binding.mainFrameLayoutContainerProperties.id,
-                            FilterPropertiesFragment.newInstance(),
-                            FILTER_FRAGMENT_TAG
-                        )
-                    }
-                }
-
                 MainViewEvent.DisplayFilterPropertiesFragmentOnTablet -> {
-                    supportFragmentManager.commit {
-                        replace(
-                            binding.mainFrameLayoutContainerProperties.id,
-                            PropertiesFragment.newInstance(),
-                            PROPERTIES_FRAGMENT_TAG
-                        )
-                    }
-                    supportFragmentManager.commit {
-                        binding.mainFrameLayoutContainerDetail?.let {
+                    val existingPropertiesFragment = supportFragmentManager.findFragmentByTag(PROPERTIES_FRAGMENT_TAG)
+                    if (existingPropertiesFragment == null) {
+                        val constraintSet = ConstraintSet()
+                        constraintSet.clear(R.id.main_FrameLayout_container_properties, ConstraintSet.END)
+                        supportFragmentManager.commit {
                             replace(
-                                it.id,
-                                FilterPropertiesFragment.newInstance(),
-                                FILTER_FRAGMENT_TAG
+                                binding.mainFrameLayoutContainerProperties.id,
+                                PropertiesFragment.newInstance(),
+                                PROPERTIES_FRAGMENT_TAG
                             )
+                        }
+                    }
+
+                    val existingFilterFragment = supportFragmentManager.findFragmentByTag(FILTER_FRAGMENT_TAG)
+                    if (existingFilterFragment == null) {
+                        supportFragmentManager.commit {
+                            binding.mainFrameLayoutContainerDetail?.let {
+                                replace(
+                                    it.id,
+                                    FilterPropertiesFragment.newInstance(),
+                                    FILTER_FRAGMENT_TAG
+                                )
+                            }
                         }
                     }
                 }
@@ -293,6 +274,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun adjustConstraintSet(fragmentTag: String) {
+        val existingEditFragment = supportFragmentManager.findFragmentByTag(fragmentTag)
+        if (existingEditFragment == null) {
+            val constraintSet = ConstraintSet()
+            constraintSet.connect(
+                R.id.main_FrameLayout_container_properties,
+                ConstraintSet.END,
+                ConstraintSet.PARENT_ID,
+                ConstraintSet.END
+            )
+            binding.mainViewSeparator?.isVisible = false
+        }
+    }
 
     override fun onResume() {
         super.onResume()
