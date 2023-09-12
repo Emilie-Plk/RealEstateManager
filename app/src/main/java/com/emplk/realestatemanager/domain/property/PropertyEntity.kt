@@ -15,10 +15,10 @@ data class PropertyEntity(
     val rooms: Int,
     val bedrooms: Int,
     val bathrooms: Int,
-    val pictures: List<PictureEntity>, //
+    val pictures: List<PictureEntity>,
     val amenities: List<AmenityEntity>,
     val description: String,
-    val agentName: String, //
+    val agentName: String,
     val isAvailableForSale: Boolean,
     val isSold: Boolean,
     val entryDate: LocalDateTime,
