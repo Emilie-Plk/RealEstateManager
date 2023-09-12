@@ -1,4 +1,4 @@
-package com.emplk.realestatemanager.ui.add.type
+package com.emplk.realestatemanager.ui.add.agent
 
 import android.database.DataSetObservable
 import android.database.DataSetObserver
@@ -10,9 +10,9 @@ import android.widget.Filterable
 import android.widget.ListAdapter
 import com.emplk.realestatemanager.databinding.AddPropertySpinnerItemBinding
 
-class AddPropertyTypeSpinnerAdapter : ListAdapter, Filterable {
+class AddPropertyAgentSpinnerAdapter : ListAdapter, Filterable {
     private val dataSetObservable = DataSetObservable()
-    private var items = emptyList<AddPropertyTypeViewStateItem>()
+    private var items = emptyList<AddPropertyAgentViewStateItem>()
 
 
     override fun registerDataSetObserver(observer: DataSetObserver?) {
@@ -25,7 +25,7 @@ class AddPropertyTypeSpinnerAdapter : ListAdapter, Filterable {
 
     override fun getCount(): Int = items.size
 
-    override fun getItem(position: Int): AddPropertyTypeViewStateItem? = items.getOrNull(position)
+    override fun getItem(position: Int): AddPropertyAgentViewStateItem? = items.getOrNull(position)
 
     override fun getItemId(position: Int): Long = getItem(position)?.id ?: -1L
 
@@ -37,7 +37,7 @@ class AddPropertyTypeSpinnerAdapter : ListAdapter, Filterable {
         } else {
             AddPropertySpinnerItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         }
-        getItem(position)?.let { item ->
+        getItem(position)?.let { item ->  // let function ensures that you only perform the operations inside the block if getItem(position) returns a non-null item.
             binding.addPropertySpinnerItemTvName.text = item.name
         }
         return binding.root
@@ -57,10 +57,10 @@ class AddPropertyTypeSpinnerAdapter : ListAdapter, Filterable {
         override fun performFiltering(constraint: CharSequence) = FilterResults()
         override fun publishResults(constraint: CharSequence, results: FilterResults?) {}
         override fun convertResultToString(resultValue: Any): CharSequence =
-            (resultValue as AddPropertyTypeViewStateItem).name
+            (resultValue as AddPropertyAgentViewStateItem).name
     }
 
-    fun setData(items: List<AddPropertyTypeViewStateItem>) {
+    fun setData(items: List<AddPropertyAgentViewStateItem>) {
         this.items = items
         dataSetObservable.notifyChanged()
     }

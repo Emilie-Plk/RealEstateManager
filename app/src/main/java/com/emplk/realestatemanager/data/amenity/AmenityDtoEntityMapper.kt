@@ -13,6 +13,9 @@ class AmenityDtoEntityMapper @Inject constructor() {
             propertyId = amenity.propertyId,
         )
 
+    fun mapToDtoEntities(amenities: List<AmenityEntity>) =
+        amenities.map { mapToDtoEntity(it) }
+
     fun mapToDomainEntities(amenityDtoEntities: List<AmenityDtoEntity>) =
         amenityDtoEntities.map { mapToDomainEntity(it) }
 

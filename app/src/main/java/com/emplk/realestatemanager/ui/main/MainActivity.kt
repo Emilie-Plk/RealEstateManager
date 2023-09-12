@@ -116,7 +116,7 @@ class MainActivity : AppCompatActivity() {
                     binding.mainViewSeparator?.isVisible = false
                     val existingAddFragment = supportFragmentManager.findFragmentByTag(ADD_FRAGMENT_TAG)
                     if (existingAddFragment == null) {
-                        adjustConstraintSet(ADD_FRAGMENT_TAG)
+                        adjustConstraintSet()
                         supportFragmentManager.commit {
                             replace(
                                 R.id.main_FrameLayout_container_properties,
@@ -139,9 +139,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 MainViewEvent.DisplayDetailFragmentOnTablet -> {
-                    val constraintSet = ConstraintSet()
-                    constraintSet.clear(R.id.main_FrameLayout_container_properties, ConstraintSet.END)
-
+                    resetConstraintSet()
                     supportFragmentManager.commit {
                         binding.mainFrameLayoutContainerDetail?.let {
                             replace(
@@ -151,15 +149,11 @@ class MainActivity : AppCompatActivity() {
                             )
                         }
 
-                        val existingPropertiesFragment =
-                            supportFragmentManager.findFragmentByTag(PROPERTIES_FRAGMENT_TAG)
-                        if (existingPropertiesFragment == null) {
-                            replace(
-                                binding.mainFrameLayoutContainerProperties.id,
-                                PropertiesFragment.newInstance(),
-                                PROPERTIES_FRAGMENT_TAG
-                            )
-                        }
+                        replace(
+                            binding.mainFrameLayoutContainerProperties.id,
+                            PropertiesFragment.newInstance(),
+                            PROPERTIES_FRAGMENT_TAG
+                        )
                     }
                 }
 
@@ -196,7 +190,7 @@ class MainActivity : AppCompatActivity() {
                             EditPropertyFragment.newInstance(),
                             EDIT_FRAGMENT_TAG
                         )
-                        adjustConstraintSet(EDIT_FRAGMENT_TAG)
+                        adjustConstraintSet()
                     }
                 }
 
@@ -218,29 +212,23 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 MainViewEvent.DisplayFilterPropertiesFragmentOnTablet -> {
-                    val existingPropertiesFragment = supportFragmentManager.findFragmentByTag(PROPERTIES_FRAGMENT_TAG)
-                    if (existingPropertiesFragment == null) {
-                        val constraintSet = ConstraintSet()
-                        constraintSet.clear(R.id.main_FrameLayout_container_properties, ConstraintSet.END)
-                        supportFragmentManager.commit {
-                            replace(
-                                binding.mainFrameLayoutContainerProperties.id,
-                                PropertiesFragment.newInstance(),
-                                PROPERTIES_FRAGMENT_TAG
-                            )
-                        }
+                    resetConstraintSet()
+                    supportFragmentManager.commit {
+                        replace(
+                            binding.mainFrameLayoutContainerProperties.id,
+                            PropertiesFragment.newInstance(),
+                            PROPERTIES_FRAGMENT_TAG
+                        )
+
                     }
 
-                    val existingFilterFragment = supportFragmentManager.findFragmentByTag(FILTER_FRAGMENT_TAG)
-                    if (existingFilterFragment == null) {
-                        supportFragmentManager.commit {
-                            binding.mainFrameLayoutContainerDetail?.let {
-                                replace(
-                                    it.id,
-                                    FilterPropertiesFragment.newInstance(),
-                                    FILTER_FRAGMENT_TAG
-                                )
-                            }
+                    supportFragmentManager.commit {
+                        binding.mainFrameLayoutContainerDetail?.let {
+                            replace(
+                                it.id,
+                                FilterPropertiesFragment.newInstance(),
+                                FILTER_FRAGMENT_TAG
+                            )
                         }
                     }
                 }
@@ -274,19 +262,28 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun adjustConstraintSet(fragmentTag: String) {
-        val existingEditFragment = supportFragmentManager.findFragmentByTag(fragmentTag)
-        if (existingEditFragment == null) {
-            val constraintSet = ConstraintSet()
-            constraintSet.connect(
-                R.id.main_FrameLayout_container_properties,
-                ConstraintSet.END,
-                ConstraintSet.PARENT_ID,
-                ConstraintSet.END
-            )
-            binding.mainViewSeparator?.isVisible = false
-        }
+    private fun adjustConstraintSet() {
+        val constraintSet = ConstraintSet()
+        constraintSet.connect(
+            R.id.main_FrameLayout_container_properties,
+            ConstraintSet.END,
+            ConstraintSet.PARENT_ID,
+            ConstraintSet.END
+        )
+        binding.mainViewSeparator?.isVisible = false
     }
+
+    private fun resetConstraintSet() {
+        val constraintSet = ConstraintSet()
+        constraintSet.connect(
+            R.id.main_FrameLayout_container_properties,
+            ConstraintSet.END,
+            R.id.main_View_separator,
+            ConstraintSet.START
+        )
+        binding.mainViewSeparator?.isVisible = true
+    }
+
 
     override fun onResume() {
         super.onResume()

@@ -96,7 +96,8 @@ class PropertyPicturePreviewListAdapter :
 
                 binding.previewPictureDeleteIv.setOnClickListener { item.onDeleteEvent.invoke() }
 
-                //binding.previewPictureTitleEt.addTextChangedListener /// how to do?
+                //binding.previewPictureTitleEt.addTextChangedListener
+            // TODO: how to addTextChangedListener to previewPictureTitleEt?
             }
         }
     }

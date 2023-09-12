@@ -71,6 +71,7 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
                     mapOf(
                         binding.detailAmenitiesConciergeTv to detailViewState.amenityConcierge,
                         binding.detailAmenitiesHospitalTv to detailViewState.amenityHospital,
+                        binding.detailAmenitiesGymTv to detailViewState.amenityGym,
                         binding.detailAmenitiesLibraryTv to detailViewState.amenityLibrary,
                         binding.detailAmenitiesParkTv to detailViewState.amenityPark,
                         binding.detailAmenitiesPublicTransportationTv to detailViewState.amenityPublicTransportation,

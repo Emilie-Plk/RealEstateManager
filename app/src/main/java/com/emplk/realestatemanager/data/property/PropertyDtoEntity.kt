@@ -2,12 +2,14 @@ package com.emplk.realestatemanager.data.property
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
 @Entity(
     tableName = "properties",
+    indices = [Index(value = ["id"], unique = true)]
 )
 data class PropertyDtoEntity(
     @PrimaryKey(autoGenerate = true)

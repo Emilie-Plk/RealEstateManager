@@ -10,14 +10,17 @@ data class PropertyWithDetails(
     @Embedded
     val property: PropertyDtoEntity,
     @Relation(
+        entity = PictureDtoEntity::class,
         parentColumn = "id",
         entityColumn = "property_id"
     ) val pictures: List<PictureDtoEntity>,
     @Relation(
+        entity = LocationDtoEntity::class,
         parentColumn = "id",
         entityColumn = "property_id"
     ) val location: LocationDtoEntity,
     @Relation(
+        entity = AmenityDtoEntity::class,
         parentColumn = "id",
         entityColumn = "property_id"
     ) val amenities: List<AmenityDtoEntity> = emptyList(),
