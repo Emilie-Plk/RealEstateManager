@@ -12,7 +12,7 @@
         android:layout_margin="8dp">
 
         <TextView
-            android:id="@+id/add_property_type_radioGroup_tv"
+            android:id="@+id/add_property_type_tv"
             style="@style/Theme.RealEstateManager.AddPropertySubtitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -21,77 +21,26 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+<com.google.android.material.textfield.TextInputLayout
+    android:id="@+id/add_property_type_textInputLayout"
+    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginEnd="16dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/add_property_type_tv">
 
-        <HorizontalScrollView
-            android:id="@+id/add_property_type_radioGroup_scrollView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="4dp"
-            android:scrollbarAlwaysDrawHorizontalTrack="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/add_property_type_radioGroup_tv">
+    <AutoCompleteTextView
+        android:id="@+id/add_property_type_actv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Select a type"
+        android:inputType="none" />
 
-
-            <RadioGroup
-                android:id="@+id/add_property_type_radioGroup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="parent">
-
-                <RadioButton
-                    android:id="@+id/add_property_type_radioGroup_penthouse"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="4dp"
-                    android:paddingEnd="4dp"
-                    android:text="Penthouse" />
-
-                <RadioButton
-                    android:id="@+id/add_property_type_radioGroup_townhouse"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="4dp"
-                    android:paddingEnd="4dp"
-                    android:text="Townhouse" />
-
-                <RadioButton
-                    android:id="@+id/add_property_type_radioGroup_villa"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="4dp"
-                    android:paddingEnd="4dp"
-                    android:text="Villa" />
-
-                <RadioButton
-                    android:id="@+id/add_property_type_radioGroup_loft"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="4dp"
-                    android:paddingEnd="4dp"
-                    android:text="Loft" />
-
-
-                <RadioButton
-                    android:id="@+id/add_property_type_radioGroup_manor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="4dp"
-                    android:paddingEnd="4dp"
-                    android:text="Manor" />
-
-                <RadioButton
-                    android:id="@+id/add_property_type_radioGroup_other"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Other" />
-            </RadioGroup>
-        </HorizontalScrollView>
-
+</com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/add_property_address_tv"
@@ -100,7 +49,7 @@
             android:layout_height="wrap_content"
             android:text="Address"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/add_property_type_radioGroup_scrollView" />
+            app:layout_constraintTop_toBottomOf="@id/add_property_type_textInputLayout" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/add_property_address_textInputLayout"
@@ -132,6 +81,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/add_property_address_textInputLayout" />
 
+        <TextView
+            android:id="@+id/add_property_price_currency_tv"
+            app:layout_constraintStart_toEndOf="@id/add_property_price_tv"
+            app:layout_constraintTop_toTopOf="@id/add_property_price_tv"
+            app:layout_constraintBottom_toBottomOf="@id/add_property_price_tv"
+            android:layout_marginStart="8dp"
+            android:text="@string/price_currency"
+            tools:text="(in $)"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/add_property_price_textInputLayout"
             style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
@@ -161,6 +121,17 @@
             android:text="Surface"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/add_property_price_textInputLayout" />
+
+        <TextView
+            android:id="@+id/add_property_surface_unit_tv"
+            app:layout_constraintStart_toEndOf="@id/add_property_surface_tv"
+            app:layout_constraintTop_toTopOf="@id/add_property_surface_tv"
+            app:layout_constraintBottom_toBottomOf="@id/add_property_surface_tv"
+            android:layout_marginStart="8dp"
+            android:text="@string/surface_unit"
+            tools:text="(in m²)"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/add_property_surface_textInputLayout"
@@ -484,7 +455,7 @@
                 android:id="@+id/add_property_agent_actv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Agent name"
+                android:hint="Select an agent"
                 android:inputType="none" />
         </com.google.android.material.textfield.TextInputLayout>
 
