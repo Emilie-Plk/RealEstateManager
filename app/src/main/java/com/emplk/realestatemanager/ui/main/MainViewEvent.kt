@@ -7,7 +7,6 @@ sealed class MainViewEvent {
     object DisplayAddPropertyFragmentOnTablet : MainViewEvent()
     object DisplayEditPropertyFragmentOnPhone : MainViewEvent()
     object DisplayEditPropertyFragmentOnTablet : MainViewEvent()
-    object DisplayBlankFragment : MainViewEvent()
     object DisplayDetailFragmentOnPhone : MainViewEvent()
     object DisplayDetailFragmentOnTablet : MainViewEvent()
     object DisplayFilterPropertiesFragmentOnPhone : MainViewEvent()

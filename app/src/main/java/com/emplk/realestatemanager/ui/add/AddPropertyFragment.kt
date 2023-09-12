@@ -1,6 +1,7 @@
 package com.emplk.realestatemanager.ui.add
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -18,7 +19,10 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
     private val viewModel by viewModels<AddPropertyViewModel>()
 
     companion object {
-        fun newInstance() = AddPropertyFragment()
+        fun newInstance() : Fragment {
+            Log.d("COUCOU", "AddPropertyFragment newInstance")
+            return AddPropertyFragment()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
