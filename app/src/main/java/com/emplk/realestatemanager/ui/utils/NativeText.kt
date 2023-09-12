@@ -32,4 +32,7 @@ sealed class NativeText {
         override fun toCharSequence(context: Context): CharSequence = context.getString(id, *args.toTypedArray())
     }
 
+    object Empty : NativeText() {
+        override fun toCharSequence(context: Context): CharSequence = ""
+    }
 }

@@ -354,6 +354,17 @@
                 tools:visibility="visible" />
 
             <TextView
+                android:id="@+id/detail_amenities_gym_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:drawablePadding="8dp"
+                android:text="@string/detail_amenities_gym_tv"
+                app:drawableStartCompat="@drawable/baseline_dumbbell_24"
+                tools:visibility="visible" />
+
+            <TextView
                 android:id="@+id/detail_amenities_library_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
