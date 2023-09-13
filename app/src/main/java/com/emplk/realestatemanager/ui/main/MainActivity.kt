@@ -70,56 +70,46 @@ class MainActivity : AppCompatActivity() {
         viewModel.viewEventLiveData.observeEvent(this) { event ->
             when (event) {
                 MainViewEvent.DisplayPropertyListFragmentOnPhone -> {
-                        Log.d("COUCOU MainActivity", "existing frag is null ! DisplayPropertyListFragmentOnPhone: ")
-                        supportFragmentManager.commit {
-                            replace(
-                                binding.mainFrameLayoutContainerProperties.id,
-                                PropertiesFragment.newInstance(),
-                                PROPERTIES_FRAGMENT_TAG
-                            ).addToBackStack(PROPERTIES_FRAGMENT_TAG)
+                    Log.d("COUCOU MainActivity", "existing frag is null ! DisplayPropertyListFragmentOnPhone: ")
+                    supportFragmentManager.commit {
+                        replace(
+                            binding.mainFrameLayoutContainerProperties.id,
+                            PropertiesFragment.newInstance(),
+                            PROPERTIES_FRAGMENT_TAG
+                        ).addToBackStack(PROPERTIES_FRAGMENT_TAG)
                     }
                 }
 
                 MainViewEvent.DisplayPropertyListFragmentOnTablet -> {
-                    val existingPropertiesFragment =
-                        supportFragmentManager.findFragmentByTag(PROPERTIES_FRAGMENT_TAG)
-                    if (existingPropertiesFragment == null) {
-                        Log.d("COUCOU MainActivity", "existing frag is null ! DisplayPropertyListFragmentOnTablet: ")
-                        supportFragmentManager.commit {
-                            replace(
-                                binding.mainFrameLayoutContainerProperties.id,
-                                PropertiesFragment.newInstance(),
-                                PROPERTIES_FRAGMENT_TAG
-                            ).addToBackStack(PROPERTIES_FRAGMENT_TAG)
-                        }
+                    Log.d("COUCOU MainActivity", "existing frag is null ! DisplayPropertyListFragmentOnTablet: ")
+                    supportFragmentManager.commit {
+                        replace(
+                            binding.mainFrameLayoutContainerProperties.id,
+                            PropertiesFragment.newInstance(),
+                            PROPERTIES_FRAGMENT_TAG
+                        ).addToBackStack(PROPERTIES_FRAGMENT_TAG)
                     }
                 }
 
                 MainViewEvent.DisplayAddPropertyFragmentOnPhone -> {
-                    val existingAddFragment = supportFragmentManager.findFragmentByTag(ADD_FRAGMENT_TAG)
-                    if (existingAddFragment == null) {
-                        supportFragmentManager.commit {
-                            replace(
-                                R.id.main_FrameLayout_container_properties,
-                                AddPropertyFragment.newInstance(),
-                                ADD_FRAGMENT_TAG
-                            ).addToBackStack(ADD_FRAGMENT_TAG)
-                        }
+                    supportFragmentManager.commit {
+                        replace(
+                            binding.mainFrameLayoutContainerProperties.id,
+                            AddPropertyFragment.newInstance(),
+                            ADD_FRAGMENT_TAG
+                        ).addToBackStack(ADD_FRAGMENT_TAG)
                     }
                 }
 
                 MainViewEvent.DisplayAddPropertyFragmentOnTablet -> {
                     binding.mainViewSeparator?.isVisible = false
-                    val existingAddFragment = supportFragmentManager.findFragmentByTag(ADD_FRAGMENT_TAG)
-                    if (existingAddFragment == null) {
-                        adjustConstraintSet()
-                        supportFragmentManager.commit {
-                            replace(
-                                R.id.main_FrameLayout_container_properties,
-                                AddPropertyFragment.newInstance(),
-                                ADD_FRAGMENT_TAG
-                            ).addToBackStack(ADD_FRAGMENT_TAG)
-                        }
+                    adjustConstraintSet()
+                    supportFragmentManager.commit {
+                        replace(
+                            binding.mainFrameLayoutContainerProperties.id,
+                            AddPropertyFragment.newInstance(),
+                            ADD_FRAGMENT_TAG
+                        ).addToBackStack(ADD_FRAGMENT_TAG)
                     }
                 }
 
@@ -154,16 +144,12 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 MainViewEvent.DisplayEditPropertyFragmentOnPhone -> {
-                    val existingEditFragment = supportFragmentManager.findFragmentByTag(EDIT_FRAGMENT_TAG)
-                    if (existingEditFragment == null) {
-                        Log.d("COUCOU MainActivity", "existing frag is null ! DisplayEditPropertyFragmentOnPhone: ")
-                        supportFragmentManager.commit {
-                            replace(
-                                binding.mainFrameLayoutContainerProperties.id,
-                                EditPropertyFragment.newInstance(),
-                                EDIT_FRAGMENT_TAG
-                            ).addToBackStack(EDIT_FRAGMENT_TAG)
-                        }
+                    supportFragmentManager.commit {
+                        replace(
+                            binding.mainFrameLayoutContainerProperties.id,
+                            EditPropertyFragment.newInstance(),
+                            EDIT_FRAGMENT_TAG
+                        ).addToBackStack(EDIT_FRAGMENT_TAG)
                     }
                 }
 
@@ -181,29 +167,22 @@ class MainActivity : AppCompatActivity() {
                             "COUCOU MainActivity",
                             "Replace Edit Fg + adjust constraints DisplayEditPropertyFragmentOnTablet: "
                         )
+                        adjustConstraintSet()
                         replace(
                             binding.mainFrameLayoutContainerProperties.id,
                             EditPropertyFragment.newInstance(),
                             EDIT_FRAGMENT_TAG
                         )
-                        adjustConstraintSet()
                     }
                 }
 
                 MainViewEvent.DisplayFilterPropertiesFragmentOnPhone -> {
-                    val existingFilterFragment = supportFragmentManager.findFragmentByTag(FILTER_FRAGMENT_TAG)
-                    if (existingFilterFragment == null) {
-                        Log.d(
-                            "COUCOU MainActivity",
-                            "Existing filter fragment is null:  DisplayFilterPropertiesFragmentOnPhone: "
+                    supportFragmentManager.commit {
+                        replace(
+                            binding.mainFrameLayoutContainerProperties.id,
+                            FilterPropertiesFragment.newInstance(),
+                            FILTER_FRAGMENT_TAG
                         )
-                        supportFragmentManager.commit {
-                            replace(
-                                binding.mainFrameLayoutContainerProperties.id,
-                                FilterPropertiesFragment.newInstance(),
-                                FILTER_FRAGMENT_TAG
-                            )
-                        }
                     }
                 }
 
@@ -215,7 +194,6 @@ class MainActivity : AppCompatActivity() {
                             PropertiesFragment.newInstance(),
                             PROPERTIES_FRAGMENT_TAG
                         )
-
                     }
 
                     supportFragmentManager.commit {

@@ -7,7 +7,7 @@ import java.math.BigDecimal
 import java.time.LocalDateTime
 
 data class PropertyEntity(
-    val id: Long,
+    val id: Long = 0,
     val type: String,
     val price: BigDecimal,
     val surface: Int,

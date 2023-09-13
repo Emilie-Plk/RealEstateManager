@@ -12,15 +12,14 @@ import com.emplk.realestatemanager.domain.property.PropertyEntity
 import com.emplk.realestatemanager.domain.property.PropertyRepository
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
-import kotlin.time.Duration.Companion.seconds
 
 class PropertyRepositoryRoom @Inject constructor(
     private val propertyDao: PropertyDao,
@@ -47,27 +46,21 @@ class PropertyRepositoryRoom @Inject constructor(
     override suspend fun addPropertyWithDetails(propertyEntity: PropertyEntity): Boolean =
         withContext(coroutineDispatcherProvider.io) {
             val propertyIdDeferred: Deferred<Long> = async { add(propertyEntity) }
+            val propertyId = propertyIdDeferred.await()
 
-            propertyIdDeferred.await()
-
-            delay(5.seconds)
-
-            val locationDeferred = launch {
-                val propertyId = propertyIdDeferred.await()
+            val locationJob = launch {
                 val locationDtoEntity = locationDtoEntityMapper.mapToDtoEntity(propertyEntity.location, propertyId)
                 locationDao.insert(locationDtoEntity)
             }
 
-            val picturesDeferred = launch {
-                val propertyId = propertyIdDeferred.await()
+            val picturesJob = launch {
                 propertyEntity.pictures.map { pictureEntity ->
                     val pictureDtoEntity = pictureDtoEntityMapper.mapToDtoEntity(pictureEntity, propertyId)
                     pictureDao.insert(pictureDtoEntity)
                 }
             }
 
-            val amenitiesDeferred = launch {
-                val propertyId = propertyIdDeferred.await()
+            val amenitiesJob = launch {
                 propertyEntity.amenities.map {
                     val amenityDtoEntity = amenityDtoEntityMapper.mapToDtoEntity(it, propertyId)
                     amenityDao.insert(amenityDtoEntity)
@@ -75,7 +68,7 @@ class PropertyRepositoryRoom @Inject constructor(
             }
 
             // Wait for all child jobs to complete
-            val childrenJobs = listOf(locationDeferred, picturesDeferred, amenitiesDeferred)
+            val childrenJobs = listOf(locationJob, picturesJob, amenitiesJob)
             childrenJobs.joinAll()
             true
         }

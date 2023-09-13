@@ -1,7 +1,7 @@
 package com.emplk.realestatemanager.domain.location
 
 data class LocationEntity(
-    val id: Long,
+    val id: Long = 0,
     val propertyId: Long,
     val address: String,
     val city: String,
