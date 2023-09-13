@@ -52,7 +52,7 @@ class DetailViewModel @Inject constructor(
                 propertyType = propertyEntity.type,
                 featuredPicture = NativePhoto.Uri(
                     propertyEntity.pictures.first { picture ->
-                        picture.isThumbnail
+                        picture.isFeatured
                     }.uri
                 ),
                 pictures = propertyEntity.pictures.map { picture ->

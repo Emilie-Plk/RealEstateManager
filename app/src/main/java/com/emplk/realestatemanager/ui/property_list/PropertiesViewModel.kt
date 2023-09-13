@@ -22,8 +22,6 @@ import com.emplk.realestatemanager.ui.utils.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 
 import kotlinx.coroutines.launch
@@ -80,7 +78,7 @@ class PropertiesViewModel @Inject constructor(
             emit(
                 properties.map { property ->
                     val photoUrl =
-                        property.pictures.find { picture -> picture.isThumbnail }?.uri
+                        property.pictures.find { picture -> picture.isFeatured }?.uri
 
                     PropertiesViewState.Properties(
                         id = property.id,

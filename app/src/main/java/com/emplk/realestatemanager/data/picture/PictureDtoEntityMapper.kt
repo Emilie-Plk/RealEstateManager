@@ -10,7 +10,7 @@ class PictureDtoEntityMapper @Inject constructor() {
             id = picture.id,
             propertyId = propertyId,
             uri = picture.uri,
-            isThumbnail = picture.isThumbnail,
+            isFeatured = picture.isFeatured,
             description = picture.description,
         )
     }
@@ -21,7 +21,7 @@ class PictureDtoEntityMapper @Inject constructor() {
                 id = it.id,
                 propertyId = propertyId,
                 uri = it.uri,
-                isThumbnail = it.isThumbnail,
+                isFeatured = it.isFeatured,
                 description = it.description,
             )
         }
@@ -32,7 +32,7 @@ class PictureDtoEntityMapper @Inject constructor() {
             id = pictureDtoEntity.id,
             propertyId = pictureDtoEntity.propertyId,
             uri = pictureDtoEntity.uri,
-            isThumbnail = pictureDtoEntity.isThumbnail,
+            isFeatured = pictureDtoEntity.isFeatured,
             description = pictureDtoEntity.description,
         )
     }
@@ -43,7 +43,7 @@ class PictureDtoEntityMapper @Inject constructor() {
                 id = it.id,
                 propertyId = it.propertyId,
                 uri = it.uri,
-                isThumbnail = it.isThumbnail,
+                isFeatured = it.isFeatured,
                 description = it.description,
             )
         }

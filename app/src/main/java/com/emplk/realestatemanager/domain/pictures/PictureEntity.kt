@@ -5,5 +5,5 @@ data class PictureEntity(
     val propertyId: Long,
     val description: String,
     val uri: String,
-    val isThumbnail: Boolean,
+    val isFeatured: Boolean,
 )

@@ -106,13 +106,13 @@ class AddPropertyViewModel @Inject constructor(
                             PictureEntity(
                                 uri = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmlsbGF8ZW58MHx8MHx8fDA%3D&w=300&q=300",
                                 description = "Villa",
-                                isThumbnail = true,
+                                isFeatured = true,
                                 propertyId = 0,
                             ),
                             PictureEntity(
                                 uri = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmlsbGF8ZW58MHx8MHx8fDA%3D&w=300&q=300",
                                 description = "Villa",
-                                isThumbnail = false,
+                                isFeatured = false,
                                 propertyId = 0,
                             ),
                         ),
