@@ -76,7 +76,6 @@ class AddPropertyViewModel @Inject constructor(
                 isAddingPropertyInDatabaseMutableStateFlow.value = true
                 val success = addPropertyUseCase.invoke(
                     PropertyEntity(
-                        id = 0,
                         type = "Villa",
                         price = BigDecimal(15234574845),
                         surface = 326565,
@@ -91,31 +90,26 @@ class AddPropertyViewModel @Inject constructor(
                         saleDate = null,
                         amenities = listOf(
                             AmenityEntity(
-                                id = 0,
                                 type = AmenityType.PARK,
                                 propertyId = 0,
                             ),
                             AmenityEntity(
-                                id = 0,
                                 type = AmenityType.SCHOOL,
                                 propertyId = 0,
                             ),
                             AmenityEntity(
-                                id = 0,
                                 type = AmenityType.GYM,
                                 propertyId = 0,
                             )
                         ),
                         pictures = listOf(
                             PictureEntity(
-                                id = 0,
                                 uri = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmlsbGF8ZW58MHx8MHx8fDA%3D&w=300&q=300",
                                 description = "Villa",
                                 isThumbnail = true,
                                 propertyId = 0,
                             ),
                             PictureEntity(
-                                id = 0,
                                 uri = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmlsbGF8ZW58MHx8MHx8fDA%3D&w=300&q=300",
                                 description = "Villa",
                                 isThumbnail = false,
@@ -123,7 +117,6 @@ class AddPropertyViewModel @Inject constructor(
                             ),
                         ),
                         location = LocationEntity(
-                            id = 0,
                             propertyId = 0,
                             address = "1 rue de la paix",
                             postalCode = "75000",
