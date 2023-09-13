@@ -507,18 +507,27 @@
             tools:listitem="@layout/property_preview_picture_item" />
 
         <Button
-            android:id="@+id/add_property_submit_button"
+            android:id="@+id/add_property_create_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="12dp"
-            android:text="Create property"
+            android:text="@string/add_property_create_button"
             app:icon="@drawable/baseline_add_home_24"
             app:iconTint="@color/secondary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/add_property_preview_pictures_recyclerView" />
+
+        <ProgressBar
+            android:id="@+id/add_property_progressBar"
+            app:layout_constraintStart_toEndOf="@id/add_property_create_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/add_property_create_button"
+            app:layout_constraintBottom_toBottomOf="@id/add_property_create_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.data.location
 
+import android.database.sqlite.SQLiteException
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.location.LocationEntity
 import com.emplk.realestatemanager.domain.location.LocationRepository
@@ -12,17 +13,20 @@ class LocationRepositoryRoom @Inject constructor(
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : LocationRepository {
 
-    override suspend fun add(locationEntity: LocationEntity) {
+    override suspend fun add(locationEntity: LocationEntity, propertyId: Long): Boolean =
         withContext(coroutineDispatcherProvider.io) {
-            val locationDtoEntity = locationDtoEntityMapper.mapToDtoEntity(locationEntity)
-            locationDao.insert(locationDtoEntity)
+            try {
+                val locationDtoEntity = locationDtoEntityMapper.mapToDtoEntity(locationEntity, propertyId)
+                locationDao.insert(locationDtoEntity)  == 1L
+            } catch (e: SQLiteException) {
+                e.printStackTrace()
+                false
+            }
         }
-    }
 
-    override suspend fun update(locationEntity: LocationEntity) {
+    override suspend fun update(locationEntity: LocationEntity, propertyId: Long) : Boolean =
         withContext(coroutineDispatcherProvider.io) {
-            val locationDtoEntity = locationDtoEntityMapper.mapToDtoEntity(locationEntity)
-            locationDao.update(locationDtoEntity)
+            val locationDtoEntity = locationDtoEntityMapper.mapToDtoEntity(locationEntity, propertyId)
+            locationDao.update(locationDtoEntity) == 1
         }
-    }
 }

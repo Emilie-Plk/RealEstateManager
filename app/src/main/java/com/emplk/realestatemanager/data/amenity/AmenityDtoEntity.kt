@@ -11,6 +11,6 @@ data class AmenityDtoEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val name: String,
-    @ColumnInfo(name = "property_id")
+    @ColumnInfo(name = "property_id", index = true)
     val propertyId: Long,
 )

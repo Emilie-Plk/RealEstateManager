@@ -70,9 +70,6 @@ class MainActivity : AppCompatActivity() {
         viewModel.viewEventLiveData.observeEvent(this) { event ->
             when (event) {
                 MainViewEvent.DisplayPropertyListFragmentOnPhone -> {
-                    val existingPropertiesFragment =
-                        supportFragmentManager.findFragmentByTag(PROPERTIES_FRAGMENT_TAG)
-                    if (existingPropertiesFragment == null) {
                         Log.d("COUCOU MainActivity", "existing frag is null ! DisplayPropertyListFragmentOnPhone: ")
                         supportFragmentManager.commit {
                             replace(
@@ -80,7 +77,6 @@ class MainActivity : AppCompatActivity() {
                                 PropertiesFragment.newInstance(),
                                 PROPERTIES_FRAGMENT_TAG
                             ).addToBackStack(PROPERTIES_FRAGMENT_TAG)
-                        }
                     }
                 }
 

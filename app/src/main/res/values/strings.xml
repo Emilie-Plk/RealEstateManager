@@ -66,5 +66,7 @@
     <string name="property_type_villa">Villa</string>
     <string name="property_type_manor">Manor</string>
     <string name="property_type_other">Other</string>
+    <string name="add_property_create_button">Create property</string>
+    <string name="add_property_successfully_created_snackBar_message">Property successfully created!</string>
 
 </resources>
