@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.data.picture
 
+import android.database.sqlite.SQLiteException
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.pictures.PictureEntity
 import com.emplk.realestatemanager.domain.pictures.PictureRepository
@@ -12,17 +13,20 @@ class PictureRepositoryRoom @Inject constructor(
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : PictureRepository {
 
-    override suspend fun add(pictureEntity: PictureEntity) {
+    override suspend fun add(pictureEntity: PictureEntity, propertyId: Long): Boolean =
         withContext(coroutineDispatcherProvider.io) {
-            val pictureDtoEntity = pictureDtoEntityMapper.mapToDtoEntity(pictureEntity)
-            pictureDao.insert(pictureDtoEntity)
+            try {
+                val pictureDtoEntity = pictureDtoEntityMapper.mapToDtoEntity(pictureEntity, propertyId)
+                pictureDao.insert(pictureDtoEntity)  == 1L
+            } catch (e: SQLiteException) {
+                e.printStackTrace()
+                false
+            }
         }
-    }
 
-    override suspend fun update(pictureEntity: PictureEntity) {
+    override suspend fun update(pictureEntity: PictureEntity, propertyId: Long): Boolean =
         withContext(coroutineDispatcherProvider.io) {
-            val pictureDtoEntity = pictureDtoEntityMapper.mapToDtoEntity(pictureEntity)
-            pictureDao.update(pictureDtoEntity)
+            val pictureDtoEntity = pictureDtoEntityMapper.mapToDtoEntity(pictureEntity, propertyId)
+            pictureDao.update(pictureDtoEntity) == 1
         }
-    }
 }

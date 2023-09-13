@@ -228,7 +228,7 @@ abstract class AppDatabase : RoomDatabase() {
                                 propertyId = 3,
                             ),
                             AmenityDtoEntity(
-                                name = AmenityType.GYM.name,
+                                name = AmenityType.CONCIERGE.name,
                                 propertyId = 3,
                             ),
                             AmenityDtoEntity(

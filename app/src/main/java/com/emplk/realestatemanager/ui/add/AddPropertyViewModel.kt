@@ -1,6 +1,5 @@
 package com.emplk.realestatemanager.ui.add
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
@@ -15,6 +14,8 @@ import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCa
 import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
 import com.emplk.realestatemanager.domain.location.LocationEntity
 import com.emplk.realestatemanager.domain.navigation.GetNavigationTypeUseCase
+import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
+import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.pictures.PictureEntity
 import com.emplk.realestatemanager.domain.property.AddPropertyUseCase
 import com.emplk.realestatemanager.domain.property.PropertyEntity
@@ -23,11 +24,13 @@ import com.emplk.realestatemanager.domain.screen_width.GetScreenWidthTypeFlowUse
 import com.emplk.realestatemanager.ui.AddPropertyPictureStateItem
 import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem
 import com.emplk.realestatemanager.ui.add.type.AddPropertyTypeViewStateItem
+import com.emplk.realestatemanager.ui.utils.Event
 import com.emplk.realestatemanager.ui.utils.NativeText
 import com.emplk.realestatemanager.ui.utils.combine
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
@@ -39,6 +42,7 @@ import javax.inject.Inject
 class AddPropertyViewModel @Inject constructor(
     private val addPropertyUseCase: AddPropertyUseCase,
     private val getNavigationTypeUseCase: GetNavigationTypeUseCase,
+    private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val getScreenWidthTypeFlowUseCase: GetScreenWidthTypeFlowUseCase,
     private val getCurrencyTypeUseCase: GetCurrencyTypeUseCase,
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
@@ -59,7 +63,88 @@ class AddPropertyViewModel @Inject constructor(
     private val agentMutableStateFlow = MutableStateFlow<AddPropertyAgentViewStateItem?>(null)
     private val pictureMutableStateFlow = MutableStateFlow<List<AddPropertyPictureStateItem>>(emptyList())
     private val isEveryFieldFilledMutableStateFlow = MutableStateFlow(false)
-    private val onCreateButtonClicked = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+    private val onCreateButtonClickedMutableSharedFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+    private val isAddingPropertyInDatabaseMutableStateFlow = MutableStateFlow(false)
+    private val isPropertySuccessfullyAddedInDatabaseMutableSharedFlow =
+        MutableSharedFlow<Boolean>(extraBufferCapacity = 1)
+
+    val viewEventLiveData: LiveData<Event<AddPropertyViewEvent>> = liveData {
+
+        onCreateButtonClickedMutableSharedFlow.collect {
+            emit(Event(AddPropertyViewEvent.OnAddPropertyClicked))
+            viewModelScope.launch(coroutineDispatcherProvider.io) {
+                isAddingPropertyInDatabaseMutableStateFlow.value = true
+                val success = addPropertyUseCase.invoke(
+                    PropertyEntity(
+                        id = 0,
+                        type = "Villa",
+                        price = BigDecimal(15234574845),
+                        surface = 326565,
+                        rooms = 10,
+                        bedrooms = 5,
+                        bathrooms = 5,
+                        description = "Splendid villa with swimming pool and garden",
+                        agentName = "Michel",
+                        isAvailableForSale = true,
+                        isSold = false,
+                        entryDate = LocalDateTime.now(),
+                        saleDate = null,
+                        amenities = listOf(
+                            AmenityEntity(
+                                id = 0,
+                                type = AmenityType.PARK,
+                                propertyId = 0,
+                            ),
+                            AmenityEntity(
+                                id = 0,
+                                type = AmenityType.SCHOOL,
+                                propertyId = 0,
+                            ),
+                            AmenityEntity(
+                                id = 0,
+                                type = AmenityType.GYM,
+                                propertyId = 0,
+                            )
+                        ),
+                        pictures = listOf(
+                            PictureEntity(
+                                id = 0,
+                                uri = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmlsbGF8ZW58MHx8MHx8fDA%3D&w=300&q=300",
+                                description = "Villa",
+                                isThumbnail = true,
+                                propertyId = 0,
+                            ),
+                            PictureEntity(
+                                id = 0,
+                                uri = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmlsbGF8ZW58MHx8MHx8fDA%3D&w=300&q=300",
+                                description = "Villa",
+                                isThumbnail = false,
+                                propertyId = 0,
+                            ),
+                        ),
+                        location = LocationEntity(
+                            id = 0,
+                            propertyId = 0,
+                            address = "1 rue de la paix",
+                            postalCode = "75000",
+                            city = "Paris",
+                            latitude = 48.8566,
+                            longitude = 2.3522,
+                        )
+                    )
+                )
+                isAddingPropertyInDatabaseMutableStateFlow.value = false
+                isPropertySuccessfullyAddedInDatabaseMutableSharedFlow.tryEmit(success)
+            }
+
+            isPropertySuccessfullyAddedInDatabaseMutableSharedFlow.collect { success ->
+                if (success) {
+                    setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
+                    emit(Event(AddPropertyViewEvent.ShowSnackBarPropertyCreated(NativeText.Resource(R.string.add_property_successfully_created_snackBar_message))))
+                }
+            }
+        }
+    }
 
     val addPropertyViewStateLiveData: LiveData<AddPropertyViewStateItem> = liveData {
         combine(
@@ -112,83 +197,15 @@ class AddPropertyViewModel @Inject constructor(
                     },
                 )
             )
-
-            onCreateButtonClicked.collect {
-                // Add property
-                // TODO: NINO ça va être compliqué pour l'id de property (#PropertyEntity)
-                viewModelScope.launch(coroutineDispatcherProvider.io) {
-                    val number = addPropertyUseCase.invoke(
-                        PropertyEntity(
-                            id = 0,
-                            type = "Villa",
-                            price = BigDecimal(15234574845),
-                            surface = 326565,
-                            rooms = 10,
-                            bedrooms = 5,
-                            bathrooms = 5,
-                            description = "Splendid villa with swimming pool and garden",
-                            agentName = "Michel",
-                            isAvailableForSale = true,
-                            isSold = false,
-                            entryDate = LocalDateTime.now(),
-                            saleDate = null,
-                            amenities = listOf(
-                                AmenityEntity(
-                                    id = 0,
-                                    type = AmenityType.PARK,
-                                    propertyId = 4,
-                                ),
-                                AmenityEntity(
-                                    id = 0,
-                                    type = AmenityType.SCHOOL,
-                                    propertyId = 4,
-                                ),
-                                AmenityEntity(
-                                    id = 0,
-                                    type = AmenityType.GYM,
-                                    propertyId = 4,
-                                )
-                            ),
-                            pictures = listOf(
-                                PictureEntity(
-                                    id = 0,
-                                    uri = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmlsbGF8ZW58MHx8MHx8fDA%3D&w=300&q=300",
-                                    description = "Villa",
-                                    isThumbnail = true,
-                                    propertyId = 4,
-                                ),
-                                PictureEntity(
-                                    id = 0,
-                                    uri = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmlsbGF8ZW58MHx8MHx8fDA%3D&w=300&q=300",
-                                    description = "Villa",
-                                    isThumbnail = false,
-                                    propertyId = 4,
-                                ),
-                            ),
-                            location = LocationEntity(
-                                id = 0,
-                                propertyId = 4,
-                                address = "1 rue de la paix",
-                                postalCode = "75000",
-                                city = "Paris",
-                                latitude = 48.8566,
-                                longitude = 2.3522,
-                            )
-                        )
-                    )
-
-                }
-
-            }
         }.collect()
     }
-
 
     val viewStateLiveData: LiveData<AddPropertyViewState> = liveData {
         combine(
             getAgentsFlowUseCase.invoke(),
             getPropertyTypeFlowUseCase.invoke(),
-        ) { agents, propertyTypes ->
+            isAddingPropertyInDatabaseMutableStateFlow.asStateFlow(),
+        ) { agents, propertyTypes, isAddingPropertyInDatabase ->
             val currencyType = getCurrencyTypeUseCase.invoke()
             emit(
                 AddPropertyViewState(
@@ -208,6 +225,7 @@ class AddPropertyViewModel @Inject constructor(
                         getSurfaceUnitUseCase.invoke().symbol,
                     ),
                     isAddButtonEnabled = isEveryFieldFilledMutableStateFlow.value,
+                    isProgressBarVisible = isAddingPropertyInDatabase,
                     propertyTypes = propertyTypes.map { propertyType ->
                         AddPropertyTypeViewStateItem(
                             id = propertyType.key,
@@ -254,6 +272,6 @@ class AddPropertyViewModel @Inject constructor(
     }
 
     fun onAddPropertyClicked() {
-        onCreateButtonClicked.tryEmit(Unit)
+        onCreateButtonClickedMutableSharedFlow.tryEmit(Unit)
     }
 }

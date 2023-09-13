@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.data.property
 
+import android.database.sqlite.SQLiteException
 import com.emplk.realestatemanager.data.amenity.AmenityDao
 import com.emplk.realestatemanager.data.amenity.AmenityDtoEntityMapper
 import com.emplk.realestatemanager.data.location.LocationDao
@@ -9,11 +10,17 @@ import com.emplk.realestatemanager.data.picture.PictureDtoEntityMapper
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.property.PropertyEntity
 import com.emplk.realestatemanager.domain.property.PropertyRepository
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.joinAll
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 class PropertyRepositoryRoom @Inject constructor(
     private val propertyDao: PropertyDao,
@@ -28,23 +35,51 @@ class PropertyRepositoryRoom @Inject constructor(
 ) : PropertyRepository {
 
     override suspend fun add(propertyEntity: PropertyEntity): Long = withContext(coroutineDispatcherProvider.io) {
-        val propertyDtoEntity = propertyDtoEntityMapper.mapToDtoEntity(propertyEntity)
-        val locationDtoEntity = locationDtoEntityMapper.mapToDtoEntity(propertyEntity.location)
-        val pictureDtoEntities = pictureDtoEntityMapper.mapToDtoEntities(propertyEntity.pictures)
-        val amenityDtoEntities = amenityDtoEntityMapper.mapToDtoEntities(propertyEntity.amenities)
-
-         locationDao.insert(locationDtoEntity)
-
-        pictureDtoEntities.map {
-            pictureDao.insert(it)
+        try {
+            val propertyDtoEntity = propertyDtoEntityMapper.mapToDtoEntity(propertyEntity)
+            propertyDao.insert(propertyDtoEntity)
+        } catch (e: SQLiteException) {
+            e.printStackTrace()
+            -1L
         }
-
-        amenityDtoEntities.map {
-            amenityDao.insert(it)
-        }
-
-       propertyDao.insert(propertyDtoEntity)
     }
+
+    override suspend fun addPropertyWithDetails(propertyEntity: PropertyEntity): Boolean =
+        withContext(coroutineDispatcherProvider.io) {
+            val propertyIdDeferred: Deferred<Long> = async { add(propertyEntity) }
+
+            propertyIdDeferred.await()
+
+            delay(5.seconds)
+
+            val locationDeferred = launch {
+                val propertyId = propertyIdDeferred.await()
+                val locationDtoEntity = locationDtoEntityMapper.mapToDtoEntity(propertyEntity.location, propertyId)
+                locationDao.insert(locationDtoEntity)
+            }
+
+            val picturesDeferred = launch {
+                val propertyId = propertyIdDeferred.await()
+                propertyEntity.pictures.map { pictureEntity ->
+                    val pictureDtoEntity = pictureDtoEntityMapper.mapToDtoEntity(pictureEntity, propertyId)
+                    pictureDao.insert(pictureDtoEntity)
+                }
+            }
+
+            val amenitiesDeferred = launch {
+                val propertyId = propertyIdDeferred.await()
+                propertyEntity.amenities.map {
+                    val amenityDtoEntity = amenityDtoEntityMapper.mapToDtoEntity(it, propertyId)
+                    amenityDao.insert(amenityDtoEntity)
+                }
+            }
+
+            // Wait for all child jobs to complete
+            val childrenJobs = listOf(locationDeferred, picturesDeferred, amenitiesDeferred)
+            childrenJobs.joinAll()
+            true
+        }
+
 
     override fun getPropertiesAsFlow(): Flow<List<PropertyEntity>> = propertyDao
         .getPropertiesWithDetailsFlow()

@@ -5,10 +5,10 @@ import javax.inject.Inject
 
 class LocationDtoEntityMapper @Inject constructor() {
 
-    fun mapToDtoEntity(locationEntity: LocationEntity) =
+    fun mapToDtoEntity(locationEntity: LocationEntity, propertyId: Long) =
         LocationDtoEntity(
             id = locationEntity.id,
-            propertyId = locationEntity.propertyId,
+            propertyId = propertyId,
             address = locationEntity.address,
             city = locationEntity.city,
             postalCode = locationEntity.postalCode,
