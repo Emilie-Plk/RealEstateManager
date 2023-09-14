@@ -63,67 +63,56 @@ class PropertiesViewModel @Inject constructor(
         }
     }
 
-
     val viewState: LiveData<List<PropertiesViewState>> = liveData {
         val currencyType = getCurrencyTypeUseCase.invoke()
         val surfaceUnitType = getSurfaceUnitUseCase.invoke()
+
         if (latestValue == null) {
             emit(listOf(PropertiesViewState.LoadingState))
         }
+
         getPropertiesAsFlowUseCase.invoke().collect { properties ->
             if (properties.isEmpty()) {
                 emit(listOf(PropertiesViewState.EmptyState))
                 return@collect
             }
-            emit(
-                properties.map { property ->
-                    val photoUrl =
-                        property.pictures.find { picture -> picture.isFeatured }?.uri
 
-                    PropertiesViewState.Properties(
-                        id = property.id,
-                        propertyType = property.type,
-                        featuredPicture = if (photoUrl != null) {
-                            NativePhoto.Uri(photoUrl)
-                        } else {
-                            NativePhoto.Resource(R.drawable.baseline_villa_24)
-                        },
-                        address = property.location.city,
-                        price = when (currencyType) {
-                            CurrencyType.DOLLAR -> NativeText.Argument(
-                                R.string.price_in_dollar,
-                                property.price
-                            )
+            emit(properties.asSequence()
+                    .map { property ->
+                        val photoUrl = property.pictures.find { it.isFeatured }?.uri
+                        val featuredPicture = photoUrl?.let { NativePhoto.Uri(it) }
+                            ?: NativePhoto.Resource(R.drawable.baseline_villa_24)
 
-                            CurrencyType.EURO -> NativeText.Argument(
-                                R.string.price_in_euro,
-                                property.price
-                            )
-                        },
-                        isSold = property.isSold,
-                        room = property.rooms.toString(),
-                        bathroom = property.bathrooms.toString(),
-                        bedroom = property.bedrooms.toString(),
-                        surface = when (surfaceUnitType) {
-                            SurfaceUnitType.SQUARE_FEET -> NativeText.Argument(
-                                R.string.surface_in_square_feet,
-                                property.surface
-                            )
-
-                            SurfaceUnitType.SQUARE_METER -> NativeText.Argument(
-                                R.string.surface_in_square_meters,
-                                property.surface
-                            )
-                        },
-                        onClickEvent = EquatableCallback {
-                            viewModelScope.launch {
-                                propertyIdMutableSharedFlow.tryEmit(property.id)
-                                setNavigationTypeUseCase.invoke(NavigationFragmentType.DETAIL_FRAGMENT)
-                                setCurrentPropertyIdUseCase.invoke(property.id)
-                            }
+                        val priceText = when (currencyType) {
+                            CurrencyType.DOLLAR -> NativeText.Argument(R.string.price_in_dollar, property.price)
+                            CurrencyType.EURO -> NativeText.Argument(R.string.price_in_euro, property.price)
                         }
-                    )
-                }.sortedBy { it.isSold }
+
+                        val surfaceText = when (surfaceUnitType) {
+                            SurfaceUnitType.SQUARE_FEET -> NativeText.Argument(R.string.surface_in_square_feet, property.surface)
+                            SurfaceUnitType.SQUARE_METER -> NativeText.Argument(R.string.surface_in_square_meters, property.surface)
+                        }
+
+                        PropertiesViewState.Properties(
+                            id = property.id,
+                            propertyType = property.type,
+                            featuredPicture = featuredPicture,
+                            address = property.location.city,
+                            price = priceText,
+                            isSold = property.isSold,
+                            room = property.rooms.toString(),
+                            bathroom = property.bathrooms.toString(),
+                            bedroom = property.bedrooms.toString(),
+                            surface = surfaceText,
+                            onClickEvent = EquatableCallback {
+                                    propertyIdMutableSharedFlow.tryEmit(property.id)
+                                    setNavigationTypeUseCase.invoke(NavigationFragmentType.DETAIL_FRAGMENT)
+                                    setCurrentPropertyIdUseCase.invoke(property.id)
+                            }
+                        )
+                    }
+                    .sortedBy { it.isSold }
+                    .toList()
             )
         }
     }
