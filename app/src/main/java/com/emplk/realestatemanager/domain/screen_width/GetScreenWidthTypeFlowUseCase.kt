@@ -1,8 +1,6 @@
 package com.emplk.realestatemanager.domain.screen_width
 
-import android.util.Log
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
 import javax.inject.Inject
 
 

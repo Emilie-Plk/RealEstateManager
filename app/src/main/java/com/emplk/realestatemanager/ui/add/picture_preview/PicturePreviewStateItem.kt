@@ -16,6 +16,8 @@ sealed class PicturePreviewStateItem(val type: Type) {
         val description: String,
         val isFeatured: Boolean,
         val onDeleteEvent: EquatableCallback,
+        val onFeaturedEvent: EquatableCallback,
+        val onDescriptionChanged: EquatableCallback,
     ) : PicturePreviewStateItem(Type.ADD_PICTURE_PREVIEW)
 
     data class EditPropertyPicturePreview(
@@ -24,5 +26,7 @@ sealed class PicturePreviewStateItem(val type: Type) {
         val description: String,
         val isFeatured: Boolean,
         val onDeleteEvent: EquatableCallback,
+        val onFeaturedEvent: EquatableCallback,
+        val onDescriptionChanged: EquatableCallback,
     ) : PicturePreviewStateItem(Type.EDIT_PICTURE_PREVIEW)
 }

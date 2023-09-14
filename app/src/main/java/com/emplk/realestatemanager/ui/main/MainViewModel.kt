@@ -2,7 +2,6 @@ package com.emplk.realestatemanager.ui.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.liveData
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdFlowUseCase
@@ -43,78 +42,103 @@ class MainViewModel @Inject constructor(
         ) { isTablet, navigationType, toolbarSubtitle ->
             when (navigationType) {
                 LIST_FRAGMENT -> if (!isTablet) {
-                    emit(MainViewState(
-                        isAddFabVisible = true,
-                        isFilterAppBarButtonVisible = true,
-                        isAddAppBarButtonVisible = true,
-                        subtitle = toolbarSubtitle
-                    ))
+                    emit(
+                        MainViewState(
+                            isAddFabVisible = true,
+                            isFilterAppBarButtonVisible = true,
+                            isAddAppBarButtonVisible = true,
+                            subtitle = toolbarSubtitle
+                        )
+                    )
                 } else {
-                    emit(MainViewState(
-                        isAddFabVisible = false,
-                        isFilterAppBarButtonVisible = true,
-                        isAddAppBarButtonVisible = true,
-                        subtitle = null
-                    ))
+                    emit(
+                        MainViewState(
+                            isAddFabVisible = false,
+                            isFilterAppBarButtonVisible = true,
+                            isAddAppBarButtonVisible = true,
+                            subtitle = null
+                        )
+                    )
                 }
 
                 EDIT_FRAGMENT -> if (!isTablet) {
-                    emit(MainViewState(false,
-                        isFilterAppBarButtonVisible = false,
-                        isAddAppBarButtonVisible = false,
-                        subtitle = toolbarSubtitle
-                    ))
+                    emit(
+                        MainViewState(
+                            false,
+                            isFilterAppBarButtonVisible = false,
+                            isAddAppBarButtonVisible = false,
+                            subtitle = toolbarSubtitle
+                        )
+                    )
                 } else {
-                    emit(MainViewState(false,
-                        isFilterAppBarButtonVisible = true,
-                        isAddAppBarButtonVisible = true,
-                        subtitle = null
-                    ))
+                    emit(
+                        MainViewState(
+                            false,
+                            isFilterAppBarButtonVisible = true,
+                            isAddAppBarButtonVisible = true,
+                            subtitle = null
+                        )
+                    )
                 }
 
                 FILTER_FRAGMENT -> if (!isTablet) {
-                    emit(MainViewState(false,
-                        isFilterAppBarButtonVisible = false,
-                        isAddAppBarButtonVisible = false,
-                        subtitle = toolbarSubtitle
-                    ))
+                    emit(
+                        MainViewState(
+                            false,
+                            isFilterAppBarButtonVisible = false,
+                            isAddAppBarButtonVisible = false,
+                            subtitle = toolbarSubtitle
+                        )
+                    )
                 } else {
-                    emit(MainViewState(
-                        isAddFabVisible = false,
-                        isFilterAppBarButtonVisible = false,
-                        isAddAppBarButtonVisible = true,
-                        subtitle = null
-                    ))
+                    emit(
+                        MainViewState(
+                            isAddFabVisible = false,
+                            isFilterAppBarButtonVisible = false,
+                            isAddAppBarButtonVisible = true,
+                            subtitle = null
+                        )
+                    )
                 }
 
                 ADD_FRAGMENT -> if (!isTablet) {
-                    emit(MainViewState(
-                        isAddFabVisible = false,
-                        isFilterAppBarButtonVisible = true,
-                        isAddAppBarButtonVisible = false,
-                        subtitle = toolbarSubtitle
-                    ))
+                    emit(
+                        MainViewState(
+                            isAddFabVisible = false,
+                            isFilterAppBarButtonVisible = true,
+                            isAddAppBarButtonVisible = false,
+                            subtitle = toolbarSubtitle
+                        )
+                    )
                 } else {
-                    emit(MainViewState(
-                        isAddFabVisible = false,
-                        isFilterAppBarButtonVisible = true,
-                        isAddAppBarButtonVisible = false,
-                        subtitle = null
-                    ))
+                    emit(
+                        MainViewState(
+                            isAddFabVisible = false,
+                            isFilterAppBarButtonVisible = true,
+                            isAddAppBarButtonVisible = false,
+                            subtitle = null
+                        )
+                    )
                 }
 
                 DETAIL_FRAGMENT -> if (!isTablet) {
-                    emit(MainViewState(false,
-                        isFilterAppBarButtonVisible = false,
-                        isAddAppBarButtonVisible = false,
-                        subtitle = toolbarSubtitle
-                    ))
+                    emit(
+                        MainViewState(
+                            false,
+                            isFilterAppBarButtonVisible = false,
+                            isAddAppBarButtonVisible = false,
+                            subtitle = toolbarSubtitle
+                        )
+                    )
                 } else {
-                    emit(MainViewState(false,
-                        isFilterAppBarButtonVisible = true,
-                        isAddAppBarButtonVisible = true,
-                        subtitle = null
-                    ))
+                    emit(
+                        MainViewState(
+                            false,
+                            isFilterAppBarButtonVisible = true,
+                            isAddAppBarButtonVisible = true,
+                            subtitle = null
+                        )
+                    )
                 }
             }
         }.collect()

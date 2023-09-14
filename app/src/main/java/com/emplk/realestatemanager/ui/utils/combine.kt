@@ -2,6 +2,7 @@ package com.emplk.realestatemanager.ui.utils
 
 
 import kotlinx.coroutines.flow.Flow
+
 /* Custom combine() methods used for more than 4 parameters */
 inline fun <T1, T2, T3, T4, T5, T6, T7, R> combine(
     flow: Flow<T1>,
@@ -65,7 +66,17 @@ inline fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, R> combine(
     flow9: Flow<T9>,
     crossinline transform: suspend (T1, T2, T3, T4, T5, T6, T7, T8, T9) -> R
 ): Flow<R> {
-    return kotlinx.coroutines.flow.combine(flow, flow2, flow3, flow4, flow5, flow6, flow7, flow8, flow9) { args: Array<*> ->
+    return kotlinx.coroutines.flow.combine(
+        flow,
+        flow2,
+        flow3,
+        flow4,
+        flow5,
+        flow6,
+        flow7,
+        flow8,
+        flow9
+    ) { args: Array<*> ->
         @Suppress("UNCHECKED_CAST")
         transform(
             args[0] as T1,
@@ -94,7 +105,18 @@ inline fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R> combine(
     flow10: Flow<T10>,
     crossinline transform: suspend (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10) -> R
 ): Flow<R> {
-    return kotlinx.coroutines.flow.combine(flow, flow2, flow3, flow4, flow5, flow6, flow7, flow8, flow9, flow10) { args: Array<*> ->
+    return kotlinx.coroutines.flow.combine(
+        flow,
+        flow2,
+        flow3,
+        flow4,
+        flow5,
+        flow6,
+        flow7,
+        flow8,
+        flow9,
+        flow10
+    ) { args: Array<*> ->
         @Suppress("UNCHECKED_CAST")
         transform(
             args[0] as T1,
@@ -125,7 +147,19 @@ inline fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, R> combine(
     flow11: Flow<T11>,
     crossinline transform: suspend (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11) -> R
 ): Flow<R> {
-    return kotlinx.coroutines.flow.combine(flow, flow2, flow3, flow4, flow5, flow6, flow7, flow8, flow9, flow10, flow11) { args: Array<*> ->
+    return kotlinx.coroutines.flow.combine(
+        flow,
+        flow2,
+        flow3,
+        flow4,
+        flow5,
+        flow6,
+        flow7,
+        flow8,
+        flow9,
+        flow10,
+        flow11
+    ) { args: Array<*> ->
         @Suppress("UNCHECKED_CAST")
         transform(
             args[0] as T1,

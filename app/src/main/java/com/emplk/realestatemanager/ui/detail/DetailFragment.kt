@@ -5,14 +5,9 @@ import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.DetailFragmentBinding
-import com.emplk.realestatemanager.ui.edit.EditPropertyFragment
-import com.emplk.realestatemanager.ui.main.MainActivity
-import com.emplk.realestatemanager.ui.property_list.PropertiesFragment
-import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.NativePhoto.Companion.load
 import com.emplk.realestatemanager.ui.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint

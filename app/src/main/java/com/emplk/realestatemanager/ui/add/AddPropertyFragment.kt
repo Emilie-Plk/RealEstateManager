@@ -1,13 +1,18 @@
 package com.emplk.realestatemanager.ui.add
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.AddPropertyFragmentBinding
 import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentSpinnerAdapter
+import com.emplk.realestatemanager.ui.add.picture_preview.PropertyPicturePreviewListAdapter
 import com.emplk.realestatemanager.ui.add.type.AddPropertyTypeSpinnerAdapter
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.viewBinding
@@ -37,12 +42,21 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
 
         val agentAdapter = AddPropertyAgentSpinnerAdapter()
         binding.addPropertyAgentActv.setAdapter(agentAdapter)
+        binding.addPropertyAgentActv.setOnItemClickListener { _, _, position, _ ->
+            agentAdapter.getItem(position)?.let {
+                viewModel.onAgentSelected(it.name)
+            }
+        }
+
+        val picturePreviewAdapter = PropertyPicturePreviewListAdapter()
+        binding.addPropertyPreviewPicturesRecyclerView.adapter = picturePreviewAdapter
 
         viewModel.addPropertyViewStateLiveData.observe(viewLifecycleOwner) {
+            picturePreviewAdapter.submitList(it.pictures)
         }
 
         binding.addPropertyCreateButton.setOnClickListener {
-            viewModel.onAddPropertyClicked()
+          //  viewModel.onAddPropertyClicked()
         }
 
         viewModel.viewEventLiveData.observeEvent(viewLifecycleOwner) { event ->
@@ -55,7 +69,6 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
                 }
 
                 is AddPropertyViewEvent.OnAddPropertyClicked -> {
-
                 }
             }
         }
@@ -68,6 +81,31 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
             //    binding.addPropertySubmitButton.isEnabled = viewState.isAddButtonEnabled
             binding.addPropertyProgressBar.isVisible = viewState.isProgressBarVisible
         }
+
+        binding.addPropertyAddressTextInputEditText.doAfterTextChanged {
+            viewModel.onAddressChanged(it.toString())
+        }
+
+        binding.addPropertyPriceTextInputEditText.doAfterTextChanged {
+            viewModel.onPriceChanged(it.toString())
+        }
+
+        binding.addPropertySurfaceTextInputEditText.doAfterTextChanged {
+            viewModel.onSurfaceChanged(it.toString())
+        }
+
+        val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            if (uri != null) {
+                Log.d("PhotoPicker", "Selected URI: $uri")
+                viewModel.onPictureFromStorageSelected(uri)
+            } else {
+                Log.d("PhotoPicker", "No media selected")
+            }
+        }
+        binding.addPropertyPicturesFromStorageButton.setOnClickListener {
+            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
+
     }
 }
 

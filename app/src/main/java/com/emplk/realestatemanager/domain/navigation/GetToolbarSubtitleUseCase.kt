@@ -4,7 +4,6 @@ import com.emplk.realestatemanager.domain.screen_width.GetScreenWidthTypeFlowUse
 import com.emplk.realestatemanager.domain.screen_width.ScreenWidthType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.distinctUntilChanged
 import javax.inject.Inject
 
 class GetToolbarSubtitleUseCase @Inject constructor(

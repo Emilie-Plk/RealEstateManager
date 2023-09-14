@@ -46,34 +46,34 @@ class DetailViewModel @Inject constructor(
                 val currencyType = getCurrencyTypeUseCase.invoke()
                 val surfaceUnitType = getSurfaceUnitUseCase.invoke()
 
-        emit(
-            DetailViewState.PropertyDetail(
-                id = propertyEntity.id,
-                propertyType = propertyEntity.type,
-                featuredPicture = NativePhoto.Uri(
-                    propertyEntity.pictures.first { picture ->
-                        picture.isFeatured
-                    }.uri
-                ),
-                pictures = propertyEntity.pictures.map { picture ->
-                    picture.uri
-                },
-                price = when (currencyType) {
-                    CurrencyType.DOLLAR -> NativeText.Argument(
-                        R.string.price_in_dollar,
-                        propertyEntity.price
-                    )
+                emit(
+                    DetailViewState.PropertyDetail(
+                        id = propertyEntity.id,
+                        propertyType = propertyEntity.type,
+                        featuredPicture = NativePhoto.Uri(
+                            propertyEntity.pictures.first { picture ->
+                                picture.isFeatured
+                            }.uri
+                        ),
+                        pictures = propertyEntity.pictures.map { picture ->
+                            picture.uri
+                        },
+                        price = when (currencyType) {
+                            CurrencyType.DOLLAR -> NativeText.Argument(
+                                R.string.price_in_dollar,
+                                propertyEntity.price
+                            )
 
-                    CurrencyType.EURO -> NativeText.Argument(
-                        R.string.price_in_euro,
-                        propertyEntity.price
-                    )
-                },
-                surface = when (surfaceUnitType) {
-                    SurfaceUnitType.SQUARE_FEET -> NativeText.Argument(
-                        R.string.surface_in_square_feet,
-                        propertyEntity.surface
-                    )
+                            CurrencyType.EURO -> NativeText.Argument(
+                                R.string.price_in_euro,
+                                propertyEntity.price
+                            )
+                        },
+                        surface = when (surfaceUnitType) {
+                            SurfaceUnitType.SQUARE_FEET -> NativeText.Argument(
+                                R.string.surface_in_square_feet,
+                                propertyEntity.surface
+                            )
 
                             SurfaceUnitType.SQUARE_METER -> NativeText.Argument(
                                 R.string.surface_in_square_meters,
