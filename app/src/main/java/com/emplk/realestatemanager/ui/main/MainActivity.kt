@@ -287,7 +287,14 @@ class MainActivity : AppCompatActivity() {
         onBackPressedDispatcher.addCallback(this) {
             val backStackCount = supportFragmentManager.backStackEntryCount
             if (backStackCount > 1) {
+                val poppedFragmentTag = supportFragmentManager.getBackStackEntryAt(backStackCount - 1).name
                 supportFragmentManager.popBackStack()
+                supportFragmentManager.commit {
+                    val poppedFragment = supportFragmentManager.findFragmentByTag(poppedFragmentTag)
+                    if (poppedFragment != null) {
+                        remove(poppedFragment)
+                    }
+                }
             } else {
                 finish()
             }
