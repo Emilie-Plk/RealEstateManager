@@ -99,29 +99,17 @@ class MainActivity : AppCompatActivity() {
                         PropertiesFragment.newInstance()
                     )
 
-                    val existingFragment = supportFragmentManager.findFragmentByTag(BLANK_FRAGMENT_TAG)
-                    if (existingFragment == null) {
-                        supportFragmentManager.commit {
-                            binding.mainFrameLayoutContainerDetail?.let {
-                                replace(
-                                    it.id,
-                                    BlankFragment.newInstance()
-                                ).addToBackStack(BLANK_FRAGMENT_TAG)
-                            }
-                        }
-                    } else {
-                        supportFragmentManager.commit {
-                            binding.mainFrameLayoutContainerDetail?.let {
-                                replace(
-                                    it.id,
-                                    BlankFragment.newInstance()
-                                )
-                            }
-                        }
+                    binding.mainFrameLayoutContainerDetail?.id?.let {
+                        displayFragment(
+                            it,
+                            BLANK_FRAGMENT_TAG,
+                            BlankFragment.newInstance()
+                        )
                     }
                 }
 
                 MainViewEvent.DisplayAddPropertyFragmentOnPhone -> {
+                    resetConstraintSet()
                     displayFragment(
                         binding.mainFrameLayoutContainerProperties.id,
                         ADD_FRAGMENT_TAG,
@@ -214,27 +202,13 @@ class MainActivity : AppCompatActivity() {
                         PROPERTIES_FRAGMENT_TAG,
                         PropertiesFragment.newInstance()
                     )
-                    val existingFragment = supportFragmentManager.findFragmentByTag(FILTER_FRAGMENT_TAG)
-                    if (existingFragment == null) {
-                        supportFragmentManager.commit {
-                            binding.mainFrameLayoutContainerDetail?.let {
-                                replace(
-                                    it.id,
-                                    FilterPropertiesFragment.newInstance(),
-                                    FILTER_FRAGMENT_TAG
-                                ).addToBackStack(FILTER_FRAGMENT_TAG)
-                            }
-                        }
-                    } else {
-                        supportFragmentManager.commit {
-                            binding.mainFrameLayoutContainerDetail?.let {
-                                replace(
-                                    it.id,
-                                    FilterPropertiesFragment.newInstance(),
-                                    FILTER_FRAGMENT_TAG
-                                )
-                            }
-                        }
+
+                    binding.mainFrameLayoutContainerDetail?.id?.let {
+                        displayFragment(
+                            it,
+                            FILTER_FRAGMENT_TAG,
+                            FilterPropertiesFragment.newInstance()
+                        )
                     }
                 }
             }
@@ -268,8 +242,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun adjustConstraintSet() {
-        val constraintSet = ConstraintSet()
-        constraintSet.connect(
+        ConstraintSet().connect(
             R.id.main_FrameLayout_container_properties,
             ConstraintSet.END,
             ConstraintSet.PARENT_ID,
@@ -279,8 +252,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun resetConstraintSet() {
-        val constraintSet = ConstraintSet()
-        constraintSet.connect(
+        ConstraintSet().connect(
             R.id.main_FrameLayout_container_properties,
             ConstraintSet.END,
             R.id.main_View_separator,
@@ -301,7 +273,6 @@ class MainActivity : AppCompatActivity() {
                 ).addToBackStack(fragmentTag)
             }
         } else {
-            // If the fragment with the same tag is already in the back stack, just show it
             supportFragmentManager.commit {
                 replace(
                     containerViewId,
@@ -322,7 +293,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
 
     override fun onResume() {
         super.onResume()
