@@ -263,6 +263,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun displayFragment(containerViewId: Int, fragmentTag: String, fragment: Fragment) {
         val existingFragment = supportFragmentManager.findFragmentByTag(fragmentTag)
+        val tagList = mutableListOf<String>()
+
+        for (i in 0 until supportFragmentManager.backStackEntryCount) {
+            val backStackEntry = supportFragmentManager.getBackStackEntryAt(i)
+            val tag = backStackEntry.name ?: "DefaultTag"
+            tagList.add(tag)
+        }
 
         if (existingFragment == null) {
             supportFragmentManager.commit {
@@ -272,6 +279,8 @@ class MainActivity : AppCompatActivity() {
                     fragmentTag
                 ).addToBackStack(fragmentTag)
             }
+        } else if (tagList.contains(fragmentTag)) {
+            return
         } else {
             supportFragmentManager.commit {
                 replace(

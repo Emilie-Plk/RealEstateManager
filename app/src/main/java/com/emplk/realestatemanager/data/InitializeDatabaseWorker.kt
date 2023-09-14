@@ -68,12 +68,12 @@ class InitializeDatabaseWorker @AssistedInject constructor(
                 allJobs.awaitAll()
                 Result.success()
             } else {
-                Log.e("COUCOU", "Gson can't parse properties : $propertiesAsJson")
+                Log.e("InitDatabaseWorker", "Gson can't parse properties : $propertiesAsJson")
                 Result.failure()
             }
         } else {
             Log.e(
-                "COUCOU",
+                "InitDatabaseWorker",
                 "Failed to get data with key $KEY_INPUT_DATA_PROPERTIES from data: $inputData"
             )
             Result.failure()
