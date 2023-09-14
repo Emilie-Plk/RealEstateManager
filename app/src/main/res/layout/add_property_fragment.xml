@@ -21,26 +21,26 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-<com.google.android.material.textfield.TextInputLayout
-    android:id="@+id/add_property_type_textInputLayout"
-    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="8dp"
-    android:layout_marginEnd="16dp"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/add_property_type_tv">
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/add_property_type_textInputLayout"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/add_property_type_tv">
 
-    <AutoCompleteTextView
-        android:id="@+id/add_property_type_actv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Select a type"
-        android:inputType="none" />
+            <AutoCompleteTextView
+                android:id="@+id/add_property_type_actv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Select a type"
+                android:inputType="none" />
 
-</com.google.android.material.textfield.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/add_property_address_tv"
@@ -90,7 +90,7 @@
             android:text="@string/price_currency_in_n"
             tools:text="(in $)"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/add_property_price_textInputLayout"
@@ -131,7 +131,7 @@
             android:text="@string/surface_unit_in_n"
             tools:text="(in m²)"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/add_property_surface_textInputLayout"
@@ -527,7 +527,7 @@
             app:layout_constraintTop_toTopOf="@id/add_property_create_button"
             app:layout_constraintBottom_toBottomOf="@id/add_property_create_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

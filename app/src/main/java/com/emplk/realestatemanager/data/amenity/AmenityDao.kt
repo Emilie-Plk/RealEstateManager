@@ -10,11 +10,11 @@ import kotlinx.coroutines.flow.Flow
 interface AmenityDao {
 
     @Insert
-    suspend fun insert(amenityDtoEntity: AmenityDtoEntity) : Long
+    suspend fun insert(amenityDtoEntity: AmenityDtoEntity): Long
 
     @Query("SELECT * FROM amenities WHERE property_id = :propertyId")
     fun getAllAmenitiesAsFlow(propertyId: Long): Flow<AmenityDtoEntity>
 
     @Update
-    suspend fun update(amenityDtoEntity: AmenityDtoEntity) : Int
+    suspend fun update(amenityDtoEntity: AmenityDtoEntity): Int
 }

@@ -3,7 +3,7 @@ package com.emplk.realestatemanager.ui.add.picture_preview
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.addTextChangedListener
+import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -70,7 +70,18 @@ class PropertyPicturePreviewListAdapter :
                     .error(R.drawable.baseline_villa_24)
                     .into(binding.previewPictureIv)
 
+                binding.previewPictureStarFeaturedIv.setImageResource(
+                    if (item.isFeatured) R.drawable.baseline_star_24
+                    else R.drawable.baseline_star_border_24
+                )
+
                 binding.previewPictureDeleteIv.setOnClickListener { item.onDeleteEvent.invoke() }
+
+                binding.previewPictureStarFeaturedIv.setOnClickListener { item.onFeaturedEvent.invoke() }
+
+                binding.previewPictureTitleEt.doAfterTextChanged {
+                    item.onDescriptionChanged.invoke()
+                }
             }
         }
 
@@ -96,8 +107,11 @@ class PropertyPicturePreviewListAdapter :
 
                 binding.previewPictureDeleteIv.setOnClickListener { item.onDeleteEvent.invoke() }
 
-                //binding.previewPictureTitleEt.addTextChangedListener
-            // TODO: how to addTextChangedListener to previewPictureTitleEt?
+                binding.previewPictureStarFeaturedIv.setOnClickListener { item.onFeaturedEvent.invoke() }
+
+                binding.previewPictureTitleEt.doAfterTextChanged {
+                    item.onDescriptionChanged.invoke()
+                }
             }
         }
     }

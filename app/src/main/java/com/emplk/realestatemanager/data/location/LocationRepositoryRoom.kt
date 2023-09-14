@@ -17,14 +17,14 @@ class LocationRepositoryRoom @Inject constructor(
         withContext(coroutineDispatcherProvider.io) {
             try {
                 val locationDtoEntity = locationDtoEntityMapper.mapToDtoEntity(locationEntity, propertyId)
-                locationDao.insert(locationDtoEntity)  == 1L
+                locationDao.insert(locationDtoEntity) == 1L
             } catch (e: SQLiteException) {
                 e.printStackTrace()
                 false
             }
         }
 
-    override suspend fun update(locationEntity: LocationEntity, propertyId: Long) : Boolean =
+    override suspend fun update(locationEntity: LocationEntity, propertyId: Long): Boolean =
         withContext(coroutineDispatcherProvider.io) {
             val locationDtoEntity = locationDtoEntityMapper.mapToDtoEntity(locationEntity, propertyId)
             locationDao.update(locationDtoEntity) == 1

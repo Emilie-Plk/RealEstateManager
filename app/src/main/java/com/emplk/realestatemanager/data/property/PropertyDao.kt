@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 interface PropertyDao {
 
     @Insert
-    suspend fun insert(propertyDtoEntity: PropertyDtoEntity) : Long
+    suspend fun insert(propertyDtoEntity: PropertyDtoEntity): Long
 
     @Transaction
     @Query("SELECT * FROM properties WHERE id = :propertyId")

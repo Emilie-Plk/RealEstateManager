@@ -2,7 +2,6 @@ package com.emplk.realestatemanager.data.screen_width
 
 import com.emplk.realestatemanager.domain.screen_width.ScreenWidthType
 import com.emplk.realestatemanager.domain.screen_width.ScreenWidthTypeRepository
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import javax.inject.Inject

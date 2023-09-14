@@ -1,9 +1,6 @@
 package com.emplk.realestatemanager.ui.add
 
-import com.emplk.realestatemanager.ui.AddPropertyPictureStateItem
-import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem
-import com.emplk.realestatemanager.ui.utils.NativeText
-import java.math.BigDecimal
+import com.emplk.realestatemanager.ui.add.picture_preview.PicturePreviewStateItem
 
 data class AddPropertyViewStateItem(
     val propertyType: String,
@@ -15,6 +12,6 @@ data class AddPropertyViewStateItem(
     val nbBathrooms: String,
     val nbBedrooms: String,
     val amenities: List<String>,
-    val pictures: List<AddPropertyPictureStateItem>,
-    val agent : AddPropertyAgentViewStateItem,
+    val pictures: List<PicturePreviewStateItem>,
+    val agent: String,
 )

@@ -17,7 +17,7 @@ class PictureRepositoryRoom @Inject constructor(
         withContext(coroutineDispatcherProvider.io) {
             try {
                 val pictureDtoEntity = pictureDtoEntityMapper.mapToDtoEntity(pictureEntity, propertyId)
-                pictureDao.insert(pictureDtoEntity)  == 1L
+                pictureDao.insert(pictureDtoEntity) == 1L
             } catch (e: SQLiteException) {
                 e.printStackTrace()
                 false

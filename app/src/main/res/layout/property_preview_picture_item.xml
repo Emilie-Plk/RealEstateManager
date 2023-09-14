@@ -1,76 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Theme.RealEstateManager.PropertyItemCardView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp">
+    android:layout_margin="8dp"
+    android:padding="4dp">
 
-    <ImageView
-        android:id="@+id/preview_picture_iv"
-        android:layout_width="140dp"
-        android:layout_height="100dp"
-        android:scaleType="centerCrop"
-        app:contentDescription="Picture of property"
-        app:layout_constraintEnd_toStartOf="@id/preview_picture_view"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/tools_villa" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/preview_picture_title_textInputLayout"
-        style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/preview_picture_iv"
-        app:layout_constraintTop_toBottomOf="@id/preview_picture_iv">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/preview_picture_title_et"
-            android:layout_width="match_parent"
+
+        <ImageView
+            android:id="@+id/preview_picture_iv"
+            android:layout_width="140dp"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop"
+            app:contentDescription="Picture of property"
+            app:layout_constraintEnd_toStartOf="@id/preview_picture_view"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/tools_villa" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/preview_picture_title_textInputLayout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:lines="1" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/preview_picture_iv">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/preview_picture_title_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:inputType="textMultiLine"
+                android:maxLength="28"
+                android:maxLines="2" />
 
-    <View
-        android:id="@+id/preview_picture_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/preview_picture_iv"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/preview_picture_iv"
-        app:layout_constraintTop_toTopOf="@+id/preview_picture_iv" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <View
+            android:id="@+id/preview_picture_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/preview_picture_iv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/preview_picture_iv"
+            app:layout_constraintTop_toTopOf="@+id/preview_picture_iv" />
 
 
-    <ImageView
-        android:id="@+id/preview_picture_delete_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginBottom="12dp"
-        android:clickable="true"
-        android:contentDescription="@string/iv_preview_delete_property_btn"
-        android:focusable="true"
-        android:src="@drawable/baseline_delete_24"
-        app:layout_constraintBottom_toBottomOf="@+id/preview_picture_view"
-        app:layout_constraintEnd_toEndOf="@+id/preview_picture_view"
-        app:layout_constraintStart_toStartOf="@id/preview_picture_view" />
+        <ImageView
+            android:id="@+id/preview_picture_delete_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginBottom="12dp"
+            android:clickable="true"
+            android:contentDescription="@string/iv_preview_delete_property_btn"
+            android:focusable="true"
+            android:src="@drawable/baseline_delete_24"
+            app:layout_constraintBottom_toBottomOf="@+id/preview_picture_view"
+            app:layout_constraintEnd_toEndOf="@+id/preview_picture_view"
+            app:layout_constraintStart_toStartOf="@id/preview_picture_view" />
 
-    <ImageView
-        android:id="@+id/preview_picture_star_featured_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginTop="12dp"
-        android:clickable="true"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="4dp"
-        android:focusable="true"
-        android:src="@drawable/baseline_star_24"
-        app:layout_constraintEnd_toEndOf="@+id/preview_picture_view"
-        app:layout_constraintStart_toStartOf="@+id/preview_picture_view"
-        app:layout_constraintTop_toTopOf="@+id/preview_picture_view"
-        app:tint="@color/secondary" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:id="@+id/preview_picture_star_featured_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="4dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/baseline_star_24"
+            app:layout_constraintEnd_toEndOf="@+id/preview_picture_view"
+            app:layout_constraintStart_toStartOf="@+id/preview_picture_view"
+            app:layout_constraintTop_toTopOf="@+id/preview_picture_view"
+            app:tint="@color/secondary" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
