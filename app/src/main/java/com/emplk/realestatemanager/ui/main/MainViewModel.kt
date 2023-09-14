@@ -32,6 +32,7 @@ class MainViewModel @Inject constructor(
     private val getToolbarSubtitleUseCase: GetToolbarSubtitleUseCase,
     coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : ViewModel() {
+
     private val isTabletMutableStateFlow = MutableStateFlow(false)
 
     val mainViewState: LiveData<MainViewState> = liveData(coroutineDispatcherProvider.main) {
@@ -130,7 +131,11 @@ class MainViewModel @Inject constructor(
                     if (!isTablet) {
                         emit(Event(MainViewEvent.DisplayPropertyListFragmentOnPhone))
                     } else {
-                        emit(Event(MainViewEvent.DisplayPropertyListFragmentOnTablet))
+                        if (currentPropertyId >= 1) {
+                            emit(Event(MainViewEvent.DisplayPropertyListFragmentOnTablet))
+                        } else {
+                            emit(Event(MainViewEvent.DisplayPropertyListFragmentWithNoSelectedPropertyOnTablet))
+                        }
                     }
 
                 ADD_FRAGMENT ->
