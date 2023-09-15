@@ -50,10 +50,13 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
 
         val picturePreviewAdapter = PropertyPicturePreviewListAdapter()
         binding.addPropertyPreviewPicturesRecyclerView.adapter = picturePreviewAdapter
+        setNumberPickers()
 
         viewModel.addPropertyViewStateLiveData.observe(viewLifecycleOwner) {
             picturePreviewAdapter.submitList(it.pictures)
         }
+
+
 
         binding.addPropertyCreateButton.setOnClickListener {
           //  viewModel.onAddPropertyClicked()
@@ -106,6 +109,28 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
+    }
+
+
+
+    private fun setNumberPickers() {
+        binding.addPropertyRoomsNumberPicker.minValue = 0
+        binding.addPropertyRoomsNumberPicker.maxValue = 30
+        binding.addPropertyRoomsNumberPicker.setOnValueChangedListener { _, _, value ->
+            viewModel.onRoomsNumberChanged(value)
+        }
+
+        binding.addPropertyBedroomsNumberPicker.minValue = 0
+        binding.addPropertyBedroomsNumberPicker.maxValue = 15
+        binding.addPropertyBedroomsNumberPicker.setOnValueChangedListener { _, _, value ->
+            viewModel.onBedroomsNumberChanged(value)
+        }
+
+        binding.addPropertyBathroomsNumberPicker.minValue = 0
+        binding.addPropertyBathroomsNumberPicker.maxValue = 15
+        binding.addPropertyBathroomsNumberPicker.setOnValueChangedListener { _, _, value ->
+            viewModel.onBathroomsNumberChanged(value)
+        }
     }
 }
 

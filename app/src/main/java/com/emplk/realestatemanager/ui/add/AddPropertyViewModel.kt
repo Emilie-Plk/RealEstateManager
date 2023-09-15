@@ -288,4 +288,16 @@ class AddPropertyViewModel @Inject constructor(
     fun onAddPropertyClicked() {
         onCreateButtonClickedMutableSharedFlow.tryEmit(Unit)
     }
+
+    fun onRoomsNumberChanged(value: Int) {
+
+    }
+
+    fun onBedroomsNumberChanged(value: Int) {
+
+    }
+
+    fun onBathroomsNumberChanged(value: Int) {
+
+    }
 }
