@@ -63,9 +63,7 @@ class PropertyPicturePreviewListAdapter :
             }
 
             fun bind(item: PicturePreviewStateItem.AddPropertyPicturePreview) {
-                item.uri.load(
-                    binding.previewPictureIv
-                )
+                item.uri.load(binding.previewPictureIv)
                     .transform(CenterCrop(), RoundedCorners(16))
                     .error(R.drawable.baseline_villa_24)
                     .into(binding.previewPictureIv)
@@ -104,6 +102,11 @@ class PropertyPicturePreviewListAdapter :
                     .transform(CenterCrop(), RoundedCorners(16))
                     .error(R.drawable.baseline_villa_24)
                     .into(binding.previewPictureIv)
+
+                binding.previewPictureStarFeaturedIv.setImageResource(
+                    if (item.isFeatured) R.drawable.baseline_star_24
+                    else R.drawable.baseline_star_border_24
+                )
 
                 binding.previewPictureDeleteIv.setOnClickListener { item.onDeleteEvent.invoke() }
 

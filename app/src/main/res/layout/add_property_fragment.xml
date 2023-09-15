@@ -83,14 +83,14 @@
 
         <TextView
             android:id="@+id/add_property_price_currency_tv"
-            app:layout_constraintStart_toEndOf="@id/add_property_price_tv"
-            app:layout_constraintTop_toTopOf="@id/add_property_price_tv"
-            app:layout_constraintBottom_toBottomOf="@id/add_property_price_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="@string/price_currency_in_n"
-            tools:text="(in $)"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            app:layout_constraintBottom_toBottomOf="@id/add_property_price_tv"
+            app:layout_constraintStart_toEndOf="@id/add_property_price_tv"
+            app:layout_constraintTop_toTopOf="@id/add_property_price_tv"
+            tools:text="(in $)" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/add_property_price_textInputLayout"
@@ -124,14 +124,14 @@
 
         <TextView
             android:id="@+id/add_property_surface_unit_tv"
-            app:layout_constraintStart_toEndOf="@id/add_property_surface_tv"
-            app:layout_constraintTop_toTopOf="@id/add_property_surface_tv"
-            app:layout_constraintBottom_toBottomOf="@id/add_property_surface_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="@string/surface_unit_in_n"
-            tools:text="(in m²)"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            app:layout_constraintBottom_toBottomOf="@id/add_property_surface_tv"
+            app:layout_constraintStart_toEndOf="@id/add_property_surface_tv"
+            app:layout_constraintTop_toTopOf="@id/add_property_surface_tv"
+            tools:text="(in m²)" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/add_property_surface_textInputLayout"
@@ -160,51 +160,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Rooms"
-            app:layout_constraintEnd_toEndOf="@+id/add_property_rooms_incrementButton"
-            app:layout_constraintStart_toStartOf="@+id/add_property_rooms_decrementButton"
-            app:layout_constraintTop_toBottomOf="@id/add_property_surface_textInputLayout" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/add_property_rooms_textInputLayout"
-            style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toStartOf="@id/add_property_rooms_incrementButton"
-            app:layout_constraintStart_toEndOf="@id/add_property_rooms_decrementButton"
-            app:layout_constraintTop_toBottomOf="@id/add_property_rooms_tv">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/add_property_rooms_editText"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:imeOptions="actionDone"
-                android:inputType="numberDecimal" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <Button
-            android:id="@+id/add_property_rooms_decrementButton"
-            style="@style/Widget.AppCompat.Button.Small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="-"
-            app:layout_constraintBottom_toBottomOf="@id/add_property_rooms_textInputLayout"
-            app:layout_constraintEnd_toStartOf="@+id/add_property_rooms_textInputLayout"
+            app:layout_constraintEnd_toStartOf="@id/add_property_bedrooms_tv"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/add_property_rooms_textInputLayout" />
+            app:layout_constraintTop_toBottomOf="@id/add_property_surface_textInputLayout"
+            />
 
-        <Button
-            android:id="@+id/add_property_rooms_incrementButton"
-            style="@style/Widget.AppCompat.Button.Small"
+        <NumberPicker
+            android:id="@+id/add_property_rooms_numberPicker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:text="+"
-            app:layout_constraintBottom_toBottomOf="@id/add_property_rooms_textInputLayout"
-            app:layout_constraintEnd_toStartOf="@id/add_property_bedrooms_decrementButton"
-            app:layout_constraintStart_toEndOf="@+id/add_property_rooms_textInputLayout"
-            app:layout_constraintTop_toTopOf="@id/add_property_rooms_textInputLayout" />
+            app:layout_constraintEnd_toEndOf="@id/add_property_rooms_tv"
+            app:layout_constraintStart_toStartOf="@id/add_property_rooms_tv"
+            app:layout_constraintTop_toBottomOf="@id/add_property_rooms_tv" />
 
         <TextView
             android:id="@+id/add_property_bedrooms_tv"
@@ -212,105 +179,36 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Bedrooms"
-            app:layout_constraintEnd_toEndOf="@+id/add_property_bedrooms_incrementButton"
-            app:layout_constraintStart_toStartOf="@+id/add_property_bedrooms_decrementButton"
-            app:layout_constraintTop_toBottomOf="@+id/add_property_surface_textInputLayout" />
+            app:layout_constraintEnd_toStartOf="@id/add_property_bathrooms_tv"
+            app:layout_constraintStart_toEndOf="@id/add_property_rooms_tv"
+            app:layout_constraintTop_toBottomOf="@id/add_property_surface_textInputLayout" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/add_property_bedrooms_textInputLayout"
-            style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
+        <NumberPicker
+            android:id="@+id/add_property_bedrooms_numberPicker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toStartOf="@id/add_property_bedrooms_incrementButton"
-            app:layout_constraintStart_toEndOf="@id/add_property_bedrooms_decrementButton"
-            app:layout_constraintTop_toBottomOf="@id/add_property_bedrooms_tv">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/add_property_bedrooms_editText"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:imeOptions="actionDone"
-                android:inputType="numberDecimal" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <Button
-            android:id="@+id/add_property_bedrooms_decrementButton"
-            style="@style/Widget.AppCompat.Button.Small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="-"
-            app:layout_constraintBottom_toBottomOf="@id/add_property_bedrooms_textInputLayout"
-            app:layout_constraintEnd_toStartOf="@id/add_property_bedrooms_textInputLayout"
-            app:layout_constraintStart_toEndOf="@id/add_property_rooms_incrementButton"
-            app:layout_constraintTop_toTopOf="@+id/add_property_bedrooms_textInputLayout" />
-
-        <Button
-            android:id="@+id/add_property_bedrooms_incrementButton"
-            style="@style/Widget.AppCompat.Button.Small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="+"
-            app:layout_constraintBottom_toBottomOf="@id/add_property_bedrooms_textInputLayout"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/add_property_bedrooms_textInputLayout"
-            app:layout_constraintTop_toTopOf="@id/add_property_bedrooms_textInputLayout" />
+            app:layout_constraintEnd_toEndOf="@id/add_property_bedrooms_tv"
+            app:layout_constraintStart_toStartOf="@id/add_property_bedrooms_tv"
+            app:layout_constraintTop_toBottomOf="@id/add_property_bedrooms_tv" />
 
         <TextView
             android:id="@+id/add_property_bathrooms_tv"
             style="@style/Theme.RealEstateManager.AddPropertySubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
             android:text="Bathrooms"
-            app:layout_constraintEnd_toEndOf="@+id/add_property_bathrooms_incrementButton"
-            app:layout_constraintStart_toStartOf="@+id/add_property_bathrooms_decrementButton"
-            app:layout_constraintTop_toBottomOf="@+id/add_property_rooms_textInputLayout" />
-        />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/add_property_bedrooms_tv"
+            app:layout_constraintTop_toBottomOf="@id/add_property_surface_textInputLayout" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/add_property_bathrooms_textInputLayout"
-            style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
+
+        <NumberPicker
+            android:id="@+id/add_property_bathrooms_numberPicker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toStartOf="@id/add_property_bathrooms_incrementButton"
-            app:layout_constraintStart_toEndOf="@id/add_property_bathrooms_decrementButton"
-            app:layout_constraintTop_toBottomOf="@id/add_property_bathrooms_tv">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/add_property_bathrooms_editText"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:imeOptions="actionDone"
-                android:inputType="numberDecimal" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <Button
-            android:id="@+id/add_property_bathrooms_decrementButton"
-            style="@style/Widget.AppCompat.Button.Small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="-"
-            app:layout_constraintBottom_toBottomOf="@id/add_property_bathrooms_textInputLayout"
-            app:layout_constraintEnd_toStartOf="@id/add_property_bathrooms_textInputLayout"
-            app:layout_constraintStart_toStartOf="@+id/add_property_rooms_decrementButton"
-            app:layout_constraintTop_toTopOf="@+id/add_property_bathrooms_textInputLayout" />
-
-        <Button
-            android:id="@+id/add_property_bathrooms_incrementButton"
-            style="@style/Widget.AppCompat.Button.Small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="+"
-            app:layout_constraintBottom_toBottomOf="@id/add_property_bathrooms_textInputLayout"
-            app:layout_constraintEnd_toEndOf="@+id/add_property_rooms_incrementButton"
-            app:layout_constraintStart_toEndOf="@id/add_property_bathrooms_textInputLayout"
-            app:layout_constraintTop_toTopOf="@id/add_property_bathrooms_textInputLayout" />
-
+            app:layout_constraintEnd_toEndOf="@id/add_property_bathrooms_tv"
+            app:layout_constraintStart_toStartOf="@id/add_property_bathrooms_tv"
+            app:layout_constraintTop_toBottomOf="@id/add_property_bathrooms_tv" />
 
         <TextView
             android:id="@+id/add_property_description_tv"
@@ -319,7 +217,7 @@
             android:layout_height="wrap_content"
             android:text="Description"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/add_property_bathrooms_decrementButton" />
+            app:layout_constraintTop_toBottomOf="@+id/add_property_bathrooms_numberPicker" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/add_property_description_textInputLayout"
@@ -512,6 +410,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="12dp"
+            android:backgroundTint="@color/primary"
             android:text="@string/add_property_create_button"
             app:icon="@drawable/baseline_add_home_24"
             app:iconTint="@color/secondary"
@@ -522,12 +421,12 @@
 
         <ProgressBar
             android:id="@+id/add_property_progressBar"
-            app:layout_constraintStart_toEndOf="@id/add_property_create_button"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/add_property_create_button"
-            app:layout_constraintBottom_toBottomOf="@id/add_property_create_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/add_property_create_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/add_property_create_button"
+            app:layout_constraintTop_toTopOf="@id/add_property_create_button" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

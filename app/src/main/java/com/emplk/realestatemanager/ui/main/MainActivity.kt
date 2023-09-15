@@ -148,6 +148,7 @@ class MainActivity : AppCompatActivity() {
                             remove(existingFragment)
                         }
                     }
+                  
                     binding.mainFrameLayoutContainerDetail?.id?.let {
                         displayFragment(
                             it,
