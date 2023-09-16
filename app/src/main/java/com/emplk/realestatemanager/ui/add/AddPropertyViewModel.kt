@@ -29,7 +29,6 @@ import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.Event
 import com.emplk.realestatemanager.ui.utils.NativePhoto
 import com.emplk.realestatemanager.ui.utils.NativeText
-import com.emplk.realestatemanager.ui.utils.combine
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,7 +39,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.time.LocalDateTime
-import java.util.Random
 import javax.inject.Inject
 
 @HiltViewModel
@@ -56,19 +54,22 @@ class AddPropertyViewModel @Inject constructor(
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : ViewModel() {
 
-    private val propertyTypeMutableStateFlow = MutableStateFlow<String?>(null)
-    private val addressMutableStateFlow = MutableStateFlow<String?>(null)
-    private val priceMutableStateFlow = MutableStateFlow<String?>(null)
-    private val surfaceMutableStateFlow = MutableStateFlow<String?>(null)
-    private val descriptionMutableStateFlow = MutableStateFlow<String?>(null)
-    private val nbRoomsMutableStateFlow = MutableStateFlow<String?>(null)
-    private val nbBathroomsMutableStateFlow = MutableStateFlow<String?>(null)
-    private val nbBedroomsMutableStateFlow = MutableStateFlow<String?>(null)
-    private val amenitiesMutableStateFlow = MutableStateFlow<List<String>>(emptyList())
-    private val agentMutableStateFlow = MutableStateFlow<String?>(null)
-    private val urisPictureFromStorageMutableStateFLow = MutableStateFlow<List<Uri?>>(emptyList())
-    private val pictureMutableStateFlow =
-        MutableStateFlow<List<PicturePreviewStateItem.AddPropertyPicturePreview>>(emptyList())
+    private data class AddPropertyForm(
+        val propertyType: String? = null,
+        val address: String? = null,
+        val price: String? = null,
+        val surface: String? = null,
+        val description: String? = null,
+        val nbRooms: String? = null,
+        val nbBathrooms: String? = null,
+        val nbBedrooms: String? = null,
+        val amenities: List<String> = emptyList(),
+        val agent: String? = null,
+        val pictureUris: List<PicturePreviewStateItem.AddPropertyPicturePreview> = emptyList(),
+    )
+
+    private val formMutableStateFlow = MutableStateFlow(AddPropertyForm())
+
     private val isEveryFieldFilledMutableStateFlow = MutableStateFlow(false)
     private val onCreateButtonClickedMutableSharedFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
     private val isAddingPropertyInDatabaseMutableStateFlow = MutableStateFlow(false)
@@ -153,45 +154,34 @@ class AddPropertyViewModel @Inject constructor(
     }
 
     val addPropertyViewStateLiveData: LiveData<AddPropertyViewStateItem> = liveData {
-        combine(
-            propertyTypeMutableStateFlow,
-            addressMutableStateFlow,
-            priceMutableStateFlow,
-            surfaceMutableStateFlow,
-            descriptionMutableStateFlow,
-            nbRoomsMutableStateFlow,
-            nbBathroomsMutableStateFlow,
-            nbBedroomsMutableStateFlow,
-            amenitiesMutableStateFlow,
-            agentMutableStateFlow,
-            pictureMutableStateFlow,
-        ) { propertyType, address, price, surface, description, nbRooms, nbBathrooms, nbBedrooms, amenities, agent, pictures ->
-            val isFormValid = (propertyType != null &&
-                    address.isNullOrBlank() &&
-                    price.isNullOrBlank() &&
-                    surface.isNullOrBlank() &&
-                    description.isNullOrBlank() &&
-                    nbRooms.isNullOrBlank() &&
-                    nbBathrooms.isNullOrBlank() &&
-                    nbBedrooms.isNullOrBlank() &&
-                    agent != null &&
-                    pictures.isNotEmpty())
+        formMutableStateFlow.collect { propertyForm ->
+            val isFormValid = (propertyForm.propertyType != null &&
+                    propertyForm.address.isNullOrBlank() &&
+                    propertyForm.price.isNullOrBlank() &&
+                    propertyForm.surface.isNullOrBlank() &&
+                    propertyForm.description.isNullOrBlank() &&
+                    propertyForm.nbRooms.isNullOrBlank() &&
+                    propertyForm.nbBathrooms.isNullOrBlank() &&
+                    propertyForm.nbBedrooms.isNullOrBlank() &&
+                    propertyForm.agent != null &&
+                    propertyForm.pictureUris.isNotEmpty()
+                    )
 
             isEveryFieldFilledMutableStateFlow.value = isFormValid
 
             emit(
                 AddPropertyViewStateItem(
-                    propertyType = propertyType ?: "",
-                    address = address ?: "",
-                    price = price ?: "",
-                    surface = surface ?: "",
-                    description = description ?: "",
-                    nbRooms = nbRooms ?: "",
-                    nbBathrooms = nbBathrooms ?: "",
-                    nbBedrooms = nbBedrooms ?: "",
-                    amenities = amenities,
-                    agent = agent ?: "",
-                    pictures = pictures.map { picture ->
+                    propertyType = propertyForm.propertyType ?: "",
+                    address = propertyForm.address ?: "",
+                    price = propertyForm.price ?: "",
+                    surface = propertyForm.surface ?: "",
+                    description = propertyForm.description ?: "",
+                    nbRooms = propertyForm.nbRooms ?: "",
+                    nbBathrooms = propertyForm.nbBathrooms ?: "",
+                    nbBedrooms = propertyForm.nbBedrooms ?: "",
+                    amenities = propertyForm.amenities,
+                    agent = propertyForm.agent ?: "",
+                    pictures = propertyForm.pictureUris.map { picture ->
                         PicturePreviewStateItem.AddPropertyPicturePreview(
                             id = picture.id,
                             uri = picture.uri,
@@ -201,10 +191,10 @@ class AddPropertyViewModel @Inject constructor(
                             onFeaturedEvent = EquatableCallback { },
                             onDescriptionChanged = EquatableCallback { },
                         )
-                    },
+                    }
                 )
             )
-        }.collect()
+        }
     }
 
     val viewStateLiveData: LiveData<AddPropertyViewState> = liveData {
@@ -250,54 +240,72 @@ class AddPropertyViewModel @Inject constructor(
         }.collect()
     }
 
-    fun onPropertyTypeSelected(propertyType: String) {
-        propertyTypeMutableStateFlow.value = propertyType
-    }
-
-    fun onAgentSelected(agent: String) {
-        agentMutableStateFlow.value = agent
-    }
-
-    fun onAddressChanged(address: String) {
-        addressMutableStateFlow.value = address
-    }
-
-    fun onPriceChanged(price: String) {
-        priceMutableStateFlow.value = price
-    }
-
-    fun onSurfaceChanged(surface: String) {
-        surfaceMutableStateFlow.value = surface
-    }
-
-    fun onPictureFromStorageSelected(uri: Uri) {
-        pictureMutableStateFlow.update { pictures ->
-            val pictureId = 0L
-            pictures + PicturePreviewStateItem.AddPropertyPicturePreview(
-                id = pictureId + 1L,
-                uri = NativePhoto.Uri(uri.toString()),
-                description = "",
-                isFeatured = pictures.isEmpty(),
-                onDeleteEvent = EquatableCallback { },
-                onFeaturedEvent = EquatableCallback { },
-                onDescriptionChanged = EquatableCallback { },
-            )
-        }
-    }
-
     fun onAddPropertyClicked() {
         onCreateButtonClickedMutableSharedFlow.tryEmit(Unit)
     }
 
-    fun onRoomsNumberChanged(value: Int) {
+    fun onPropertyTypeSelected(propertyType: String) {
+        formMutableStateFlow.update {
+            it.copy(propertyType = propertyType)
+        }
+    }
 
+    fun onAgentSelected(agent: String) {
+        formMutableStateFlow.update {
+            it.copy(agent = agent)
+        }
+    }
+
+    fun onAddressChanged(address: String) {
+        formMutableStateFlow.update {
+            it.copy(address = address)
+        }
+    }
+
+    fun onPriceChanged(price: String) {
+        formMutableStateFlow.update {
+            it.copy(price = price)
+        }
+    }
+
+    fun onSurfaceChanged(surface: String) {
+        formMutableStateFlow.update {
+            it.copy(surface = surface)
+        }
+    }
+
+    fun onPictureFromStorageSelected(uri: Uri) {
+        val pictureId = 0L
+        formMutableStateFlow.update {
+            it.copy(
+                pictureUris = it.pictureUris + PicturePreviewStateItem.AddPropertyPicturePreview(
+                    id = pictureId + 1L,
+                    uri = NativePhoto.Uri(uri.toString()),
+                    description = "",
+                    isFeatured = false,
+                    onDeleteEvent = EquatableCallback { },
+                    onFeaturedEvent = EquatableCallback { },
+                    onDescriptionChanged = EquatableCallback { },
+                )
+            )
+        }
+    }
+
+    fun onRoomsNumberChanged(value: Int) {
+        formMutableStateFlow.update {
+            it.copy(nbRooms = value.toString())
+        }
     }
 
     fun onBedroomsNumberChanged(value: Int) {
-
+        formMutableStateFlow.update {
+            it.copy(nbBedrooms = value.toString())
+        }
     }
 
     fun onBathroomsNumberChanged(value: Int) {
-
+        formMutableStateFlow.update {
+            it.copy(nbBathrooms = value.toString())
+        }
     }
 }
