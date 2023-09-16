@@ -19,6 +19,7 @@
         <activity
             android:name=".ui.blank.BlankActivity"
             android:exported="false"
+            android:parentActivityName=".ui.main.MainActivity"
             android:label="@string/title_activity_blank"
             android:theme="@style/Theme.RealEstateManager" />
         <activity

@@ -2,7 +2,10 @@ package com.emplk.realestatemanager.ui.detail
 
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -20,6 +23,11 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
 
     companion object {
         fun newInstance() = DetailFragment()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

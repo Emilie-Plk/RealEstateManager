@@ -7,6 +7,7 @@ import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdFlowUseCase
 import com.emplk.realestatemanager.domain.navigation.GetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.navigation.GetToolbarSubtitleUseCase
+import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.ADD_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.DETAIL_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.EDIT_FRAGMENT
@@ -61,25 +62,7 @@ class MainViewModel @Inject constructor(
                     )
                 }
 
-                EDIT_FRAGMENT -> if (!isTablet) {
-                    emit(
-                        MainViewState(
-                            false,
-                            isFilterAppBarButtonVisible = false,
-                            isAddAppBarButtonVisible = false,
-                            subtitle = toolbarSubtitle
-                        )
-                    )
-                } else {
-                    emit(
-                        MainViewState(
-                            false,
-                            isFilterAppBarButtonVisible = true,
-                            isAddAppBarButtonVisible = true,
-                            subtitle = null
-                        )
-                    )
-                }
+                EDIT_FRAGMENT -> Unit
 
                 FILTER_FRAGMENT -> if (!isTablet) {
                     emit(
@@ -101,25 +84,7 @@ class MainViewModel @Inject constructor(
                     )
                 }
 
-                ADD_FRAGMENT -> if (!isTablet) {
-                    emit(
-                        MainViewState(
-                            isAddFabVisible = false,
-                            isFilterAppBarButtonVisible = true,
-                            isAddAppBarButtonVisible = false,
-                            subtitle = toolbarSubtitle
-                        )
-                    )
-                } else {
-                    emit(
-                        MainViewState(
-                            isAddFabVisible = false,
-                            isFilterAppBarButtonVisible = true,
-                            isAddAppBarButtonVisible = false,
-                            subtitle = null
-                        )
-                    )
-                }
+                ADD_FRAGMENT -> Unit
 
                 DETAIL_FRAGMENT -> if (!isTablet) {
                     emit(
@@ -162,12 +127,13 @@ class MainViewModel @Inject constructor(
                         }
                     }
 
-                ADD_FRAGMENT ->
-                    if (!isTablet) {
-                        emit(Event(MainViewEvent.DisplayAddPropertyFragmentOnPhone))
-                    } else {
-                        emit(Event(MainViewEvent.DisplayAddPropertyFragmentOnTablet))
-                    }
+                ADD_FRAGMENT -> {
+                    emit(Event(MainViewEvent.NavigateToBlank(ADD_FRAGMENT.name)))
+                }
+
+                EDIT_FRAGMENT -> {
+                    emit(Event(MainViewEvent.NavigateToBlank(EDIT_FRAGMENT.name)))
+                }
 
                 DETAIL_FRAGMENT ->
                     if (currentPropertyId >= 1) {
@@ -175,15 +141,6 @@ class MainViewModel @Inject constructor(
                             emit(Event(MainViewEvent.DisplayDetailFragmentOnPhone))
                         } else {
                             emit(Event(MainViewEvent.DisplayDetailFragmentOnTablet))
-                        }
-                    }
-
-                EDIT_FRAGMENT ->
-                    if (currentPropertyId >= 1) {
-                        if (!isTablet) {
-                            emit(Event(MainViewEvent.DisplayEditPropertyFragmentOnPhone))
-                        } else {
-                            emit(Event(MainViewEvent.DisplayEditPropertyFragmentOnTablet))
                         }
                     }
 

@@ -1,5 +1,7 @@
 package com.emplk.realestatemanager.ui.main
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -7,17 +9,15 @@ import android.view.MenuItem
 import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.commitNow
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.MainActivityBinding
-import com.emplk.realestatemanager.ui.add.AddPropertyFragment
-import com.emplk.realestatemanager.ui.blank.BlankFragment
+import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
+import com.emplk.realestatemanager.ui.blank.BlankActivity
 import com.emplk.realestatemanager.ui.detail.DetailFragment
-import com.emplk.realestatemanager.ui.edit.EditPropertyFragment
 import com.emplk.realestatemanager.ui.filter.FilterPropertiesFragment
 import com.emplk.realestatemanager.ui.property_list.PropertiesFragment
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
@@ -27,17 +27,21 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
+    companion object {
+        fun navigate(context: Context) {
+            val intent = Intent(context, MainActivity::class.java)
+            context.startActivity(intent)
+        }
+
+        private const val PROPERTIES_FRAGMENT_TAG = "PROPERTIES_FRAGMENT_TAG"
+        private const val DETAIL_FRAGMENT_TAG = "DETAIL_FRAGMENT_TAG"
+        private const val FILTER_FRAGMENT_TAG = "FILTER_FRAGMENT_TAG"
+    }
+
+
     private val binding by viewBinding { MainActivityBinding.inflate(it) }
     private val viewModel by viewModels<MainViewModel>()
 
-    private companion object {
-        private const val PROPERTIES_FRAGMENT_TAG = "PROPERTIES_FRAGMENT_TAG"
-        private const val DETAIL_FRAGMENT_TAG = "DETAIL_FRAGMENT_TAG"
-        private const val ADD_FRAGMENT_TAG = "ADD_FRAGMENT_TAG"
-        private const val EDIT_FRAGMENT_TAG = "EDIT_FRAGMENT_TAG"
-        private const val FILTER_FRAGMENT_TAG = "FILTER_FRAGMENT_TAG"
-        private const val BLANK_FRAGMENT_TAG = "BLANK_FRAGMENT_TAG"
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,39 +96,6 @@ class MainActivity : AppCompatActivity() {
                     )
                 }
 
-                MainViewEvent.DisplayPropertyListFragmentWithNoSelectedPropertyOnTablet -> {
-                    displayFragment(
-                        binding.mainFrameLayoutContainerProperties.id,
-                        PROPERTIES_FRAGMENT_TAG,
-                        PropertiesFragment.newInstance()
-                    )
-
-                    binding.mainFrameLayoutContainerDetail?.id?.let {
-                        displayFragment(
-                            it,
-                            BLANK_FRAGMENT_TAG,
-                            BlankFragment.newInstance()
-                        )
-                    }
-                }
-
-                MainViewEvent.DisplayAddPropertyFragmentOnPhone -> {
-                    resetConstraintSet()
-                    displayFragment(
-                        binding.mainFrameLayoutContainerProperties.id,
-                        ADD_FRAGMENT_TAG,
-                        AddPropertyFragment.newInstance()
-                    )
-                }
-
-                MainViewEvent.DisplayAddPropertyFragmentOnTablet -> {
-                    adjustConstraintSet()
-                    displayFragment(
-                        binding.mainFrameLayoutContainerProperties.id,
-                        ADD_FRAGMENT_TAG,
-                        AddPropertyFragment.newInstance()
-                    )
-                }
 
                 MainViewEvent.DisplayDetailFragmentOnPhone -> {
                     val existingFragment = supportFragmentManager.findFragmentByTag(DETAIL_FRAGMENT_TAG)
@@ -141,14 +112,13 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 MainViewEvent.DisplayDetailFragmentOnTablet -> {
-                    resetConstraintSet()
                     val existingFragment = supportFragmentManager.findFragmentByTag(DETAIL_FRAGMENT_TAG)
                     if (existingFragment != null) {
                         supportFragmentManager.commitNow {
                             remove(existingFragment)
                         }
                     }
-                  
+
                     binding.mainFrameLayoutContainerDetail?.id?.let {
                         displayFragment(
                             it,
@@ -163,31 +133,6 @@ class MainActivity : AppCompatActivity() {
                     )
                 }
 
-                MainViewEvent.DisplayEditPropertyFragmentOnPhone -> {
-                    displayFragment(
-                        binding.mainFrameLayoutContainerProperties.id,
-                        EDIT_FRAGMENT_TAG,
-                        EditPropertyFragment.newInstance()
-                    )
-                }
-
-                MainViewEvent.DisplayEditPropertyFragmentOnTablet -> {
-                    adjustConstraintSet()
-                    val detailFragment = supportFragmentManager.findFragmentByTag(DETAIL_FRAGMENT_TAG)
-
-                    if (detailFragment != null) {
-                        supportFragmentManager.commit {
-                            remove(detailFragment)
-                        }
-                    }
-                    displayFragment(
-                        binding.mainFrameLayoutContainerProperties.id,
-                        EDIT_FRAGMENT_TAG,
-                        EditPropertyFragment.newInstance()
-                    )
-                }
-
-
                 MainViewEvent.DisplayFilterPropertiesFragmentOnPhone -> {
                     displayFragment(
                         binding.mainFrameLayoutContainerProperties.id,
@@ -197,7 +142,6 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 MainViewEvent.DisplayFilterPropertiesFragmentOnTablet -> {
-                    resetConstraintSet()
                     displayFragment(
                         binding.mainFrameLayoutContainerProperties.id,
                         PROPERTIES_FRAGMENT_TAG,
@@ -212,6 +156,19 @@ class MainActivity : AppCompatActivity() {
                         )
                     }
                 }
+
+                MainViewEvent.DisplayPropertyListFragmentWithNoSelectedPropertyOnTablet -> TODO()
+
+                MainViewEvent.NavigateToBlank(NavigationFragmentType.ADD_FRAGMENT.name) -> {
+                    startActivity(BlankActivity.navigate(this, NavigationFragmentType.ADD_FRAGMENT.name))
+                }
+
+
+                MainViewEvent.NavigateToBlank(NavigationFragmentType.EDIT_FRAGMENT.name) -> {
+                    startActivity(BlankActivity.navigate(this, NavigationFragmentType.EDIT_FRAGMENT.name))
+                }
+
+                is MainViewEvent.NavigateToBlank -> TODO()
             }
         }
     }
@@ -240,26 +197,6 @@ class MainActivity : AppCompatActivity() {
 
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    private fun adjustConstraintSet() {
-        ConstraintSet().connect(
-            R.id.main_FrameLayout_container_properties,
-            ConstraintSet.END,
-            ConstraintSet.PARENT_ID,
-            ConstraintSet.END
-        )
-        binding.mainViewSeparator?.isVisible = false
-    }
-
-    private fun resetConstraintSet() {
-        ConstraintSet().connect(
-            R.id.main_FrameLayout_container_properties,
-            ConstraintSet.END,
-            R.id.main_View_separator,
-            ConstraintSet.START
-        )
-        binding.mainViewSeparator?.isVisible = true
     }
 
     private fun displayFragment(containerViewId: Int, fragmentTag: String, fragment: Fragment) {
@@ -297,14 +234,7 @@ class MainActivity : AppCompatActivity() {
         onBackPressedDispatcher.addCallback(this) {
             val backStackCount = supportFragmentManager.backStackEntryCount
             if (backStackCount > 1) {
-                val poppedFragmentTag = supportFragmentManager.getBackStackEntryAt(backStackCount - 1).name
                 supportFragmentManager.popBackStack()
-                supportFragmentManager.commit {
-                    val poppedFragment = supportFragmentManager.findFragmentByTag(poppedFragmentTag)
-                    if (poppedFragment != null) {
-                        remove(poppedFragment)
-                    }
-                }
             } else {
                 finish()
             }
