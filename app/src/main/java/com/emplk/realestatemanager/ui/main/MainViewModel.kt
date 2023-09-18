@@ -7,7 +7,6 @@ import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdFlowUseCase
 import com.emplk.realestatemanager.domain.navigation.GetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.navigation.GetToolbarSubtitleUseCase
-import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.ADD_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.DETAIL_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.EDIT_FRAGMENT
@@ -116,16 +115,7 @@ class MainViewModel @Inject constructor(
             getCurrentPropertyIdFlowUseCase.invoke(),
         ) { isTablet, navigationType, currentPropertyId ->
             when (navigationType) {
-                LIST_FRAGMENT ->
-                    if (!isTablet) {
-                        emit(Event(MainViewEvent.DisplayPropertyListFragmentOnPhone))
-                    } else {
-                        if (currentPropertyId >= 1) {
-                            emit(Event(MainViewEvent.DisplayPropertyListFragmentOnTablet))
-                        } else {
-                            emit(Event(MainViewEvent.DisplayPropertyListFragmentWithNoSelectedPropertyOnTablet))
-                        }
-                    }
+                LIST_FRAGMENT -> emit(Event(MainViewEvent.DisplayPropertyList))
 
                 ADD_FRAGMENT -> {
                     emit(Event(MainViewEvent.NavigateToBlank(ADD_FRAGMENT.name)))

@@ -1,9 +1,7 @@
 package com.emplk.realestatemanager.ui.main
 
 sealed class MainViewEvent {
-    object DisplayPropertyListFragmentOnPhone : MainViewEvent()
-    object DisplayPropertyListFragmentWithNoSelectedPropertyOnTablet : MainViewEvent()
-    object DisplayPropertyListFragmentOnTablet : MainViewEvent()
+    object DisplayPropertyList : MainViewEvent()
 
     object DisplayDetailFragmentOnPhone : MainViewEvent()
     object DisplayDetailFragmentOnTablet : MainViewEvent()
