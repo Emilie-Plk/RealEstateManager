@@ -37,6 +37,24 @@ class PicturePreviewRepositoryRoom @Inject constructor(
             ) == 1
         }
 
+    override suspend fun upsert(picturePreviewEntity: PicturePreviewEntity): Long =
+        withContext(coroutineDispatcherProvider.io) {
+            picturePreviewDao.upsert(
+                picturePreviewMapper.mapToPicturePreviewDto(picturePreviewEntity)
+            )
+        }
+
+    override suspend fun updateDescription(pictureId: Long, newDescription: String?) =
+        withContext(coroutineDispatcherProvider.io) {
+            picturePreviewDao.updateDescription(pictureId, newDescription)
+        }
+
+    override suspend fun updateFeaturedPicture(pictureId: Long, newFeaturedPicture: Boolean) =
+        withContext(coroutineDispatcherProvider.io) {
+            picturePreviewDao.updateFeaturedPicture(pictureId, newFeaturedPicture)
+        }
+
+
     override suspend fun delete(picturePreviewId: Long): Boolean = withContext(coroutineDispatcherProvider.io) {
         picturePreviewDao.delete(picturePreviewId) == 1
     }
