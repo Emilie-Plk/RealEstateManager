@@ -17,8 +17,13 @@ import com.emplk.realestatemanager.data.picture.PictureDao
 import com.emplk.realestatemanager.data.picture.PictureDtoEntity
 import com.emplk.realestatemanager.data.property.PropertyDao
 import com.emplk.realestatemanager.data.property.PropertyDtoEntity
+import com.emplk.realestatemanager.data.property_form.PropertyFormDao
+import com.emplk.realestatemanager.data.property_form.amenity.AmenityFormDao
+import com.emplk.realestatemanager.data.property_form.amenity.AmenityFormDto
+import com.emplk.realestatemanager.data.property_form.location.LocationFormDao
+import com.emplk.realestatemanager.data.property_form.location.LocationFormDto
 import com.emplk.realestatemanager.data.property_form.picture_preview.PicturePreviewDao
-import com.emplk.realestatemanager.data.property_form.picture_preview.PicturePreviewDto
+import com.emplk.realestatemanager.data.property_form.picture_preview.PicturePreviewFormDto
 import com.emplk.realestatemanager.data.utils.type_converters.BigDecimalTypeConverter
 import com.emplk.realestatemanager.data.utils.type_converters.LocalDateTimeTypeConverter
 import com.emplk.realestatemanager.domain.amenity.AmenityType
@@ -33,7 +38,9 @@ import java.time.LocalDateTime
         PictureDtoEntity::class,
         LocationDtoEntity::class,
         AmenityDtoEntity::class,
-        PicturePreviewDto::class
+        PicturePreviewFormDto::class,
+        LocationFormDto::class,
+        AmenityFormDto::class,
     ],
     version = 1,
     exportSchema = false
@@ -48,7 +55,10 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun getLocationDao(): LocationDao
     abstract fun getPictureDao(): PictureDao
     abstract fun getAmenityDao(): AmenityDao
+    abstract fun getPropertyFormDao(): PropertyFormDao
     abstract fun getPicturePreviewDao(): PicturePreviewDao
+    abstract fun getLocationFormDao(): LocationFormDao
+    abstract fun getAmenityFormDao(): AmenityFormDao
 
     companion object {
         private const val DATABASE_NAME = "RealEstateManager_database"

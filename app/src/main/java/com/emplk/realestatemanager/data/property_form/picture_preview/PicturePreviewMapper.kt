@@ -5,17 +5,21 @@ import javax.inject.Inject
 
 class PicturePreviewMapper @Inject constructor() {
 
-    fun mapToPicturePreviewEntity(picturePreviewDto: PicturePreviewDto): PicturePreviewEntity =
+    fun mapToPicturePreviewEntity(picturePreviewFormDto: PicturePreviewFormDto): PicturePreviewEntity =
         PicturePreviewEntity(
-            id = picturePreviewDto.id,
-            uri = picturePreviewDto.uri,
-            description = picturePreviewDto.description,
-            isFeatured = picturePreviewDto.isFeatured,
+            id = picturePreviewFormDto.id,
+            uri = picturePreviewFormDto.uri,
+            description = picturePreviewFormDto.description,
+            isFeatured = picturePreviewFormDto.isFeatured,
         )
 
-    fun mapToPicturePreviewDto(picturePreviewEntity: PicturePreviewEntity): PicturePreviewDto =
-        PicturePreviewDto(
+    fun mapToPicturePreviewDto(
+        picturePreviewEntity: PicturePreviewEntity,
+        propertyFormId: Long
+    ): PicturePreviewFormDto =
+        PicturePreviewFormDto(
             id = picturePreviewEntity.id,
+            propertyFormId = propertyFormId,
             uri = picturePreviewEntity.uri,
             description = picturePreviewEntity.description,
             isFeatured = picturePreviewEntity.isFeatured,

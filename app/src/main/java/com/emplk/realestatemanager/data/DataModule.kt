@@ -7,6 +7,9 @@ import com.emplk.realestatemanager.data.amenity.AmenityDao
 import com.emplk.realestatemanager.data.location.LocationDao
 import com.emplk.realestatemanager.data.picture.PictureDao
 import com.emplk.realestatemanager.data.property.PropertyDao
+import com.emplk.realestatemanager.data.property_form.PropertyFormDao
+import com.emplk.realestatemanager.data.property_form.amenity.AmenityFormDao
+import com.emplk.realestatemanager.data.property_form.location.LocationFormDao
 import com.emplk.realestatemanager.data.property_form.picture_preview.PicturePreviewDao
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -53,9 +56,22 @@ class DataModule {
     @Provides
     fun provideAmenityDao(appDatabase: AppDatabase): AmenityDao = appDatabase.getAmenityDao()
 
+
+    @Singleton
+    @Provides
+    fun providePropertyFormDao(appDatabase: AppDatabase): PropertyFormDao = appDatabase.getPropertyFormDao()
+
     @Singleton
     @Provides
     fun providePicturePreviewDao(appDatabase: AppDatabase): PicturePreviewDao = appDatabase.getPicturePreviewDao()
+
+    @Singleton
+    @Provides
+    fun provideLocationFormDao(appDatabase: AppDatabase): LocationFormDao = appDatabase.getLocationFormDao()
+
+    @Singleton
+    @Provides
+    fun provideAmenityFormDao(appDatabase: AppDatabase): AmenityFormDao = appDatabase.getAmenityFormDao()
 
     @Singleton
     @Provides
