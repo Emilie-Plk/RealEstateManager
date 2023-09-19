@@ -13,7 +13,7 @@ interface LocationFormDao {
     suspend fun insert(locationFormDto: LocationFormDto): Long
 
     @Query("SELECT * FROM location_forms WHERE property_form_id = :propertyFormId LIMIT 1")
-    suspend fun getAsFlow(propertyFormId: Long): Flow<LocationFormDto>
+    fun getAsFlow(propertyFormId: Long): Flow<LocationFormDto>
 
     @Update
     suspend fun update(locationFormDto: LocationFormDto): Int

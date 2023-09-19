@@ -106,7 +106,7 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
 
             checkboxIds.forEach {
                 it.setOnCheckedChangeListener { _, _ ->
-                        viewModel.onAmenityAdded(it.text.toString())
+                        viewModel.onAmenityAdded(it.id)
                 }
             }
         }

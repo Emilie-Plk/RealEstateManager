@@ -8,24 +8,22 @@ import androidx.lifecycle.viewModelScope
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.agent.GetAgentsFlowUseCase
-import com.emplk.realestatemanager.domain.amenity.AmenityEntity
 import com.emplk.realestatemanager.domain.amenity.AmenityType
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
-import com.emplk.realestatemanager.domain.location.LocationEntity
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
-import com.emplk.realestatemanager.domain.pictures.PictureEntity
 import com.emplk.realestatemanager.domain.property.AddPropertyUseCase
-import com.emplk.realestatemanager.domain.property.PropertyEntity
+import com.emplk.realestatemanager.domain.property_form.amenity.AddAmenityPropertyFormUseCase
+import com.emplk.realestatemanager.domain.property_form.amenity.AmenityFormEntity
+import com.emplk.realestatemanager.domain.property_form.amenity.DeleteAmenityPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.AddPicturePreviewUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.DeletePicturePreviewUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.GetPicturePreviewFlowUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.PicturePreviewEntity
 import com.emplk.realestatemanager.domain.property_form.picture_preview.UpdateFeaturedPictureUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.UpdatePicturePreviewDescriptionUseCase
-import com.emplk.realestatemanager.domain.property_form.picture_preview.UpsertPicturePreviewUseCase
 import com.emplk.realestatemanager.domain.property_type.GetPropertyTypeFlowUseCase
 import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem
 import com.emplk.realestatemanager.ui.add.picture_preview.PicturePreviewStateItem
@@ -42,7 +40,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
-import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -53,14 +50,19 @@ class AddPropertyViewModel @Inject constructor(
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
     private val getAgentsFlowUseCase: GetAgentsFlowUseCase,
     private val addPicturePreviewUseCase: AddPicturePreviewUseCase,
-    private val upsertPicturePreviewUseCase: UpsertPicturePreviewUseCase,
     private val updatePicturePreviewDescriptionUseCase: UpdatePicturePreviewDescriptionUseCase,
+    private val addAmenityPropertyFormUseCase: AddAmenityPropertyFormUseCase,
+    private val deleteAmenityPropertyFormUseCase: DeleteAmenityPropertyFormUseCase,
     private val updateFeaturedPictureUseCase: UpdateFeaturedPictureUseCase,
     private val getPicturePreviewUseCase: GetPicturePreviewFlowUseCase,
     private val deletePicturePreviewUseCase: DeletePicturePreviewUseCase,
     private val getPropertyTypeFlowUseCase: GetPropertyTypeFlowUseCase,
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : ViewModel() {
+
+    companion object {
+        private const val PROPERTY_FORM_ID = 1L
+    }
 
     private data class AddPropertyForm(
         val propertyType: String? = null,
@@ -71,7 +73,7 @@ class AddPropertyViewModel @Inject constructor(
         val nbRooms: Int = 0,
         val nbBathrooms: Int = 0,
         val nbBedrooms: Int = 0,
-        val amenities: List<String> = emptyList(),
+        val amenities: List<AmenityType> = emptyList(),
         val agent: String? = null,
         val pictures: List<PicturePreviewStateItem.AddPropertyPicturePreview> = emptyList(),
     )
@@ -89,64 +91,14 @@ class AddPropertyViewModel @Inject constructor(
             emit(Event(AddPropertyViewEvent.OnAddPropertyClicked))
             viewModelScope.launch(coroutineDispatcherProvider.io) {
                 isAddingPropertyInDatabaseMutableStateFlow.value = true
-                val success = addPropertyUseCase.invoke(
-                    PropertyEntity(
-                        type = "Villa",
-                        price = BigDecimal(15234574845),
-                        surface = 326565,
-                        rooms = 10,
-                        bedrooms = 5,
-                        bathrooms = 5,
-                        description = "Splendid villa with swimming pool and garden",
-                        agentName = "Michel",
-                        isAvailableForSale = true,
-                        isSold = false,
-                        entryDate = LocalDateTime.now(),
-                        saleDate = null,
-                        amenities = listOf(
-                            AmenityEntity(
-                                type = AmenityType.PARK,
-                                propertyId = 0,
-                            ),
-                            AmenityEntity(
-                                type = AmenityType.SCHOOL,
-                                propertyId = 0,
-                            ),
-                            AmenityEntity(
-                                type = AmenityType.GYM,
-                                propertyId = 0,
-                            )
-                        ),
-                        pictures = listOf(
-                            PictureEntity(
-                                uri = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmlsbGF8ZW58MHx8MHx8fDA%3D&w=300&q=300",
-                                description = "Villa",
-                                isFeatured = true,
-                                propertyId = 0,
-                            ),
-                            PictureEntity(
-                                uri = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmlsbGF8ZW58MHx8MHx8fDA%3D&w=300&q=300",
-                                description = "Villa",
-                                isFeatured = false,
-                                propertyId = 0,
-                            ),
-                        ),
-                        location = LocationEntity(
-                            propertyId = 0,
-                            address = "1 rue de la paix",
-                            postalCode = "75000",
-                            city = "Paris",
-                            latitude = 48.8566,
-                            longitude = 2.3522,
-                        )
-                    )
-                )
+                // Time to add property
                 isAddingPropertyInDatabaseMutableStateFlow.value = false
-                isPropertySuccessfullyAddedInDatabaseMutableSharedFlow.tryEmit(success)
+                // isPropertySuccessfullyAddedInDatabaseMutableSharedFlow.tryEmit(success)
             }
 
             isPropertySuccessfullyAddedInDatabaseMutableSharedFlow.collect { success ->
                 if (success) {
+                    // Delete stored form
                     setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
                     emit(
                         Event(
@@ -179,7 +131,10 @@ class AddPropertyViewModel @Inject constructor(
                     nbRooms = form.nbRooms,
                     nbBathrooms = form.nbBathrooms,
                     nbBedrooms = form.nbBedrooms,
-                    amenities = form.amenities,
+                    amenities = form.amenities.map { amenityType ->
+                        amenityType.name
+
+                    },
                     pictures = mapToPicturePreviewStateItems(picturePreviews), // Cannot sort by now
                     agent = form.agent,
                     priceCurrency = when (currencyType) {
@@ -282,6 +237,7 @@ class AddPropertyViewModel @Inject constructor(
         viewModelScope.launch {
             addPicturePreviewUseCase.invoke(
                 PicturePreviewEntity(
+                    propertyFormId = PROPERTY_FORM_ID,
                     uri = uri.toString(),
                     description = "",
                     isFeatured = false,
@@ -308,19 +264,47 @@ class AddPropertyViewModel @Inject constructor(
         }
     }
 
-    fun onAmenityAdded(amenity: String) {
+    fun onAmenityAdded(amenityStringId: Int) {
         val currentAmenities = formMutableStateFlow.value.amenities.toMutableSet()
-        if (currentAmenities.contains(amenity)) {
-            currentAmenities.remove(amenity)
+        val currentAmenityType = mapAmenityStringIdToAmenityType(amenityStringId)
+
+        if (currentAmenities.contains(currentAmenityType)) {
+            viewModelScope.launch {
+                deleteAmenityPropertyFormUseCase.invoke(currentAmenityType.id)
+            }
         } else {
-            currentAmenities.add(amenity)
+            viewModelScope.launch {
+                addAmenityPropertyFormUseCase.invoke(
+                    AmenityFormEntity(
+                        id = currentAmenityType.id,
+                        propertyFormId = PROPERTY_FORM_ID,
+                        type = currentAmenityType.name,
+                    )
+                )
+            }
+            currentAmenities.add(currentAmenityType)
         }
         formMutableStateFlow.update {
             it.copy(amenities = currentAmenities.toList())
         }
     }
 
+
     fun onAddPropertyClicked() {
         onCreateButtonClickedMutableSharedFlow.tryEmit(Unit)
     }
+
+    private fun mapAmenityStringIdToAmenityType(amenityStringId: Int): AmenityType =
+        when (amenityStringId) {
+            R.string.amenity_school -> AmenityType.SCHOOL
+            R.string.amenity_park -> AmenityType.PARK
+            R.string.amenity_shopping_mall -> AmenityType.SHOPPING_MALL
+            R.string.amenity_restaurant -> AmenityType.RESTAURANT
+            R.string.amenity_concierge_service -> AmenityType.CONCIERGE
+            R.string.amenity_gym -> AmenityType.GYM
+            R.string.amenity_public_transportation -> AmenityType.PUBLIC_TRANSPORTATION
+            R.string.amenity_hospital -> AmenityType.HOSPITAL
+            R.string.amenity_library -> AmenityType.LIBRARY
+            else -> throw IllegalArgumentException("Unknown amenity string id")
+        }
 }
