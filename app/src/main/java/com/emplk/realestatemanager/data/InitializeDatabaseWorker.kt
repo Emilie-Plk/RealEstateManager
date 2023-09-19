@@ -6,13 +6,13 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.emplk.realestatemanager.data.amenity.AmenityDao
-import com.emplk.realestatemanager.data.amenity.AmenityDtoEntity
+import com.emplk.realestatemanager.data.amenity.AmenityDto
 import com.emplk.realestatemanager.data.location.LocationDao
-import com.emplk.realestatemanager.data.location.LocationDtoEntity
+import com.emplk.realestatemanager.data.location.LocationDto
 import com.emplk.realestatemanager.data.picture.PictureDao
-import com.emplk.realestatemanager.data.picture.PictureDtoEntity
+import com.emplk.realestatemanager.data.picture.PictureDto
 import com.emplk.realestatemanager.data.property.PropertyDao
-import com.emplk.realestatemanager.data.property.PropertyDtoEntity
+import com.emplk.realestatemanager.data.property.PropertyDto
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.data.utils.fromJson
 import com.google.gson.Gson
@@ -48,10 +48,10 @@ class InitializeDatabaseWorker @AssistedInject constructor(
         val amenitiesAsJson = inputData.getString(KEY_INPUT_DATA_AMENITIES)
 
         if (propertiesAsJson != null && locationsAsJson != null && picturesAsJson != null && amenitiesAsJson != null) {
-            val propertyEntities = gson.fromJson<List<PropertyDtoEntity>>(json = propertiesAsJson)
-            val locationEntities = gson.fromJson<List<LocationDtoEntity>>(json = locationsAsJson)
-            val pictureEntities = gson.fromJson<List<PictureDtoEntity>>(json = picturesAsJson)
-            val amenityEntities = gson.fromJson<List<AmenityDtoEntity>>(json = amenitiesAsJson)
+            val propertyEntities = gson.fromJson<List<PropertyDto>>(json = propertiesAsJson)
+            val locationEntities = gson.fromJson<List<LocationDto>>(json = locationsAsJson)
+            val pictureEntities = gson.fromJson<List<PictureDto>>(json = picturesAsJson)
+            val amenityEntities = gson.fromJson<List<AmenityDto>>(json = amenitiesAsJson)
 
             if (propertyEntities != null && locationEntities != null && pictureEntities != null && amenityEntities != null) {
                 val allJobs =

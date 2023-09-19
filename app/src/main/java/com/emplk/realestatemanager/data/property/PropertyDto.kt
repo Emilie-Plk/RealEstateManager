@@ -11,7 +11,7 @@ import java.time.LocalDateTime
     tableName = "properties",
     indices = [Index(value = ["id"], unique = true)]
 )
-data class PropertyDtoEntity(
+data class PropertyDto(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val type: String,

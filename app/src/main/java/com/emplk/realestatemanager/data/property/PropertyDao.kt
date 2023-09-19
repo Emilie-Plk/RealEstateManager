@@ -11,19 +11,19 @@ import kotlinx.coroutines.flow.Flow
 interface PropertyDao {
 
     @Insert
-    suspend fun insert(propertyDtoEntity: PropertyDtoEntity): Long
+    suspend fun insert(propertyDto: PropertyDto): Long
 
     @Transaction
     @Query("SELECT * FROM properties WHERE id = :propertyId")
     fun getPropertyById(propertyId: Long): Flow<PropertyWithDetails>
 
     @Query("SELECT * FROM properties")
-    fun getProperties(): Flow<List<PropertyDtoEntity>>
+    fun getProperties(): Flow<List<PropertyDto>>
 
     @Transaction
     @Query("SELECT * FROM properties")
     fun getPropertiesWithDetailsFlow(): Flow<List<PropertyWithDetails>>
 
     @Update
-    suspend fun update(propertyDtoEntity: PropertyDtoEntity): Int
+    suspend fun update(propertyDto: PropertyDto): Int
 }

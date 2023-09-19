@@ -10,13 +10,13 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
 import com.emplk.realestatemanager.data.amenity.AmenityDao
-import com.emplk.realestatemanager.data.amenity.AmenityDtoEntity
+import com.emplk.realestatemanager.data.amenity.AmenityDto
 import com.emplk.realestatemanager.data.location.LocationDao
-import com.emplk.realestatemanager.data.location.LocationDtoEntity
+import com.emplk.realestatemanager.data.location.LocationDto
 import com.emplk.realestatemanager.data.picture.PictureDao
-import com.emplk.realestatemanager.data.picture.PictureDtoEntity
+import com.emplk.realestatemanager.data.picture.PictureDto
 import com.emplk.realestatemanager.data.property.PropertyDao
-import com.emplk.realestatemanager.data.property.PropertyDtoEntity
+import com.emplk.realestatemanager.data.property.PropertyDto
 import com.emplk.realestatemanager.data.property_form.PropertyFormDao
 import com.emplk.realestatemanager.data.property_form.amenity.AmenityFormDao
 import com.emplk.realestatemanager.data.property_form.amenity.AmenityFormDto
@@ -34,10 +34,10 @@ import java.time.LocalDateTime
 
 @Database(
     entities = [
-        PropertyDtoEntity::class,
-        PictureDtoEntity::class,
-        LocationDtoEntity::class,
-        AmenityDtoEntity::class,
+        PropertyDto::class,
+        PictureDto::class,
+        LocationDto::class,
+        AmenityDto::class,
         PicturePreviewFormDto::class,
         LocationFormDto::class,
         AmenityFormDto::class,
@@ -78,7 +78,7 @@ abstract class AppDatabase : RoomDatabase() {
                 override fun onCreate(db: SupportSQLiteDatabase) {
                     val propertiesAsJson = gson.toJson(
                         listOf(
-                            PropertyDtoEntity(
+                            PropertyDto(
                                 type = "Flat",
                                 price = BigDecimal(1000000),
                                 surface = 150,
@@ -92,7 +92,7 @@ abstract class AppDatabase : RoomDatabase() {
                                 isSold = false,
                                 agentName = "John Doe"
                             ),
-                            PropertyDtoEntity(
+                            PropertyDto(
                                 type = "Villa",
                                 price = BigDecimal(5000000),
                                 surface = 200,
@@ -106,7 +106,7 @@ abstract class AppDatabase : RoomDatabase() {
                                 isSold = true,
                                 agentName = "Jane Smith"
                             ),
-                            PropertyDtoEntity(
+                            PropertyDto(
                                 type = "Penthouse",
                                 price = BigDecimal(2000000),
                                 surface = 100,
@@ -125,7 +125,7 @@ abstract class AppDatabase : RoomDatabase() {
 
                     val locationsAsJson = gson.toJson(
                         listOf(
-                            LocationDtoEntity(
+                            LocationDto(
                                 propertyId = 1,
                                 latitude = 40.765076,
                                 longitude = -73.976693,
@@ -133,7 +133,7 @@ abstract class AppDatabase : RoomDatabase() {
                                 city = "New York City",
                                 postalCode = "10019",
                             ),
-                            LocationDtoEntity(
+                            LocationDto(
                                 propertyId = 2,
                                 latitude = 40.710525,
                                 longitude = -74.008368,
@@ -141,7 +141,7 @@ abstract class AppDatabase : RoomDatabase() {
                                 city = "New York City",
                                 postalCode = "10038",
                             ),
-                            LocationDtoEntity(
+                            LocationDto(
                                 propertyId = 3,
                                 latitude = 40.765076,
                                 longitude = -73.976693,
@@ -154,55 +154,55 @@ abstract class AppDatabase : RoomDatabase() {
 
                     val picturesAsJson = gson.toJson(
                         listOf(
-                            PictureDtoEntity(
+                            PictureDto(
                                 uri = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmlsbGF8ZW58MHx8MHx8fDA%3D&w=300&q=300",
                                 propertyId = 1,
                                 description = "Front view",
                                 isFeatured = true,
                             ),
-                            PictureDtoEntity(
+                            PictureDto(
                                 uri = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmlsbGF8ZW58MHx8MHx8fDA%3D&w=300&q=300",
                                 propertyId = 1,
                                 description = "Living room",
                                 isFeatured = false,
                             ),
-                            PictureDtoEntity(
+                            PictureDto(
                                 uri = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmlsbGF8ZW58MHx8MHx8fDA%3D&w=300&q=300",
                                 propertyId = 1,
                                 description = "Kitchen",
                                 isFeatured = false,
                             ),
-                            PictureDtoEntity(
+                            PictureDto(
                                 uri = "https://img.freepik.com/photos-gratuite/maison-design-villa-moderne-salon-decloisonne-chambre-privee-aile-grande-terrasse-intimite_1258-169741.jpg?w=300",
                                 propertyId = 2,
                                 description = "Front view",
                                 isFeatured = true,
                             ),
-                            PictureDtoEntity(
+                            PictureDto(
                                 uri = "https://img.freepik.com/photos-gratuite/maison-design-villa-moderne-salon-decloisonne-chambre-privee-aile-grande-terrasse-intimite_1258-169741.jpg?w=300",
                                 propertyId = 2,
                                 description = "Living room",
                                 isFeatured = false,
                             ),
-                            PictureDtoEntity(
+                            PictureDto(
                                 uri = "https://img.freepik.com/photos-gratuite/maison-design-villa-moderne-salon-decloisonne-chambre-privee-aile-grande-terrasse-intimite_1258-169741.jpg?w=300",
                                 propertyId = 2,
                                 description = "Kitchen",
                                 isFeatured = false,
                             ),
-                            PictureDtoEntity(
+                            PictureDto(
                                 uri = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmlsbGF8ZW58MHx8MHx8fDA%3D&w=300&q=300",
                                 propertyId = 3,
                                 description = "Front view",
                                 isFeatured = true,
                             ),
-                            PictureDtoEntity(
+                            PictureDto(
                                 uri = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmlsbGF8ZW58MHx8MHx8fDA%3D&w=300&q=300",
                                 propertyId = 3,
                                 description = "Living room",
                                 isFeatured = false,
                             ),
-                            PictureDtoEntity(
+                            PictureDto(
                                 uri = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmlsbGF8ZW58MHx8MHx8fDA%3D&w=300&q=300",
                                 propertyId = 3,
                                 description = "Kitchen",
@@ -213,43 +213,43 @@ abstract class AppDatabase : RoomDatabase() {
 
                     val amenitiesAsJson = gson.toJson(
                         listOf(
-                            AmenityDtoEntity(
+                            AmenityDto(
                                 name = AmenityType.PARK.name,
                                 propertyId = 1,
                             ),
-                            AmenityDtoEntity(
+                            AmenityDto(
                                 name = AmenityType.GYM.name,
                                 propertyId = 1,
                             ),
-                            AmenityDtoEntity(
+                            AmenityDto(
                                 name = AmenityType.RESTAURANT.name,
                                 propertyId = 1,
                             ),
-                            AmenityDtoEntity(
+                            AmenityDto(
                                 name = AmenityType.SCHOOL.name,
                                 propertyId = 2,
                             ),
-                            AmenityDtoEntity(
+                            AmenityDto(
                                 name = AmenityType.SHOPPING_MALL.name,
                                 propertyId = 2,
                             ),
-                            AmenityDtoEntity(
+                            AmenityDto(
                                 name = AmenityType.PUBLIC_TRANSPORTATION.name,
                                 propertyId = 2,
                             ),
-                            AmenityDtoEntity(
+                            AmenityDto(
                                 name = AmenityType.PARK.name,
                                 propertyId = 3,
                             ),
-                            AmenityDtoEntity(
+                            AmenityDto(
                                 name = AmenityType.CONCIERGE.name,
                                 propertyId = 3,
                             ),
-                            AmenityDtoEntity(
+                            AmenityDto(
                                 name = AmenityType.HOSPITAL.name,
                                 propertyId = 3,
                             ),
-                            AmenityDtoEntity(
+                            AmenityDto(
                                 name = AmenityType.SCHOOL.name,
                                 propertyId = 3,
                             ),

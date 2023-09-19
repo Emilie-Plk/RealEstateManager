@@ -9,14 +9,14 @@ import javax.inject.Inject
 
 class LocationRepositoryRoom @Inject constructor(
     private val locationDao: LocationDao,
-    private val locationDtoEntityMapper: LocationDtoEntityMapper,
+    private val locationMapper: LocationMapper,
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : LocationRepository {
 
     override suspend fun add(locationEntity: LocationEntity, propertyId: Long): Boolean =
         withContext(coroutineDispatcherProvider.io) {
             try {
-                val locationDtoEntity = locationDtoEntityMapper.mapToDtoEntity(locationEntity, propertyId)
+                val locationDtoEntity = locationMapper.mapToDtoEntity(locationEntity, propertyId)
                 locationDao.insert(locationDtoEntity) == 1L
             } catch (e: SQLiteException) {
                 e.printStackTrace()
@@ -26,7 +26,7 @@ class LocationRepositoryRoom @Inject constructor(
 
     override suspend fun update(locationEntity: LocationEntity, propertyId: Long): Boolean =
         withContext(coroutineDispatcherProvider.io) {
-            val locationDtoEntity = locationDtoEntityMapper.mapToDtoEntity(locationEntity, propertyId)
+            val locationDtoEntity = locationMapper.mapToDtoEntity(locationEntity, propertyId)
             locationDao.update(locationDtoEntity) == 1
         }
 }

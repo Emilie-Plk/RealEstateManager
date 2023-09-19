@@ -21,14 +21,10 @@ class PropertyPicturePreviewListAdapter :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PropertyPicturePreviewViewHolder =
         when (PicturePreviewStateItem.Type.values()[viewType]) {
             PicturePreviewStateItem.Type.ADD_PICTURE_PREVIEW ->
-                PropertyPicturePreviewViewHolder.AddPropertyPicturePreview.create(
-                    parent
-                )
+                PropertyPicturePreviewViewHolder.AddPropertyPicturePreview.create(parent)
 
             PicturePreviewStateItem.Type.EDIT_PICTURE_PREVIEW ->
-                PropertyPicturePreviewViewHolder.EditPropertyPicturePreview.create(
-                    parent
-                )
+                PropertyPicturePreviewViewHolder.EditPropertyPicturePreview.create(parent)
         }
 
     override fun onBindViewHolder(
@@ -68,14 +64,14 @@ class PropertyPicturePreviewListAdapter :
                     .error(R.drawable.baseline_villa_24)
                     .into(binding.previewPictureIv)
 
+                binding.previewPictureStarFeaturedIv.setOnClickListener { item.onFeaturedEvent.invoke() }
+
                 binding.previewPictureStarFeaturedIv.setImageResource(
                     if (item.isFeatured) R.drawable.baseline_star_24
                     else R.drawable.baseline_star_border_24
                 )
 
                 binding.previewPictureDeleteIv.setOnClickListener { item.onDeleteEvent.invoke() }
-
-                binding.previewPictureStarFeaturedIv.setOnClickListener { item.onFeaturedEvent.invoke() }
 
                 item.description?.let {
                     binding.previewPictureTitleEt.setText(it)

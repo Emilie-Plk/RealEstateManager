@@ -9,14 +9,14 @@ import javax.inject.Inject
 
 class PictureRepositoryRoom @Inject constructor(
     private val pictureDao: PictureDao,
-    private val pictureDtoEntityMapper: PictureDtoEntityMapper,
+    private val pictureMapper: PictureMapper,
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : PictureRepository {
 
     override suspend fun add(pictureEntity: PictureEntity, propertyId: Long): Boolean =
         withContext(coroutineDispatcherProvider.io) {
             try {
-                val pictureDtoEntity = pictureDtoEntityMapper.mapToDtoEntity(pictureEntity, propertyId)
+                val pictureDtoEntity = pictureMapper.mapToDtoEntity(pictureEntity, propertyId)
                 pictureDao.insert(pictureDtoEntity) == 1L
             } catch (e: SQLiteException) {
                 e.printStackTrace()
@@ -26,7 +26,7 @@ class PictureRepositoryRoom @Inject constructor(
 
     override suspend fun update(pictureEntity: PictureEntity, propertyId: Long): Boolean =
         withContext(coroutineDispatcherProvider.io) {
-            val pictureDtoEntity = pictureDtoEntityMapper.mapToDtoEntity(pictureEntity, propertyId)
+            val pictureDtoEntity = pictureMapper.mapToDtoEntity(pictureEntity, propertyId)
             pictureDao.update(pictureDtoEntity) == 1
         }
 }

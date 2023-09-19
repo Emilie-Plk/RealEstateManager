@@ -4,10 +4,10 @@ import com.emplk.realestatemanager.domain.amenity.AmenityEntity
 import com.emplk.realestatemanager.domain.amenity.AmenityType
 import javax.inject.Inject
 
-class AmenityDtoEntityMapper @Inject constructor() {
+class AmenityMapper @Inject constructor() {
 
     fun mapToDtoEntity(amenity: AmenityEntity, propertyId: Long) =
-        AmenityDtoEntity(
+        AmenityDto(
             id = amenity.id,
             name = amenity.type.name,
             propertyId = propertyId,
@@ -16,13 +16,13 @@ class AmenityDtoEntityMapper @Inject constructor() {
     fun mapToDtoEntities(amenities: List<AmenityEntity>, propertyId: Long) =
         amenities.map { mapToDtoEntity(it, propertyId) }
 
-    fun mapToDomainEntities(amenityDtoEntities: List<AmenityDtoEntity>) =
+    fun mapToDomainEntities(amenityDtoEntities: List<AmenityDto>) =
         amenityDtoEntities.map { mapToDomainEntity(it) }
 
-    private fun mapToDomainEntity(amenityDtoEntity: AmenityDtoEntity) =
+    private fun mapToDomainEntity(amenityDto: AmenityDto) =
         AmenityEntity(
-            id = amenityDtoEntity.id,
-            type = AmenityType.valueOf(amenityDtoEntity.name),
-            propertyId = amenityDtoEntity.propertyId,
+            id = amenityDto.id,
+            type = AmenityType.valueOf(amenityDto.name),
+            propertyId = amenityDto.propertyId,
         )
 }

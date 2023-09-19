@@ -28,7 +28,6 @@ interface PicturePreviewDao {
     @Query("UPDATE picture_previews SET isFeatured = :newFeaturedPicture WHERE id = :pictureId")
     suspend fun updateFeaturedPicture(pictureId: Long, newFeaturedPicture: Boolean)
 
-
     @Query("DELETE FROM picture_previews WHERE id = :picturePreviewId")
     suspend fun delete(picturePreviewId: Long): Int
 }

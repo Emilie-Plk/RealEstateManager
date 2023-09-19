@@ -3,10 +3,10 @@ package com.emplk.realestatemanager.data.picture
 import com.emplk.realestatemanager.domain.pictures.PictureEntity
 import javax.inject.Inject
 
-class PictureDtoEntityMapper @Inject constructor() {
+class PictureMapper @Inject constructor() {
 
-    fun mapToDtoEntity(picture: PictureEntity, propertyId: Long): PictureDtoEntity {
-        return PictureDtoEntity(
+    fun mapToDtoEntity(picture: PictureEntity, propertyId: Long): PictureDto {
+        return PictureDto(
             id = picture.id,
             propertyId = propertyId,
             uri = picture.uri,
@@ -15,9 +15,9 @@ class PictureDtoEntityMapper @Inject constructor() {
         )
     }
 
-    fun mapToDtoEntities(pictures: List<PictureEntity>, propertyId: Long): List<PictureDtoEntity> {
+    fun mapToDtoEntities(pictures: List<PictureEntity>, propertyId: Long): List<PictureDto> {
         return pictures.map {
-            PictureDtoEntity(
+            PictureDto(
                 id = it.id,
                 propertyId = propertyId,
                 uri = it.uri,
@@ -27,17 +27,17 @@ class PictureDtoEntityMapper @Inject constructor() {
         }
     }
 
-    fun mapToDomainEntity(pictureDtoEntity: PictureDtoEntity): PictureEntity {
+    fun mapToDomainEntity(pictureDto: PictureDto): PictureEntity {
         return PictureEntity(
-            id = pictureDtoEntity.id,
-            propertyId = pictureDtoEntity.propertyId,
-            uri = pictureDtoEntity.uri,
-            isFeatured = pictureDtoEntity.isFeatured,
-            description = pictureDtoEntity.description,
+            id = pictureDto.id,
+            propertyId = pictureDto.propertyId,
+            uri = pictureDto.uri,
+            isFeatured = pictureDto.isFeatured,
+            description = pictureDto.description,
         )
     }
 
-    fun mapToDomainEntities(pictureDtoEntities: List<PictureDtoEntity>): List<PictureEntity> {
+    fun mapToDomainEntities(pictureDtoEntities: List<PictureDto>): List<PictureEntity> {
         return pictureDtoEntities.map {
             PictureEntity(
                 id = it.id,
