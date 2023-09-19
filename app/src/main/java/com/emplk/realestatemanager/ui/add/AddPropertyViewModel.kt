@@ -80,8 +80,6 @@ class AddPropertyViewModel @Inject constructor(
 
     private val isEveryFieldFilledMutableStateFlow = MutableStateFlow(false)
     private val isAddingPropertyInDatabaseMutableStateFlow = MutableStateFlow(false)
-    private val picturePreviewsMutableStateFlow =
-        MutableStateFlow<List<PicturePreviewStateItem.AddPropertyPicturePreview>>(emptyList())
     private val isPropertySuccessfullyAddedInDatabaseMutableSharedFlow =
         MutableSharedFlow<Boolean>(extraBufferCapacity = 1)
     private val onCreateButtonClickedMutableSharedFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
@@ -226,7 +224,7 @@ class AddPropertyViewModel @Inject constructor(
                 description = picturePreview.description,
                 isFeatured = picturePreview.isFeatured,
                 onDescriptionChanged = EquatableCallback {
-                   viewModelScope.launch {
+                    viewModelScope.launch {
                         updatePicturePreviewDescriptionUseCase.invoke(picturePreview.id, picturePreview.description)
                     }
                 },
@@ -246,8 +244,7 @@ class AddPropertyViewModel @Inject constructor(
                         updateFeaturedPictureUseCase.invoke(picturePreview.id, true)
                     }
                 },
-
-                )
+            )
         }
     }
 

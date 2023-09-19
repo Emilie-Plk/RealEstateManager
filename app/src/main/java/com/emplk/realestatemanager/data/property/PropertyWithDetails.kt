@@ -2,26 +2,26 @@ package com.emplk.realestatemanager.data.property
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.emplk.realestatemanager.data.amenity.AmenityDtoEntity
-import com.emplk.realestatemanager.data.location.LocationDtoEntity
-import com.emplk.realestatemanager.data.picture.PictureDtoEntity
+import com.emplk.realestatemanager.data.amenity.AmenityDto
+import com.emplk.realestatemanager.data.location.LocationDto
+import com.emplk.realestatemanager.data.picture.PictureDto
 
 data class PropertyWithDetails(
     @Embedded
-    val property: PropertyDtoEntity,
+    val property: PropertyDto,
     @Relation(
-        entity = PictureDtoEntity::class,
+        entity = PictureDto::class,
         parentColumn = "id",
         entityColumn = "property_id"
-    ) val pictures: List<PictureDtoEntity>,
+    ) val pictures: List<PictureDto>,
     @Relation(
-        entity = LocationDtoEntity::class,
+        entity = LocationDto::class,
         parentColumn = "id",
         entityColumn = "property_id"
-    ) val location: LocationDtoEntity,
+    ) val location: LocationDto,
     @Relation(
-        entity = AmenityDtoEntity::class,
+        entity = AmenityDto::class,
         parentColumn = "id",
         entityColumn = "property_id"
-    ) val amenities: List<AmenityDtoEntity> = emptyList(),
+    ) val amenities: List<AmenityDto> = emptyList(),
 )

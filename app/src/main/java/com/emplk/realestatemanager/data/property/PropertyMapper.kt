@@ -1,21 +1,21 @@
 package com.emplk.realestatemanager.data.property
 
-import com.emplk.realestatemanager.data.amenity.AmenityDtoEntity
-import com.emplk.realestatemanager.data.amenity.AmenityDtoEntityMapper
-import com.emplk.realestatemanager.data.location.LocationDtoEntity
-import com.emplk.realestatemanager.data.location.LocationDtoEntityMapper
-import com.emplk.realestatemanager.data.picture.PictureDtoEntity
-import com.emplk.realestatemanager.data.picture.PictureDtoEntityMapper
+import com.emplk.realestatemanager.data.amenity.AmenityDto
+import com.emplk.realestatemanager.data.amenity.AmenityMapper
+import com.emplk.realestatemanager.data.location.LocationDto
+import com.emplk.realestatemanager.data.location.LocationMapper
+import com.emplk.realestatemanager.data.picture.PictureDto
+import com.emplk.realestatemanager.data.picture.PictureMapper
 import com.emplk.realestatemanager.domain.property.PropertyEntity
 import javax.inject.Inject
 
 class PropertyMapper @Inject constructor(
-    private val locationDtoEntityMapper: LocationDtoEntityMapper,
-    private val pictureDtoEntityMapper: PictureDtoEntityMapper,
-    private val amenityDtoEntityMapper: AmenityDtoEntityMapper,
+    private val locationMapper: LocationMapper,
+    private val pictureMapper: PictureMapper,
+    private val amenityMapper: AmenityMapper,
 ) {
 
-    fun mapToDtoEntity(property: PropertyEntity) = PropertyDtoEntity(
+    fun mapToDtoEntity(property: PropertyEntity) = PropertyDto(
         id = property.id,
         type = property.type,
         price = property.price,
@@ -33,26 +33,26 @@ class PropertyMapper @Inject constructor(
 
 
     fun mapToDomainEntity(
-        propertyDtoEntity: PropertyDtoEntity,
-        locationDtoEntity: LocationDtoEntity,
-        pictureDtoEntities: List<PictureDtoEntity>,
-        amenityDtoEntities: List<AmenityDtoEntity>,
+        propertyDto: PropertyDto,
+        locationDto: LocationDto,
+        pictureDtoEntities: List<PictureDto>,
+        amenityDtoEntities: List<AmenityDto>,
     ) = PropertyEntity(
-        id = propertyDtoEntity.id,
-        type = propertyDtoEntity.type,
-        price = propertyDtoEntity.price,
-        surface = propertyDtoEntity.surface,
-        location = locationDtoEntityMapper.mapToDomainEntity(locationDtoEntity),
-        pictures = pictureDtoEntityMapper.mapToDomainEntities(pictureDtoEntities),
-        amenities = amenityDtoEntityMapper.mapToDomainEntities(amenityDtoEntities),
-        rooms = propertyDtoEntity.rooms,
-        bedrooms = propertyDtoEntity.bedrooms,
-        bathrooms = propertyDtoEntity.bathrooms,
-        description = propertyDtoEntity.description,
-        agentName = propertyDtoEntity.agentName,
-        isAvailableForSale = propertyDtoEntity.isAvailableForSale,
-        isSold = propertyDtoEntity.isSold,
-        entryDate = propertyDtoEntity.entryDate,
-        saleDate = propertyDtoEntity.saleDate,
+        id = propertyDto.id,
+        type = propertyDto.type,
+        price = propertyDto.price,
+        surface = propertyDto.surface,
+        location = locationMapper.mapToDomainEntity(locationDto),
+        pictures = pictureMapper.mapToDomainEntities(pictureDtoEntities),
+        amenities = amenityMapper.mapToDomainEntities(amenityDtoEntities),
+        rooms = propertyDto.rooms,
+        bedrooms = propertyDto.bedrooms,
+        bathrooms = propertyDto.bathrooms,
+        description = propertyDto.description,
+        agentName = propertyDto.agentName,
+        isAvailableForSale = propertyDto.isAvailableForSale,
+        isSold = propertyDto.isSold,
+        entryDate = propertyDto.entryDate,
+        saleDate = propertyDto.saleDate,
     )
 }

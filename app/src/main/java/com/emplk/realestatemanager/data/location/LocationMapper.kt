@@ -3,10 +3,10 @@ package com.emplk.realestatemanager.data.location
 import com.emplk.realestatemanager.domain.location.LocationEntity
 import javax.inject.Inject
 
-class LocationDtoEntityMapper @Inject constructor() {
+class LocationMapper @Inject constructor() {
 
     fun mapToDtoEntity(locationEntity: LocationEntity, propertyId: Long) =
-        LocationDtoEntity(
+        LocationDto(
             id = locationEntity.id,
             propertyId = propertyId,
             address = locationEntity.address,
@@ -16,14 +16,14 @@ class LocationDtoEntityMapper @Inject constructor() {
             longitude = locationEntity.longitude,
         )
 
-    fun mapToDomainEntity(locationDtoEntity: LocationDtoEntity) =
+    fun mapToDomainEntity(locationDto: LocationDto) =
         LocationEntity(
-            id = locationDtoEntity.id,
-            propertyId = locationDtoEntity.propertyId,
-            address = locationDtoEntity.address,
-            city = locationDtoEntity.city,
-            postalCode = locationDtoEntity.postalCode,
-            latitude = locationDtoEntity.latitude,
-            longitude = locationDtoEntity.longitude,
+            id = locationDto.id,
+            propertyId = locationDto.propertyId,
+            address = locationDto.address,
+            city = locationDto.city,
+            postalCode = locationDto.postalCode,
+            latitude = locationDto.latitude,
+            longitude = locationDto.longitude,
         )
 }

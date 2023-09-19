@@ -9,13 +9,13 @@ import javax.inject.Inject
 
 class AmenityRepositoryRoom @Inject constructor(
     private val amenityDao: AmenityDao,
-    private val amenityDtoEntityMapper: AmenityDtoEntityMapper,
+    private val amenityMapper: AmenityMapper,
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : AmenityRepository {
     override suspend fun addAmenity(amenityEntity: AmenityEntity, propertyId: Long): Boolean =
         withContext(coroutineDispatcherProvider.io) {
             try {
-                val amenityDtoEntity = amenityDtoEntityMapper.mapToDtoEntity(amenityEntity, propertyId)
+                val amenityDtoEntity = amenityMapper.mapToDtoEntity(amenityEntity, propertyId)
                 amenityDao.insert(amenityDtoEntity) == 1L
             } catch (e: SQLiteException) {
                 e.printStackTrace()
@@ -25,7 +25,7 @@ class AmenityRepositoryRoom @Inject constructor(
 
     override suspend fun updateAmenity(amenityEntity: AmenityEntity, propertyId: Long): Boolean =
         withContext(coroutineDispatcherProvider.io) {
-            val amenityDtoEntity = amenityDtoEntityMapper.mapToDtoEntity(amenityEntity, propertyId)
+            val amenityDtoEntity = amenityMapper.mapToDtoEntity(amenityEntity, propertyId)
             amenityDao.update(amenityDtoEntity) == 1
         }
 }

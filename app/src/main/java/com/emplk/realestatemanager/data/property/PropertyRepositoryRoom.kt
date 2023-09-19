@@ -2,11 +2,11 @@ package com.emplk.realestatemanager.data.property
 
 import android.database.sqlite.SQLiteException
 import com.emplk.realestatemanager.data.amenity.AmenityDao
-import com.emplk.realestatemanager.data.amenity.AmenityDtoEntityMapper
+import com.emplk.realestatemanager.data.amenity.AmenityMapper
 import com.emplk.realestatemanager.data.location.LocationDao
-import com.emplk.realestatemanager.data.location.LocationDtoEntityMapper
+import com.emplk.realestatemanager.data.location.LocationMapper
 import com.emplk.realestatemanager.data.picture.PictureDao
-import com.emplk.realestatemanager.data.picture.PictureDtoEntityMapper
+import com.emplk.realestatemanager.data.picture.PictureMapper
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.property.PropertyEntity
 import com.emplk.realestatemanager.domain.property.PropertyRepository
@@ -26,9 +26,9 @@ class PropertyRepositoryRoom @Inject constructor(
     private val pictureDao: PictureDao,
     private val amenityDao: AmenityDao,
     private val propertyMapper: PropertyMapper,
-    private val locationDtoEntityMapper: LocationDtoEntityMapper,
-    private val pictureDtoEntityMapper: PictureDtoEntityMapper,
-    private val amenityDtoEntityMapper: AmenityDtoEntityMapper,
+    private val locationMapper: LocationMapper,
+    private val pictureMapper: PictureMapper,
+    private val amenityMapper: AmenityMapper,
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : PropertyRepository {
 
@@ -48,20 +48,20 @@ class PropertyRepositoryRoom @Inject constructor(
             val propertyId = propertyIdDeferred.await()
 
             val locationJob = launch {
-                val locationDtoEntity = locationDtoEntityMapper.mapToDtoEntity(propertyEntity.location, propertyId)
+                val locationDtoEntity = locationMapper.mapToDtoEntity(propertyEntity.location, propertyId)
                 locationDao.insert(locationDtoEntity)
             }
 
             val picturesJob = launch {
                 propertyEntity.pictures.map { pictureEntity ->
-                    val pictureDtoEntity = pictureDtoEntityMapper.mapToDtoEntity(pictureEntity, propertyId)
+                    val pictureDtoEntity = pictureMapper.mapToDtoEntity(pictureEntity, propertyId)
                     pictureDao.insert(pictureDtoEntity)
                 }
             }
 
             val amenitiesJob = launch {
                 propertyEntity.amenities.map {
-                    val amenityDtoEntity = amenityDtoEntityMapper.mapToDtoEntity(it, propertyId)
+                    val amenityDtoEntity = amenityMapper.mapToDtoEntity(it, propertyId)
                     amenityDao.insert(amenityDtoEntity)
                 }
             }
