@@ -11,16 +11,16 @@ import kotlinx.coroutines.flow.Flow
 interface PicturePreviewDao {
 
     @Insert
-    suspend fun insert(picturePreviewDto: PicturePreviewDto): Long
+    suspend fun insert(picturePreviewFormDto: PicturePreviewFormDto): Long
 
     @Query("SELECT * FROM picture_previews")
-    fun getAllAsFlow(): Flow<List<PicturePreviewDto>>
+    fun getAllAsFlow(): Flow<List<PicturePreviewFormDto>>
 
     @Update
-    suspend fun update(picturePreviewDto: PicturePreviewDto): Int
+    suspend fun update(picturePreviewFormDto: PicturePreviewFormDto): Int
 
     @Upsert
-    suspend fun upsert(picturePreviewDto: PicturePreviewDto): Long
+    suspend fun upsert(picturePreviewFormDto: PicturePreviewFormDto): Long
 
     @Query("UPDATE picture_previews SET description = :newDescription WHERE id = :pictureId")
     suspend fun updateDescription(pictureId: Long, newDescription: String?)

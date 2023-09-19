@@ -65,7 +65,7 @@ class AddPropertyViewModel @Inject constructor(
     private data class AddPropertyForm(
         val propertyType: String? = null,
         val address: String? = null,
-        val price: String? = null,
+        val price: BigDecimal = BigDecimal.ZERO,
         val surface: String? = null,
         val description: String? = null,
         val nbRooms: Int = 0,
@@ -271,7 +271,7 @@ class AddPropertyViewModel @Inject constructor(
 
     fun onPriceChanged(price: String) {
         formMutableStateFlow.update {
-            it.copy(price = price)
+            it.copy(price = price.toBigDecimal())
         }
     }
 
