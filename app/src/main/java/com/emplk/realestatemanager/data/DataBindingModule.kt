@@ -8,6 +8,7 @@ import com.emplk.realestatemanager.data.location.LocationRepositoryRoom
 import com.emplk.realestatemanager.data.navigation.NavigationRepositoryImpl
 import com.emplk.realestatemanager.data.picture.PictureRepositoryRoom
 import com.emplk.realestatemanager.data.property.PropertyRepositoryRoom
+import com.emplk.realestatemanager.data.property_form.picture_preview.PicturePreviewRepositoryRoom
 import com.emplk.realestatemanager.data.property_type.PropertyTypeRepositoryImpl
 import com.emplk.realestatemanager.data.screen_width.ScreenWidthTypeRepositoryImpl
 import com.emplk.realestatemanager.domain.agent.RealEstateAgentRepository
@@ -18,6 +19,7 @@ import com.emplk.realestatemanager.domain.location.LocationRepository
 import com.emplk.realestatemanager.domain.navigation.NavigationRepository
 import com.emplk.realestatemanager.domain.pictures.PictureRepository
 import com.emplk.realestatemanager.domain.property.PropertyRepository
+import com.emplk.realestatemanager.domain.property_form.picture_preview.PicturePreviewRepository
 import com.emplk.realestatemanager.domain.property_type.PropertyTypeRepository
 import com.emplk.realestatemanager.domain.screen_width.ScreenWidthTypeRepository
 import dagger.Binds
@@ -69,4 +71,8 @@ abstract class DataBindingModule {
     @Singleton
     @Binds
     abstract fun bindPropertyTypeRepository(implementation: PropertyTypeRepositoryImpl): PropertyTypeRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindPicturePreviewRepository(implementation: PicturePreviewRepositoryRoom): PicturePreviewRepository
 }

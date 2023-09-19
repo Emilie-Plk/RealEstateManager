@@ -25,7 +25,7 @@ class PropertyRepositoryRoom @Inject constructor(
     private val locationDao: LocationDao,
     private val pictureDao: PictureDao,
     private val amenityDao: AmenityDao,
-    private val propertyDtoEntityMapper: PropertyDtoEntityMapper,
+    private val propertyMapper: PropertyMapper,
     private val locationDtoEntityMapper: LocationDtoEntityMapper,
     private val pictureDtoEntityMapper: PictureDtoEntityMapper,
     private val amenityDtoEntityMapper: AmenityDtoEntityMapper,
@@ -34,7 +34,7 @@ class PropertyRepositoryRoom @Inject constructor(
 
     override suspend fun add(propertyEntity: PropertyEntity): Long = withContext(coroutineDispatcherProvider.io) {
         try {
-            val propertyDtoEntity = propertyDtoEntityMapper.mapToDtoEntity(propertyEntity)
+            val propertyDtoEntity = propertyMapper.mapToDtoEntity(propertyEntity)
             propertyDao.insert(propertyDtoEntity)
         } catch (e: SQLiteException) {
             e.printStackTrace()
@@ -77,7 +77,7 @@ class PropertyRepositoryRoom @Inject constructor(
         .getPropertiesWithDetailsFlow()
         .map { propertyWithDetailsEntities ->
             propertyWithDetailsEntities.map { propertyWithDetailsEntity ->
-                propertyDtoEntityMapper.mapToDomainEntity(
+                propertyMapper.mapToDomainEntity(
                     propertyWithDetailsEntity.property,
                     propertyWithDetailsEntity.location,
                     propertyWithDetailsEntity.pictures,
@@ -90,7 +90,7 @@ class PropertyRepositoryRoom @Inject constructor(
     override fun getPropertyByIdAsFlow(propertyId: Long): Flow<PropertyEntity> = propertyDao
         .getPropertyById(propertyId)
         .map {
-            propertyDtoEntityMapper.mapToDomainEntity(
+            propertyMapper.mapToDomainEntity(
                 it.property,
                 it.location,
                 it.pictures,
@@ -101,7 +101,7 @@ class PropertyRepositoryRoom @Inject constructor(
 
     override suspend fun update(propertyEntity: PropertyEntity): Int =
         withContext(coroutineDispatcherProvider.io) {
-            val propertyDtoEntity = propertyDtoEntityMapper.mapToDtoEntity(propertyEntity)
+            val propertyDtoEntity = propertyMapper.mapToDtoEntity(propertyEntity)
             propertyDao.update(propertyDtoEntity)
         }
 }
