@@ -3,6 +3,7 @@ package com.emplk.realestatemanager.data.property_form
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 import java.math.BigDecimal
 
@@ -14,8 +15,9 @@ interface PropertyFormDao {
     @Query("SELECT * FROM property_forms WHERE id = :propertyFormId LIMIT 1")
     suspend fun getPropertyForm(propertyFormId: Long): PropertyFormDto
 
+    @Transaction
     @Query("SELECT * FROM property_forms WHERE id = :propertyFormId LIMIT 1")
-    suspend fun getPropertyFormWithDetailsAsFlow(propertyFormId: Long): Flow<PropertyFormWithDetails>
+    fun getPropertyFormWithDetailsAsFlow(propertyFormId: Long): Flow<PropertyFormWithDetails>
 
     @Query("UPDATE property_forms SET type = :newType WHERE id = :propertyFormId")
     suspend fun updateType(propertyFormId: Long, newType: String)

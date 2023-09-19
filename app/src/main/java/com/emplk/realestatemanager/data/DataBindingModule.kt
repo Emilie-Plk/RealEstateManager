@@ -8,6 +8,8 @@ import com.emplk.realestatemanager.data.location.LocationRepositoryRoom
 import com.emplk.realestatemanager.data.navigation.NavigationRepositoryImpl
 import com.emplk.realestatemanager.data.picture.PictureRepositoryRoom
 import com.emplk.realestatemanager.data.property.PropertyRepositoryRoom
+import com.emplk.realestatemanager.data.property_form.PropertyFormRepositoryRoom
+import com.emplk.realestatemanager.data.property_form.amenity.AmenityFormRepositoryRoom
 import com.emplk.realestatemanager.data.property_form.location.LocationFormRepositoryRoom
 import com.emplk.realestatemanager.data.property_form.picture_preview.PicturePreviewRepositoryRoom
 import com.emplk.realestatemanager.data.property_type.PropertyTypeRepositoryImpl
@@ -20,6 +22,8 @@ import com.emplk.realestatemanager.domain.location.LocationRepository
 import com.emplk.realestatemanager.domain.navigation.NavigationRepository
 import com.emplk.realestatemanager.domain.pictures.PictureRepository
 import com.emplk.realestatemanager.domain.property.PropertyRepository
+import com.emplk.realestatemanager.domain.property_form.PropertyFormRepository
+import com.emplk.realestatemanager.domain.property_form.amenity.AmenityFormRepository
 import com.emplk.realestatemanager.domain.property_form.location.LocationFormRepository
 import com.emplk.realestatemanager.domain.property_form.picture_preview.PicturePreviewRepository
 import com.emplk.realestatemanager.domain.property_type.PropertyTypeRepository
@@ -76,7 +80,7 @@ abstract class DataBindingModule {
 
     @Singleton
     @Binds
-    abstract fun bindPropertyFormRepository(implementation: PicturePreviewRepositoryRoom): PicturePreviewRepository
+    abstract fun bindPropertyFormRepository(implementation: PropertyFormRepositoryRoom): PropertyFormRepository
 
     @Singleton
     @Binds
@@ -85,4 +89,8 @@ abstract class DataBindingModule {
     @Singleton
     @Binds
     abstract fun bindLocationFormRepository(implementation: LocationFormRepositoryRoom): LocationFormRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindAmenityFormRepository(implementation: AmenityFormRepositoryRoom): AmenityFormRepository
 }

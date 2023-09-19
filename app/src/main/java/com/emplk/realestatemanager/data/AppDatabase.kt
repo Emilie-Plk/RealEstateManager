@@ -18,6 +18,7 @@ import com.emplk.realestatemanager.data.picture.PictureDto
 import com.emplk.realestatemanager.data.property.PropertyDao
 import com.emplk.realestatemanager.data.property.PropertyDto
 import com.emplk.realestatemanager.data.property_form.PropertyFormDao
+import com.emplk.realestatemanager.data.property_form.PropertyFormDto
 import com.emplk.realestatemanager.data.property_form.amenity.AmenityFormDao
 import com.emplk.realestatemanager.data.property_form.amenity.AmenityFormDto
 import com.emplk.realestatemanager.data.property_form.location.LocationFormDao
@@ -38,6 +39,7 @@ import java.time.LocalDateTime
         PictureDto::class,
         LocationDto::class,
         AmenityDto::class,
+        PropertyFormDto::class,
         PicturePreviewFormDto::class,
         LocationFormDto::class,
         AmenityFormDto::class,
