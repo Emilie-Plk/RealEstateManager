@@ -262,7 +262,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/add_property_amenities_tv">
 
-
             <CheckBox
                 android:id="@+id/add_property_amenities_school_checkbox"
                 android:layout_width="wrap_content"

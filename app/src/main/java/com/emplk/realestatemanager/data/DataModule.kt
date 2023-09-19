@@ -7,6 +7,7 @@ import com.emplk.realestatemanager.data.amenity.AmenityDao
 import com.emplk.realestatemanager.data.location.LocationDao
 import com.emplk.realestatemanager.data.picture.PictureDao
 import com.emplk.realestatemanager.data.property.PropertyDao
+import com.emplk.realestatemanager.data.property_form.picture_preview.PicturePreviewDao
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -51,6 +52,10 @@ class DataModule {
     @Singleton
     @Provides
     fun provideAmenityDao(appDatabase: AppDatabase): AmenityDao = appDatabase.getAmenityDao()
+
+    @Singleton
+    @Provides
+    fun providePicturePreviewDao(appDatabase: AppDatabase): PicturePreviewDao = appDatabase.getPicturePreviewDao()
 
     @Singleton
     @Provides

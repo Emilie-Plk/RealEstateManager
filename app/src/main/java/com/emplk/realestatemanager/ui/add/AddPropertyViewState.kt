@@ -6,17 +6,17 @@ import com.emplk.realestatemanager.ui.add.type.AddPropertyTypeViewStateItem
 import com.emplk.realestatemanager.ui.utils.NativeText
 
 data class AddPropertyViewState(
-/*    val propertyType: String,
-    val address: String,
-    val price: String,
-    val surface: String,
-    val description: String,
-    val nbRooms: String,
-    val nbBathrooms: String,
-    val nbBedrooms: String,
+    val propertyType: String?,
+    val address: String?,
+    val price: String?,
+    val surface: String?,
+    val description: String?,
+    val nbRooms: Int,
+    val nbBathrooms: Int,
+    val nbBedrooms: Int,
     val amenities: List<String>,
     val pictures: List<PicturePreviewStateItem>,
-    val agent: String,*/
+    val agent: String?,
     val priceCurrency: NativeText,
     val surfaceUnit: NativeText,
     val isAddButtonEnabled: Boolean,

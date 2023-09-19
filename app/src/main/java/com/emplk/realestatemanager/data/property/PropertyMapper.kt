@@ -9,7 +9,7 @@ import com.emplk.realestatemanager.data.picture.PictureDtoEntityMapper
 import com.emplk.realestatemanager.domain.property.PropertyEntity
 import javax.inject.Inject
 
-class PropertyDtoEntityMapper @Inject constructor(
+class PropertyMapper @Inject constructor(
     private val locationDtoEntityMapper: LocationDtoEntityMapper,
     private val pictureDtoEntityMapper: PictureDtoEntityMapper,
     private val amenityDtoEntityMapper: AmenityDtoEntityMapper,

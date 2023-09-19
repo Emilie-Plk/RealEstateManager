@@ -12,6 +12,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.PropertyPreviewPictureItemBinding
 import com.emplk.realestatemanager.ui.utils.NativePhoto.Companion.load
+import com.emplk.realestatemanager.ui.utils.NativeText
 
 class PropertyPicturePreviewListAdapter :
     ListAdapter<PicturePreviewStateItem, PropertyPicturePreviewListAdapter.PropertyPicturePreviewViewHolder>(

@@ -1,10 +1,13 @@
 package com.emplk.realestatemanager.ui.add
 
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.View
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.FileProvider
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
@@ -18,16 +21,20 @@ import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.viewBinding
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
 
 @AndroidEntryPoint
 class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
 
-    private val binding by viewBinding { AddPropertyFragmentBinding.bind(it) }
-    private val viewModel by viewModels<AddPropertyViewModel>()
-
     companion object {
+        private const val KEY_CURRENT_PHOTO_URI = "KEY_CURRENT_PHOTO_URI"
+
         fun newInstance(): Fragment = AddPropertyFragment()
     }
+
+    private val binding by viewBinding { AddPropertyFragmentBinding.bind(it) }
+    private val viewModel by viewModels<AddPropertyViewModel>()
+    private var currentPhotoUri: Uri? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -50,16 +57,13 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
 
         val picturePreviewAdapter = PropertyPicturePreviewListAdapter()
         binding.addPropertyPreviewPicturesRecyclerView.adapter = picturePreviewAdapter
+
         setNumberPickers()
 
-        viewModel.addPropertyViewStateLiveData.observe(viewLifecycleOwner) {
-            picturePreviewAdapter.submitList(it.pictures)
-        }
-
-
+        initFormFieldsTextWatchers()
 
         binding.addPropertyCreateButton.setOnClickListener {
-          //  viewModel.onAddPropertyClicked()
+            //  viewModel.onAddPropertyClicked()
         }
 
         viewModel.viewEventLiveData.observeEvent(viewLifecycleOwner) { event ->
@@ -79,12 +83,70 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
         viewModel.viewStateLiveData.observe(viewLifecycleOwner) { viewState ->
             typeAdapter.setData(viewState.propertyTypes)
             agentAdapter.setData(viewState.agents)
+            picturePreviewAdapter.submitList(viewState.pictures)
             binding.addPropertyPriceCurrencyTv.text = viewState.priceCurrency.toCharSequence(requireContext())
             binding.addPropertySurfaceUnitTv.text = viewState.surfaceUnit.toCharSequence(requireContext())
-            //    binding.addPropertySubmitButton.isEnabled = viewState.isAddButtonEnabled
+            binding.addPropertyRoomsNumberPicker.value = viewState.nbRooms
+            binding.addPropertyBedroomsNumberPicker.value = viewState.nbBedrooms
+            binding.addPropertyBathroomsNumberPicker.value = viewState.nbBathrooms
+            binding.addPropertyCreateButton.isEnabled = viewState.isAddButtonEnabled
             binding.addPropertyProgressBar.isVisible = viewState.isProgressBarVisible
+
+            val checkboxIds = listOf(
+                binding.addPropertyAmenitiesGymCheckbox,
+                binding.addPropertyAmenitiesSchoolCheckbox,
+                binding.addPropertyAmenitiesParkCheckbox,
+                binding.addPropertyAmenitiesRestaurantCheckbox,
+                binding.addPropertyAmenitiesConciergeServiceCheckbox,
+                binding.addPropertyAmenitiesHospitalCheckbox,
+                binding.addPropertyAmenitiesShoppingMallCheckbox,
+                binding.addPropertyAmenitiesLibraryCheckbox,
+                binding.addPropertyAmenitiesRestaurantCheckbox,
+            )
+
+            checkboxIds.forEach {
+                it.setOnCheckedChangeListener { _, _ ->
+                        viewModel.onAmenityAdded(it.text.toString())
+                }
+            }
         }
 
+        // region Import pictures
+        val importPictureCallback = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            if (uri != null) {
+                Log.d("PhotoPicker", "Selected URI: $uri")
+                viewModel.onPictureSelected(uri)
+            } else {
+                Log.d("PhotoPicker", "No media selected")
+            }
+        }
+
+        val takePictureCallback = registerForActivityResult(ActivityResultContracts.TakePicture()) { successful ->
+            if (successful) {
+                currentPhotoUri?.let { viewModel.onPictureSelected(it) }
+            }
+        }
+
+        binding.addPropertyPicturesFromStorageButton.setOnClickListener {
+            importPictureCallback.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
+
+        binding.addPropertyFromCameraButton.setOnClickListener {
+            currentPhotoUri = FileProvider.getUriForFile(
+                requireContext(),
+                requireContext().packageName + ".provider",
+                File.createTempFile(
+                    "JPEG_",
+                    ".jpg",
+                    requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+                )
+            )
+            takePictureCallback.launch(currentPhotoUri)
+        }
+        // endregion Import pictures
+    }
+
+    private fun initFormFieldsTextWatchers() {
         binding.addPropertyAddressTextInputEditText.doAfterTextChanged {
             viewModel.onAddressChanged(it.toString())
         }
@@ -96,21 +158,7 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
         binding.addPropertySurfaceTextInputEditText.doAfterTextChanged {
             viewModel.onSurfaceChanged(it.toString())
         }
-
-        val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-            if (uri != null) {
-                Log.d("PhotoPicker", "Selected URI: $uri")
-                viewModel.onPictureFromStorageSelected(uri)
-            } else {
-                Log.d("PhotoPicker", "No media selected")
-            }
-        }
-        binding.addPropertyPicturesFromStorageButton.setOnClickListener {
-            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-        }
-
     }
-
 
 
     private fun setNumberPickers() {

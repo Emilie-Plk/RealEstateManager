@@ -14,14 +14,16 @@ import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
 import com.emplk.realestatemanager.domain.location.LocationEntity
-import com.emplk.realestatemanager.domain.navigation.GetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.pictures.PictureEntity
 import com.emplk.realestatemanager.domain.property.AddPropertyUseCase
 import com.emplk.realestatemanager.domain.property.PropertyEntity
+import com.emplk.realestatemanager.domain.property_form.picture_preview.AddPicturePreviewUseCase
+import com.emplk.realestatemanager.domain.property_form.picture_preview.DeletePicturePreviewUseCase
+import com.emplk.realestatemanager.domain.property_form.picture_preview.GetPicturePreviewFlowUseCase
+import com.emplk.realestatemanager.domain.property_form.picture_preview.PicturePreviewEntity
 import com.emplk.realestatemanager.domain.property_type.GetPropertyTypeFlowUseCase
-import com.emplk.realestatemanager.domain.screen_width.GetScreenWidthTypeFlowUseCase
 import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem
 import com.emplk.realestatemanager.ui.add.picture_preview.PicturePreviewStateItem
 import com.emplk.realestatemanager.ui.add.type.AddPropertyTypeViewStateItem
@@ -32,7 +34,6 @@ import com.emplk.realestatemanager.ui.utils.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
@@ -44,12 +45,13 @@ import javax.inject.Inject
 @HiltViewModel
 class AddPropertyViewModel @Inject constructor(
     private val addPropertyUseCase: AddPropertyUseCase,
-    private val getNavigationTypeUseCase: GetNavigationTypeUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
-    private val getScreenWidthTypeFlowUseCase: GetScreenWidthTypeFlowUseCase,
     private val getCurrencyTypeUseCase: GetCurrencyTypeUseCase,
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
     private val getAgentsFlowUseCase: GetAgentsFlowUseCase,
+    private val addPicturePreviewUseCase: AddPicturePreviewUseCase,
+    private val getPicturePreviewUseCase: GetPicturePreviewFlowUseCase,
+    private val deletePicturePreviewUseCase: DeletePicturePreviewUseCase,
     private val getPropertyTypeFlowUseCase: GetPropertyTypeFlowUseCase,
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : ViewModel() {
@@ -60,24 +62,25 @@ class AddPropertyViewModel @Inject constructor(
         val price: String? = null,
         val surface: String? = null,
         val description: String? = null,
-        val nbRooms: String? = null,
-        val nbBathrooms: String? = null,
-        val nbBedrooms: String? = null,
+        val nbRooms: Int = 0,
+        val nbBathrooms: Int = 0,
+        val nbBedrooms: Int = 0,
         val amenities: List<String> = emptyList(),
         val agent: String? = null,
-        val pictureUris: List<PicturePreviewStateItem.AddPropertyPicturePreview> = emptyList(),
+        val pictures: List<PicturePreviewStateItem.AddPropertyPicturePreview> = emptyList(),
     )
 
     private val formMutableStateFlow = MutableStateFlow(AddPropertyForm())
 
     private val isEveryFieldFilledMutableStateFlow = MutableStateFlow(false)
-    private val onCreateButtonClickedMutableSharedFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
     private val isAddingPropertyInDatabaseMutableStateFlow = MutableStateFlow(false)
+    private val picturePreviewsMutableStateFlow =
+        MutableStateFlow<List<PicturePreviewStateItem.AddPropertyPicturePreview>>(emptyList())
     private val isPropertySuccessfullyAddedInDatabaseMutableSharedFlow =
         MutableSharedFlow<Boolean>(extraBufferCapacity = 1)
+    private val onCreateButtonClickedMutableSharedFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
 
     val viewEventLiveData: LiveData<Event<AddPropertyViewEvent>> = liveData {
-
         onCreateButtonClickedMutableSharedFlow.collect {
             emit(Event(AddPropertyViewEvent.OnAddPropertyClicked))
             viewModelScope.launch(coroutineDispatcherProvider.io) {
@@ -153,59 +156,28 @@ class AddPropertyViewModel @Inject constructor(
         }
     }
 
-    val addPropertyViewStateLiveData: LiveData<AddPropertyViewStateItem> = liveData {
-        formMutableStateFlow.collect { propertyForm ->
-            val isFormValid = (propertyForm.propertyType != null &&
-                    propertyForm.address.isNullOrBlank() &&
-                    propertyForm.price.isNullOrBlank() &&
-                    propertyForm.surface.isNullOrBlank() &&
-                    propertyForm.description.isNullOrBlank() &&
-                    propertyForm.nbRooms.isNullOrBlank() &&
-                    propertyForm.nbBathrooms.isNullOrBlank() &&
-                    propertyForm.nbBedrooms.isNullOrBlank() &&
-                    propertyForm.agent != null &&
-                    propertyForm.pictureUris.isNotEmpty()
-                    )
-
-            isEveryFieldFilledMutableStateFlow.value = isFormValid
-
-            emit(
-                AddPropertyViewStateItem(
-                    propertyType = propertyForm.propertyType ?: "",
-                    address = propertyForm.address ?: "",
-                    price = propertyForm.price ?: "",
-                    surface = propertyForm.surface ?: "",
-                    description = propertyForm.description ?: "",
-                    nbRooms = propertyForm.nbRooms ?: "",
-                    nbBathrooms = propertyForm.nbBathrooms ?: "",
-                    nbBedrooms = propertyForm.nbBedrooms ?: "",
-                    amenities = propertyForm.amenities,
-                    agent = propertyForm.agent ?: "",
-                    pictures = propertyForm.pictureUris.map { picture ->
-                        PicturePreviewStateItem.AddPropertyPicturePreview(
-                            id = picture.id,
-                            uri = picture.uri,
-                            description = picture.description,
-                            isFeatured = picture.isFeatured,
-                            onDeleteEvent = EquatableCallback { },
-                            onFeaturedEvent = EquatableCallback { },
-                            onDescriptionChanged = EquatableCallback { },
-                        )
-                    }
-                )
-            )
-        }
-    }
-
     val viewStateLiveData: LiveData<AddPropertyViewState> = liveData {
         combine(
+            formMutableStateFlow,
             getAgentsFlowUseCase.invoke(),
             getPropertyTypeFlowUseCase.invoke(),
-            isAddingPropertyInDatabaseMutableStateFlow.asStateFlow(),
-        ) { agents, propertyTypes, isAddingPropertyInDatabase ->
+            getPicturePreviewUseCase.invoke(),
+            isAddingPropertyInDatabaseMutableStateFlow,
+        ) { form, agents, propertyTypes, picturePreviews, isAddingPropertyInDatabase ->
             val currencyType = getCurrencyTypeUseCase.invoke()
             emit(
                 AddPropertyViewState(
+                    propertyType = form.propertyType,
+                    address = form.address,
+                    price = form.price,
+                    surface = form.surface,
+                    description = form.description,
+                    nbRooms = form.nbRooms,
+                    nbBathrooms = form.nbBathrooms,
+                    nbBedrooms = form.nbBedrooms,
+                    amenities = form.amenities,
+                    pictures = mapToPicturePreviewStateItems(picturePreviews), // Cannot sort by now
+                    agent = form.agent,
                     priceCurrency = when (currencyType) {
                         CurrencyType.DOLLAR -> NativeText.Argument(
                             R.string.price_currency_in_n,
@@ -232,7 +204,7 @@ class AddPropertyViewModel @Inject constructor(
                     agents = agents.map { agent ->
                         AddPropertyAgentViewStateItem(
                             id = agent.key,
-                            name = agent.value,
+                            name = agent.value
                         )
                     },
                 )
@@ -240,8 +212,35 @@ class AddPropertyViewModel @Inject constructor(
         }.collect()
     }
 
-    fun onAddPropertyClicked() {
-        onCreateButtonClickedMutableSharedFlow.tryEmit(Unit)
+    private fun mapToPicturePreviewStateItems(picturePreviews: List<PicturePreviewEntity>): List<PicturePreviewStateItem> {
+        return picturePreviews.map { picturePreview ->
+            PicturePreviewStateItem.AddPropertyPicturePreview(
+                id = picturePreview.id,
+                uri = NativePhoto.Uri(picturePreview.uri),
+                description = picturePreview.description,
+                isFeatured = picturePreview.isFeatured,
+                onDescriptionChanged = EquatableCallback { },
+                onDeleteEvent = EquatableCallback {
+                    viewModelScope.launch {
+                        deletePicturePreviewUseCase.invoke(picturePreview.id)
+                    }
+                },
+                onFeaturedEvent = EquatableCallback { },
+            )
+        }
+    }
+
+    private fun onPictureDeleted(id: Long) {
+        viewModelScope.launch(coroutineDispatcherProvider.io) {
+            addPicturePreviewUseCase.invoke(
+                PicturePreviewEntity(
+                    id = id,
+                    uri = "",
+                    description = "",
+                    isFeatured = false,
+                )
+            )
+        }
     }
 
     fun onPropertyTypeSelected(propertyType: String) {
@@ -274,38 +273,51 @@ class AddPropertyViewModel @Inject constructor(
         }
     }
 
-    fun onPictureFromStorageSelected(uri: Uri) {
-        val pictureId = 0L
-        formMutableStateFlow.update {
-            it.copy(
-                pictureUris = it.pictureUris + PicturePreviewStateItem.AddPropertyPicturePreview(
-                    id = pictureId + 1L,
-                    uri = NativePhoto.Uri(uri.toString()),
+
+    fun onPictureSelected(uri: Uri) {
+        viewModelScope.launch {
+            addPicturePreviewUseCase.invoke(
+                PicturePreviewEntity(
+                    uri = uri.toString(),
                     description = "",
                     isFeatured = false,
-                    onDeleteEvent = EquatableCallback { },
-                    onFeaturedEvent = EquatableCallback { },
-                    onDescriptionChanged = EquatableCallback { },
                 )
             )
         }
     }
 
+
     fun onRoomsNumberChanged(value: Int) {
         formMutableStateFlow.update {
-            it.copy(nbRooms = value.toString())
+            it.copy(nbRooms = value)
         }
     }
 
     fun onBedroomsNumberChanged(value: Int) {
         formMutableStateFlow.update {
-            it.copy(nbBedrooms = value.toString())
+            it.copy(nbBedrooms = value)
         }
     }
 
     fun onBathroomsNumberChanged(value: Int) {
         formMutableStateFlow.update {
-            it.copy(nbBathrooms = value.toString())
+            it.copy(nbBathrooms = value)
         }
+    }
+
+    fun onAmenityAdded(amenity: String) {
+        val currentAmenities = formMutableStateFlow.value.amenities.toMutableSet()
+        if (currentAmenities.contains(amenity)) {
+            currentAmenities.remove(amenity)
+        } else {
+            currentAmenities.add(amenity)
+        }
+        formMutableStateFlow.update {
+            it.copy(amenities = currentAmenities.toList())
+        }
+    }
+
+    fun onAddPropertyClicked() {
+        onCreateButtonClickedMutableSharedFlow.tryEmit(Unit)
     }
 }
