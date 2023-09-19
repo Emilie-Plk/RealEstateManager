@@ -12,7 +12,6 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.PropertyPreviewPictureItemBinding
 import com.emplk.realestatemanager.ui.utils.NativePhoto.Companion.load
-import com.emplk.realestatemanager.ui.utils.NativeText
 
 class PropertyPicturePreviewListAdapter :
     ListAdapter<PicturePreviewStateItem, PropertyPicturePreviewListAdapter.PropertyPicturePreviewViewHolder>(
@@ -78,8 +77,17 @@ class PropertyPicturePreviewListAdapter :
 
                 binding.previewPictureStarFeaturedIv.setOnClickListener { item.onFeaturedEvent.invoke() }
 
+                item.description?.let {
+                    binding.previewPictureTitleEt.setText(it)
+                }
+
                 binding.previewPictureTitleEt.doAfterTextChanged {
-                    item.onDescriptionChanged.invoke()
+                    it?.let {
+                        item.description = it.toString()
+                        if (it.length > 5) {
+                            item.onDescriptionChanged.invoke()
+                        }
+                    }
                 }
             }
         }

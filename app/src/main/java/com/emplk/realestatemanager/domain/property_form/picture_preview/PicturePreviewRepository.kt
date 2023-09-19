@@ -9,5 +9,11 @@ interface PicturePreviewRepository {
 
     suspend fun update(picturePreviewEntity: PicturePreviewEntity): Boolean
 
+    suspend fun upsert(picturePreviewEntity: PicturePreviewEntity): Long
+
+    suspend fun updateDescription(pictureId: Long, newDescription: String?)
+
+    suspend fun updateFeaturedPicture(pictureId: Long, newFeaturedPicture: Boolean)
+
     suspend fun delete(picturePreviewId: Long): Boolean
 }

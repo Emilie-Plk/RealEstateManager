@@ -23,6 +23,9 @@ import com.emplk.realestatemanager.domain.property_form.picture_preview.AddPictu
 import com.emplk.realestatemanager.domain.property_form.picture_preview.DeletePicturePreviewUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.GetPicturePreviewFlowUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.PicturePreviewEntity
+import com.emplk.realestatemanager.domain.property_form.picture_preview.UpdateFeaturedPictureUseCase
+import com.emplk.realestatemanager.domain.property_form.picture_preview.UpdatePicturePreviewDescriptionUseCase
+import com.emplk.realestatemanager.domain.property_form.picture_preview.UpsertPicturePreviewUseCase
 import com.emplk.realestatemanager.domain.property_type.GetPropertyTypeFlowUseCase
 import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem
 import com.emplk.realestatemanager.ui.add.picture_preview.PicturePreviewStateItem
@@ -50,6 +53,9 @@ class AddPropertyViewModel @Inject constructor(
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
     private val getAgentsFlowUseCase: GetAgentsFlowUseCase,
     private val addPicturePreviewUseCase: AddPicturePreviewUseCase,
+    private val upsertPicturePreviewUseCase: UpsertPicturePreviewUseCase,
+    private val updatePicturePreviewDescriptionUseCase: UpdatePicturePreviewDescriptionUseCase,
+    private val updateFeaturedPictureUseCase: UpdateFeaturedPictureUseCase,
     private val getPicturePreviewUseCase: GetPicturePreviewFlowUseCase,
     private val deletePicturePreviewUseCase: DeletePicturePreviewUseCase,
     private val getPropertyTypeFlowUseCase: GetPropertyTypeFlowUseCase,
@@ -212,34 +218,36 @@ class AddPropertyViewModel @Inject constructor(
         }.collect()
     }
 
-    private fun mapToPicturePreviewStateItems(picturePreviews: List<PicturePreviewEntity>): List<PicturePreviewStateItem> {
+    private fun mapToPicturePreviewStateItems(picturePreviews: List<PicturePreviewEntity>): List<PicturePreviewStateItem.AddPropertyPicturePreview> {
         return picturePreviews.map { picturePreview ->
             PicturePreviewStateItem.AddPropertyPicturePreview(
                 id = picturePreview.id,
                 uri = NativePhoto.Uri(picturePreview.uri),
                 description = picturePreview.description,
                 isFeatured = picturePreview.isFeatured,
-                onDescriptionChanged = EquatableCallback { },
+                onDescriptionChanged = EquatableCallback {
+                   viewModelScope.launch {
+                        updatePicturePreviewDescriptionUseCase.invoke(picturePreview.id, picturePreview.description)
+                    }
+                },
                 onDeleteEvent = EquatableCallback {
                     viewModelScope.launch {
                         deletePicturePreviewUseCase.invoke(picturePreview.id)
                     }
                 },
-                onFeaturedEvent = EquatableCallback { },
-            )
-        }
-    }
+                onFeaturedEvent = EquatableCallback {
+                    viewModelScope.launch {
+                        // Clear the isFeatured flag for all pictures
+                        picturePreviews.forEach { picture ->
+                            updateFeaturedPictureUseCase.invoke(picture.id, false)
+                        }
 
-    private fun onPictureDeleted(id: Long) {
-        viewModelScope.launch(coroutineDispatcherProvider.io) {
-            addPicturePreviewUseCase.invoke(
-                PicturePreviewEntity(
-                    id = id,
-                    uri = "",
-                    description = "",
-                    isFeatured = false,
+                        // Set the isFeatured flag to true for the clicked picturePreview
+                        updateFeaturedPictureUseCase.invoke(picturePreview.id, true)
+                    }
+                },
+
                 )
-            )
         }
     }
 
@@ -273,7 +281,6 @@ class AddPropertyViewModel @Inject constructor(
         }
     }
 
-
     fun onPictureSelected(uri: Uri) {
         viewModelScope.launch {
             addPicturePreviewUseCase.invoke(
@@ -285,7 +292,6 @@ class AddPropertyViewModel @Inject constructor(
             )
         }
     }
-
 
     fun onRoomsNumberChanged(value: Int) {
         formMutableStateFlow.update {
