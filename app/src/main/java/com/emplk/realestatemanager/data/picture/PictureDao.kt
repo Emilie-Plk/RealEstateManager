@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 interface PictureDao {
 
     @Insert
-    suspend fun insert(pictureDto: PictureDto): Long
+    suspend fun insert(pictureDto: PictureDto): Long?
 
     @Query("SELECT * FROM pictures WHERE property_id = :propertyId")
     fun getPicturesAsFlow(propertyId: Long): Flow<List<PictureDto>>
