@@ -15,6 +15,7 @@ import androidx.fragment.app.viewModels
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.AddPropertyFragmentBinding
 import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentSpinnerAdapter
+import com.emplk.realestatemanager.ui.add.amenity.AmenityListAdapter
 import com.emplk.realestatemanager.ui.add.picture_preview.PropertyPicturePreviewListAdapter
 import com.emplk.realestatemanager.ui.add.type.AddPropertyTypeSpinnerAdapter
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
@@ -58,12 +59,15 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
         val picturePreviewAdapter = PropertyPicturePreviewListAdapter()
         binding.addPropertyPreviewPicturesRecyclerView.adapter = picturePreviewAdapter
 
+        val amenityAdapter = AmenityListAdapter()
+        binding.addPropertyAmenitiesRv.adapter = amenityAdapter
+
         setNumberPickers()
 
         initFormFieldsTextWatchers()
 
         binding.addPropertyCreateButton.setOnClickListener {
-            //  viewModel.onAddPropertyClicked()
+            viewModel.onAddPropertyClicked()
         }
 
         viewModel.viewEventLiveData.observeEvent(viewLifecycleOwner) { event ->
@@ -84,6 +88,7 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
             typeAdapter.setData(viewState.propertyTypes)
             agentAdapter.setData(viewState.agents)
             picturePreviewAdapter.submitList(viewState.pictures)
+            amenityAdapter.submitList(viewState.amenities)
             binding.addPropertyPriceCurrencyTv.text = viewState.priceCurrency.toCharSequence(requireContext())
             binding.addPropertySurfaceUnitTv.text = viewState.surfaceUnit.toCharSequence(requireContext())
             binding.addPropertyRoomsNumberPicker.value = viewState.nbRooms
@@ -91,24 +96,6 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
             binding.addPropertyBathroomsNumberPicker.value = viewState.nbBathrooms
             binding.addPropertyCreateButton.isEnabled = viewState.isAddButtonEnabled
             binding.addPropertyProgressBar.isVisible = viewState.isProgressBarVisible
-
-            val checkboxIds = listOf(
-                binding.addPropertyAmenitiesGymCheckbox,
-                binding.addPropertyAmenitiesSchoolCheckbox,
-                binding.addPropertyAmenitiesParkCheckbox,
-                binding.addPropertyAmenitiesRestaurantCheckbox,
-                binding.addPropertyAmenitiesConciergeServiceCheckbox,
-                binding.addPropertyAmenitiesHospitalCheckbox,
-                binding.addPropertyAmenitiesShoppingMallCheckbox,
-                binding.addPropertyAmenitiesLibraryCheckbox,
-                binding.addPropertyAmenitiesRestaurantCheckbox,
-            )
-
-            checkboxIds.forEach {
-                it.setOnCheckedChangeListener { _, _ ->
-                        viewModel.onAmenityAdded(it.id)
-                }
-            }
         }
 
         // region Import pictures

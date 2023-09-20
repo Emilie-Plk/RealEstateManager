@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class RealEstateAgentRepositoryImpl @Inject constructor() : RealEstateAgentRepository {
-    private val agentNameList = mapOf<Long, String>(
+    private val agentNameList = mapOf(
         1L to "John Doe",
         2L to "Jane Doe",
         3L to "John Smith",

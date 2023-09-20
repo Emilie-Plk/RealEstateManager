@@ -2,8 +2,6 @@ package com.emplk.realestatemanager.ui.add.picture_preview
 
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.NativePhoto
-import com.emplk.realestatemanager.ui.utils.NativeText
-import java.time.LocalDateTime
 
 sealed class PicturePreviewStateItem(val type: Type) {
 

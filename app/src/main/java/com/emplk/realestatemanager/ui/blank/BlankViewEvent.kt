@@ -1,5 +1,5 @@
 package com.emplk.realestatemanager.ui.blank
 
 sealed class BlankViewEvent {
-    object NavigateToMain: BlankViewEvent()
+    object NavigateToMain : BlankViewEvent()
 }
