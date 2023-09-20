@@ -17,11 +17,11 @@ class AmenityFormRepositoryRoom @Inject constructor(
 
     override fun getAllAsFlow(): Flow<List<AmenityFormEntity>> =
         amenityFormDao.getAllAsFlow()
-        .map { amenityFormDtos ->
-            amenityFormDtos.map { amenityFormDto ->
-                amenityFormMapper.mapToAmenityFormEntity(amenityFormDto, amenityFormDto.propertyFormId)
+            .map { amenityFormDtos ->
+                amenityFormDtos.map { amenityFormDto ->
+                    amenityFormMapper.mapToAmenityFormEntity(amenityFormDto, amenityFormDto.propertyFormId)
+                }
             }
-        }
 
     override suspend fun delete(amenityFormId: Long): Int =
         amenityFormDao.delete(amenityFormId)

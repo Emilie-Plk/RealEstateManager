@@ -22,9 +22,10 @@ class PropertyFormRepositoryRoom @Inject constructor(
         propertyFormDao.updateType(pictureId, newType)
     }
 
-    override suspend fun updatePrice(pictureId: Long, newPrice: BigDecimal) = withContext(coroutineDispatcherProvider.io) {
-        propertyFormDao.updatePrice(pictureId, newPrice)
-    }
+    override suspend fun updatePrice(pictureId: Long, newPrice: BigDecimal) =
+        withContext(coroutineDispatcherProvider.io) {
+            propertyFormDao.updatePrice(pictureId, newPrice)
+        }
 
     override suspend fun updateSurface(pictureId: Long, newSurface: Int) = withContext(coroutineDispatcherProvider.io) {
         propertyFormDao.updateSurface(pictureId, newSurface)
@@ -34,13 +35,15 @@ class PropertyFormRepositoryRoom @Inject constructor(
         propertyFormDao.updateRooms(pictureId, newRooms)
     }
 
-    override suspend fun updateBedrooms(pictureId: Long, newBedrooms: Int) = withContext(coroutineDispatcherProvider.io) {
-        propertyFormDao.updateBedrooms(pictureId, newBedrooms)
-    }
+    override suspend fun updateBedrooms(pictureId: Long, newBedrooms: Int) =
+        withContext(coroutineDispatcherProvider.io) {
+            propertyFormDao.updateBedrooms(pictureId, newBedrooms)
+        }
 
-    override suspend fun updateBathrooms(pictureId: Long, newBathrooms: Int) = withContext(coroutineDispatcherProvider.io) {
-        propertyFormDao.updateBathrooms(pictureId, newBathrooms)
-    }
+    override suspend fun updateBathrooms(pictureId: Long, newBathrooms: Int) =
+        withContext(coroutineDispatcherProvider.io) {
+            propertyFormDao.updateBathrooms(pictureId, newBathrooms)
+        }
 
     override suspend fun updateDescription(pictureId: Long, newDescription: String?) =
         withContext(coroutineDispatcherProvider.io) {

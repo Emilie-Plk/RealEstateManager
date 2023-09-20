@@ -5,6 +5,6 @@ import javax.inject.Inject
 class UpdatePicturePreviewUseCase @Inject constructor(
     private val picturePreviewRepository: PicturePreviewRepository,
 ) {
-    suspend fun invoke(picturePreviewEntity: PicturePreviewEntity, propertyFormId : Long): Boolean =
+    suspend fun invoke(picturePreviewEntity: PicturePreviewEntity, propertyFormId: Long): Boolean =
         picturePreviewRepository.update(picturePreviewEntity, propertyFormId)
 }

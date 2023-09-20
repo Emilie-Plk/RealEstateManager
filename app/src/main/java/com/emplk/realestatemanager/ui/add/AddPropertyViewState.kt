@@ -1,6 +1,8 @@
 package com.emplk.realestatemanager.ui.add
 
+import com.emplk.realestatemanager.domain.amenity.AmenityEntity
 import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem
+import com.emplk.realestatemanager.ui.add.amenity.AmenityViewStateItem
 import com.emplk.realestatemanager.ui.add.picture_preview.PicturePreviewStateItem
 import com.emplk.realestatemanager.ui.add.type.AddPropertyTypeViewStateItem
 import com.emplk.realestatemanager.ui.utils.NativeText
@@ -15,7 +17,7 @@ data class AddPropertyViewState(
     val nbRooms: Int,
     val nbBathrooms: Int,
     val nbBedrooms: Int,
-    val amenities: List<String>,
+    val selectedAmenities: List<AmenityEntity>,
     val pictures: List<PicturePreviewStateItem>,
     val agent: String?,
     val priceCurrency: NativeText,
@@ -24,4 +26,5 @@ data class AddPropertyViewState(
     val isProgressBarVisible: Boolean,
     val propertyTypes: List<AddPropertyTypeViewStateItem>,
     val agents: List<AddPropertyAgentViewStateItem>,
+    val amenities: List<AmenityViewStateItem>,
 )

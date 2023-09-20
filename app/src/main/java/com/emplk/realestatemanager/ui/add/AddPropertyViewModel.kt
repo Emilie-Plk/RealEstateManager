@@ -8,7 +8,9 @@ import androidx.lifecycle.viewModelScope
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.agent.GetAgentsFlowUseCase
+import com.emplk.realestatemanager.domain.amenity.AmenityEntity
 import com.emplk.realestatemanager.domain.amenity.AmenityType
+import com.emplk.realestatemanager.domain.amenity.type.GetAmenityTypeFlowUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
@@ -16,7 +18,6 @@ import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.AddPropertyUseCase
 import com.emplk.realestatemanager.domain.property_form.amenity.AddAmenityPropertyFormUseCase
-import com.emplk.realestatemanager.domain.property_form.amenity.AmenityFormEntity
 import com.emplk.realestatemanager.domain.property_form.amenity.DeleteAmenityPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.AddPicturePreviewUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.DeletePicturePreviewUseCase
@@ -26,17 +27,18 @@ import com.emplk.realestatemanager.domain.property_form.picture_preview.UpdateFe
 import com.emplk.realestatemanager.domain.property_form.picture_preview.UpdatePicturePreviewDescriptionUseCase
 import com.emplk.realestatemanager.domain.property_type.GetPropertyTypeFlowUseCase
 import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem
+import com.emplk.realestatemanager.ui.add.amenity.AmenityViewStateItem
 import com.emplk.realestatemanager.ui.add.picture_preview.PicturePreviewStateItem
 import com.emplk.realestatemanager.ui.add.type.AddPropertyTypeViewStateItem
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.Event
 import com.emplk.realestatemanager.ui.utils.NativePhoto
 import com.emplk.realestatemanager.ui.utils.NativeText
+import com.emplk.realestatemanager.ui.utils.combine
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
@@ -49,6 +51,7 @@ class AddPropertyViewModel @Inject constructor(
     private val getCurrencyTypeUseCase: GetCurrencyTypeUseCase,
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
     private val getAgentsFlowUseCase: GetAgentsFlowUseCase,
+    private val getAmenityTypeFlowUseCase: GetAmenityTypeFlowUseCase,
     private val addPicturePreviewUseCase: AddPicturePreviewUseCase,
     private val updatePicturePreviewDescriptionUseCase: UpdatePicturePreviewDescriptionUseCase,
     private val addAmenityPropertyFormUseCase: AddAmenityPropertyFormUseCase,
@@ -73,7 +76,7 @@ class AddPropertyViewModel @Inject constructor(
         val nbRooms: Int = 0,
         val nbBathrooms: Int = 0,
         val nbBedrooms: Int = 0,
-        val amenities: List<AmenityType> = emptyList(),
+        val amenities: List<AmenityEntity> = emptyList(),
         val agent: String? = null,
         val pictures: List<PicturePreviewStateItem.AddPropertyPicturePreview> = emptyList(),
     )
@@ -117,9 +120,10 @@ class AddPropertyViewModel @Inject constructor(
             formMutableStateFlow,
             getAgentsFlowUseCase.invoke(),
             getPropertyTypeFlowUseCase.invoke(),
+            getAmenityTypeFlowUseCase.invoke(),
             getPicturePreviewUseCase.invoke(),
             isAddingPropertyInDatabaseMutableStateFlow,
-        ) { form, agents, propertyTypes, picturePreviews, isAddingPropertyInDatabase ->
+        ) { form, agents, propertyTypes, amenityTypes, picturePreviews, isAddingPropertyInDatabase ->
             val currencyType = getCurrencyTypeUseCase.invoke()
             emit(
                 AddPropertyViewState(
@@ -131,11 +135,8 @@ class AddPropertyViewModel @Inject constructor(
                     nbRooms = form.nbRooms,
                     nbBathrooms = form.nbBathrooms,
                     nbBedrooms = form.nbBedrooms,
-                    amenities = form.amenities.map { amenityType ->
-                        amenityType.name
-
-                    },
-                    pictures = mapToPicturePreviewStateItems(picturePreviews), // Cannot sort by now
+                    selectedAmenities = form.amenities,
+                    pictures = mapToPicturePreviewToViewStates(picturePreviews),
                     agent = form.agent,
                     priceCurrency = when (currencyType) {
                         CurrencyType.DOLLAR -> NativeText.Argument(
@@ -154,6 +155,7 @@ class AddPropertyViewModel @Inject constructor(
                     ),
                     isAddButtonEnabled = isEveryFieldFilledMutableStateFlow.value,
                     isProgressBarVisible = isAddingPropertyInDatabase,
+                    amenities = mapAmenityTypesToViewStates(amenityTypes),
                     propertyTypes = propertyTypes.map { propertyType ->
                         AddPropertyTypeViewStateItem(
                             id = propertyType.key,
@@ -171,8 +173,26 @@ class AddPropertyViewModel @Inject constructor(
         }.collect()
     }
 
-    private fun mapToPicturePreviewStateItems(picturePreviews: List<PicturePreviewEntity>): List<PicturePreviewStateItem.AddPropertyPicturePreview> {
-        return picturePreviews.map { picturePreview ->
+    private fun mapAmenityTypesToViewStates(amenityTypes: List<AmenityType>): List<AmenityViewStateItem> {
+        val viewStates = amenityTypes.map { amenityType ->
+            AmenityViewStateItem(
+                id = amenityType.id,
+                name = amenityType.name,
+                iconDrawable = amenityType.iconDrawable,
+                stringRes = amenityType.stringRes,
+                onCheckBoxClicked = EquatableCallback {
+                },
+            )
+        }
+        formMutableStateFlow.update {
+            it.copy(amenities = it.amenities)
+        }
+        return viewStates
+    }
+
+
+    private fun mapToPicturePreviewToViewStates(picturePreviews: List<PicturePreviewEntity>): List<PicturePreviewStateItem.AddPropertyPicturePreview> =
+        picturePreviews.map { picturePreview ->
             PicturePreviewStateItem.AddPropertyPicturePreview(
                 id = picturePreview.id,
                 uri = NativePhoto.Uri(picturePreview.uri),
@@ -201,7 +221,6 @@ class AddPropertyViewModel @Inject constructor(
                 },
             )
         }
-    }
 
     fun onPropertyTypeSelected(propertyType: String) {
         formMutableStateFlow.update {
@@ -264,47 +283,7 @@ class AddPropertyViewModel @Inject constructor(
         }
     }
 
-    fun onAmenityAdded(amenityStringId: Int) {
-        val currentAmenities = formMutableStateFlow.value.amenities.toMutableSet()
-        val currentAmenityType = mapAmenityStringIdToAmenityType(amenityStringId)
-
-        if (currentAmenities.contains(currentAmenityType)) {
-            viewModelScope.launch {
-                deleteAmenityPropertyFormUseCase.invoke(currentAmenityType.id)
-            }
-        } else {
-            viewModelScope.launch {
-                addAmenityPropertyFormUseCase.invoke(
-                    AmenityFormEntity(
-                        id = currentAmenityType.id,
-                        propertyFormId = PROPERTY_FORM_ID,
-                        type = currentAmenityType.name,
-                    )
-                )
-            }
-            currentAmenities.add(currentAmenityType)
-        }
-        formMutableStateFlow.update {
-            it.copy(amenities = currentAmenities.toList())
-        }
-    }
-
-
     fun onAddPropertyClicked() {
         onCreateButtonClickedMutableSharedFlow.tryEmit(Unit)
     }
-
-    private fun mapAmenityStringIdToAmenityType(amenityStringId: Int): AmenityType =
-        when (amenityStringId) {
-            R.string.amenity_school -> AmenityType.SCHOOL
-            R.string.amenity_park -> AmenityType.PARK
-            R.string.amenity_shopping_mall -> AmenityType.SHOPPING_MALL
-            R.string.amenity_restaurant -> AmenityType.RESTAURANT
-            R.string.amenity_concierge_service -> AmenityType.CONCIERGE
-            R.string.amenity_gym -> AmenityType.GYM
-            R.string.amenity_public_transportation -> AmenityType.PUBLIC_TRANSPORTATION
-            R.string.amenity_hospital -> AmenityType.HOSPITAL
-            R.string.amenity_library -> AmenityType.LIBRARY
-            else -> throw IllegalArgumentException("Unknown amenity string id")
-        }
 }
