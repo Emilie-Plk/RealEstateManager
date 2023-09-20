@@ -2,6 +2,7 @@ package com.emplk.realestatemanager.data
 
 import android.app.Application
 import android.content.res.Resources
+import androidx.room.PrimaryKey
 import androidx.work.WorkManager
 import com.emplk.realestatemanager.data.amenity.AmenityDao
 import com.emplk.realestatemanager.data.location.LocationDao
@@ -17,6 +18,10 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -39,6 +44,37 @@ class DataModule {
         workManager: WorkManager,
         gson: Gson,
     ): AppDatabase = AppDatabase.create(application, workManager, gson)
+
+    @Singleton
+    @Provides
+    fun provideResources(application: Application): Resources = application.resources
+
+    @Singleton
+    @Provides
+    fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BASIC
+    }
+
+    @Singleton
+    @Provides
+    fun provideGoogleApiRetrofit(okHttpClient: okhttp3.OkHttpClient, gson: Gson): Retrofit =
+        retrofit2.Retrofit.Builder()
+            .baseUrl("https://maps.googleapis.com/maps/api/")
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+
+    @Singleton
+    @Provides
+    fun provideGoogleOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): okhttp3.OkHttpClient =
+        okhttp3.OkHttpClient.Builder()
+            .addInterceptor(httpLoggingInterceptor)
+            .connectTimeout(8, TimeUnit.SECONDS)
+            .readTimeout(8, TimeUnit.SECONDS)
+            .addInterceptor(httpLoggingInterceptor)
+            .build()
+
+    // region DAOs
 
     @Singleton
     @Provides
@@ -73,7 +109,5 @@ class DataModule {
     @Provides
     fun provideAmenityFormDao(appDatabase: AppDatabase): AmenityFormDao = appDatabase.getAmenityFormDao()
 
-    @Singleton
-    @Provides
-    fun provideResources(application: Application): Resources = application.resources
+    // endregion DAOs
 }

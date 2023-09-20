@@ -4,7 +4,11 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.emplk.realestatemanager.R
 
-enum class AmenityType(val id: Long, @StringRes val stringRes: Int, @DrawableRes val iconDrawable: Int) {
+enum class AmenityType(
+    val id: Long,
+    @StringRes val stringRes: Int,
+    @DrawableRes val iconDrawable: Int
+) {
     SCHOOL(1, R.string.amenity_school, R.drawable.baseline_school_24),
     PARK(2, R.string.amenity_park, R.drawable.baseline_park_24),
     SHOPPING_MALL(3, R.string.amenity_shopping_mall, R.drawable.baseline_shopping_cart_24),

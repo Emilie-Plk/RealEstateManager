@@ -32,7 +32,6 @@ import com.google.gson.Gson
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
-
 @Database(
     entities = [
         PropertyDto::class,
