@@ -3,6 +3,7 @@ package com.emplk.realestatemanager.data
 import com.emplk.realestatemanager.data.agent.RealEstateAgentRepositoryImpl
 import com.emplk.realestatemanager.data.amenity.AmenityRepositoryRoom
 import com.emplk.realestatemanager.data.amenity.type.AmenityTypeRepositoryImpl
+import com.emplk.realestatemanager.data.autocomplete.PredictionRepositoryAutocomplete
 import com.emplk.realestatemanager.data.currency.LocaleFormattingRepositoryImpl
 import com.emplk.realestatemanager.data.current_property.CurrentPropertyRepositoryImpl
 import com.emplk.realestatemanager.data.location.LocationRepositoryRoom
@@ -99,4 +100,8 @@ abstract class DataBindingModule {
     @Singleton
     @Binds
     abstract fun bindAmenityFormRepository(implementation: AmenityFormRepositoryRoom): AmenityFormRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindPredictionRepository(implementation: PredictionRepositoryAutocomplete): PredictionRepositoryAutocomplete
 }

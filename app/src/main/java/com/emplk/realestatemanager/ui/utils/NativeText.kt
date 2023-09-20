@@ -31,8 +31,4 @@ sealed class NativeText {
     data class Arguments(@StringRes val id: Int, val args: List<Any>) : NativeText() {
         override fun toCharSequence(context: Context): CharSequence = context.getString(id, *args.toTypedArray())
     }
-
-    object Empty : NativeText() {
-        override fun toCharSequence(context: Context): CharSequence = ""
-    }
 }

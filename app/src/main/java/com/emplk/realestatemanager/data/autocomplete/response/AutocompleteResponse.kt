@@ -1,4 +1,4 @@
-package com.emplk.realestatemanager.data.autocomplete
+package com.emplk.realestatemanager.data.autocomplete.response
 
 import com.google.gson.annotations.SerializedName
 
