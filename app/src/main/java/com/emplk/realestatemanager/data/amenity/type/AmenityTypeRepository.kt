@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class AmenityTypeRepositoryImpl @Inject constructor() : AmenityTypeRepository {
-    private val amenityTypes = listOf<AmenityType>(
+    private val amenityTypes = listOf(
         AmenityType.SCHOOL,
         AmenityType.PARK,
         AmenityType.SHOPPING_MALL,

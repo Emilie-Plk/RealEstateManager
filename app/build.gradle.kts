@@ -56,6 +56,7 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.6.1")
     implementation("androidx.navigation:navigation-fragment-ktx:2.5.3")
     implementation("androidx.navigation:navigation-ui-ktx:2.5.3")
+    implementation("com.google.android.gms:play-services-awareness:19.0.1")
 
     // DESUGARING
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")

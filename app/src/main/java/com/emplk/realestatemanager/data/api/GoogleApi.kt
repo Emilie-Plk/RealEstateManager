@@ -1,6 +1,7 @@
 package com.emplk.realestatemanager.data.api
 
-import com.emplk.realestatemanager.data.autocomplete.AutocompleteResponse
+import com.emplk.realestatemanager.data.autocomplete.response.AutocompleteResponse
+import com.emplk.realestatemanager.data.geocoding.response.GeocodingResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -14,6 +15,6 @@ interface GoogleApi {
 
     @GET("/geocode/json")
     suspend fun getGeocode(
-        @Query("place_id") address: String,
+        @Query("place_id") placeId: String,
     ): GeocodingResponse
 }
