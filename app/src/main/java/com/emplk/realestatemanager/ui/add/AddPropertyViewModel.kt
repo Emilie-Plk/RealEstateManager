@@ -178,6 +178,7 @@ class AddPropertyViewModel @Inject constructor(
             AmenityViewStateItem(
                 id = amenityType.id,
                 name = amenityType.name,
+                isChecked = false,
                 iconDrawable = amenityType.iconDrawable,
                 stringRes = amenityType.stringRes,
                 onCheckBoxClicked = EquatableCallback {
