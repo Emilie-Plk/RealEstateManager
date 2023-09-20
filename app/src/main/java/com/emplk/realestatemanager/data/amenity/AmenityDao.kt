@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 interface AmenityDao {
 
     @Insert
-    suspend fun insert(amenityDto: AmenityDto): Long
+    suspend fun insert(amenityDto: AmenityDto): Long?
 
     @Query("SELECT * FROM amenities WHERE property_id = :propertyId")
     fun getAllAmenitiesAsFlow(propertyId: Long): Flow<AmenityDto>
