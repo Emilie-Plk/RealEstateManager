@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.agent.GetAgentsFlowUseCase
+import com.emplk.realestatemanager.domain.amenity.AmenityEntity
 import com.emplk.realestatemanager.domain.amenity.AmenityType
 import com.emplk.realestatemanager.domain.amenity.type.GetAmenityTypeFlowUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
@@ -21,8 +22,10 @@ import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem
 import com.emplk.realestatemanager.ui.add.amenity.AmenityViewStateItem
 import com.emplk.realestatemanager.ui.add.picture_preview.PicturePreviewStateItem
 import com.emplk.realestatemanager.ui.add.type.AddPropertyTypeViewStateItem
+import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParam
 import com.emplk.realestatemanager.ui.utils.Event
+import com.emplk.realestatemanager.ui.utils.NativePhoto
 import com.emplk.realestatemanager.ui.utils.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -60,7 +63,7 @@ class AddPropertyViewModel @Inject constructor(
         val nbBathrooms: Int = 0,
         val nbBedrooms: Int = 0,
         val agent: String? = null,
-        val amenities: List<AmenityViewStateItem> = emptyList(),
+        val amenities: List<AmenityEntity> = emptyList(),
         val pictures: List<PicturePreviewStateItem.AddPropertyPicturePreview> = emptyList(),
     )
 
@@ -100,59 +103,59 @@ class AddPropertyViewModel @Inject constructor(
 
     val viewStateLiveData: LiveData<AddPropertyViewState> = liveData {
         combine(
-                formMutableStateFlow,
-        getAgentsFlowUseCase.invoke(),
-        getPropertyTypeFlowUseCase.invoke(),
-        getAmenityTypeFlowUseCase.invoke(),
-        isAddingPropertyInDatabaseMutableStateFlow,
+            formMutableStateFlow,
+            getAgentsFlowUseCase.invoke(),
+            getPropertyTypeFlowUseCase.invoke(),
+            getAmenityTypeFlowUseCase.invoke(),
+            isAddingPropertyInDatabaseMutableStateFlow,
         ) { form, agents, propertyTypes, amenityTypes, isAddingPropertyInDatabase ->
-        val currencyType = getCurrencyTypeUseCase.invoke()
-        emit(
-            AddPropertyViewState(
-                propertyType = form.propertyType,
-                address = form.address,
-                price = form.price,
-                surface = form.surface,
-                description = form.description,
-                nbRooms = form.nbRooms,
-                nbBathrooms = form.nbBathrooms,
-                nbBedrooms = form.nbBedrooms,
-                selectedAmenities = form.amenities,
-                pictures = form.pictures,
-                agent = form.agent,
-                priceCurrency = when (currencyType) {
-                    CurrencyType.DOLLAR -> NativeText.Argument(
-                        R.string.price_currency_in_n,
-                        currencyType.symbol
-                    )
+            val currencyType = getCurrencyTypeUseCase.invoke()
+            emit(
+                AddPropertyViewState(
+                    propertyType = form.propertyType,
+                    address = form.address,
+                    price = form.price,
+                    surface = form.surface,
+                    description = form.description,
+                    nbRooms = form.nbRooms,
+                    nbBathrooms = form.nbBathrooms,
+                    nbBedrooms = form.nbBedrooms,
+                    pictures = form.pictures,
+                    agent = form.agent,
+                    priceCurrency = when (currencyType) {
+                        CurrencyType.DOLLAR -> NativeText.Argument(
+                            R.string.price_currency_in_n,
+                            currencyType.symbol
+                        )
 
-                    CurrencyType.EURO -> NativeText.Argument(
-                        R.string.price_currency_in_n,
-                        currencyType.symbol
-                    )
-                },
-                surfaceUnit = NativeText.Argument(
-                    R.string.surface_unit_in_n,
-                    getSurfaceUnitUseCase.invoke().symbol,
-                ),
-                isAddButtonEnabled = isEveryFieldFilledMutableStateFlow.value,
-                isProgressBarVisible = isAddingPropertyInDatabase,
-                amenities = mapAmenityTypesToViewStates(amenityTypes),
-                propertyTypes = propertyTypes.map { propertyType ->
-                    AddPropertyTypeViewStateItem(
-                        id = propertyType.key,
-                        name = propertyType.value,
-                    )
-                },
-                agents = agents.map { agent ->
-                    AddPropertyAgentViewStateItem(
-                        id = agent.key,
-                        name = agent.value
-                    )
-                },
+                        CurrencyType.EURO -> NativeText.Argument(
+                            R.string.price_currency_in_n,
+                            currencyType.symbol
+                        )
+                    },
+                    surfaceUnit = NativeText.Argument(
+                        R.string.surface_unit_in_n,
+                        getSurfaceUnitUseCase.invoke().symbol,
+                    ),
+                    isAddButtonEnabled = isEveryFieldFilledMutableStateFlow.value,
+                    isProgressBarVisible = isAddingPropertyInDatabase,
+                    amenities = mapAmenityTypesToViewStates(amenityTypes),
+                    selectedAmenities = form.amenities,
+                    propertyTypes = propertyTypes.map { propertyType ->
+                        AddPropertyTypeViewStateItem(
+                            id = propertyType.key,
+                            name = propertyType.value,
+                        )
+                    },
+                    agents = agents.map { agent ->
+                        AddPropertyAgentViewStateItem(
+                            id = agent.key,
+                            name = agent.value
+                        )
+                    },
+                )
             )
-        )
-    }.collect()
+        }.collect()
     }
 
     private fun mapAmenityTypesToViewStates(amenityTypes: List<AmenityType>): List<AmenityViewStateItem> {
@@ -164,11 +167,25 @@ class AddPropertyViewModel @Inject constructor(
                 iconDrawable = amenityType.iconDrawable,
                 stringRes = amenityType.stringRes,
                 onCheckBoxClicked = EquatableCallbackWithParam { isChecked ->
+                    if (isChecked) {
+                        formMutableStateFlow.update {
+                            it.copy(
+                                amenities = it.amenities + AmenityEntity(
+                                    id = amenityType.id,
+                                    type = amenityType,
+                                    propertyId = 1,
+                                )
+                            )
+                        }
+                    } else {
+                        formMutableStateFlow.update {
+                            it.copy(
+                                amenities = it.amenities.filter { amenity -> amenity.id != amenityType.id }
+                            )
+                        }
+                    }
                 },
             )
-        }
-        formMutableStateFlow.update {
-            it.copy(amenities = it.amenities)
         }
         return viewStates
     }
@@ -204,9 +221,45 @@ class AddPropertyViewModel @Inject constructor(
     }
 
     fun onPictureSelected(uri: Uri) {
-        // TODO Add new picture
+        val pictureId = formMutableStateFlow.value.pictures.size + 1L
+        val addedPicture = PicturePreviewStateItem.AddPropertyPicturePreview(
+            id = pictureId,
+            uri = NativePhoto.Uri(uri.toString()),
+            isFeatured = false,
+            description = null,
+            onDeleteEvent = EquatableCallback {
+                formMutableStateFlow.update {
+                    it.copy(pictures = it.pictures.filter { picture -> picture.id != pictureId })
+                }
+            },
+            onFeaturedEvent = EquatableCallbackWithParam { isFeatured ->
+                formMutableStateFlow.update {
+                    it.copy(pictures = it.pictures.map { picture ->
+                        if (picture.id == pictureId) {
+                            picture.copy(isFeatured = isFeatured)
+                        } else return@EquatableCallbackWithParam
+                    })
+                }
+            },
+            onDescriptionChanged = EquatableCallbackWithParam { description ->
+                formMutableStateFlow.update {
+                    it.copy(pictures = it.pictures.map { picture ->
+                        if (picture.id == pictureId) {
+                            picture.copy(description = description)
+                        } else return@EquatableCallbackWithParam
+                    })
+                }
+            },
+        )
         formMutableStateFlow.update {
-            it.copy(pictures = it.pictures) }
+            it.copy(pictures = it.pictures + addedPicture)
+        }
+    }
+
+    fun onDescriptionChanged(description: String) {
+        formMutableStateFlow.update {
+            it.copy(description = description)
+        }
     }
 
     fun onRoomsNumberChanged(value: Int) {

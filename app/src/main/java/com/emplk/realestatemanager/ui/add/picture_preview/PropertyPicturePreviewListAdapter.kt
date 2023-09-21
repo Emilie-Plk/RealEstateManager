@@ -76,7 +76,8 @@ class PropertyPicturePreviewListAdapter :
                 binding.previewPictureDeleteIv.setOnClickListener { item.onDeleteEvent.invoke() }
 
                 binding.previewPictureTitleEt.doAfterTextChanged {
-                    item.onDescriptionChanged.invoke(it.toString())
+                    editable ->
+                    item.onDescriptionChanged.invoke(editable.toString())
                 }
             }
         }
@@ -108,7 +109,9 @@ class PropertyPicturePreviewListAdapter :
 
                 binding.previewPictureDeleteIv.setOnClickListener { item.onDeleteEvent.invoke() }
 
-                binding.previewPictureStarFeaturedIv.setOnClickListener { item.onFeaturedEvent.invoke() }
+                binding.previewPictureStarFeaturedIv.setOnClickListener {
+                    item.onFeaturedEvent.invoke(!item.isFeatured) // TODO: noooot sure at all lol
+                }
 
                 binding.previewPictureTitleEt.doAfterTextChanged {
                     item.onDescriptionChanged.invoke(it.toString())
