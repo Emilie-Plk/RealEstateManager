@@ -1,10 +1,18 @@
 package com.emplk.realestatemanager.data.property_form.picture_preview
 
 import com.emplk.realestatemanager.data.property_form.PropertyFormDto
+import com.emplk.realestatemanager.data.property_form.amenity.AmenityFormDto
+import com.emplk.realestatemanager.data.property_form.amenity.AmenityFormMapper
+import com.emplk.realestatemanager.data.property_form.location.LocationFormDto
+import com.emplk.realestatemanager.data.property_form.location.LocationFormMapper
 import com.emplk.realestatemanager.domain.property_form.PropertyFormEntity
 import javax.inject.Inject
 
-class PropertyFormMapper @Inject constructor() {
+class PropertyFormMapper @Inject constructor(
+    private val locationFormMapper: LocationFormMapper,
+    private val picturePreviewMapper: PicturePreviewMapper,
+    private val amenityFormMapper: AmenityFormMapper,
+) {
 
     fun mapToPropertyFormDto(propertyForm: PropertyFormEntity): PropertyFormDto =
         PropertyFormDto(
@@ -19,7 +27,12 @@ class PropertyFormMapper @Inject constructor() {
             agentName = propertyForm.agentName,
         )
 
-    fun mapToPropertyFormEntity(propertyFormDto: PropertyFormDto): PropertyFormEntity =
+    fun mapToPropertyFormEntity(
+        propertyFormDto: PropertyFormDto,
+        locationFormDto: LocationFormDto,
+        picturePreviewFormDtos: List<PicturePreviewFormDto>,
+        amenityFormDtos: List<AmenityFormDto>,
+    ): PropertyFormEntity =
         PropertyFormEntity(
             id = propertyFormDto.id,
             type = propertyFormDto.type,
@@ -30,5 +43,8 @@ class PropertyFormMapper @Inject constructor() {
             bathrooms = propertyFormDto.bathrooms,
             description = propertyFormDto.description,
             agentName = propertyFormDto.agentName,
+            location = locationFormMapper.mapToLocationFormEntity(locationFormDto),
+            pictures = picturePreviewMapper.mapToPicturePreviewEntities(picturePreviewFormDtos),
+            amenities = amenityFormMapper.mapToAmenityFormEntities(amenityFormDtos),
         )
 }

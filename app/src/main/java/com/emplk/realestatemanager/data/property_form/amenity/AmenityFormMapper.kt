@@ -11,11 +11,13 @@ class AmenityFormMapper @Inject constructor() {
             type = amenityFormDto.name,
         )
 
-    fun mapToAmenityDto(amenityFormEntity: AmenityFormEntity) =
+    fun mapToAmenityDto(amenityFormEntity: AmenityFormEntity, propertyFormId : Long) =
         AmenityFormDto(
             id = amenityFormEntity.id,
-            propertyFormId = amenityFormEntity.propertyFormId,
+            propertyFormId = propertyFormId,
             name = amenityFormEntity.type,
         )
 
+    fun mapToAmenityFormEntities(amenityFormDtos: List<AmenityFormDto>): List<AmenityFormEntity> =
+        amenityFormDtos.map { mapToAmenityFormEntity(it, it.propertyFormId) }
 }

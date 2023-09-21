@@ -1,20 +1,15 @@
 package com.emplk.realestatemanager.domain.property_form
 
-import java.math.BigDecimal
+import kotlinx.coroutines.flow.Flow
 
 interface PropertyFormRepository {
-    suspend fun add(propertyFormEntity: PropertyFormEntity): Long
-    suspend fun updateType(pictureId: Long, newType: String)
+    suspend fun add(propertyFormEntity: PropertyFormEntity): Long?
 
-    suspend fun updatePrice(pictureId: Long, newPrice: BigDecimal)
+    suspend fun addPropertyFormWithDetails(propertyFormEntity: PropertyFormEntity): Boolean
 
-    suspend fun updateSurface(pictureId: Long, newSurface: Int)
+    suspend fun getPropertyFormByIdAsFlow(propertyFormId: Long): Flow<PropertyFormEntity>
 
-    suspend fun updateRooms(pictureId: Long, newRooms: Int)
+    suspend fun exists(): Boolean
 
-    suspend fun updateBedrooms(pictureId: Long, newBedrooms: Int)
-
-    suspend fun updateBathrooms(pictureId: Long, newBathrooms: Int)
-
-    suspend fun updateDescription(pictureId: Long, newDescription: String?)
+    suspend fun update(propertyFormEntity: PropertyFormEntity)
 }

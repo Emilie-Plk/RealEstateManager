@@ -14,14 +14,14 @@ class LocationFormRepositoryRoom @Inject constructor(
     override suspend fun add(locationFormEntity: LocationFormEntity, propertyFormId: Long): Long =
         withContext(coroutineDispatcherProvider.io) {
             locationFormDao.insert(
-                locationFormMapper.mapToLocationDto(locationFormEntity, propertyFormId)
+                locationFormMapper.mapToLocationDto(locationFormEntity)
             )
         }
 
     override suspend fun update(locationFormEntity: LocationFormEntity, propertyFormId: Long): Int =
         withContext(coroutineDispatcherProvider.io) {
             locationFormDao.update(
-                locationFormMapper.mapToLocationDto(locationFormEntity, propertyFormId)
+                locationFormMapper.mapToLocationDto(locationFormEntity)
             )
         }
 
