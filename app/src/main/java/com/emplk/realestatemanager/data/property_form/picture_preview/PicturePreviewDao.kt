@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 interface PicturePreviewDao {
 
     @Insert
-    suspend fun insert(picturePreviewFormDto: PicturePreviewFormDto): Long
+    suspend fun insert(picturePreviewFormDto: PicturePreviewFormDto): Long?
 
     @Query("SELECT * FROM picture_previews")
     fun getAllAsFlow(): Flow<List<PicturePreviewFormDto>>

@@ -15,14 +15,14 @@ interface PropertyDao {
 
     @Transaction
     @Query("SELECT * FROM properties WHERE id = :propertyId")
-    fun getPropertyById(propertyId: Long): Flow<PropertyWithDetails>
+    fun getPropertyByIdAsFlow(propertyId: Long): Flow<PropertyWithDetails>
 
     @Query("SELECT * FROM properties")
-    fun getProperties(): Flow<List<PropertyDto>>
+    fun getPropertiesAsFlow(): Flow<List<PropertyDto>>
 
     @Transaction
     @Query("SELECT * FROM properties")
-    fun getPropertiesWithDetailsFlow(): Flow<List<PropertyWithDetails>>
+    fun getPropertiesWithDetailsAsFlow(): Flow<List<PropertyWithDetails>>
 
     @Update
     suspend fun update(propertyDto: PropertyDto): Int

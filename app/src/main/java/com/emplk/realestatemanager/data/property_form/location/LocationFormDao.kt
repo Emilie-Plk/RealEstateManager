@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 interface LocationFormDao {
 
     @Insert
-    suspend fun insert(locationFormDto: LocationFormDto): Long
+    suspend fun insert(locationFormDto: LocationFormDto): Long?
 
     @Query("SELECT * FROM location_forms WHERE property_form_id = :propertyFormId LIMIT 1")
     fun getAsFlow(propertyFormId: Long): Flow<LocationFormDto>

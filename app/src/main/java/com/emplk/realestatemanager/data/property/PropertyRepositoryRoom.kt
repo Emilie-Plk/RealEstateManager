@@ -31,8 +31,7 @@ class PropertyRepositoryRoom @Inject constructor(
 
     override suspend fun add(propertyEntity: PropertyEntity): Long? = withContext(coroutineDispatcherProvider.io) {
         try {
-            val propertyDtoEntity = propertyMapper.mapToDtoEntity(propertyEntity)
-            propertyDao.insert(propertyDtoEntity)
+            propertyDao.insert(propertyMapper.mapToDtoEntity(propertyEntity))
         } catch (e: SQLiteException) {
             e.printStackTrace()
             null
@@ -68,7 +67,7 @@ class PropertyRepositoryRoom @Inject constructor(
 
 
     override fun getPropertiesAsFlow(): Flow<List<PropertyEntity>> = propertyDao
-        .getPropertiesWithDetailsFlow()
+        .getPropertiesWithDetailsAsFlow()
         .map { propertyWithDetailsEntities ->
             propertyWithDetailsEntities.map { propertyWithDetailsEntity ->
                 propertyMapper.mapToDomainEntity(
@@ -82,7 +81,7 @@ class PropertyRepositoryRoom @Inject constructor(
         .flowOn(coroutineDispatcherProvider.io)
 
     override fun getPropertyByIdAsFlow(propertyId: Long): Flow<PropertyEntity> = propertyDao
-        .getPropertyById(propertyId)
+        .getPropertyByIdAsFlow(propertyId)
         .map {
             propertyMapper.mapToDomainEntity(
                 it.property,
