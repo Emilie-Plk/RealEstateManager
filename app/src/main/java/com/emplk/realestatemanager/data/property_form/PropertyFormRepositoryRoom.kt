@@ -13,6 +13,8 @@ import com.emplk.realestatemanager.domain.property_form.PropertyFormEntity
 import com.emplk.realestatemanager.domain.property_form.PropertyFormRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -29,6 +31,9 @@ class PropertyFormRepositoryRoom @Inject constructor(
     private val picturePreviewMapper: PicturePreviewMapper,
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : PropertyFormRepository {
+
+    private val isPropertyFormInProgressMutableStateFlow = MutableStateFlow(false)
+
     override suspend fun add(propertyFormEntity: PropertyFormEntity): Long? =
         withContext(coroutineDispatcherProvider.io) {
             try {
@@ -39,9 +44,9 @@ class PropertyFormRepositoryRoom @Inject constructor(
             }
         }
 
-    override suspend fun addPropertyFormWithDetails(propertyFormEntity: PropertyFormEntity): Boolean =
+    override suspend fun addPropertyFormWithDetails(propertyFormEntity: PropertyFormEntity): Long =
         withContext(coroutineDispatcherProvider.io) {
-            val propertyFormId = add(propertyFormEntity) ?: return@withContext false
+            val propertyFormId = add(propertyFormEntity) ?: return@withContext -1L
 
             val locationFormAsync = async {
                 val locationFormDto = locationFormMapper.mapToLocationDto(propertyFormEntity.location, propertyFormId)
@@ -63,7 +68,15 @@ class PropertyFormRepositoryRoom @Inject constructor(
             }
 
             (listOf(locationFormAsync) + picturePreviewsFormAsync + amenitiesFormAsync).all { it.await() != null }
+            propertyFormId
         }
+
+    override fun setPropertyFormProgress(isPropertyFormInProgress: Boolean) {
+        isPropertyFormInProgressMutableStateFlow.tryEmit(isPropertyFormInProgress)
+    }
+
+    override fun isPropertyFormInProgressAsFlow(): Flow<Boolean> =
+        isPropertyFormInProgressMutableStateFlow.asStateFlow()
 
     override suspend fun getPropertyFormByIdAsFlow(propertyFormId: Long): Flow<PropertyFormEntity> =
         propertyFormDao.getPropertyFormById(propertyFormId).map { propertyFormWithDetails ->
@@ -102,5 +115,6 @@ class PropertyFormRepositoryRoom @Inject constructor(
         amenityFormDao.deleteAll(propertyFormId)
         picturePreviewDao.deleteAll(propertyFormId)
         locationFormDao.delete(propertyFormId)
-        propertyFormDao.delete(propertyFormId)}
+        propertyFormDao.delete(propertyFormId)
+    }
 }

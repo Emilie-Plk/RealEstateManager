@@ -18,6 +18,8 @@ import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCas
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.AddPropertyUseCase
+import com.emplk.realestatemanager.domain.property_form.AddTemporaryPropertyFormUseCase
+import com.emplk.realestatemanager.domain.property_form.SetPropertyFormProgressUseCase
 import com.emplk.realestatemanager.domain.property_type.GetPropertyTypeFlowUseCase
 import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem
 import com.emplk.realestatemanager.ui.add.amenity.AmenityViewStateItem
@@ -36,7 +38,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.transform
-import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
@@ -46,18 +47,16 @@ import kotlin.time.Duration.Companion.seconds
 @HiltViewModel
 class AddPropertyViewModel @Inject constructor(
     private val addPropertyUseCase: AddPropertyUseCase,
+    private val addTemporaryPropertyFormUseCase: AddTemporaryPropertyFormUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val getCurrencyTypeUseCase: GetCurrencyTypeUseCase,
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
     private val getAgentsFlowUseCase: GetAgentsFlowUseCase,
+    private val setPropertyFormProgressUseCase: SetPropertyFormProgressUseCase,
     private val getAmenityTypeFlowUseCase: GetAmenityTypeFlowUseCase,
     private val getPropertyTypeFlowUseCase: GetPropertyTypeFlowUseCase,
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : ViewModel() {
-
-    companion object {
-        private const val PROPERTY_FORM_ID = 1L
-    }
 
     private data class AddPropertyForm(
         val propertyType: String? = null,
@@ -109,6 +108,8 @@ class AddPropertyViewModel @Inject constructor(
 
     val viewStateLiveData: LiveData<AddPropertyViewState> = liveData {
         coroutineScope {
+            val temporaryPropertyFormResult = addTemporaryPropertyFormUseCase.invoke()
+            Log.d("COUCOU", "temporaryPropertyFormResult: $temporaryPropertyFormResult")
             launch {
                 combine(
                     formMutableStateFlow,
@@ -118,6 +119,19 @@ class AddPropertyViewModel @Inject constructor(
                     isAddingPropertyInDatabaseMutableStateFlow,
                 ) { form, agents, propertyTypes, amenityTypes, isAddingPropertyInDatabase ->
                     val currencyType = getCurrencyTypeUseCase.invoke()
+
+                    val isFormInProgress = form.pictures.isNotEmpty() ||
+                            !form.propertyType.isNullOrBlank() ||
+                            !form.address.isNullOrBlank() ||
+                            form.price > BigDecimal.ZERO ||
+                            !form.surface.isNullOrBlank() ||
+                            !form.description.isNullOrBlank() ||
+                            form.nbRooms > 0 ||
+                            form.nbBathrooms > 0 ||
+                            form.nbBedrooms > 0 ||
+                            !form.agent.isNullOrBlank()
+                    setPropertyFormProgressUseCase.invoke(isFormInProgress)
+
                     emit(
                         AddPropertyViewState(
                             propertyType = form.propertyType,
@@ -171,8 +185,7 @@ class AddPropertyViewModel @Inject constructor(
                     emit(it)
                     delay(10.seconds)
                 }.collect {
-                    // TODO : save form in database UC
-                    Log.d("COUCOU", "Saving form in database")
+                    // TODO : update form in database UC
                 }
             }
         }
@@ -230,13 +243,21 @@ class AddPropertyViewModel @Inject constructor(
 
     fun onPriceChanged(price: String) {
         formMutableStateFlow.update {
-            it.copy(price = price.toBigDecimal())
+            if (price.isBlank()) {
+                it.copy(price = BigDecimal.ZERO)
+            } else {
+                it.copy(price = price.toBigDecimal())
+            }
         }
     }
 
     fun onSurfaceChanged(surface: String) {
         formMutableStateFlow.update {
-            it.copy(surface = surface)
+            if (surface.isBlank()) {
+                it.copy(surface = null)
+            } else {
+                it.copy(surface = surface)
+            }
         }
     }
 
