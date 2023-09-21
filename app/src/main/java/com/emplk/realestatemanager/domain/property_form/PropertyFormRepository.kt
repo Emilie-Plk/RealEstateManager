@@ -5,7 +5,11 @@ import kotlinx.coroutines.flow.Flow
 interface PropertyFormRepository {
     suspend fun add(propertyFormEntity: PropertyFormEntity): Long?
 
-    suspend fun addPropertyFormWithDetails(propertyFormEntity: PropertyFormEntity): Boolean
+    suspend fun addPropertyFormWithDetails(propertyFormEntity: PropertyFormEntity): Long
+
+    fun setPropertyFormProgress(isPropertyFormInProgress: Boolean)
+
+    fun isPropertyFormInProgressAsFlow(): Flow<Boolean>
 
     suspend fun getPropertyFormByIdAsFlow(propertyFormId: Long): Flow<PropertyFormEntity>
 

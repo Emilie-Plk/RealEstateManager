@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commitNow
@@ -12,6 +13,7 @@ import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.BlankActivityBinding
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.ui.add.AddPropertyFragment
+import com.emplk.realestatemanager.ui.add.add_dialog.AddDraftDialogFragment
 import com.emplk.realestatemanager.ui.edit.EditPropertyFragment
 import com.emplk.realestatemanager.ui.main.MainActivity
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
@@ -41,6 +43,8 @@ class BlankActivity : AppCompatActivity() {
         setSupportActionBar(binding.blankToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        onBackPress()
+
         val fragmentTag = intent.getStringExtra(KEY_FRAGMENT_TAG)
 
         if (savedInstanceState == null) {
@@ -67,6 +71,9 @@ class BlankActivity : AppCompatActivity() {
                     MainActivity.navigate(this)
                     finish()
                 }
+
+                BlankViewEvent.DisplayDraftDialog ->
+                    AddDraftDialogFragment.newInstance().show(supportFragmentManager, null)
             }
         }
     }
@@ -85,5 +92,19 @@ class BlankActivity : AppCompatActivity() {
 
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun onBackPress() {
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+             //   viewModel.onBackClicked()
+                val backStackCount = supportFragmentManager.backStackEntryCount
+                if (backStackCount > 0) {
+                    supportFragmentManager.popBackStack()
+                } else {
+                    finish()
+                }
+            }
+        })
     }
 }

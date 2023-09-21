@@ -24,6 +24,7 @@ class GetToolbarSubtitleUseCase @Inject constructor(
                     NavigationFragmentType.FILTER_FRAGMENT -> "Filter properties"
                     NavigationFragmentType.ADD_FRAGMENT -> "Add property"
                     NavigationFragmentType.DETAIL_FRAGMENT -> "Property details"
+                    NavigationFragmentType.DRAFT_DIALOG_FRAGMENT -> null
                 }
             }
         }

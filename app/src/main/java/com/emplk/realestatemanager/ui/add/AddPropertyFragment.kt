@@ -28,8 +28,6 @@ import java.io.File
 class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
 
     companion object {
-        private const val KEY_CURRENT_PHOTO_URI = "KEY_CURRENT_PHOTO_URI"
-
         fun newInstance(): Fragment = AddPropertyFragment()
     }
 
