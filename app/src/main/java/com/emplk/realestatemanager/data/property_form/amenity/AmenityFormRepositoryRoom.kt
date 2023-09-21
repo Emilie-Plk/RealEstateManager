@@ -10,9 +10,9 @@ class AmenityFormRepositoryRoom @Inject constructor(
     private val amenityFormDao: AmenityFormDao,
     private val amenityFormMapper: AmenityFormMapper,
 ) : AmenityFormRepository {
-    override suspend fun add(amenityFormEntity: AmenityFormEntity): Long =
+    override suspend fun add(amenityFormEntity: AmenityFormEntity, propertyFormId: Long): Long? =
         amenityFormDao.insert(
-            amenityFormMapper.mapToAmenityDto(amenityFormEntity)
+            amenityFormMapper.mapToAmenityDto(amenityFormEntity, propertyFormId)
         )
 
     override fun getAllAsFlow(): Flow<List<AmenityFormEntity>> =

@@ -97,4 +97,10 @@ class PropertyFormRepositoryRoom @Inject constructor(
                 amenityFormDao.update(amenityFormMapper.mapToAmenityDto(it, propertyFormEntity.id))
             }
         }
+
+    override suspend fun delete(propertyFormId: Long) = withContext(coroutineDispatcherProvider.io) {
+        amenityFormDao.deleteAll(propertyFormId)
+        picturePreviewDao.deleteAll(propertyFormId)
+        locationFormDao.delete(propertyFormId)
+        propertyFormDao.delete(propertyFormId)}
 }

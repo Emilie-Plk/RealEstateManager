@@ -12,4 +12,6 @@ interface PropertyFormRepository {
     suspend fun exists(): Boolean
 
     suspend fun update(propertyFormEntity: PropertyFormEntity)
+
+    suspend fun delete(propertyFormId: Long)
 }
