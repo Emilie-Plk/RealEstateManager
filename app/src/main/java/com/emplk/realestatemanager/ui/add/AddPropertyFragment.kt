@@ -89,11 +89,12 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
             agentAdapter.setData(viewState.agents)
             picturePreviewAdapter.submitList(viewState.pictures)
             amenityAdapter.submitList(viewState.amenities)
-            binding.addPropertyPriceCurrencyTv.text = viewState.priceCurrency.toCharSequence(requireContext())
-            binding.addPropertySurfaceUnitTv.text = viewState.surfaceUnit.toCharSequence(requireContext())
-            binding.addPropertyRoomsNumberPicker.value = viewState.nbRooms
-            binding.addPropertyBedroomsNumberPicker.value = viewState.nbBedrooms
-            binding.addPropertyBathroomsNumberPicker.value = viewState.nbBathrooms
+            binding.addPropertyDescriptionTv.text = viewState.description
+            /*   binding.addPropertyPriceCurrencyTv.text = viewState.priceCurrency.toCharSequence(requireContext())
+               binding.addPropertySurfaceUnitTv.text = viewState.surfaceUnit.toCharSequence(requireContext())
+               binding.addPropertyRoomsNumberPicker.value = viewState.nbRooms
+               binding.addPropertyBedroomsNumberPicker.value = viewState.nbBedrooms
+               binding.addPropertyBathroomsNumberPicker.value = viewState.nbBathrooms*/
             binding.addPropertyCreateButton.isEnabled = viewState.isAddButtonEnabled
             binding.addPropertyProgressBar.isVisible = viewState.isProgressBarVisible
         }
@@ -144,6 +145,10 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
 
         binding.addPropertySurfaceTextInputEditText.doAfterTextChanged {
             viewModel.onSurfaceChanged(it.toString())
+        }
+
+        binding.addPropertyDescriptionTextInputEditText.doAfterTextChanged {
+            viewModel.onDescriptionChanged(it.toString())
         }
     }
 

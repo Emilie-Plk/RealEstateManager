@@ -10,5 +10,5 @@ data class AmenityFormDto(
     val id: Long = 0,
     @ColumnInfo(name = "property_form_id", index = true)
     val propertyFormId: Long,
-    val name: String,
+    val name: String?,
 )
