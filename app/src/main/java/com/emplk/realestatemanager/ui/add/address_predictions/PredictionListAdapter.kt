@@ -3,13 +3,14 @@ package com.emplk.realestatemanager.ui.add.address_predictions
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.emplk.realestatemanager.databinding.PropertyAddressPredictionEmptyBinding
 import com.emplk.realestatemanager.databinding.PropertyAddressPredictionItemBinding
 
 class PredictionListAdapter :
-    ListAdapter<PredictionViewState, PredictionListAdapter.PredictionViewHolder>(DiffCallback) {
+    ListAdapter<PredictionViewState, PredictionListAdapter.PredictionViewHolder>(PredictionDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PredictionViewHolder =
         when (PredictionViewState.Type.values()[viewType]) {
@@ -46,7 +47,8 @@ class PredictionListAdapter :
             }
         }
 
-        class EmptyState(private val binding: PropertyAddressPredictionEmptyBinding) : RecyclerView.ViewHolder(binding.root) {
+        class EmptyState(private val binding: PropertyAddressPredictionEmptyBinding) :
+            PredictionViewHolder(binding.root) {
             companion object {
                 fun create(parent: ViewGroup) = EmptyState(
                     binding = PropertyAddressPredictionEmptyBinding.inflate(
@@ -60,4 +62,18 @@ class PredictionListAdapter :
     }
 
 
+}
+
+object PredictionDiffCallback : DiffUtil.ItemCallback<PredictionViewState>() {
+    override fun areItemsTheSame(oldItem: PredictionViewState, newItem: PredictionViewState): Boolean =
+        when {
+            oldItem is PredictionViewState.Prediction && newItem is PredictionViewState.Prediction -> oldItem.id == newItem.id
+
+            oldItem is PredictionViewState.EmptyState && newItem is PredictionViewState.EmptyState -> true
+
+            else -> false
+        }
+
+    override fun areContentsTheSame(oldItem: PredictionViewState, newItem: PredictionViewState): Boolean =
+        oldItem == newItem
 }

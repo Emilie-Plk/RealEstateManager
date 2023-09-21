@@ -10,15 +10,15 @@ import java.math.BigDecimal
 
 data class PropertyFormEntity(
     val id: Long = 0,
-    val type: String? = null,
+    val type: String?,
     val price: BigDecimal? = BigDecimal.ZERO,
-    val surface: Int? = null,
-    val rooms: Int? = null,
-    val bedrooms: Int? = null,
-    val bathrooms: Int? = null,
-    val description: String? = null,
-    val agentName: String? = null,
-    val location: LocationFormEntity? = null,
+    val surface: Int?,
+    val rooms: Int?,
+    val bedrooms: Int?,
+    val bathrooms: Int?,
+    val description: String?,
+    val agentName: String?,
+    val location: LocationFormEntity?,
     val pictures: List<PicturePreviewEntity>,
     val amenities: List<AmenityFormEntity>,
 )
