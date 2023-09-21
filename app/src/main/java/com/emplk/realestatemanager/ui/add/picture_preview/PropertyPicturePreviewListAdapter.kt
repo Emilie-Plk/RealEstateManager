@@ -64,7 +64,9 @@ class PropertyPicturePreviewListAdapter :
                     .error(R.drawable.baseline_villa_24)
                     .into(binding.previewPictureIv)
 
-                binding.previewPictureStarFeaturedIv.setOnClickListener { item.onFeaturedEvent.invoke() }
+                binding.previewPictureStarFeaturedIv.setOnClickListener {
+                    item.onFeaturedEvent.invoke(!item.isFeatured)
+                }
 
                 binding.previewPictureStarFeaturedIv.setImageResource(
                     if (item.isFeatured) R.drawable.baseline_star_24
@@ -73,17 +75,8 @@ class PropertyPicturePreviewListAdapter :
 
                 binding.previewPictureDeleteIv.setOnClickListener { item.onDeleteEvent.invoke() }
 
-                item.description?.let {
-                    binding.previewPictureTitleEt.setText(it)
-                }
-
                 binding.previewPictureTitleEt.doAfterTextChanged {
-                    it?.let {
-                        item.description = it.toString()
-                        if (it.length > 5) {
-                            item.onDescriptionChanged.invoke()
-                        }
-                    }
+                    item.onDescriptionChanged.invoke(it.toString())
                 }
             }
         }
@@ -118,7 +111,7 @@ class PropertyPicturePreviewListAdapter :
                 binding.previewPictureStarFeaturedIv.setOnClickListener { item.onFeaturedEvent.invoke() }
 
                 binding.previewPictureTitleEt.doAfterTextChanged {
-                    item.onDescriptionChanged.invoke()
+                    item.onDescriptionChanged.invoke(it.toString())
                 }
             }
         }

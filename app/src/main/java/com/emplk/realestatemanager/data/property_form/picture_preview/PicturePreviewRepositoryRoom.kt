@@ -14,10 +14,10 @@ class PicturePreviewRepositoryRoom @Inject constructor(
     private val picturePreviewMapper: PicturePreviewMapper,
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : PicturePreviewRepository {
-    override suspend fun add(picturePreviewEntity: PicturePreviewEntity): Long =
+    override suspend fun add(picturePreviewEntity: PicturePreviewEntity, propertyFormId : Long): Long? =
         withContext(coroutineDispatcherProvider.io) {
             picturePreviewDao.insert(
-                picturePreviewMapper.mapToPicturePreviewDto(picturePreviewEntity)
+                picturePreviewMapper.mapToPicturePreviewDto(picturePreviewEntity, propertyFormId)
             )
         }
 
@@ -33,15 +33,8 @@ class PicturePreviewRepositoryRoom @Inject constructor(
     override suspend fun update(picturePreviewEntity: PicturePreviewEntity, propertyFormId: Long): Boolean =
         withContext(coroutineDispatcherProvider.io) {
             picturePreviewDao.update(
-                picturePreviewMapper.mapToPicturePreviewDto(picturePreviewEntity)
+                picturePreviewMapper.mapToPicturePreviewDto(picturePreviewEntity, propertyFormId)
             ) == 1
-        }
-
-    override suspend fun upsert(picturePreviewEntity: PicturePreviewEntity, propertyFormId: Long): Long =
-        withContext(coroutineDispatcherProvider.io) {
-            picturePreviewDao.upsert(
-                picturePreviewMapper.mapToPicturePreviewDto(picturePreviewEntity)
-            )
         }
 
     override suspend fun updateDescription(pictureId: Long, newDescription: String?) =

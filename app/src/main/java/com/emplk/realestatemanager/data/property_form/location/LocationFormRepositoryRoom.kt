@@ -11,21 +11,21 @@ class LocationFormRepositoryRoom @Inject constructor(
     private val locationFormMapper: LocationFormMapper,
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : LocationFormRepository {
-    override suspend fun add(locationFormEntity: LocationFormEntity, propertyFormId: Long): Long =
+    override suspend fun add(locationFormEntity: LocationFormEntity, propertyFormId: Long): Long? =
         withContext(coroutineDispatcherProvider.io) {
             locationFormDao.insert(
-                locationFormMapper.mapToLocationDto(locationFormEntity)
+                locationFormMapper.mapToLocationDto(locationFormEntity, propertyFormId)
             )
         }
 
     override suspend fun update(locationFormEntity: LocationFormEntity, propertyFormId: Long): Int =
         withContext(coroutineDispatcherProvider.io) {
             locationFormDao.update(
-                locationFormMapper.mapToLocationDto(locationFormEntity)
+                locationFormMapper.mapToLocationDto(locationFormEntity, propertyFormId)
             )
         }
 
-    override suspend fun delete(locationFormId: Long): Int =
+    override suspend fun delete(locationFormId: Long) =
         withContext(coroutineDispatcherProvider.io) {
             locationFormDao.delete(locationFormId)
         }

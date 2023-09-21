@@ -30,11 +30,10 @@ class AmenityListAdapter :
 
         fun bind(item: AmenityViewStateItem) {
             binding.addPropertyAmenitiesCheckbox.setText(item.stringRes)
-       //     binding.addPropertyAmenitiesCheckbox.isChecked = item.isChecked
+            binding.addPropertyAmenitiesCheckbox.isChecked = item.isChecked
             binding.addPropertyAmenitiesCheckbox.setCompoundDrawablesWithIntrinsicBounds(item.iconDrawable, 0, 0, 0)
             binding.addPropertyAmenitiesCheckbox.setOnCheckedChangeListener { _, isChecked ->
-                item.isChecked = !isChecked
-                //  item.onCheckBoxClicked.invoke()
+                item.onCheckBoxClicked.invoke(isChecked)
             }
         }
     }
