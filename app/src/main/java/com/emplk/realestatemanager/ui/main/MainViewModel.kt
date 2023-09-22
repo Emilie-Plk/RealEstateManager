@@ -7,8 +7,12 @@ import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdFlowUseCase
 import com.emplk.realestatemanager.domain.navigation.GetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.navigation.GetToolbarSubtitleUseCase
-import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
-import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.*
+import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.ADD_FRAGMENT
+import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.DETAIL_FRAGMENT
+import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.DRAFT_DIALOG_FRAGMENT
+import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.EDIT_FRAGMENT
+import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.FILTER_FRAGMENT
+import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.LIST_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.screen_width.SetScreenWidthTypeUseCase
 import com.emplk.realestatemanager.ui.utils.Event

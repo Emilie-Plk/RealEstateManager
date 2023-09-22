@@ -1,6 +1,5 @@
 package com.emplk.realestatemanager.domain.property_form
 
-import com.emplk.realestatemanager.domain.property_form.PropertyFormRepository
 import javax.inject.Inject
 
 class DeleteTemporaryPropertyFormUseCase @Inject constructor(

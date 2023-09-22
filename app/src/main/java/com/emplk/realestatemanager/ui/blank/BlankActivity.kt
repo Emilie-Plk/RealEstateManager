@@ -97,7 +97,7 @@ class BlankActivity : AppCompatActivity() {
     private fun onBackPress() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-             //   viewModel.onBackClicked()
+                //   viewModel.onBackClicked()
                 val backStackCount = supportFragmentManager.backStackEntryCount
                 if (backStackCount > 0) {
                     supportFragmentManager.popBackStack()

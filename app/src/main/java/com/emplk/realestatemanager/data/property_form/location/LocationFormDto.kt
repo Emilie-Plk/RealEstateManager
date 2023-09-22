@@ -2,14 +2,25 @@ package com.emplk.realestatemanager.data.property_form.location
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.emplk.realestatemanager.data.property_form.PropertyFormDto
 
-@Entity(tableName = "location_forms")
+@Entity(
+    tableName = "location_forms",
+    foreignKeys = [ForeignKey(
+        entity = PropertyFormDto::class,
+        parentColumns = ["id"],
+        childColumns = ["property_form_id"],
+        onDelete = ForeignKey.CASCADE
+    )
+    ]
+)
 data class LocationFormDto(
     @PrimaryKey(autoGenerate = true)
     val id: Long? = 0,
     @ColumnInfo(name = "property_form_id", index = true)
-    val propertyFormId: Long?,
+    val propertyFormId: Long,
     val address: String?,
     val city: String?,
     @ColumnInfo(name = "postal_code")

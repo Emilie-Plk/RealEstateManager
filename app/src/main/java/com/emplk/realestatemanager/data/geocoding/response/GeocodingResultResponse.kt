@@ -2,7 +2,7 @@ package com.emplk.realestatemanager.data.geocoding.response
 
 import com.google.gson.annotations.SerializedName
 
-data class GeocodingResultResponse (
+data class GeocodingResultResponse(
     @SerializedName("address_components") val addressComponents: List<AddressComponentResponse>?,
     @SerializedName("formatted_address") val formattedAddress: String?,
     @SerializedName("geometry") val geometry: GeometryResponse?,

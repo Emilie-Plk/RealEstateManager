@@ -24,10 +24,11 @@ class AddDraftDialogViewModel @Inject constructor(
 
     fun onCancelClicked() {
         viewModelScope.launch {
-            val propertyFormIdDeferred = async {
+            val propertyFormId = async {
                 getCurrentPropertyFormIdUseCase.invoke()
-            }
-            deleteTemporaryPropertyFormUseCase.invoke(propertyFormIdDeferred.await())
+            }.await()
+
+            deleteTemporaryPropertyFormUseCase.invoke(propertyFormId)
         }
         setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
     }

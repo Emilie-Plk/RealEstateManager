@@ -75,8 +75,7 @@ class PropertyPicturePreviewListAdapter :
 
                 binding.previewPictureDeleteIv.setOnClickListener { item.onDeleteEvent.invoke() }
 
-                binding.previewPictureTitleEt.doAfterTextChanged {
-                    editable ->
+                binding.previewPictureTitleEt.doAfterTextChanged { editable ->
                     item.onDescriptionChanged.invoke(editable.toString())
                 }
             }

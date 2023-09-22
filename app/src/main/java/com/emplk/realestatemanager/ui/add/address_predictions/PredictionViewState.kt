@@ -1,6 +1,5 @@
 package com.emplk.realestatemanager.ui.add.address_predictions
 
-import com.emplk.realestatemanager.ui.property_list.PropertiesViewState
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
 
 sealed class PredictionViewState(val type: Type) {

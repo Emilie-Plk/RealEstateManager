@@ -1,10 +1,8 @@
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
-
 plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
-    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")  version "2.0.1"
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin") version "2.0.1"
     id("dagger.hilt.android.plugin")
 }
 
