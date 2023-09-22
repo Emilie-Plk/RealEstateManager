@@ -20,24 +20,24 @@ class PredictionRepositoryAutocomplete @Inject constructor(
 
     override suspend fun getPredictions(query: String): List<PredictionEntity> =
         withContext(coroutineDispatcherProvider.io) {
-try {
-            val response = googleApi.getAddressPredictions(query, TYPE)
+            try {
+                val response = googleApi.getAddressPredictions(query, TYPE)
 
-            when (response.status) {
-                "OK" -> response.predictions?.mapNotNull { predictionResponse ->
-                    if (predictionResponse.placeId == null || predictionResponse.description == null) {
-                        return@mapNotNull null
-                    }
-                    PredictionEntity(
-                        predictionResponse.placeId,
-                        predictionResponse.description
-                    )
-                } ?: emptyList()
+                when (response.status) {
+                    "OK" -> response.predictions?.mapNotNull { predictionResponse ->
+                        if (predictionResponse.placeId == null || predictionResponse.description == null) {
+                            return@mapNotNull null
+                        }
+                        PredictionEntity(
+                            predictionResponse.placeId,
+                            predictionResponse.description
+                        )
+                    } ?: emptyList()
 
-                "ZERO_RESULTS" -> emptyList()
+                    "ZERO_RESULTS" -> emptyList()
 
-                else -> emptyList()
-            }
+                    else -> emptyList()
+                }
             } catch (e: Exception) {
                 coroutineContext.ensureActive()
                 emptyList()

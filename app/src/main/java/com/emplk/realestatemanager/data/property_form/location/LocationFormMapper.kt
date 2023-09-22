@@ -14,7 +14,7 @@ class LocationFormMapper @Inject constructor() {
         postalCode = locationFormDto.postalCode,
     )
 
-    fun mapToLocationDto(locationFormEntity: LocationFormEntity?, propertyFormId : Long) : LocationFormDto =
+    fun mapToLocationDto(locationFormEntity: LocationFormEntity?, propertyFormId: Long): LocationFormDto =
         LocationFormDto(
             id = locationFormEntity?.id,
             propertyFormId = propertyFormId,

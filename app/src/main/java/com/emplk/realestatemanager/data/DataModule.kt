@@ -2,7 +2,6 @@ package com.emplk.realestatemanager.data
 
 import android.app.Application
 import android.content.res.Resources
-import androidx.room.PrimaryKey
 import androidx.work.WorkManager
 import com.emplk.realestatemanager.data.amenity.AmenityDao
 import com.emplk.realestatemanager.data.location.LocationDao
