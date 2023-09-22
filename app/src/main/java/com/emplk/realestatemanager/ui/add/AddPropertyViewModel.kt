@@ -19,6 +19,7 @@ import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.AddPropertyUseCase
 import com.emplk.realestatemanager.domain.property_form.AddTemporaryPropertyFormUseCase
+import com.emplk.realestatemanager.domain.property_form.InitTemporaryPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_form.SetPropertyFormProgressUseCase
 import com.emplk.realestatemanager.domain.property_type.GetPropertyTypeFlowUseCase
 import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem
@@ -48,6 +49,7 @@ import kotlin.time.Duration.Companion.seconds
 class AddPropertyViewModel @Inject constructor(
     private val addPropertyUseCase: AddPropertyUseCase,
     private val addTemporaryPropertyFormUseCase: AddTemporaryPropertyFormUseCase,
+    private val initTemporaryPropertyFormUseCase: InitTemporaryPropertyFormUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val getCurrencyTypeUseCase: GetCurrencyTypeUseCase,
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
@@ -108,8 +110,8 @@ class AddPropertyViewModel @Inject constructor(
 
     val viewStateLiveData: LiveData<AddPropertyViewState> = liveData {
         coroutineScope {
-            val temporaryPropertyFormResult = addTemporaryPropertyFormUseCase.invoke()
-            Log.d("COUCOU", "temporaryPropertyFormResult: $temporaryPropertyFormResult")
+            val initTemporaryPropertyFormUseCase = initTemporaryPropertyFormUseCase.invoke()
+            Log.d("COUCOU", "temporaryPropertyFormResult: $initTemporaryPropertyFormUseCase")
             launch {
                 combine(
                     formMutableStateFlow,
@@ -131,7 +133,6 @@ class AddPropertyViewModel @Inject constructor(
                             form.nbBedrooms > 0 ||
                             !form.agent.isNullOrBlank()
                     setPropertyFormProgressUseCase.invoke(isFormInProgress)
-
                     emit(
                         AddPropertyViewState(
                             propertyType = form.propertyType,

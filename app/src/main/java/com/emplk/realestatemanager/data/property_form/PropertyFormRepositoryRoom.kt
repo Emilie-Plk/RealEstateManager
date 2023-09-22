@@ -78,7 +78,11 @@ class PropertyFormRepositoryRoom @Inject constructor(
     override fun isPropertyFormInProgressAsFlow(): Flow<Boolean> =
         isPropertyFormInProgressMutableStateFlow.asStateFlow()
 
-    override suspend fun getPropertyFormByIdAsFlow(propertyFormId: Long): Flow<PropertyFormEntity> =
+    override suspend fun getExistingPropertyFormId(): Long = withContext(coroutineDispatcherProvider.io) {
+        propertyFormDao.getExistingPropertyFormId()
+    }
+
+    override fun getPropertyFormByIdAsFlow(propertyFormId: Long): Flow<PropertyFormEntity> =
         propertyFormDao.getPropertyFormById(propertyFormId).map { propertyFormWithDetails ->
             propertyFormMapper.mapToPropertyFormEntity(
                 propertyFormWithDetails.propertyForm,
@@ -112,9 +116,9 @@ class PropertyFormRepositoryRoom @Inject constructor(
         }
 
     override suspend fun delete(propertyFormId: Long) = withContext(coroutineDispatcherProvider.io) {
+        propertyFormDao.delete(propertyFormId)
         amenityFormDao.deleteAll(propertyFormId)
         picturePreviewDao.deleteAll(propertyFormId)
         locationFormDao.delete(propertyFormId)
-        propertyFormDao.delete(propertyFormId)
     }
 }

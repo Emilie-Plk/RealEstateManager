@@ -1,14 +1,21 @@
 package com.emplk.realestatemanager.ui.add.add_dialog
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
+import com.emplk.realestatemanager.domain.property_form.DeleteTemporaryPropertyFormUseCase
+import com.emplk.realestatemanager.domain.property_form.GetCurrentPropertyFormIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AddDraftDialogViewModel @Inject constructor(
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
+    private val deleteTemporaryPropertyFormUseCase: DeleteTemporaryPropertyFormUseCase,
+    private val getCurrentPropertyFormIdUseCase: GetCurrentPropertyFormIdUseCase,
 ) : ViewModel() {
     fun onAddDraftClicked() {
         // Save form in db
@@ -16,7 +23,12 @@ class AddDraftDialogViewModel @Inject constructor(
     }
 
     fun onCancelClicked() {
-        // Clear form db
+        viewModelScope.launch {
+            val propertyFormIdDeferred = async {
+                getCurrentPropertyFormIdUseCase.invoke()
+            }
+            deleteTemporaryPropertyFormUseCase.invoke(propertyFormIdDeferred.await())
+        }
         setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
     }
 }
