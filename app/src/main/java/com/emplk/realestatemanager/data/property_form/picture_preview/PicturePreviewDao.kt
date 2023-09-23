@@ -2,9 +2,7 @@ package com.emplk.realestatemanager.data.property_form.picture_preview
 
 import androidx.room.Dao
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -16,14 +14,8 @@ interface PicturePreviewDao {
     @Query("SELECT * FROM picture_previews")
     fun getAllAsFlow(): Flow<List<PicturePreviewFormDto>>
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun update(picturePreviewFormDto: PicturePreviewFormDto): Int
-
-    @Query("UPDATE picture_previews SET description = :newDescription WHERE id = :pictureId")
-    suspend fun updateDescription(pictureId: Long, newDescription: String?)
-
-    @Query("UPDATE picture_previews SET isFeatured = :newFeaturedPicture WHERE id = :pictureId")
-    suspend fun updateFeaturedPicture(pictureId: Long, newFeaturedPicture: Boolean)
+    @Query("UPDATE picture_previews SET uri = :newUri, description = :newDescription, isFeatured = :newIsFeatured WHERE property_form_id = :propertyFormId")
+    suspend fun update(newUri: String?, newDescription: String?, newIsFeatured: Boolean?, propertyFormId: Long): Int
 
     @Query("DELETE FROM picture_previews WHERE id = :picturePreviewId")
     suspend fun delete(picturePreviewId: Long): Int

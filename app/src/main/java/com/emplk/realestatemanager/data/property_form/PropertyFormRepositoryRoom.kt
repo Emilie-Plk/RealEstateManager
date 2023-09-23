@@ -1,7 +1,6 @@
 package com.emplk.realestatemanager.data.property_form
 
 import android.database.sqlite.SQLiteException
-import android.util.Log
 import com.emplk.realestatemanager.data.property_form.amenity.AmenityFormDao
 import com.emplk.realestatemanager.data.property_form.amenity.AmenityFormMapper
 import com.emplk.realestatemanager.data.property_form.location.LocationFormDao
@@ -114,21 +113,29 @@ class PropertyFormRepositoryRoom @Inject constructor(
                 propertyFormId
             )
 
-
-            val location = locationFormDao.update(
-                locationFormMapper.mapToLocationDto(
-                    propertyFormEntity.location,
-                    propertyFormId
-                )
+            val locationFormDto = locationFormMapper.mapToLocationDto(propertyFormEntity.location, propertyFormId)
+            locationFormDao.update(
+                locationFormDto.address,
+                locationFormDto.city,
+                locationFormDto.postalCode,
+                locationFormDto.latitude,
+                locationFormDto.longitude,
+                propertyFormId
             )
 
-            Log.d("COUCOU", "update: location: $location")
-
             propertyFormEntity.pictures.forEach {
-                picturePreviewDao.update(picturePreviewMapper.mapToPicturePreviewDto(it, propertyFormId))
+                val picturePreviewDto =
+                    picturePreviewMapper.mapToPicturePreviewDto(it, propertyFormId)
+                picturePreviewDao.update(
+                    picturePreviewDto.uri,
+                    picturePreviewDto.description,
+                    picturePreviewDto.isFeatured,
+                    propertyFormId
+                )
             }
             propertyFormEntity.amenities.forEach {
-                amenityFormDao.update(amenityFormMapper.mapToAmenityDto(it, propertyFormId))
+                val amenityFormDto = amenityFormMapper.mapToAmenityDto(it, propertyFormId)
+                amenityFormDao.update(amenityFormDto.name, propertyFormId)
             }
         }
 
