@@ -7,8 +7,6 @@ class PicturePreviewMapper @Inject constructor() {
 
     fun mapToPicturePreviewEntity(picturePreviewFormDto: PicturePreviewFormDto): PicturePreviewEntity =
         PicturePreviewEntity(
-            id = picturePreviewFormDto.id,
-            propertyFormId = picturePreviewFormDto.propertyFormId,
             uri = picturePreviewFormDto.uri,
             description = picturePreviewFormDto.description,
             isFeatured = picturePreviewFormDto.isFeatured,
@@ -19,7 +17,6 @@ class PicturePreviewMapper @Inject constructor() {
         propertyFormId: Long
     ): PicturePreviewFormDto =
         PicturePreviewFormDto(
-            id = picturePreviewEntity.id,
             propertyFormId = propertyFormId,
             uri = picturePreviewEntity.uri,
             description = picturePreviewEntity.description,

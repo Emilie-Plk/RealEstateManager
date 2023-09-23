@@ -97,27 +97,38 @@ class PropertyFormRepositoryRoom @Inject constructor(
         propertyFormDao.exists()
     }
 
-    override suspend fun update(propertyFormEntity: PropertyFormEntity) =
+    override suspend fun update(propertyFormEntity: PropertyFormEntity, propertyFormId: Long) =
         withContext(coroutineDispatcherProvider.io) {
-            val updateResult =
-                propertyFormDao.update(propertyFormMapper.mapToPropertyFormDto(propertyFormEntity))
 
-            Log.d("Coucou", "updateResult: $updateResult")
+            val propertyFormDto = propertyFormMapper.mapToPropertyFormDto(propertyFormEntity)
 
-            val locationResult = locationFormDao.update(
+            propertyFormDao.update(
+                propertyFormDto.type,
+                propertyFormDto.price,
+                propertyFormDto.surface,
+                propertyFormDto.rooms,
+                propertyFormDto.bedrooms,
+                propertyFormDto.bathrooms,
+                propertyFormDto.description,
+                propertyFormDto.agentName,
+                propertyFormId
+            )
+
+
+            val location = locationFormDao.update(
                 locationFormMapper.mapToLocationDto(
                     propertyFormEntity.location,
-                    propertyFormEntity.id
+                    propertyFormId
                 )
             )
 
-            Log.d("Coucou", "locationResult: $locationResult")
+            Log.d("COUCOU", "update: location: $location")
 
             propertyFormEntity.pictures.forEach {
-                picturePreviewDao.update(picturePreviewMapper.mapToPicturePreviewDto(it, propertyFormEntity.id))
+                picturePreviewDao.update(picturePreviewMapper.mapToPicturePreviewDto(it, propertyFormId))
             }
             propertyFormEntity.amenities.forEach {
-                amenityFormDao.update(amenityFormMapper.mapToAmenityDto(it, propertyFormEntity.id))
+                amenityFormDao.update(amenityFormMapper.mapToAmenityDto(it, propertyFormId))
             }
         }
 

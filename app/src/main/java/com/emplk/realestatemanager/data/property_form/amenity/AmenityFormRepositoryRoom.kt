@@ -19,7 +19,7 @@ class AmenityFormRepositoryRoom @Inject constructor(
         amenityFormDao.getAllAsFlow()
             .map { amenityFormDtos ->
                 amenityFormDtos.map { amenityFormDto ->
-                    amenityFormMapper.mapToAmenityFormEntity(amenityFormDto, amenityFormDto.propertyFormId)
+                    amenityFormMapper.mapToAmenityFormEntity(amenityFormDto)
                 }
             }
 

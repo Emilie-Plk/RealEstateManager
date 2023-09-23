@@ -16,7 +16,6 @@ class PropertyFormMapper @Inject constructor(
 
     fun mapToPropertyFormDto(propertyForm: PropertyFormEntity): PropertyFormDto =
         PropertyFormDto(
-            id = propertyForm.id,
             type = propertyForm.type,
             price = propertyForm.price,
             surface = propertyForm.surface,
@@ -34,7 +33,6 @@ class PropertyFormMapper @Inject constructor(
         amenityFormDtos: List<AmenityFormDto>,
     ): PropertyFormEntity =
         PropertyFormEntity(
-            id = propertyFormDto.id,
             type = propertyFormDto.type,
             price = propertyFormDto.price,
             surface = propertyFormDto.surface,
