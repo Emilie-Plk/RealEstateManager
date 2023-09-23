@@ -202,7 +202,7 @@ class AddPropertyViewModel @Inject constructor(
                             bathrooms = it.nbBathrooms,
                             location = LocationFormEntity(
                                 address = it.address,
-                                city = "ciyciy",
+                                city = "city",
                                 postalCode = "postalcode",
                                 latitude = 0.0,
                                 longitude = 0.0,),
@@ -210,7 +210,6 @@ class AddPropertyViewModel @Inject constructor(
                             agentName = it.agent,
                             amenities = it.amenities.map { amenity ->
                                 AmenityFormEntity(
-                                    id = amenity.id,
                                     type = amenity.type.name,
                                 )
                             },

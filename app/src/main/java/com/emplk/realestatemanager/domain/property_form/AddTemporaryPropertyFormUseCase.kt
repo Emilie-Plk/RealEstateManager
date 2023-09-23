@@ -7,8 +7,6 @@ class AddTemporaryPropertyFormUseCase @Inject constructor(
     private val propertyFormRepository: PropertyFormRepository
 ) {
     suspend fun invoke(): Long = propertyFormRepository.addPropertyFormWithDetails(
-        PropertyFormEntity(
-            location = LocationFormEntity()
-        )
+        PropertyFormEntity()
     )
 }

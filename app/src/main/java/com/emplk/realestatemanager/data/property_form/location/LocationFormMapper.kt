@@ -5,8 +5,6 @@ import javax.inject.Inject
 
 class LocationFormMapper @Inject constructor() {
     fun mapToLocationFormEntity(locationFormDto: LocationFormDto): LocationFormEntity = LocationFormEntity(
-        id = locationFormDto.id,
-        propertyFormId = locationFormDto.propertyFormId,
         latitude = locationFormDto.latitude,
         longitude = locationFormDto.longitude,
         address = locationFormDto.address,
@@ -14,15 +12,14 @@ class LocationFormMapper @Inject constructor() {
         postalCode = locationFormDto.postalCode,
     )
 
-    fun mapToLocationDto(locationFormEntity: LocationFormEntity, propertyFormId: Long): LocationFormDto =
+    fun mapToLocationDto(locationFormEntity: LocationFormEntity?, propertyFormId: Long): LocationFormDto =
         LocationFormDto(
-            id = locationFormEntity.id,
             propertyFormId = propertyFormId,
-            latitude = locationFormEntity.latitude,
-            longitude = locationFormEntity.longitude,
-            address = locationFormEntity.address,
-            city = locationFormEntity.city,
-            postalCode = locationFormEntity.postalCode,
+            latitude = locationFormEntity?.latitude,
+            longitude = locationFormEntity?.longitude,
+            address = locationFormEntity?.address,
+            city = locationFormEntity?.city,
+            postalCode = locationFormEntity?.postalCode,
         )
 
 }
