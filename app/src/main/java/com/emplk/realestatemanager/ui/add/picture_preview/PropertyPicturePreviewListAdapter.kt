@@ -7,11 +7,11 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.PropertyPreviewPictureItemBinding
-import com.emplk.realestatemanager.ui.utils.NativePhoto.Companion.load
 
 class PropertyPicturePreviewListAdapter :
     ListAdapter<PicturePreviewStateItem, PropertyPicturePreviewListAdapter.PropertyPicturePreviewViewHolder>(
@@ -59,7 +59,9 @@ class PropertyPicturePreviewListAdapter :
             }
 
             fun bind(item: PicturePreviewStateItem.AddPropertyPicturePreview) {
-                item.uri.load(binding.previewPictureIv)
+                Glide
+                    .with(binding.previewPictureIv)
+                    .load(binding.previewPictureIv)
                     .transform(CenterCrop(), RoundedCorners(16))
                     .error(R.drawable.baseline_villa_24)
                     .into(binding.previewPictureIv)
@@ -94,9 +96,9 @@ class PropertyPicturePreviewListAdapter :
             }
 
             fun bind(item: PicturePreviewStateItem.EditPropertyPicturePreview) {
-                item.uri.load(
-                    binding.previewPictureIv
-                )
+                Glide
+                    .with(binding.previewPictureIv)
+                    .load(binding.previewPictureIv)
                     .transform(CenterCrop(), RoundedCorners(16))
                     .error(R.drawable.baseline_villa_24)
                     .into(binding.previewPictureIv)

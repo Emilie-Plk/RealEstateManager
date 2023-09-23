@@ -20,7 +20,12 @@ import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.AddPropertyUseCase
 import com.emplk.realestatemanager.domain.property_form.AddTemporaryPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_form.InitTemporaryPropertyFormUseCase
+import com.emplk.realestatemanager.domain.property_form.PropertyFormEntity
 import com.emplk.realestatemanager.domain.property_form.SetPropertyFormProgressUseCase
+import com.emplk.realestatemanager.domain.property_form.UpdatePropertyFormUseCase
+import com.emplk.realestatemanager.domain.property_form.amenity.AmenityFormEntity
+import com.emplk.realestatemanager.domain.property_form.location.LocationFormEntity
+import com.emplk.realestatemanager.domain.property_form.picture_preview.PicturePreviewEntity
 import com.emplk.realestatemanager.domain.property_type.GetPropertyTypeFlowUseCase
 import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem
 import com.emplk.realestatemanager.ui.add.amenity.AmenityViewStateItem
@@ -49,6 +54,7 @@ import kotlin.time.Duration.Companion.seconds
 class AddPropertyViewModel @Inject constructor(
     private val addPropertyUseCase: AddPropertyUseCase,
     private val addTemporaryPropertyFormUseCase: AddTemporaryPropertyFormUseCase,
+    private val updatePropertyFormUseCase: UpdatePropertyFormUseCase,
     private val initTemporaryPropertyFormUseCase: InitTemporaryPropertyFormUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val getCurrencyTypeUseCase: GetCurrencyTypeUseCase,
@@ -64,7 +70,7 @@ class AddPropertyViewModel @Inject constructor(
         val propertyType: String? = null,
         val address: String? = null,
         val price: BigDecimal = BigDecimal.ZERO,
-        val surface: String? = null,
+        val surface: Int = 0,
         val description: String? = null,
         val nbRooms: Int = 0,
         val nbBathrooms: Int = 0,
@@ -126,7 +132,7 @@ class AddPropertyViewModel @Inject constructor(
                             !form.propertyType.isNullOrBlank() ||
                             !form.address.isNullOrBlank() ||
                             form.price > BigDecimal.ZERO ||
-                            !form.surface.isNullOrBlank() ||
+                            form.surface > 0 ||
                             !form.description.isNullOrBlank() ||
                             form.nbRooms > 0 ||
                             form.nbBathrooms > 0 ||
@@ -186,7 +192,37 @@ class AddPropertyViewModel @Inject constructor(
                     emit(it)
                     delay(10.seconds)
                 }.collect {
-                    // TODO : update form in database UC
+                    updatePropertyFormUseCase.invoke(
+                        PropertyFormEntity(
+                            type = it.propertyType,
+                            price = it.price,
+                            surface = it.surface,
+                            description = it.description,
+                            rooms = it.nbRooms,
+                            bathrooms = it.nbBathrooms,
+                            location = LocationFormEntity(
+                                address = it.address,
+                                city = "ciyciy",
+                                postalCode = "postalcode",
+                                latitude = 0.0,
+                                longitude = 0.0,),
+                            bedrooms = it.nbBedrooms,
+                            agentName = it.agent,
+                            amenities = it.amenities.map { amenity ->
+                                AmenityFormEntity(
+                                    id = amenity.id,
+                                    type = amenity.type.name,
+                                )
+                            },
+                            pictures = it.pictures.map { picture ->
+                                PicturePreviewEntity(
+                                    uri = picture.uri,
+                                    isFeatured = picture.isFeatured,
+                                    description = picture.description,
+                                )
+                            }
+                        )
+                    )
                 }
             }
         }
@@ -254,75 +290,71 @@ class AddPropertyViewModel @Inject constructor(
 
     fun onSurfaceChanged(surface: String) {
         formMutableStateFlow.update {
-            if (surface.isBlank()) {
-                it.copy(surface = null)
-            } else {
-                it.copy(surface = surface)
+            it.copy(surface = surface.toInt())
+        }
+}
+
+fun onPictureSelected(uri: Uri) {
+    val pictureId = formMutableStateFlow.value.pictures.size + 1L
+    val addedPicture = PicturePreviewStateItem.AddPropertyPicturePreview(
+        id = pictureId,
+        uri = uri.toString(),
+        isFeatured = false,
+        description = null,
+        onDeleteEvent = EquatableCallback {
+            formMutableStateFlow.update {
+                it.copy(pictures = it.pictures.filter { picture -> picture.id != pictureId })
             }
-        }
+        },
+        onFeaturedEvent = EquatableCallbackWithParam { isFeatured ->
+            formMutableStateFlow.update {
+                it.copy(pictures = it.pictures.map { picture ->
+                    if (picture.id == pictureId) {
+                        picture.copy(isFeatured = isFeatured)
+                    } else return@EquatableCallbackWithParam
+                })
+            }
+        },
+        onDescriptionChanged = EquatableCallbackWithParam { description ->
+            formMutableStateFlow.update {
+                it.copy(pictures = it.pictures.map { picture ->
+                    if (picture.id == pictureId) {
+                        picture.copy(description = description)
+                    } else return@EquatableCallbackWithParam
+                })
+            }
+        },
+    )
+    formMutableStateFlow.update {
+        it.copy(pictures = it.pictures + addedPicture)
     }
+}
 
-    fun onPictureSelected(uri: Uri) {
-        val pictureId = formMutableStateFlow.value.pictures.size + 1L
-        val addedPicture = PicturePreviewStateItem.AddPropertyPicturePreview(
-            id = pictureId,
-            uri = NativePhoto.Uri(uri.toString()),
-            isFeatured = false,
-            description = null,
-            onDeleteEvent = EquatableCallback {
-                formMutableStateFlow.update {
-                    it.copy(pictures = it.pictures.filter { picture -> picture.id != pictureId })
-                }
-            },
-            onFeaturedEvent = EquatableCallbackWithParam { isFeatured ->
-                formMutableStateFlow.update {
-                    it.copy(pictures = it.pictures.map { picture ->
-                        if (picture.id == pictureId) {
-                            picture.copy(isFeatured = isFeatured)
-                        } else return@EquatableCallbackWithParam
-                    })
-                }
-            },
-            onDescriptionChanged = EquatableCallbackWithParam { description ->
-                formMutableStateFlow.update {
-                    it.copy(pictures = it.pictures.map { picture ->
-                        if (picture.id == pictureId) {
-                            picture.copy(description = description)
-                        } else return@EquatableCallbackWithParam
-                    })
-                }
-            },
-        )
-        formMutableStateFlow.update {
-            it.copy(pictures = it.pictures + addedPicture)
-        }
+fun onDescriptionChanged(description: String) {
+    formMutableStateFlow.update {
+        it.copy(description = description)
     }
+}
 
-    fun onDescriptionChanged(description: String) {
-        formMutableStateFlow.update {
-            it.copy(description = description)
-        }
+fun onRoomsNumberChanged(value: Int) {
+    formMutableStateFlow.update {
+        it.copy(nbRooms = value)
     }
+}
 
-    fun onRoomsNumberChanged(value: Int) {
-        formMutableStateFlow.update {
-            it.copy(nbRooms = value)
-        }
+fun onBedroomsNumberChanged(value: Int) {
+    formMutableStateFlow.update {
+        it.copy(nbBedrooms = value)
     }
+}
 
-    fun onBedroomsNumberChanged(value: Int) {
-        formMutableStateFlow.update {
-            it.copy(nbBedrooms = value)
-        }
+fun onBathroomsNumberChanged(value: Int) {
+    formMutableStateFlow.update {
+        it.copy(nbBathrooms = value)
     }
+}
 
-    fun onBathroomsNumberChanged(value: Int) {
-        formMutableStateFlow.update {
-            it.copy(nbBathrooms = value)
-        }
-    }
-
-    fun onAddPropertyClicked() {
-        onCreateButtonClickedMutableSharedFlow.tryEmit(Unit)
-    }
+fun onAddPropertyClicked() {
+    onCreateButtonClickedMutableSharedFlow.tryEmit(Unit)
+}
 }

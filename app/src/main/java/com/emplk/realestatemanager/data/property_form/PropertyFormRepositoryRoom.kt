@@ -1,6 +1,7 @@
 package com.emplk.realestatemanager.data.property_form
 
 import android.database.sqlite.SQLiteException
+import android.util.Log
 import com.emplk.realestatemanager.data.property_form.amenity.AmenityFormDao
 import com.emplk.realestatemanager.data.property_form.amenity.AmenityFormMapper
 import com.emplk.realestatemanager.data.property_form.location.LocationFormDao
@@ -98,14 +99,19 @@ class PropertyFormRepositoryRoom @Inject constructor(
 
     override suspend fun update(propertyFormEntity: PropertyFormEntity) =
         withContext(coroutineDispatcherProvider.io) {
-            propertyFormDao.update(propertyFormMapper.mapToPropertyFormDto(propertyFormEntity))
+            val updateResult =
+                propertyFormDao.update(propertyFormMapper.mapToPropertyFormDto(propertyFormEntity))
 
-            locationFormDao.update(
+            Log.d("Coucou", "updateResult: $updateResult")
+
+            val locationResult = locationFormDao.update(
                 locationFormMapper.mapToLocationDto(
                     propertyFormEntity.location,
                     propertyFormEntity.id
                 )
             )
+
+            Log.d("Coucou", "locationResult: $locationResult")
 
             propertyFormEntity.pictures.forEach {
                 picturePreviewDao.update(picturePreviewMapper.mapToPicturePreviewDto(it, propertyFormEntity.id))

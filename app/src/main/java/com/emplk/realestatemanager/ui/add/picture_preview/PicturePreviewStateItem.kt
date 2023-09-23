@@ -13,7 +13,7 @@ sealed class PicturePreviewStateItem(val type: Type) {
 
     data class AddPropertyPicturePreview(
         val id: Long,
-        val uri: NativePhoto,
+        val uri: String?,
         val isFeatured: Boolean,
         val description: String?,
         val onDeleteEvent: EquatableCallback,
@@ -23,7 +23,7 @@ sealed class PicturePreviewStateItem(val type: Type) {
 
     data class EditPropertyPicturePreview(
         val id: Long,
-        val uri: NativePhoto,
+        val uri: String,
         val isFeatured: Boolean,
         val description: String?,
         val onDeleteEvent: EquatableCallback,

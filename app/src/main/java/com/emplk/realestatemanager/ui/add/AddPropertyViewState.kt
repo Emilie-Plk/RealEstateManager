@@ -12,7 +12,7 @@ data class AddPropertyViewState(
     val propertyType: String?,
     val address: String?,
     val price: BigDecimal,
-    val surface: String?,
+    val surface: Int,
     val description: String?,
     val nbRooms: Int,
     val nbBathrooms: Int,
