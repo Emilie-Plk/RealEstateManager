@@ -9,9 +9,5 @@ interface PicturePreviewRepository {
 
     suspend fun update(picturePreviewEntity: PicturePreviewEntity, propertyFormId: Long): Boolean
 
-    suspend fun updateDescription(pictureId: Long, newDescription: String?)
-
-    suspend fun updateFeaturedPicture(pictureId: Long, newFeaturedPicture: Boolean)
-
     suspend fun delete(picturePreviewId: Long): Boolean
 }

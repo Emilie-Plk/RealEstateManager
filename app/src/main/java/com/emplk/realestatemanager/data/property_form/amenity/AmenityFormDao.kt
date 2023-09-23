@@ -15,8 +15,8 @@ interface AmenityFormDao {
     @Query("SELECT * FROM amenity_forms")
     fun getAllAsFlow(): Flow<List<AmenityFormDto>>
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun update(amenityFormDto: AmenityFormDto): Int
+    @Query("UPDATE amenity_forms SET name = :newName WHERE property_form_id = :propertyFormId")
+    suspend fun update(newName: String?, propertyFormId: Long): Int
 
     @Query("DELETE FROM amenity_forms WHERE id = :amenityFormId")
     suspend fun delete(amenityFormId: Long): Int

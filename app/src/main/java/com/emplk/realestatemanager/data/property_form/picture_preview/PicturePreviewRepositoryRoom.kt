@@ -32,21 +32,15 @@ class PicturePreviewRepositoryRoom @Inject constructor(
 
     override suspend fun update(picturePreviewEntity: PicturePreviewEntity, propertyFormId: Long): Boolean =
         withContext(coroutineDispatcherProvider.io) {
-            picturePreviewDao.update(
+            val picturePreviewFormDto =
                 picturePreviewMapper.mapToPicturePreviewDto(picturePreviewEntity, propertyFormId)
+            picturePreviewDao.update(
+                picturePreviewFormDto.uri,
+                picturePreviewFormDto.description,
+                picturePreviewFormDto.isFeatured,
+                propertyFormId
             ) == 1
         }
-
-    override suspend fun updateDescription(pictureId: Long, newDescription: String?) =
-        withContext(coroutineDispatcherProvider.io) {
-            picturePreviewDao.updateDescription(pictureId, newDescription)
-        }
-
-    override suspend fun updateFeaturedPicture(pictureId: Long, newFeaturedPicture: Boolean) =
-        withContext(coroutineDispatcherProvider.io) {
-            picturePreviewDao.updateFeaturedPicture(pictureId, newFeaturedPicture)
-        }
-
 
     override suspend fun delete(picturePreviewId: Long): Boolean = withContext(coroutineDispatcherProvider.io) {
         picturePreviewDao.delete(picturePreviewId) == 1

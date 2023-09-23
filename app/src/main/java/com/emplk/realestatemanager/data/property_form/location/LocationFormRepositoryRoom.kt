@@ -20,8 +20,14 @@ class LocationFormRepositoryRoom @Inject constructor(
 
     override suspend fun update(locationFormEntity: LocationFormEntity, propertyFormId: Long): Int =
         withContext(coroutineDispatcherProvider.io) {
+            val locationFormDto = locationFormMapper.mapToLocationDto(locationFormEntity, propertyFormId)
             locationFormDao.update(
-                locationFormMapper.mapToLocationDto(locationFormEntity, propertyFormId)
+                locationFormDto.address,
+                locationFormDto.city,
+                locationFormDto.postalCode,
+                locationFormDto.latitude,
+                locationFormDto.longitude,
+                propertyFormId
             )
         }
 

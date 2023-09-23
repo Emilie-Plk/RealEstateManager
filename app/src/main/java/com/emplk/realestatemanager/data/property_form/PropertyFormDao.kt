@@ -41,7 +41,7 @@ interface PropertyFormDao {
         newBathrooms: Int?,
         newDescription: String?,
         newAgentName: String?,
-        propertyFormId: Long?
+        propertyFormId: Long
     ): Int
 
     @Query("DELETE FROM property_forms WHERE id = :propertyFormId")
