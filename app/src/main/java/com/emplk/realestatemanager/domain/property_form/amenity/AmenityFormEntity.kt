@@ -1,7 +1,7 @@
 package com.emplk.realestatemanager.domain.property_form.amenity
 
 data class AmenityFormEntity(
-    val id: Long = 0,
-    val propertyFormId: Long,
+    val id: Long,
+    val propertyFormId: Long = 0,
     val type: String? = null,
 )

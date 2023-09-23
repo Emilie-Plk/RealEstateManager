@@ -15,7 +15,7 @@ data class PropertyFormEntity(
     val bathrooms: Int? = null,
     val description: String? = null,
     val agentName: String? = null,
-    val location: LocationFormEntity? = null,  // TODO: NOT SURE
+    val location: LocationFormEntity,  // TODO: NOT SURE
     val pictures: List<PicturePreviewEntity> = emptyList(),
     val amenities: List<AmenityFormEntity> = emptyList(),
 )

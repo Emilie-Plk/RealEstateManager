@@ -23,7 +23,7 @@ interface PropertyFormDao {
     @Query("SELECT id FROM property_forms LIMIT 1")
     suspend fun getExistingPropertyFormId(): Long
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
+    @Update
     suspend fun update(propertyFormDto: PropertyFormDto): Int
 
     @Query("DELETE FROM property_forms WHERE id = :propertyFormId")
