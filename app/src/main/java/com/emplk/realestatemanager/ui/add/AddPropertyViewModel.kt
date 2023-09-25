@@ -13,6 +13,7 @@ import com.emplk.realestatemanager.domain.amenity.AmenityEntity
 import com.emplk.realestatemanager.domain.amenity.AmenityType
 import com.emplk.realestatemanager.domain.amenity.type.GetAmenityTypeFlowUseCase
 import com.emplk.realestatemanager.domain.autocomplete.GetAddressPredictionsUseCase
+import com.emplk.realestatemanager.domain.autocomplete.PredictionEntity
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
@@ -39,19 +40,22 @@ import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParam
 import com.emplk.realestatemanager.ui.utils.Event
 import com.emplk.realestatemanager.ui.utils.NativeText
+import com.emplk.realestatemanager.ui.utils.combine
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.transform
+import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.time.Clock
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
@@ -93,6 +97,18 @@ class AddPropertyViewModel @Inject constructor(
     )
 
     private val formMutableStateFlow = MutableStateFlow(AddPropertyForm())
+
+    private val currentAddressInputMutableStateFlow: MutableStateFlow<String?> = MutableStateFlow(null)
+    private val currentAddressInputFlow: Flow<List<PredictionEntity>> =
+        currentAddressInputMutableStateFlow.transformLatest { input ->
+            if (input.isNullOrBlank()) {
+                emit(emptyList())
+            } else {
+                delay(400.milliseconds)
+                emit(getAddressPredictionsUseCase.invoke(input))
+            }
+        }
+
 
     private val isEveryFieldFilledMutableStateFlow = MutableStateFlow(false)
     private val isAddingPropertyInDatabaseMutableStateFlow = MutableStateFlow(false)
@@ -136,8 +152,9 @@ class AddPropertyViewModel @Inject constructor(
                     getAgentsFlowUseCase.invoke(),
                     getPropertyTypeFlowUseCase.invoke(),
                     getAmenityTypeFlowUseCase.invoke(),
+                    currentAddressInputFlow,
                     isAddingPropertyInDatabaseMutableStateFlow,
-                ) { form, agents, propertyTypes, amenityTypes, isAddingPropertyInDatabase ->
+                ) { form, agents, propertyTypes, amenityTypes, currentAddressInput, isAddingPropertyInDatabase ->
                     val currencyType = getCurrencyTypeUseCase.invoke()
 
                     val isFormInProgress = !form.propertyType.isNullOrBlank() ||
@@ -197,30 +214,21 @@ class AddPropertyViewModel @Inject constructor(
                                     name = agent.value
                                 )
                             },
-                            addressPredictions = form.addressPredictions,
-                            onAddressSearchInput = EquatableCallbackWithParam {/* input ->
-                                viewModelScope.launch {
-                                    val addressPredictions =
-                                        getAddressPredictionsUseCase.invoke(input)
-                                    val addressPredictionViewStates = addressPredictions.map { addressPrediction ->
-                                        PredictionViewState.Prediction(
-                                            address = addressPrediction.address,
-                                            placeId = addressPrediction.placeId,
-                                            onClickEvent = EquatableCallback {
-                                                formMutableStateFlow.update {
-                                                    it.copy(
-                                                        address = addressPrediction.address,
-                                                        placeId = addressPrediction.placeId,
-                                                    )
-                                                }
-                                            },
-                                        )
+                            addressPredictions = currentAddressInput.map { prediction ->
+                                PredictionViewState.Prediction(
+                                    placeId = prediction.placeId,
+                                    address = prediction.address,
+                                    onClickEvent = EquatableCallbackWithParam { placeId ->
+                                        formMutableStateFlow.update { addPropertyForm ->
+                                            addPropertyForm.copy(
+                                                address = prediction.address,
+                                                placeId = placeId,
+                                                addressPredictions = emptyList(),
+                                            )
+                                        }
                                     }
-                                    formMutableStateFlow.update {
-                                        it.copy(addressPredictions = addressPredictionViewStates)
-                                    }
-                                }*/
-                            }
+                                )
+                            },
                         )
                     )
                 }.collect()
@@ -312,27 +320,7 @@ class AddPropertyViewModel @Inject constructor(
     }
 
     fun onAddressChanged(input: String) {
-        viewModelScope.launch {
-            val addressPredictions =
-                getAddressPredictionsUseCase.invoke(input)
-            val addressPredictionViewStates = addressPredictions.map { addressPrediction ->
-                PredictionViewState.Prediction(
-                    address = addressPrediction.address,
-                    placeId = addressPrediction.placeId,
-                    onClickEvent = EquatableCallback {
-                        formMutableStateFlow.update {
-                            it.copy(
-                                address = addressPrediction.address,
-                                placeId = addressPrediction.placeId,
-                            )
-                        }
-                    },
-                )
-            }
-            formMutableStateFlow.update {
-                it.copy(addressPredictions = addressPredictionViewStates)
-            }
-        }
+        currentAddressInputMutableStateFlow.value = input
     }
 
     fun onPriceChanged(price: String) {
