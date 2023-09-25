@@ -1,16 +1,22 @@
 package com.emplk.realestatemanager.ui.add
 
 import com.emplk.realestatemanager.domain.amenity.AmenityEntity
+import com.emplk.realestatemanager.ui.add.address_predictions.PredictionViewState
 import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem
 import com.emplk.realestatemanager.ui.add.amenity.AmenityViewStateItem
 import com.emplk.realestatemanager.ui.add.picture_preview.PicturePreviewStateItem
 import com.emplk.realestatemanager.ui.add.type.AddPropertyTypeViewStateItem
+import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParam
 import com.emplk.realestatemanager.ui.utils.NativeText
 import java.math.BigDecimal
 
 data class AddPropertyViewState(
     val propertyType: String?,
+    val onAddressSearchInput: EquatableCallbackWithParam<String>,
+    val addressPredictions: List<PredictionViewState>,
     val address: String?,
+    val lat: String?,
+    val lng: String?,
     val price: BigDecimal,
     val surface: Int,
     val description: String?,

@@ -12,6 +12,7 @@ import com.emplk.realestatemanager.domain.agent.GetAgentsFlowUseCase
 import com.emplk.realestatemanager.domain.amenity.AmenityEntity
 import com.emplk.realestatemanager.domain.amenity.AmenityType
 import com.emplk.realestatemanager.domain.amenity.type.GetAmenityTypeFlowUseCase
+import com.emplk.realestatemanager.domain.autocomplete.GetAddressPredictionsUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
@@ -29,6 +30,7 @@ import com.emplk.realestatemanager.domain.property_form.picture_preview.AddPictu
 import com.emplk.realestatemanager.domain.property_form.picture_preview.DeletePicturePreviewUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.PicturePreviewEntity
 import com.emplk.realestatemanager.domain.property_type.GetPropertyTypeFlowUseCase
+import com.emplk.realestatemanager.ui.add.address_predictions.PredictionViewState
 import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem
 import com.emplk.realestatemanager.ui.add.amenity.AmenityViewStateItem
 import com.emplk.realestatemanager.ui.add.picture_preview.PicturePreviewStateItem
@@ -59,6 +61,7 @@ class AddPropertyViewModel @Inject constructor(
     private val deletePicturePreviewUseCase: DeletePicturePreviewUseCase,
     private val addPicturePreviewUseCase: AddPicturePreviewUseCase,
     private val updatePropertyFormUseCase: UpdatePropertyFormUseCase,
+    private val getAddressPredictionsUseCase: GetAddressPredictionsUseCase,
     private val initTemporaryPropertyFormUseCase: InitTemporaryPropertyFormUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val getCurrencyTypeUseCase: GetCurrencyTypeUseCase,
@@ -74,6 +77,10 @@ class AddPropertyViewModel @Inject constructor(
     private data class AddPropertyForm(
         val propertyType: String? = null,
         val address: String? = null,
+        val placeId: String? = null,
+        val addressPredictions: List<PredictionViewState> = emptyList(),
+        val lat: String? = null,
+        val lng: String? = null,
         val price: BigDecimal = BigDecimal.ZERO,
         val surface: Int = 0,
         val description: String? = null,
@@ -149,6 +156,8 @@ class AddPropertyViewModel @Inject constructor(
                         AddPropertyViewState(
                             propertyType = form.propertyType,
                             address = form.address,
+                            lat = form.lat,
+                            lng = form.lng,
                             price = form.price,
                             surface = form.surface,
                             description = form.description,
@@ -188,6 +197,30 @@ class AddPropertyViewModel @Inject constructor(
                                     name = agent.value
                                 )
                             },
+                            addressPredictions = form.addressPredictions,
+                            onAddressSearchInput = EquatableCallbackWithParam {/* input ->
+                                viewModelScope.launch {
+                                    val addressPredictions =
+                                        getAddressPredictionsUseCase.invoke(input)
+                                    val addressPredictionViewStates = addressPredictions.map { addressPrediction ->
+                                        PredictionViewState.Prediction(
+                                            address = addressPrediction.address,
+                                            placeId = addressPrediction.placeId,
+                                            onClickEvent = EquatableCallback {
+                                                formMutableStateFlow.update {
+                                                    it.copy(
+                                                        address = addressPrediction.address,
+                                                        placeId = addressPrediction.placeId,
+                                                    )
+                                                }
+                                            },
+                                        )
+                                    }
+                                    formMutableStateFlow.update {
+                                        it.copy(addressPredictions = addressPredictionViewStates)
+                                    }
+                                }*/
+                            }
                         )
                     )
                 }.collect()
@@ -278,9 +311,27 @@ class AddPropertyViewModel @Inject constructor(
         }
     }
 
-    fun onAddressChanged(address: String) {
-        formMutableStateFlow.update {
-            it.copy(address = address)
+    fun onAddressChanged(input: String) {
+        viewModelScope.launch {
+            val addressPredictions =
+                getAddressPredictionsUseCase.invoke(input)
+            val addressPredictionViewStates = addressPredictions.map { addressPrediction ->
+                PredictionViewState.Prediction(
+                    address = addressPrediction.address,
+                    placeId = addressPrediction.placeId,
+                    onClickEvent = EquatableCallback {
+                        formMutableStateFlow.update {
+                            it.copy(
+                                address = addressPrediction.address,
+                                placeId = addressPrediction.placeId,
+                            )
+                        }
+                    },
+                )
+            }
+            formMutableStateFlow.update {
+                it.copy(addressPredictions = addressPredictionViewStates)
+            }
         }
     }
 

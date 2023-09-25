@@ -17,7 +17,6 @@ class PredictionRepositoryAutocomplete @Inject constructor(
         private const val TYPE = "address"
     }
 
-
     override suspend fun getPredictions(query: String): List<PredictionEntity> =
         withContext(coroutineDispatcherProvider.io) {
             try {

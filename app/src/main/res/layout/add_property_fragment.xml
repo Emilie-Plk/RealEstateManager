@@ -365,6 +365,17 @@
             app:layout_constraintStart_toEndOf="@id/add_property_create_button"
             app:layout_constraintTop_toTopOf="@id/add_property_create_button" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/add_property_address_predictions_recyclerView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            tools:itemCount="6"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/add_property_address_textInputLayout"
+            app:layout_constraintEnd_toEndOf="@id/add_property_address_textInputLayout"
+            app:layout_constraintStart_toStartOf="@id/add_property_address_textInputLayout"
+            tools:listitem="@layout/property_address_prediction_item"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

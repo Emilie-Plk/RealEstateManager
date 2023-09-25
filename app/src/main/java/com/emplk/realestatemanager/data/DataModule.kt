@@ -3,7 +3,9 @@ package com.emplk.realestatemanager.data
 import android.app.Application
 import android.content.res.Resources
 import androidx.work.WorkManager
+import com.emplk.realestatemanager.BuildConfig
 import com.emplk.realestatemanager.data.amenity.AmenityDao
+import com.emplk.realestatemanager.data.api.GoogleApi
 import com.emplk.realestatemanager.data.location.LocationDao
 import com.emplk.realestatemanager.data.picture.PictureDao
 import com.emplk.realestatemanager.data.property.PropertyDao
@@ -17,6 +19,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -52,13 +55,18 @@ class DataModule {
     @Singleton
     @Provides
     fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BASIC
+        level = HttpLoggingInterceptor.Level.BODY
     }
 
     @Singleton
     @Provides
+    fun provideGoogleApiService(retrofit: Retrofit): GoogleApi =
+        retrofit.create(GoogleApi::class.java)
+
+    @Singleton
+    @Provides
     fun provideGoogleApiRetrofit(okHttpClient: okhttp3.OkHttpClient, gson: Gson): Retrofit =
-        retrofit2.Retrofit.Builder()
+        Retrofit.Builder()
             .baseUrl("https://maps.googleapis.com/maps/api/")
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create(gson))
@@ -71,7 +79,22 @@ class DataModule {
             .addInterceptor(httpLoggingInterceptor)
             .connectTimeout(8, TimeUnit.SECONDS)
             .readTimeout(8, TimeUnit.SECONDS)
-            .addInterceptor(httpLoggingInterceptor)
+            .addInterceptor(
+                Interceptor { chain: Interceptor.Chain ->
+                    chain.proceed(
+                        chain.request().let { request ->
+                            request
+                                .newBuilder()
+                                .url(
+                                    request.url.newBuilder()
+                                        .addQueryParameter("key", BuildConfig.GOOGLE_API_KEY)
+                                        .build()
+                                )
+                                .build()
+                        }
+                    )
+                }
+            )
             .build()
 
     // region DAOs
