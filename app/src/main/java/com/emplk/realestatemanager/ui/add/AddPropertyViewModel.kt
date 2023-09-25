@@ -109,7 +109,6 @@ class AddPropertyViewModel @Inject constructor(
             }
         }
 
-
     private val isEveryFieldFilledMutableStateFlow = MutableStateFlow(false)
     private val isAddingPropertyInDatabaseMutableStateFlow = MutableStateFlow(false)
     private val isPropertySuccessfullyAddedInDatabaseMutableSharedFlow =
@@ -249,10 +248,9 @@ class AddPropertyViewModel @Inject constructor(
                             bathrooms = it.nbBathrooms,
                             location = LocationFormEntity(
                                 address = it.address,
-                                city = "city",
-                                postalCode = "postalcode",
-                                latitude = 0.0,
-                                longitude = 0.0,
+                                placeId = it.placeId,
+                                latitude = it.lat,
+                                longitude = it.lng,
                             ),
                             bedrooms = it.nbBedrooms,
                             agentName = it.agent,

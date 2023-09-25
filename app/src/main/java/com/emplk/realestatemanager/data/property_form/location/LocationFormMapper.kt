@@ -8,8 +8,7 @@ class LocationFormMapper @Inject constructor() {
         latitude = locationFormDto.latitude,
         longitude = locationFormDto.longitude,
         address = locationFormDto.address,
-        city = locationFormDto.city,
-        postalCode = locationFormDto.postalCode,
+        placeId = locationFormDto.placeId,
     )
 
     fun mapToLocationDto(locationFormEntity: LocationFormEntity?, propertyFormId: Long): LocationFormDto =
@@ -18,8 +17,6 @@ class LocationFormMapper @Inject constructor() {
             latitude = locationFormEntity?.latitude,
             longitude = locationFormEntity?.longitude,
             address = locationFormEntity?.address,
-            city = locationFormEntity?.city,
-            postalCode = locationFormEntity?.postalCode,
+            placeId = locationFormEntity?.placeId,
         )
-
 }
