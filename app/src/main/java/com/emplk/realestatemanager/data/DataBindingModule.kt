@@ -19,6 +19,7 @@ import com.emplk.realestatemanager.data.screen_width.ScreenWidthTypeRepositoryIm
 import com.emplk.realestatemanager.domain.agent.RealEstateAgentRepository
 import com.emplk.realestatemanager.domain.amenity.AmenityRepository
 import com.emplk.realestatemanager.domain.amenity.type.AmenityTypeRepository
+import com.emplk.realestatemanager.domain.autocomplete.PredictionRepository
 import com.emplk.realestatemanager.domain.current_property.CurrentPropertyRepository
 import com.emplk.realestatemanager.domain.locale_formatting.LocaleFormattingRepository
 import com.emplk.realestatemanager.domain.location.LocationRepository
@@ -103,5 +104,5 @@ abstract class DataBindingModule {
 
     @Singleton
     @Binds
-    abstract fun bindPredictionRepository(implementation: PredictionRepositoryAutocomplete): PredictionRepositoryAutocomplete
+    abstract fun bindPredictionRepository(implementation: PredictionRepositoryAutocomplete): PredictionRepository
 }
