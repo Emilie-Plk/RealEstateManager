@@ -12,11 +12,14 @@ interface AmenityFormDao {
     @Insert
     suspend fun insert(amenityFormDto: AmenityFormDto): Long?
 
+    @Insert
+    suspend fun insertAll(amenityFormDtos: List<AmenityFormDto>): List<Long?>
+
     @Query("SELECT * FROM amenity_forms")
     fun getAllAsFlow(): Flow<List<AmenityFormDto>>
 
-    @Query("UPDATE amenity_forms SET name = :newName WHERE property_form_id = :propertyFormId")
-    suspend fun update(newName: String?, propertyFormId: Long): Int
+    @Query("SELECT id FROM amenity_forms WHERE property_form_id = :propertyFormId")
+    suspend fun getAllIds(propertyFormId: Long): List<Long>
 
     @Query("DELETE FROM amenity_forms WHERE id = :amenityFormId")
     suspend fun delete(amenityFormId: Long): Int

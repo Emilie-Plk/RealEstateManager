@@ -60,8 +60,8 @@ class PropertyPicturePreviewListAdapter :
 
             fun bind(item: PicturePreviewStateItem.AddPropertyPicturePreview) {
                 Glide
-                    .with(binding.previewPictureIv)
-                    .load(binding.previewPictureIv)
+                    .with(itemView.context)
+                    .load(item.uri)
                     .transform(CenterCrop(), RoundedCorners(16))
                     .error(R.drawable.baseline_villa_24)
                     .into(binding.previewPictureIv)
@@ -97,8 +97,8 @@ class PropertyPicturePreviewListAdapter :
 
             fun bind(item: PicturePreviewStateItem.EditPropertyPicturePreview) {
                 Glide
-                    .with(binding.previewPictureIv)
-                    .load(binding.previewPictureIv)
+                    .with(itemView.context)
+                    .load(item.uri)
                     .transform(CenterCrop(), RoundedCorners(16))
                     .error(R.drawable.baseline_villa_24)
                     .into(binding.previewPictureIv)

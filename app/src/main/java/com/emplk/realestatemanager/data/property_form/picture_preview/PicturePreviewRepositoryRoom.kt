@@ -21,6 +21,15 @@ class PicturePreviewRepositoryRoom @Inject constructor(
             )
         }
 
+    override suspend fun addAll(picturePreviewEntities: List<PicturePreviewEntity>, propertyFormId: Long): List<Long?> =
+        withContext(coroutineDispatcherProvider.io) {
+            picturePreviewDao.insertAll(
+                picturePreviewEntities.map { picturePreviewEntity ->
+                    picturePreviewMapper.mapToPicturePreviewDto(picturePreviewEntity, propertyFormId)
+                }
+            )
+        }
+
     override fun getAsFlow(): Flow<List<PicturePreviewEntity>> = picturePreviewDao
         .getAllAsFlow()
         .map { picturePreviewDtoList ->
@@ -34,12 +43,7 @@ class PicturePreviewRepositoryRoom @Inject constructor(
         withContext(coroutineDispatcherProvider.io) {
             val picturePreviewFormDto =
                 picturePreviewMapper.mapToPicturePreviewDto(picturePreviewEntity, propertyFormId)
-            picturePreviewDao.update(
-                picturePreviewFormDto.uri,
-                picturePreviewFormDto.description,
-                picturePreviewFormDto.isFeatured,
-                propertyFormId
-            ) == 1
+            picturePreviewDao.update(picturePreviewFormDto) == 1
         }
 
     override suspend fun delete(picturePreviewId: Long): Boolean = withContext(coroutineDispatcherProvider.io) {

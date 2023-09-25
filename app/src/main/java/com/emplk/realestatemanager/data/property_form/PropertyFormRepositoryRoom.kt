@@ -126,17 +126,29 @@ class PropertyFormRepositoryRoom @Inject constructor(
             propertyFormEntity.pictures.forEach {
                 val picturePreviewDto =
                     picturePreviewMapper.mapToPicturePreviewDto(it, propertyFormId)
-                picturePreviewDao.update(
-                    picturePreviewDto.uri,
-                    picturePreviewDto.description,
-                    picturePreviewDto.isFeatured,
-                    propertyFormId
-                )
+                val updatedRow = picturePreviewDao.update(picturePreviewDto)
+                if (updatedRow == 0) {
+                    picturePreviewDao.insert(picturePreviewDto)
+                }
             }
+
+            val amenityIdsStoredInDb = amenityFormDao.getAllIds(propertyFormId)
+
+            // Insert new amenities
             propertyFormEntity.amenities.forEach {
                 val amenityFormDto = amenityFormMapper.mapToAmenityDto(it, propertyFormId)
-                amenityFormDao.update(amenityFormDto.name, propertyFormId)
+                if (!amenityIdsStoredInDb.contains(amenityFormDto.id)) {
+                    amenityFormDao.insert(amenityFormDto)
+                }
             }
+
+            // Delete removed amenities
+            amenityIdsStoredInDb.forEach { amenityIdStoredInDatabase ->
+                if (propertyFormEntity.amenities.none { it.id == amenityIdStoredInDatabase }) {
+                    amenityFormDao.delete(amenityIdStoredInDatabase)
+                }
+            }
+
         }
 
     override suspend fun delete(propertyFormId: Long) = withContext(coroutineDispatcherProvider.io) {

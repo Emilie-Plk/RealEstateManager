@@ -5,6 +5,8 @@ import kotlinx.coroutines.flow.Flow
 interface PicturePreviewRepository {
     suspend fun add(picturePreviewEntity: PicturePreviewEntity, propertyFormId: Long): Long?
 
+    suspend fun addAll(picturePreviewEntities: List<PicturePreviewEntity>, propertyFormId: Long): List<Long?>
+
     fun getAsFlow(): Flow<List<PicturePreviewEntity>>
 
     suspend fun update(picturePreviewEntity: PicturePreviewEntity, propertyFormId: Long): Boolean

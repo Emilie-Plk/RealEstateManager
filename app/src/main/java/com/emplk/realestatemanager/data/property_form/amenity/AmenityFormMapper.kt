@@ -6,11 +6,13 @@ import javax.inject.Inject
 class AmenityFormMapper @Inject constructor() {
     fun mapToAmenityFormEntity(amenityFormDto: AmenityFormDto) =
         AmenityFormEntity(
+            id = amenityFormDto.id,
             type = amenityFormDto.name,
         )
 
     fun mapToAmenityDto(amenityFormEntity: AmenityFormEntity, propertyFormId: Long) =
         AmenityFormDto(
+            id = amenityFormEntity.id,
             propertyFormId = propertyFormId,
             name = amenityFormEntity.type,
         )

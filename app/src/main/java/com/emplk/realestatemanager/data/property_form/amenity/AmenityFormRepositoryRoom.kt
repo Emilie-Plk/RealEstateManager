@@ -15,6 +15,13 @@ class AmenityFormRepositoryRoom @Inject constructor(
             amenityFormMapper.mapToAmenityDto(amenityFormEntity, propertyFormId)
         )
 
+    override suspend fun addAll(amenityFormEntities: List<AmenityFormEntity>, propertyFormId: Long): List<Long?> =
+        amenityFormDao.insertAll(
+            amenityFormEntities.map { amenityFormEntity ->
+                amenityFormMapper.mapToAmenityDto(amenityFormEntity, propertyFormId)
+            }
+        )
+
     override fun getAllAsFlow(): Flow<List<AmenityFormEntity>> =
         amenityFormDao.getAllAsFlow()
             .map { amenityFormDtos ->
