@@ -1,6 +1,7 @@
 package com.emplk.realestatemanager.ui.add.address_predictions
 
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
+import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParam
 
 sealed class PredictionViewState(val type: Type) {
 
@@ -12,7 +13,7 @@ sealed class PredictionViewState(val type: Type) {
     data class Prediction(
         val address: String,
         val placeId: String,
-        val onClickEvent: EquatableCallback,
+        val onClickEvent: EquatableCallbackWithParam<String>,
     ) : PredictionViewState(Type.PREDICTION)
 
     object EmptyState : PredictionViewState(Type.EMPTY_STATE)

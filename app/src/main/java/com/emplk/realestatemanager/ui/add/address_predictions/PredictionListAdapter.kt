@@ -42,7 +42,7 @@ class PredictionListAdapter :
             }
 
             fun bind(item: PredictionViewState.Prediction) {
-                binding.root.setOnClickListener { item.onClickEvent.invoke() }
+                binding.root.setOnClickListener { item.onClickEvent.invoke(item.placeId) }
                 binding.addPropertySuggestionTextView.text = item.address
             }
         }

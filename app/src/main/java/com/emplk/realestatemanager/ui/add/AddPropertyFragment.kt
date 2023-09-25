@@ -96,7 +96,7 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
             binding.addPropertyProgressBar.isVisible = viewState.isProgressBarVisible
 
             binding.addPropertyAddressTextInputEditText.doAfterTextChanged { editable ->
-                editable?.let { viewModel.onAddressChanged(it.toString()) }
+                editable?.let { viewModel.onAddressChanged(editable.toString()) }
             }
         }
 

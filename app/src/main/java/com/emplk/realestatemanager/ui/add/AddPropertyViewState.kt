@@ -12,7 +12,6 @@ import java.math.BigDecimal
 
 data class AddPropertyViewState(
     val propertyType: String?,
-    val onAddressSearchInput: EquatableCallbackWithParam<String>,
     val addressPredictions: List<PredictionViewState>,
     val address: String?,
     val lat: String?,
