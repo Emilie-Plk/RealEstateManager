@@ -67,7 +67,7 @@ class PropertyPicturePreviewListAdapter :
                     .into(binding.previewPictureIv)
 
                 binding.previewPictureStarFeaturedIv.setOnClickListener {
-                    item.onFeaturedEvent.invoke(!item.isFeatured)
+                    item.onFeaturedEvent.invoke(!item.isFeatured) // TODO: noooot sure at all lol
                 }
 
                 binding.previewPictureStarFeaturedIv.setImageResource(
@@ -111,7 +111,7 @@ class PropertyPicturePreviewListAdapter :
                 binding.previewPictureDeleteIv.setOnClickListener { item.onDeleteEvent.invoke() }
 
                 binding.previewPictureStarFeaturedIv.setOnClickListener {
-                    item.onFeaturedEvent.invoke(!item.isFeatured) // TODO: noooot sure at all lol
+                    item.onFeaturedEvent.invoke(!item.isFeatured)
                 }
                 binding.previewPictureTitleEt.setText(item.description)
 
