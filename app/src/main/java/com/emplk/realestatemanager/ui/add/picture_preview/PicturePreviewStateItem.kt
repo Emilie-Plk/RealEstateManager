@@ -2,7 +2,6 @@ package com.emplk.realestatemanager.ui.add.picture_preview
 
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParam
-import com.emplk.realestatemanager.ui.utils.NativePhoto
 
 sealed class PicturePreviewStateItem(val type: Type) {
 
@@ -13,9 +12,9 @@ sealed class PicturePreviewStateItem(val type: Type) {
 
     data class AddPropertyPicturePreview(
         val id: Long,
-        val uri: String?,
-        val isFeatured: Boolean,
-        val description: String?,
+        val uri: String,
+        val isFeatured: Boolean = false,
+        val description: String? = null,
         val onDeleteEvent: EquatableCallback,
         val onFeaturedEvent: EquatableCallbackWithParam<Boolean>,
         val onDescriptionChanged: EquatableCallbackWithParam<String>,

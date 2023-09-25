@@ -43,7 +43,11 @@ class PicturePreviewRepositoryRoom @Inject constructor(
         withContext(coroutineDispatcherProvider.io) {
             val picturePreviewFormDto =
                 picturePreviewMapper.mapToPicturePreviewDto(picturePreviewEntity, propertyFormId)
-            picturePreviewDao.update(picturePreviewFormDto) == 1
+            picturePreviewDao.update(
+                picturePreviewFormDto.isFeatured,
+                picturePreviewFormDto.description,
+                picturePreviewFormDto.id
+            ) == 1
         }
 
     override suspend fun delete(picturePreviewId: Long): Boolean = withContext(coroutineDispatcherProvider.io) {
