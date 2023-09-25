@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 interface PicturePreviewDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(picturePreviewFormDto: PicturePreviewFormDto): Long?
+    suspend fun insert(picturePreviewFormDto: PicturePreviewFormDto): Long
 
     @Insert
     suspend fun insertAll(picturePreviewFormDtos: List<PicturePreviewFormDto>): List<Long?>

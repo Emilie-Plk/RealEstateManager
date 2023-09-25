@@ -104,7 +104,7 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
         val importPictureCallback = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) {
                 Log.d("PhotoPicker", "Selected URI: $uri")
-                viewModel.onPictureSelected(uri)
+                viewModel.onPictureSelected(uri.toString())
             } else {
                 Log.d("PhotoPicker", "No media selected")
             }
@@ -112,7 +112,7 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
 
         val takePictureCallback = registerForActivityResult(ActivityResultContracts.TakePicture()) { successful ->
             if (successful) {
-                currentPhotoUri?.let { viewModel.onPictureSelected(it) }
+                currentPhotoUri?.let { viewModel.onPictureSelected(it.toString()) }
             }
         }
 

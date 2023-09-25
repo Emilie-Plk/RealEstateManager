@@ -8,15 +8,12 @@ class InitTemporaryPropertyFormUseCase @Inject constructor(
     private val hasAlreadyPropertyFormInDatabaseUseCase: HasAlreadyPropertyFormInDatabaseUseCase,
 ) {
 
-    suspend fun invoke(): PropertyFormDatabaseState {
-        val hasAlreadyPropertyFormInDb = hasAlreadyPropertyFormInDatabaseUseCase.invoke()
-        return if (!hasAlreadyPropertyFormInDb) {
-            val newPropertyFormId = addTemporaryPropertyFormUseCase.invoke()
-            PropertyFormDatabaseState.Empty(newPropertyFormId)
-        } else {
-            val existingPropertyFormId = propertyFormRepository.getExistingPropertyFormId()
-            val existingPropertyFormEntity = propertyFormRepository.getPropertyFormByIdAsFlow(existingPropertyFormId)
-            PropertyFormDatabaseState.DraftAlreadyExists(existingPropertyFormEntity, existingPropertyFormId)
-        }
+    suspend fun invoke(): PropertyFormDatabaseState = if (hasAlreadyPropertyFormInDatabaseUseCase.invoke()) {
+        val existingPropertyFormId = propertyFormRepository.getExistingPropertyFormId()
+        val existingPropertyFormEntity = propertyFormRepository.getPropertyFormByIdAsFlow(existingPropertyFormId)
+        PropertyFormDatabaseState.DraftAlreadyExists(existingPropertyFormEntity, existingPropertyFormId)
+    } else {
+        val newPropertyFormId = addTemporaryPropertyFormUseCase.invoke()
+        PropertyFormDatabaseState.Empty(newPropertyFormId)
     }
 }
