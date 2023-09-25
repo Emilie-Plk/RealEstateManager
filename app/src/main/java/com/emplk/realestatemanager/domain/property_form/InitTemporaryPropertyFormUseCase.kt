@@ -16,7 +16,7 @@ class InitTemporaryPropertyFormUseCase @Inject constructor(
         } else {
             val existingPropertyFormId = propertyFormRepository.getExistingPropertyFormId()
             val existingPropertyFormEntity = propertyFormRepository.getPropertyFormByIdAsFlow(existingPropertyFormId)
-            PropertyFormDatabaseState.DraftAlreadyExists(existingPropertyFormEntity)
+            PropertyFormDatabaseState.DraftAlreadyExists(existingPropertyFormEntity, existingPropertyFormId)
         }
     }
 }

@@ -20,6 +20,7 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.time.Clock
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -91,7 +92,6 @@ class DataModule {
     @Provides
     fun provideAmenityDao(appDatabase: AppDatabase): AmenityDao = appDatabase.getAmenityDao()
 
-
     @Singleton
     @Provides
     fun providePropertyFormDao(appDatabase: AppDatabase): PropertyFormDao = appDatabase.getPropertyFormDao()
@@ -109,4 +109,8 @@ class DataModule {
     fun provideAmenityFormDao(appDatabase: AppDatabase): AmenityFormDao = appDatabase.getAmenityFormDao()
 
     // endregion DAOs
+
+    @Singleton
+    @Provides
+    fun provideClock(): Clock = Clock.systemDefaultZone()
 }

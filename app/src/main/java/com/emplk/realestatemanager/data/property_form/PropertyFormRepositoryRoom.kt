@@ -1,6 +1,7 @@
 package com.emplk.realestatemanager.data.property_form
 
 import android.database.sqlite.SQLiteException
+import android.util.Log
 import com.emplk.realestatemanager.data.property_form.amenity.AmenityFormDao
 import com.emplk.realestatemanager.data.property_form.amenity.AmenityFormMapper
 import com.emplk.realestatemanager.data.property_form.location.LocationFormDao
@@ -123,18 +124,26 @@ class PropertyFormRepositoryRoom @Inject constructor(
                 propertyFormId
             )
 
+            // region add/update/remove pictures
+            val picturePreviewIdsStoredInDb = picturePreviewDao.getAllIds(propertyFormId)
+            Log.d("COUCOU", "picturePreviewIdsStoredInDb: $picturePreviewIdsStoredInDb")
+
             propertyFormEntity.pictures.forEach {
                 val picturePreviewDto =
                     picturePreviewMapper.mapToPicturePreviewDto(it, propertyFormId)
-                val updatedRow = picturePreviewDao.update(picturePreviewDto)
-                if (updatedRow == 0) {
-                    picturePreviewDao.insert(picturePreviewDto)
-                }
-            }
 
+                Log.d("COUCOU", "picturePreviewDto: $picturePreviewDto")
+                val updatedRow = picturePreviewDao.update(
+                    picturePreviewDto.isFeatured,
+                    picturePreviewDto.description,
+                    picturePreviewDto.id)
+                Log.d("COUCOU", "updatedRow: $updatedRow")
+            }
+            // endregion pictures
+
+            // region add/remove amenities
             val amenityIdsStoredInDb = amenityFormDao.getAllIds(propertyFormId)
 
-            // Insert new amenities
             propertyFormEntity.amenities.forEach {
                 val amenityFormDto = amenityFormMapper.mapToAmenityDto(it, propertyFormId)
                 if (!amenityIdsStoredInDb.contains(amenityFormDto.id)) {
@@ -142,13 +151,12 @@ class PropertyFormRepositoryRoom @Inject constructor(
                 }
             }
 
-            // Delete removed amenities
             amenityIdsStoredInDb.forEach { amenityIdStoredInDatabase ->
                 if (propertyFormEntity.amenities.none { it.id == amenityIdStoredInDatabase }) {
                     amenityFormDao.delete(amenityIdStoredInDatabase)
                 }
             }
-
+            // endregion amenities
         }
 
     override suspend fun delete(propertyFormId: Long) = withContext(coroutineDispatcherProvider.io) {
