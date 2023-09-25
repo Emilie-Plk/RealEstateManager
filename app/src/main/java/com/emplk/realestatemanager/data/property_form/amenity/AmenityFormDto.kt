@@ -6,8 +6,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "amenity_forms")
 data class AmenityFormDto(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
+    @PrimaryKey
+    val id: Long,
     @ColumnInfo(name = "property_form_id", index = true)
     val propertyFormId: Long,
     val name: String?,
