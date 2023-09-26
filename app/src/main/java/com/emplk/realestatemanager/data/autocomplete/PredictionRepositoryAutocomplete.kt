@@ -3,7 +3,6 @@ package com.emplk.realestatemanager.data.autocomplete
 import android.util.LruCache
 import com.emplk.realestatemanager.data.api.GoogleApi
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
-import com.emplk.realestatemanager.domain.autocomplete.PredictionEntity
 import com.emplk.realestatemanager.domain.autocomplete.PredictionRepository
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
@@ -18,9 +17,9 @@ class PredictionRepositoryAutocomplete @Inject constructor(
         private const val TYPE = "address"
     }
 
-    private val predictionsLruCache = LruCache<String, List<PredictionEntity>>(200)
+    private val predictionsLruCache = LruCache<String, List<String>>(200)
 
-    override suspend fun getPredictions(query: String): List<PredictionEntity> =
+    override suspend fun getPredictions(query: String): List<String> =
         withContext(coroutineDispatcherProvider.io) {
             predictionsLruCache.get(query) ?: try {
                 val response = googleApi.getAddressPredictions(query, TYPE)
@@ -30,10 +29,7 @@ class PredictionRepositoryAutocomplete @Inject constructor(
                         if (predictionResponse.placeId == null || predictionResponse.description == null) {
                             return@mapNotNull null
                         }
-                        PredictionEntity(
-                            predictionResponse.placeId,
-                            predictionResponse.description
-                        )
+                        predictionResponse.description
                     }.also {
                         predictionsLruCache.put(query, it)
                     } ?: emptyList()

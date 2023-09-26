@@ -13,7 +13,6 @@ data class LocationFormDto(
     @ColumnInfo(name = "property_form_id", index = true)
     val propertyFormId: Long,
     val address: String?,
-    val placeId: String?,
     val latitude: String?,
     val longitude: String?,
 )

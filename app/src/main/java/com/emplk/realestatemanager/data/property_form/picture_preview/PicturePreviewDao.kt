@@ -21,8 +21,14 @@ interface PicturePreviewDao {
     @Query("SELECT id FROM picture_previews WHERE property_form_id = :propertyFormId")
     suspend fun getAllIds(propertyFormId: Long): List<Long>
 
+    @Query("SELECT * FROM picture_previews WHERE id = :picturePreviewId LIMIT 1")
+    suspend fun getPictureById(picturePreviewId: Long): PicturePreviewFormDto?
+
     @Query("UPDATE picture_previews SET is_featured = :newIsFeatured, description = :newDescription WHERE id = :picturePreviewId")
-    suspend fun update(newIsFeatured: Boolean?, newDescription: String?, picturePreviewId: Long): Int
+    suspend fun update(picturePreviewId: Long, newIsFeatured: Boolean?, newDescription: String?): Int
+
+    @Query("UPDATE picture_previews SET is_featured = 0 WHERE is_featured = 1")
+    suspend fun clearFeaturedPicture(): Int
 
     @Query("DELETE FROM picture_previews WHERE id = :picturePreviewId")
     suspend fun delete(picturePreviewId: Long): Int

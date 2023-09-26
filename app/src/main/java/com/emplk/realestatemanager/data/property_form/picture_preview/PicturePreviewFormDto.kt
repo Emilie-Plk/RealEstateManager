@@ -10,7 +10,7 @@ data class PicturePreviewFormDto(
     val id: Long = 0,
     @ColumnInfo(name = "property_form_id", index = true)
     val propertyFormId: Long,
-    val uri: String?,
+    val uri: String,
     val description: String?,
     @ColumnInfo(name = "is_featured")
     val isFeatured: Boolean,

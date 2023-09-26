@@ -6,7 +6,6 @@ import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem
 import com.emplk.realestatemanager.ui.add.amenity.AmenityViewStateItem
 import com.emplk.realestatemanager.ui.add.picture_preview.PicturePreviewStateItem
 import com.emplk.realestatemanager.ui.add.type.AddPropertyTypeViewStateItem
-import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParam
 import com.emplk.realestatemanager.ui.utils.NativeText
 import java.math.BigDecimal
 
@@ -26,7 +25,7 @@ data class AddPropertyViewState(
     val amenities: List<AmenityViewStateItem>,
     val pictures: List<PicturePreviewStateItem>,
     val agents: List<AddPropertyAgentViewStateItem>,
-    val agent: String?,
+    val selectedAgent: String?,
     val priceCurrency: NativeText,
     val surfaceUnit: NativeText,
     val isAddButtonEnabled: Boolean,

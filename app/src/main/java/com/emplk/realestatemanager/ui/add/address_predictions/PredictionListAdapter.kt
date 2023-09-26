@@ -42,7 +42,7 @@ class PredictionListAdapter :
             }
 
             fun bind(item: PredictionViewState.Prediction) {
-                binding.root.setOnClickListener { item.onClickEvent.invoke(item.placeId) }
+                binding.root.setOnClickListener { item.onClickEvent.invoke(item.address) }
                 binding.addPropertySuggestionTextView.text = item.address
             }
         }
@@ -60,14 +60,12 @@ class PredictionListAdapter :
             }
         }
     }
-
-
 }
 
 object PredictionDiffCallback : DiffUtil.ItemCallback<PredictionViewState>() {
     override fun areItemsTheSame(oldItem: PredictionViewState, newItem: PredictionViewState): Boolean =
         when {
-            oldItem is PredictionViewState.Prediction && newItem is PredictionViewState.Prediction -> oldItem.placeId == newItem.placeId
+            oldItem is PredictionViewState.Prediction && newItem is PredictionViewState.Prediction -> oldItem.address == newItem.address
 
             oldItem is PredictionViewState.EmptyState && newItem is PredictionViewState.EmptyState -> true
 

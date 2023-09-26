@@ -117,29 +117,10 @@ class PropertyFormRepositoryRoom @Inject constructor(
             val locationFormDto = locationFormMapper.mapToLocationDto(propertyFormEntity.location, propertyFormId)
             locationFormDao.update(
                 locationFormDto.address,
-                locationFormDto.city,
-                locationFormDto.postalCode,
                 locationFormDto.latitude,
                 locationFormDto.longitude,
                 propertyFormId
             )
-
-            // region add/update/remove pictures
-            val picturePreviewIdsStoredInDb = picturePreviewDao.getAllIds(propertyFormId)
-            Log.d("COUCOU", "picturePreviewIdsStoredInDb: $picturePreviewIdsStoredInDb")
-
-            propertyFormEntity.pictures.forEach {
-                val picturePreviewDto =
-                    picturePreviewMapper.mapToPicturePreviewDto(it, propertyFormId)
-
-                Log.d("COUCOU", "picturePreviewDto: $picturePreviewDto")
-                val updatedRow = picturePreviewDao.update(
-                    picturePreviewDto.isFeatured,
-                    picturePreviewDto.description,
-                    picturePreviewDto.id)
-                Log.d("COUCOU", "updatedRow: $updatedRow")
-            }
-            // endregion pictures
 
             // region add/remove amenities
             val amenityIdsStoredInDb = amenityFormDao.getAllIds(propertyFormId)

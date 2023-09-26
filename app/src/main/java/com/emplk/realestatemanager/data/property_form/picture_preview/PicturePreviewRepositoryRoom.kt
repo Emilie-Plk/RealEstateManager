@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.data.property_form.picture_preview
 
+import android.database.sqlite.SQLiteException
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.property_form.picture_preview.PicturePreviewEntity
 import com.emplk.realestatemanager.domain.property_form.picture_preview.PicturePreviewRepository
@@ -16,9 +17,14 @@ class PicturePreviewRepositoryRoom @Inject constructor(
 ) : PicturePreviewRepository {
     override suspend fun add(picturePreviewEntity: PicturePreviewEntity, propertyFormId: Long): Long? =
         withContext(coroutineDispatcherProvider.io) {
-            picturePreviewDao.insert(
-                picturePreviewMapper.mapToPicturePreviewDto(picturePreviewEntity, propertyFormId)
-            )
+            try {
+                picturePreviewDao.insert(
+                    picturePreviewMapper.mapToPicturePreviewDto(picturePreviewEntity, propertyFormId)
+                )
+            } catch (e: SQLiteException) {
+                e.printStackTrace()
+                null
+            }
         }
 
     override suspend fun addAll(picturePreviewEntities: List<PicturePreviewEntity>, propertyFormId: Long): List<Long?> =
@@ -30,7 +36,7 @@ class PicturePreviewRepositoryRoom @Inject constructor(
             )
         }
 
-    override fun getAsFlow(): Flow<List<PicturePreviewEntity>> = picturePreviewDao
+    override fun getAllAsFlow(): Flow<List<PicturePreviewEntity>> = picturePreviewDao
         .getAllAsFlow()
         .map { picturePreviewDtoList ->
             picturePreviewDtoList.map { picturePreviewDto ->
@@ -39,16 +45,27 @@ class PicturePreviewRepositoryRoom @Inject constructor(
         }
         .flowOn(coroutineDispatcherProvider.io)
 
-    override suspend fun update(picturePreviewEntity: PicturePreviewEntity, propertyFormId: Long): Boolean =
+    override suspend fun getPictureById(picturePreviewId: Long): PicturePreviewEntity? =
         withContext(coroutineDispatcherProvider.io) {
-            val picturePreviewFormDto =
-                picturePreviewMapper.mapToPicturePreviewDto(picturePreviewEntity, propertyFormId)
+            picturePreviewDao.getPictureById(picturePreviewId)?.let { picturePreviewDto ->
+                picturePreviewMapper.mapToPicturePreviewEntity(picturePreviewDto)
+            }
+        }
+
+    override suspend fun update(picturePreviewId: Long, isFeatured: Boolean?, description: String?): Boolean =
+        withContext(coroutineDispatcherProvider.io) {
+            if (isFeatured != null && isFeatured) {
+                picturePreviewDao.clearFeaturedPicture()
+            }
+
+            // Set the new picture as featured or update description
             picturePreviewDao.update(
-                picturePreviewFormDto.isFeatured,
-                picturePreviewFormDto.description,
-                picturePreviewFormDto.id
+                picturePreviewId,
+                isFeatured,
+                description
             ) == 1
         }
+
 
     override suspend fun delete(picturePreviewId: Long): Boolean = withContext(coroutineDispatcherProvider.io) {
         picturePreviewDao.delete(picturePreviewId) == 1
