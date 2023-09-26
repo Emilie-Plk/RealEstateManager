@@ -11,9 +11,11 @@ interface PropertyFormRepository {
 
     fun isPropertyFormInProgressAsFlow(): Flow<Boolean>
 
-    suspend fun getExistingPropertyFormId(): Long
+    suspend fun getExistingPropertyFormId(): Long?
 
-    fun getPropertyFormByIdAsFlow(propertyFormId: Long): Flow<PropertyFormEntity>
+    suspend fun getExistingPropertyForm(): PropertyFormEntity?
+
+    suspend fun getPropertyFormById(propertyFormId: Long): PropertyFormEntity
 
     suspend fun exists(): Boolean
 

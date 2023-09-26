@@ -13,6 +13,7 @@ import com.emplk.realestatemanager.data.property.PropertyRepositoryRoom
 import com.emplk.realestatemanager.data.property_form.PropertyFormRepositoryRoom
 import com.emplk.realestatemanager.data.property_form.amenity.AmenityFormRepositoryRoom
 import com.emplk.realestatemanager.data.property_form.location.LocationFormRepositoryRoom
+import com.emplk.realestatemanager.data.property_form.picture_preview.id.PicturePreviewIdRepositoryImpl
 import com.emplk.realestatemanager.data.property_form.picture_preview.PicturePreviewRepositoryRoom
 import com.emplk.realestatemanager.data.property_type.PropertyTypeRepositoryImpl
 import com.emplk.realestatemanager.data.screen_width.ScreenWidthTypeRepositoryImpl
@@ -29,6 +30,7 @@ import com.emplk.realestatemanager.domain.property.PropertyRepository
 import com.emplk.realestatemanager.domain.property_form.PropertyFormRepository
 import com.emplk.realestatemanager.domain.property_form.amenity.AmenityFormRepository
 import com.emplk.realestatemanager.domain.property_form.location.LocationFormRepository
+import com.emplk.realestatemanager.domain.property_form.picture_preview.id.PicturePreviewIdRepository
 import com.emplk.realestatemanager.domain.property_form.picture_preview.PicturePreviewRepository
 import com.emplk.realestatemanager.domain.property_type.PropertyTypeRepository
 import com.emplk.realestatemanager.domain.screen_width.ScreenWidthTypeRepository
@@ -105,4 +107,8 @@ abstract class DataBindingModule {
     @Singleton
     @Binds
     abstract fun bindPredictionRepository(implementation: PredictionRepositoryAutocomplete): PredictionRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindPicturePreviewIdRepository(implementation: PicturePreviewIdRepositoryImpl): PicturePreviewIdRepository
 }

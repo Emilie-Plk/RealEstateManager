@@ -23,6 +23,5 @@ class AmenityMapper @Inject constructor() {
         AmenityEntity(
             id = amenityDto.id,
             type = AmenityType.valueOf(amenityDto.name),
-            propertyId = amenityDto.propertyId,
         )
 }

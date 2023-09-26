@@ -7,6 +7,6 @@ class UpdatePropertyFormUseCase @Inject constructor(
     private val getCurrentPropertyFormIdUseCase: GetCurrentPropertyFormIdUseCase,
 ) {
     suspend fun invoke(propertyFormEntity: PropertyFormEntity) {
-        propertyFormRepository.update(propertyFormEntity, getCurrentPropertyFormIdUseCase.invoke())
+        getCurrentPropertyFormIdUseCase.invoke()?.let { propertyFormRepository.update(propertyFormEntity, it) }
     }
 }

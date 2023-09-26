@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
-import kotlinx.coroutines.flow.Flow
 import java.math.BigDecimal
 
 @Dao
@@ -13,14 +12,18 @@ interface PropertyFormDao {
     suspend fun insert(propertyFormDto: PropertyFormDto): Long
 
     @Transaction
-    @Query("SELECT * FROM property_forms WHERE id = :propertyFormId")
-    fun getPropertyFormById(propertyFormId: Long): Flow<PropertyFormWithDetails>
+    @Query("SELECT * FROM property_forms WHERE id = :propertyFormId LIMIT 1")
+    suspend fun getPropertyFormById(propertyFormId: Long): PropertyFormWithDetails
+
+    @Transaction
+    @Query("SELECT * FROM property_forms LIMIT 1")
+    suspend fun getExistingPropertyForm(): PropertyFormWithDetails?
 
     @Query("SELECT EXISTS(SELECT 1 FROM property_forms)")
     suspend fun exists(): Boolean
 
     @Query("SELECT id FROM property_forms LIMIT 1")
-    suspend fun getExistingPropertyFormId(): Long
+    suspend fun getExistingPropertyFormId(): Long?
 
     @Query(
         "UPDATE property_forms SET type = :newType," +

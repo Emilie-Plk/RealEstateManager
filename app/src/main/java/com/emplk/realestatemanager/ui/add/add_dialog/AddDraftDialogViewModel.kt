@@ -6,6 +6,7 @@ import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property_form.DeleteTemporaryPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_form.GetCurrentPropertyFormIdUseCase
+import com.emplk.realestatemanager.domain.property_form.picture_preview.id.DeleteAllPicturePreviewIdsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -16,6 +17,7 @@ class AddDraftDialogViewModel @Inject constructor(
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val deleteTemporaryPropertyFormUseCase: DeleteTemporaryPropertyFormUseCase,
     private val getCurrentPropertyFormIdUseCase: GetCurrentPropertyFormIdUseCase,
+    private val deleteAllPicturePreviewIdsUseCase: DeleteAllPicturePreviewIdsUseCase,
 ) : ViewModel() {
     fun onAddDraftClicked() {
         // Save form in db
@@ -27,8 +29,11 @@ class AddDraftDialogViewModel @Inject constructor(
             val propertyFormId = async {
                 getCurrentPropertyFormIdUseCase.invoke()
             }.await()
-
-            deleteTemporaryPropertyFormUseCase.invoke(propertyFormId)
+// TODO à revoir
+            if (propertyFormId != null) {
+                deleteTemporaryPropertyFormUseCase.invoke(propertyFormId)
+            }
+            deleteAllPicturePreviewIdsUseCase.invoke()
         }
         setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
     }
