@@ -1,20 +1,20 @@
 package com.emplk.realestatemanager.domain.property_form
 
-import com.emplk.realestatemanager.domain.property_form.amenity.AmenityFormEntity
+import com.emplk.realestatemanager.domain.amenity.AmenityEntity
 import com.emplk.realestatemanager.domain.property_form.location.LocationFormEntity
 import com.emplk.realestatemanager.domain.property_form.picture_preview.PicturePreviewEntity
 import java.math.BigDecimal
 
 data class PropertyFormEntity(
-    val type: String? = null,
+    val type: String?,
     val price: BigDecimal? = BigDecimal.ZERO,
-    val surface: Int? = null,
-    val rooms: Int? = null,
-    val bedrooms: Int? = null,
-    val bathrooms: Int? = null,
-    val description: String? = null,
-    val agentName: String? = null,
-    val location: LocationFormEntity? = null,  // TODO: NOT SURE
+    val surface: Int?,
+    val rooms: Int?,
+    val bedrooms: Int?,
+    val bathrooms: Int?,
+    val description: String?,
+    val agentName: String?,
+    val location: LocationFormEntity?,  // TODO: NOT SURE
     val pictures: List<PicturePreviewEntity> = emptyList(),
-    val amenities: List<AmenityFormEntity> = emptyList(),
+    val amenities: List<AmenityEntity> = emptyList(),
 )

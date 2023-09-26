@@ -1,6 +1,5 @@
 package com.emplk.realestatemanager.ui.add
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
@@ -20,15 +19,18 @@ import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.AddPropertyUseCase
 import com.emplk.realestatemanager.domain.property_form.AddTemporaryPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_form.InitTemporaryPropertyFormUseCase
+import com.emplk.realestatemanager.domain.property_form.PropertyFormDatabaseState
 import com.emplk.realestatemanager.domain.property_form.PropertyFormEntity
 import com.emplk.realestatemanager.domain.property_form.SetPropertyFormProgressUseCase
 import com.emplk.realestatemanager.domain.property_form.UpdatePropertyFormUseCase
-import com.emplk.realestatemanager.domain.property_form.amenity.AmenityFormEntity
 import com.emplk.realestatemanager.domain.property_form.location.LocationFormEntity
 import com.emplk.realestatemanager.domain.property_form.picture_preview.AddPicturePreviewUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.DeletePicturePreviewUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.GetPicturePreviewsAsFlowUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.UpdatePicturePreviewUseCase
+import com.emplk.realestatemanager.domain.property_form.picture_preview.id.AddPicturePreviewIdUseCase
+import com.emplk.realestatemanager.domain.property_form.picture_preview.id.DeletePicturePreviewIdUseCase
+import com.emplk.realestatemanager.domain.property_form.picture_preview.id.GetPicturePreviewIdsAsFlowUseCase
 import com.emplk.realestatemanager.domain.property_type.GetPropertyTypeFlowUseCase
 import com.emplk.realestatemanager.ui.add.address_predictions.PredictionViewState
 import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem
@@ -63,6 +65,9 @@ class AddPropertyViewModel @Inject constructor(
     private val addTemporaryPropertyFormUseCase: AddTemporaryPropertyFormUseCase,
     private val deletePicturePreviewUseCase: DeletePicturePreviewUseCase,
     private val addPicturePreviewUseCase: AddPicturePreviewUseCase,
+    private val addPicturePreviewIdUseCase: AddPicturePreviewIdUseCase,
+    private val deletePicturePreviewIdUseCase: DeletePicturePreviewIdUseCase,
+    private val getPicturePreviewIdsAsFlowUseCase: GetPicturePreviewIdsAsFlowUseCase,
     private val updatePicturePreviewUseCase: UpdatePicturePreviewUseCase,
     private val updatePropertyFormUseCase: UpdatePropertyFormUseCase,
     private val getAddressPredictionsUseCase: GetAddressPredictionsUseCase,
@@ -82,7 +87,6 @@ class AddPropertyViewModel @Inject constructor(
     private data class AddPropertyForm(
         val propertyType: String? = null,
         val address: String? = null,
-        val placeId: String? = null,
         val addressPredictions: List<PredictionViewState> = emptyList(),
         val lat: String? = null,
         val lng: String? = null,
@@ -94,7 +98,7 @@ class AddPropertyViewModel @Inject constructor(
         val nbBedrooms: Int = 0,
         val agent: String? = null,
         val amenities: List<AmenityEntity> = emptyList(),
-        val pictureIds: List<Long> = emptyList(),
+        val picturesCount: Int = 0,
     )
 
     private val formMutableStateFlow = MutableStateFlow(AddPropertyForm())
@@ -144,8 +148,30 @@ class AddPropertyViewModel @Inject constructor(
 
     val viewStateLiveData: LiveData<AddPropertyViewState> = liveData {
         coroutineScope {
-            val initTemporaryPropertyFormUseCase = initTemporaryPropertyFormUseCase.invoke()
-            Log.d("COUCOU", "temporaryPropertyFormResult: $initTemporaryPropertyFormUseCase")
+            when (val initTemporaryPropertyFormUseCase = initTemporaryPropertyFormUseCase.invoke()) {
+                is PropertyFormDatabaseState.Empty -> {
+                }
+
+                is PropertyFormDatabaseState.DraftAlreadyExists -> {
+                    formMutableStateFlow.update {
+                        it.copy(
+                            propertyType = initTemporaryPropertyFormUseCase.propertyFormEntity.type,
+                            address = initTemporaryPropertyFormUseCase.propertyFormEntity.location?.address,
+                            lat = initTemporaryPropertyFormUseCase.propertyFormEntity.location?.latitude,
+                            lng = initTemporaryPropertyFormUseCase.propertyFormEntity.location?.longitude,
+                            price = initTemporaryPropertyFormUseCase.propertyFormEntity.price ?: BigDecimal.ZERO,
+                            surface = initTemporaryPropertyFormUseCase.propertyFormEntity.surface ?: 0,
+                            description = initTemporaryPropertyFormUseCase.propertyFormEntity.description,
+                            nbRooms = initTemporaryPropertyFormUseCase.propertyFormEntity.rooms ?: 0,
+                            nbBathrooms = initTemporaryPropertyFormUseCase.propertyFormEntity.bathrooms ?: 0,
+                            nbBedrooms = initTemporaryPropertyFormUseCase.propertyFormEntity.bedrooms ?: 0,
+                            agent = initTemporaryPropertyFormUseCase.propertyFormEntity.agentName,
+                            amenities = initTemporaryPropertyFormUseCase.propertyFormEntity.amenities,
+                        )
+                    }
+                }
+            }
+
             launch {
                 combine(
                     formMutableStateFlow,
@@ -153,9 +179,10 @@ class AddPropertyViewModel @Inject constructor(
                     getPropertyTypeFlowUseCase.invoke(),
                     getAmenityTypeFlowUseCase.invoke(),
                     getPicturePreviewsAsFlowUseCase.invoke(),
+                    getPicturePreviewIdsAsFlowUseCase.invoke(),
                     currentPredictionAddressesFlow,
                     isAddingPropertyInDatabaseMutableStateFlow,
-                ) { form, agents, propertyTypes, amenityTypes, picturePreviews, currentPredictionAddresses, isAddingPropertyInDatabase ->
+                ) { form, agents, propertyTypes, amenityTypes, picturePreviews, picturePreviewIds, currentPredictionAddresses, isAddingPropertyInDatabase ->
                     val currencyType = getCurrencyTypeUseCase.invoke()
 
                     val isFormInProgress = !form.propertyType.isNullOrBlank() ||
@@ -168,7 +195,7 @@ class AddPropertyViewModel @Inject constructor(
                             form.nbBedrooms > 0 ||
                             !form.agent.isNullOrBlank() ||
                             form.amenities.isNotEmpty() ||
-                            form.pictureIds.isNotEmpty()
+                            form.picturesCount > 0
                     setPropertyFormProgressUseCase.invoke(isFormInProgress)
                     emit(
                         AddPropertyViewState(
@@ -176,14 +203,14 @@ class AddPropertyViewModel @Inject constructor(
                             address = form.address,
                             lat = form.lat,
                             lng = form.lng,
-                            price = form.price,
-                            surface = form.surface,
+                            price = form.price.toString(),
+                            surface = form.surface.toString(),
                             description = form.description,
                             nbRooms = form.nbRooms,
                             nbBathrooms = form.nbBathrooms,
                             nbBedrooms = form.nbBedrooms,
                             pictures = picturePreviews
-                                .filter { picturePreview -> form.pictureIds.contains(picturePreview.id) }
+                                .filter { picturePreview -> picturePreviewIds.contains(picturePreview.id) }
                                 .map { picturePreview ->
                                     PicturePreviewStateItem.AddPropertyPicturePreview(
                                         id = picturePreview.id,
@@ -203,28 +230,26 @@ class AddPropertyViewModel @Inject constructor(
                                         description = picturePreview.description,
                                         onDeleteEvent = EquatableCallback {
                                             formMutableStateFlow.update {
-                                                it.copy(pictureIds = it.pictureIds.filter { id -> id != picturePreview.id })
+                                                it.copy(picturesCount = it.picturesCount - 1)
                                             }
-                                            viewModelScope.launch {
-                                                deletePicturePreviewUseCase.invoke(picturePreview.id)
-                                            }
+                                            deletePicturePreviewIdUseCase.invoke(picturePreview.id)
                                         },
                                         onFeaturedEvent = EquatableCallbackWithParam { isFeatured ->
                                             if (picturePreviews[0].id != picturePreview.id) {
-                                            viewModelScope.launch {
-                                                updatePicturePreviewUseCase.invoke(
-                                                    picturePreview.id,
-                                                    isFeatured,
-                                                    picturePreview.description
-                                                )
-                                                updatePicturePreviewUseCase.invoke(
-                                                    picturePreviews[0].id,
-                                                    false,
-                                                    picturePreview.description
-                                                )
+                                                viewModelScope.launch {
+                                                    updatePicturePreviewUseCase.invoke(
+                                                        picturePreview.id,
+                                                        isFeatured,
+                                                        picturePreview.description
+                                                    )
+                                                    updatePicturePreviewUseCase.invoke(
+                                                        picturePreviews[0].id,
+                                                        false,
+                                                        picturePreview.description
+                                                    )
+                                                }
                                             }
-                                        }
-                                            },
+                                        },
                                         onDescriptionChanged = EquatableCallbackWithParam { description ->
                                             viewModelScope.launch {
                                                 updatePicturePreviewUseCase.invoke(
@@ -301,16 +326,15 @@ class AddPropertyViewModel @Inject constructor(
                             bathrooms = it.nbBathrooms,
                             location = LocationFormEntity(
                                 address = it.address,
-                                placeId = it.placeId,
                                 latitude = it.lat,
                                 longitude = it.lng,
                             ),
                             bedrooms = it.nbBedrooms,
                             agentName = it.agent,
                             amenities = it.amenities.map { amenity ->
-                                AmenityFormEntity(
-                                    id = amenity.type.id,
-                                    type = amenity.type.name,
+                                AmenityEntity(
+                                    id = amenity.id,
+                                    type = amenity.type,
                                 )
                             },
                         )
@@ -325,7 +349,7 @@ class AddPropertyViewModel @Inject constructor(
             AmenityViewStateItem(
                 id = amenityType.id,
                 name = amenityType.name,
-                isChecked = false,
+                isChecked = formMutableStateFlow.value.amenities.any { amenity -> amenity.type.name == amenityType.name },
                 iconDrawable = amenityType.iconDrawable,
                 stringRes = amenityType.stringRes,
                 onCheckBoxClicked = EquatableCallbackWithParam { isChecked ->
@@ -379,16 +403,16 @@ class AddPropertyViewModel @Inject constructor(
 
     fun onSurfaceChanged(surface: String) {
         formMutableStateFlow.update {
-            it.copy(surface = surface.toInt())
+            it.copy(surface = surface.toIntOrNull() ?: 0)
         }
     }
 
     fun onPictureAdded(uriToString: String) {
         viewModelScope.launch {
             val addedPictureId = addPicturePreviewUseCase.invoke(uriToString)
-
+            addPicturePreviewIdUseCase.invoke(addedPictureId)
             formMutableStateFlow.update {
-                it.copy(pictureIds = it.pictureIds + addedPictureId)
+                it.copy(picturesCount = it.picturesCount + 1)
             }
         }
     }

@@ -1,22 +1,23 @@
 package com.emplk.realestatemanager.data.property_form.amenity
 
-import com.emplk.realestatemanager.domain.property_form.amenity.AmenityFormEntity
+import com.emplk.realestatemanager.domain.amenity.AmenityEntity
+import com.emplk.realestatemanager.domain.amenity.AmenityType
 import javax.inject.Inject
 
 class AmenityFormMapper @Inject constructor() {
     fun mapToAmenityFormEntity(amenityFormDto: AmenityFormDto) =
-        AmenityFormEntity(
+        AmenityEntity(
             id = amenityFormDto.id,
-            type = amenityFormDto.name,
+            type = AmenityType.valueOf(amenityFormDto.name),
         )
 
-    fun mapToAmenityDto(amenityFormEntity: AmenityFormEntity, propertyFormId: Long) =
+    fun mapToAmenityDto(amenityEntity: AmenityEntity, propertyFormId: Long) =
         AmenityFormDto(
-            id = amenityFormEntity.id,
+            id = amenityEntity.id,
             propertyFormId = propertyFormId,
-            name = amenityFormEntity.type,
+            name = amenityEntity.type.name,
         )
 
-    fun mapToAmenityFormEntities(amenityFormDtos: List<AmenityFormDto>): List<AmenityFormEntity> =
+    fun mapToAmenityFormEntities(amenityFormDtos: List<AmenityFormDto>): List<AmenityEntity> =
         amenityFormDtos.map { mapToAmenityFormEntity(it) }
 }

@@ -1,7 +1,6 @@
 package com.emplk.realestatemanager.data.property_form
 
 import android.database.sqlite.SQLiteException
-import android.util.Log
 import com.emplk.realestatemanager.data.property_form.amenity.AmenityFormDao
 import com.emplk.realestatemanager.data.property_form.amenity.AmenityFormMapper
 import com.emplk.realestatemanager.data.property_form.location.LocationFormDao
@@ -16,8 +15,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -79,19 +76,43 @@ class PropertyFormRepositoryRoom @Inject constructor(
     override fun isPropertyFormInProgressAsFlow(): Flow<Boolean> =
         isPropertyFormInProgressMutableStateFlow.asStateFlow()
 
-    override suspend fun getExistingPropertyFormId(): Long = withContext(coroutineDispatcherProvider.io) {
-        propertyFormDao.getExistingPropertyFormId()
+    override suspend fun getExistingPropertyFormId(): Long? = withContext(coroutineDispatcherProvider.io) {
+        try {
+            propertyFormDao.getExistingPropertyFormId()
+        } catch (e: SQLiteException) {
+            e.printStackTrace()
+            null
+        }
     }
 
-    override fun getPropertyFormByIdAsFlow(propertyFormId: Long): Flow<PropertyFormEntity> =
-        propertyFormDao.getPropertyFormById(propertyFormId).map { propertyFormWithDetails ->
-            propertyFormMapper.mapToPropertyFormEntity(
-                propertyFormWithDetails.propertyForm,
-                propertyFormWithDetails.location,
-                propertyFormWithDetails.picturePreviews,
-                propertyFormWithDetails.amenities,
-            )
-        }.flowOn(coroutineDispatcherProvider.io)
+    override suspend fun getExistingPropertyForm(): PropertyFormEntity? = withContext(coroutineDispatcherProvider.io) {
+        try {
+            propertyFormDao.getExistingPropertyForm()?.let { propertyFormWithDetails ->
+                propertyFormMapper.mapToPropertyFormEntity(
+                    propertyFormWithDetails.propertyForm,
+                    propertyFormWithDetails.location,
+                    propertyFormWithDetails.picturePreviews,
+                    propertyFormWithDetails.amenities,
+                )
+            }
+        } catch (e: SQLiteException) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    override suspend fun getPropertyFormById(propertyFormId: Long): PropertyFormEntity =
+        withContext(coroutineDispatcherProvider.io) {
+            propertyFormDao.getPropertyFormById(propertyFormId).let { propertyFormWithDetails ->
+                propertyFormMapper.mapToPropertyFormEntity(
+                    propertyFormWithDetails.propertyForm,
+                    propertyFormWithDetails.location,
+                    propertyFormWithDetails.picturePreviews,
+                    propertyFormWithDetails.amenities,
+                )
+            }
+        }
+
 
     override suspend fun exists(): Boolean = withContext(coroutineDispatcherProvider.io) {
         propertyFormDao.exists()

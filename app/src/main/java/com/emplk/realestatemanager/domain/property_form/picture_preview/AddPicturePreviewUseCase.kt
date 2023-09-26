@@ -7,12 +7,14 @@ class AddPicturePreviewUseCase @Inject constructor(
     private val picturePreviewRepository: PicturePreviewRepository,
     private val getCurrentPropertyFormIdUseCase: GetCurrentPropertyFormIdUseCase
 ) {
-    suspend fun invoke(uriToString: String): Long = picturePreviewRepository.add(
+    suspend fun invoke(uriToString: String): Long = getCurrentPropertyFormIdUseCase.invoke()?.let {
+        picturePreviewRepository.add(
         PicturePreviewEntity(
             id = 0,
             uri = uriToString,
             description = null,
             isFeatured = false
-        ), getCurrentPropertyFormIdUseCase.invoke()
-    ) ?: throw Exception("Error while adding picture preview")
+        ), it
+    )
+    } ?: throw Exception("Error while adding picture preview")
 }
