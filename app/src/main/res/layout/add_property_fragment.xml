@@ -374,7 +374,7 @@
             app:layout_constraintTop_toBottomOf="@id/add_property_address_textInputLayout"
             app:layout_constraintEnd_toEndOf="@id/add_property_address_textInputLayout"
             app:layout_constraintStart_toStartOf="@id/add_property_address_textInputLayout"
-            tools:listitem="@layout/property_address_prediction_item"/>
+            tools:listitem="@layout/property_address_prediction_item" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
