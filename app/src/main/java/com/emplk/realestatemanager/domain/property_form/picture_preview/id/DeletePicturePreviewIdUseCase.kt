@@ -4,7 +4,7 @@ import javax.inject.Inject
 
 class DeletePicturePreviewIdUseCase @Inject constructor(
     private val picturePreviewIdRepository: PicturePreviewIdRepository,
-)  {
+) {
     fun invoke(picturePreviewId: Long) {
         picturePreviewIdRepository.delete(picturePreviewId)
     }

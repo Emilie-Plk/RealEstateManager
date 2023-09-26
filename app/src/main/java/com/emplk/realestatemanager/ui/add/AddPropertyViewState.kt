@@ -7,7 +7,6 @@ import com.emplk.realestatemanager.ui.add.amenity.AmenityViewStateItem
 import com.emplk.realestatemanager.ui.add.picture_preview.PicturePreviewStateItem
 import com.emplk.realestatemanager.ui.add.type.AddPropertyTypeViewStateItem
 import com.emplk.realestatemanager.ui.utils.NativeText
-import java.math.BigDecimal
 
 data class AddPropertyViewState(
     val propertyType: String?,

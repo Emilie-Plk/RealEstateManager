@@ -101,12 +101,9 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
             binding.addPropertyRoomsNumberPicker.value = viewState.nbRooms
             binding.addPropertyBedroomsNumberPicker.value = viewState.nbBedrooms
             binding.addPropertyBathroomsNumberPicker.value = viewState.nbBathrooms
-            //binding.addPropertyAddressTextInputEditText.setText(viewState.address)
+            binding.addPropertyAddressTextInputEditText.setText(viewState.address)
             binding.addPropertyTypeActv.setText(viewState.propertyType, false)
             binding.addPropertyAgentActv.setText(viewState.selectedAgent, false)
-            binding.addPropertyAddressTextInputEditText.doAfterTextChanged { editable ->
-                editable?.let { viewModel.onAddressChanged(editable.toString()) }
-            }
         }
 
         // region Import pictures
@@ -159,6 +156,10 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
 
         binding.addPropertyDescriptionTextInputEditText.doAfterTextChanged {
             viewModel.onDescriptionChanged(it.toString())
+        }
+
+        binding.addPropertyAddressTextInputEditText.doAfterTextChanged { editable ->
+            viewModel.onAddressChanged(editable.toString())
         }
     }
 

@@ -1,7 +1,6 @@
 package com.emplk.realestatemanager.data.property_form.amenity
 
 import com.emplk.realestatemanager.domain.amenity.AmenityEntity
-import com.emplk.realestatemanager.domain.property_form.amenity.AmenityFormEntity
 import com.emplk.realestatemanager.domain.property_form.amenity.AmenityFormRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

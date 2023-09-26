@@ -14,9 +14,11 @@ interface LocationFormDao {
     @Query("SELECT * FROM location_forms WHERE property_form_id = :propertyFormId LIMIT 1")
     fun getAsFlow(propertyFormId: Long): Flow<LocationFormDto>
 
-    @Query("UPDATE location_forms SET address = :newAddress, " +
-            "latitude = :newLatitude, " +
-            "longitude = :newLongitude WHERE property_form_id = :propertyFormId")
+    @Query(
+        "UPDATE location_forms SET address = :newAddress, " +
+                "latitude = :newLatitude, " +
+                "longitude = :newLongitude WHERE property_form_id = :propertyFormId"
+    )
     fun update(
         newAddress: String?,
         newLatitude: String?,
