@@ -77,9 +77,12 @@ class PropertyPicturePreviewListAdapter :
 
                 binding.previewPictureDeleteIv.setOnClickListener { item.onDeleteEvent.invoke() }
 
-                binding.previewPictureTitleEt.doAfterTextChanged { editable ->
-                    item.onDescriptionChanged.invoke(editable.toString())
+                binding.previewPictureTitleEt.setOnFocusChangeListener { _, hasFocus ->
+                    if (!hasFocus) {
+                        item.onDescriptionChanged.invoke(binding.previewPictureTitleEt.text.toString())
+                    }
                 }
+                binding.previewPictureTitleEt.setText(item.description)
             }
         }
 
@@ -131,14 +134,14 @@ object PropertyPicturePreviewDiffCallback : DiffUtil.ItemCallback<PicturePreview
         when {
             oldItem is PicturePreviewStateItem.AddPropertyPicturePreview &&
                     newItem is PicturePreviewStateItem.AddPropertyPicturePreview ->
-                oldItem.uri == newItem.uri && oldItem.description == newItem.description &&
-                        oldItem.isFeatured == newItem.isFeatured
+                oldItem.id == newItem.id &&
+                        oldItem.uri == newItem.uri &&
+                        oldItem.isFeatured == newItem.isFeatured &&
+                        oldItem.description == newItem.description
 
             oldItem is PicturePreviewStateItem.EditPropertyPicturePreview &&
                     newItem is PicturePreviewStateItem.EditPropertyPicturePreview ->
-                oldItem.uri == newItem.uri &&
-                        oldItem.description == newItem.description &&
-                        oldItem.isFeatured == newItem.isFeatured
+                oldItem.id == newItem.id
 
             else -> false
         }

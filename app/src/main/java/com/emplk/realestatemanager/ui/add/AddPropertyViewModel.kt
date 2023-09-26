@@ -1,6 +1,5 @@
 package com.emplk.realestatemanager.ui.add
 
-import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -13,7 +12,6 @@ import com.emplk.realestatemanager.domain.amenity.AmenityEntity
 import com.emplk.realestatemanager.domain.amenity.AmenityType
 import com.emplk.realestatemanager.domain.amenity.type.GetAmenityTypeFlowUseCase
 import com.emplk.realestatemanager.domain.autocomplete.GetAddressPredictionsUseCase
-import com.emplk.realestatemanager.domain.autocomplete.PredictionEntity
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
@@ -29,7 +27,8 @@ import com.emplk.realestatemanager.domain.property_form.amenity.AmenityFormEntit
 import com.emplk.realestatemanager.domain.property_form.location.LocationFormEntity
 import com.emplk.realestatemanager.domain.property_form.picture_preview.AddPicturePreviewUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.DeletePicturePreviewUseCase
-import com.emplk.realestatemanager.domain.property_form.picture_preview.PicturePreviewEntity
+import com.emplk.realestatemanager.domain.property_form.picture_preview.GetPicturePreviewsAsFlowUseCase
+import com.emplk.realestatemanager.domain.property_form.picture_preview.UpdatePicturePreviewUseCase
 import com.emplk.realestatemanager.domain.property_type.GetPropertyTypeFlowUseCase
 import com.emplk.realestatemanager.ui.add.address_predictions.PredictionViewState
 import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem
@@ -64,12 +63,14 @@ class AddPropertyViewModel @Inject constructor(
     private val addTemporaryPropertyFormUseCase: AddTemporaryPropertyFormUseCase,
     private val deletePicturePreviewUseCase: DeletePicturePreviewUseCase,
     private val addPicturePreviewUseCase: AddPicturePreviewUseCase,
+    private val updatePicturePreviewUseCase: UpdatePicturePreviewUseCase,
     private val updatePropertyFormUseCase: UpdatePropertyFormUseCase,
     private val getAddressPredictionsUseCase: GetAddressPredictionsUseCase,
     private val initTemporaryPropertyFormUseCase: InitTemporaryPropertyFormUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val getCurrencyTypeUseCase: GetCurrencyTypeUseCase,
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
+    private val getPicturePreviewsAsFlowUseCase: GetPicturePreviewsAsFlowUseCase,
     private val getAgentsFlowUseCase: GetAgentsFlowUseCase,
     private val setPropertyFormProgressUseCase: SetPropertyFormProgressUseCase,
     private val getAmenityTypeFlowUseCase: GetAmenityTypeFlowUseCase,
@@ -93,13 +94,13 @@ class AddPropertyViewModel @Inject constructor(
         val nbBedrooms: Int = 0,
         val agent: String? = null,
         val amenities: List<AmenityEntity> = emptyList(),
-        val pictures: List<PicturePreviewStateItem.AddPropertyPicturePreview> = emptyList(),
+        val pictureIds: List<Long> = emptyList(),
     )
 
     private val formMutableStateFlow = MutableStateFlow(AddPropertyForm())
 
     private val currentAddressInputMutableStateFlow: MutableStateFlow<String?> = MutableStateFlow(null)
-    private val currentAddressInputFlow: Flow<List<PredictionEntity>> =
+    private val currentPredictionAddressesFlow: Flow<List<String>> =
         currentAddressInputMutableStateFlow.transformLatest { input ->
             if (input.isNullOrBlank()) {
                 emit(emptyList())
@@ -151,9 +152,10 @@ class AddPropertyViewModel @Inject constructor(
                     getAgentsFlowUseCase.invoke(),
                     getPropertyTypeFlowUseCase.invoke(),
                     getAmenityTypeFlowUseCase.invoke(),
-                    currentAddressInputFlow,
+                    getPicturePreviewsAsFlowUseCase.invoke(),
+                    currentPredictionAddressesFlow,
                     isAddingPropertyInDatabaseMutableStateFlow,
-                ) { form, agents, propertyTypes, amenityTypes, currentAddressInput, isAddingPropertyInDatabase ->
+                ) { form, agents, propertyTypes, amenityTypes, picturePreviews, currentPredictionAddresses, isAddingPropertyInDatabase ->
                     val currencyType = getCurrencyTypeUseCase.invoke()
 
                     val isFormInProgress = !form.propertyType.isNullOrBlank() ||
@@ -166,7 +168,7 @@ class AddPropertyViewModel @Inject constructor(
                             form.nbBedrooms > 0 ||
                             !form.agent.isNullOrBlank() ||
                             form.amenities.isNotEmpty() ||
-                            form.pictures.isNotEmpty()
+                            form.pictureIds.isNotEmpty()
                     setPropertyFormProgressUseCase.invoke(isFormInProgress)
                     emit(
                         AddPropertyViewState(
@@ -180,8 +182,61 @@ class AddPropertyViewModel @Inject constructor(
                             nbRooms = form.nbRooms,
                             nbBathrooms = form.nbBathrooms,
                             nbBedrooms = form.nbBedrooms,
-                            pictures = form.pictures,
-                            agent = form.agent,
+                            pictures = picturePreviews
+                                .filter { picturePreview -> form.pictureIds.contains(picturePreview.id) }
+                                .map { picturePreview ->
+                                    PicturePreviewStateItem.AddPropertyPicturePreview(
+                                        id = picturePreview.id,
+                                        uri = picturePreview.uri,
+                                        isFeatured = if (picturePreviews.size == 1 && picturePreviews[0].id == picturePreview.id) {
+                                            viewModelScope.launch {
+                                                updatePicturePreviewUseCase.invoke(
+                                                    picturePreviews[0].id,
+                                                    true,
+                                                    picturePreview.description
+                                                )
+                                            }
+                                            true
+                                        } else {
+                                            picturePreview.isFeatured
+                                        },
+                                        description = picturePreview.description,
+                                        onDeleteEvent = EquatableCallback {
+                                            formMutableStateFlow.update {
+                                                it.copy(pictureIds = it.pictureIds.filter { id -> id != picturePreview.id })
+                                            }
+                                            viewModelScope.launch {
+                                                deletePicturePreviewUseCase.invoke(picturePreview.id)
+                                            }
+                                        },
+                                        onFeaturedEvent = EquatableCallbackWithParam { isFeatured ->
+                                            if (picturePreviews[0].id != picturePreview.id) {
+                                            viewModelScope.launch {
+                                                updatePicturePreviewUseCase.invoke(
+                                                    picturePreview.id,
+                                                    isFeatured,
+                                                    picturePreview.description
+                                                )
+                                                updatePicturePreviewUseCase.invoke(
+                                                    picturePreviews[0].id,
+                                                    false,
+                                                    picturePreview.description
+                                                )
+                                            }
+                                        }
+                                            },
+                                        onDescriptionChanged = EquatableCallbackWithParam { description ->
+                                            viewModelScope.launch {
+                                                updatePicturePreviewUseCase.invoke(
+                                                    picturePreview.id,
+                                                    picturePreview.isFeatured,
+                                                    description
+                                                )
+                                            }
+                                        },
+                                    )
+                                },
+                            selectedAgent = form.agent,
                             priceCurrency = when (currencyType) {
                                 CurrencyType.DOLLAR -> NativeText.Argument(
                                     R.string.price_currency_in_n,
@@ -213,15 +268,13 @@ class AddPropertyViewModel @Inject constructor(
                                     name = agent.value
                                 )
                             },
-                            addressPredictions = currentAddressInput.map { prediction ->
+                            addressPredictions = currentPredictionAddresses.map { address ->
                                 PredictionViewState.Prediction(
-                                    placeId = prediction.placeId,
-                                    address = prediction.address,
-                                    onClickEvent = EquatableCallbackWithParam { placeId ->
-                                        formMutableStateFlow.update { addPropertyForm ->
-                                            addPropertyForm.copy(
-                                                address = prediction.address,
-                                                placeId = placeId,
+                                    address = address,
+                                    onClickEvent = EquatableCallbackWithParam { prediction ->
+                                        formMutableStateFlow.update {
+                                            it.copy(
+                                                address = prediction,
                                                 addressPredictions = emptyList(),
                                             )
                                         }
@@ -260,13 +313,6 @@ class AddPropertyViewModel @Inject constructor(
                                     type = amenity.type.name,
                                 )
                             },
-                            pictures = it.pictures.map { picture ->
-                                PicturePreviewEntity(
-                                    uri = picture.uri,
-                                    isFeatured = picture.isFeatured,
-                                    description = picture.description,
-                                )
-                            }
                         )
                     )
                 }
@@ -337,41 +383,12 @@ class AddPropertyViewModel @Inject constructor(
         }
     }
 
-    fun onPictureSelected(uri: Uri) {
+    fun onPictureAdded(uriToString: String) {
         viewModelScope.launch {
-            val addPictureId = addPicturePreviewUseCase.invoke(uri)
-            val addedPicture = PicturePreviewStateItem.AddPropertyPicturePreview(
-                id = addPictureId,
-                uri = uri.toString(),
-                onDeleteEvent = EquatableCallback {
-                    formMutableStateFlow.update {
-                        it.copy(pictures = it.pictures.filter { picture -> picture.id != addPictureId })
-                    }
-                    viewModelScope.launch {
-                        deletePicturePreviewUseCase.invoke(addPictureId)
-                    }
-                },
-                onFeaturedEvent = EquatableCallbackWithParam { isFeatured ->
-                    formMutableStateFlow.update {
-                        it.copy(pictures = it.pictures.map { picture ->
-                            if (picture.id == addPictureId) {
-                                picture.copy(isFeatured = isFeatured)
-                            } else return@EquatableCallbackWithParam
-                        })
-                    }
-                },
-                onDescriptionChanged = EquatableCallbackWithParam { description ->
-                    formMutableStateFlow.update {
-                        it.copy(pictures = it.pictures.map { picture ->
-                            if (picture.id == addPictureId) {
-                                picture.copy(description = description)
-                            } else return@EquatableCallbackWithParam
-                        })
-                    }
-                },
-            )
+            val addedPictureId = addPicturePreviewUseCase.invoke(uriToString)
+
             formMutableStateFlow.update {
-                it.copy(pictures = it.pictures + addedPicture)
+                it.copy(pictureIds = it.pictureIds + addedPictureId)
             }
         }
     }

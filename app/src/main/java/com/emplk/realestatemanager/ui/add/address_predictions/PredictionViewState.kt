@@ -12,7 +12,6 @@ sealed class PredictionViewState(val type: Type) {
 
     data class Prediction(
         val address: String,
-        val placeId: String,
         val onClickEvent: EquatableCallbackWithParam<String>,
     ) : PredictionViewState(Type.PREDICTION)
 

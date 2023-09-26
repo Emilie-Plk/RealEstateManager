@@ -7,9 +7,11 @@ interface PicturePreviewRepository {
 
     suspend fun addAll(picturePreviewEntities: List<PicturePreviewEntity>, propertyFormId: Long): List<Long?>
 
-    fun getAsFlow(): Flow<List<PicturePreviewEntity>>
+    fun getAllAsFlow(): Flow<List<PicturePreviewEntity>>
 
-    suspend fun update(picturePreviewEntity: PicturePreviewEntity, propertyFormId: Long): Boolean
+    suspend fun getPictureById(picturePreviewId: Long): PicturePreviewEntity?
+
+    suspend fun update(picturePreviewId: Long, isFeatured: Boolean?, description: String?): Boolean
 
     suspend fun delete(picturePreviewId: Long): Boolean
 }

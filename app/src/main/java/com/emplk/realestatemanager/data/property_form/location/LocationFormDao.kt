@@ -15,16 +15,12 @@ interface LocationFormDao {
     fun getAsFlow(propertyFormId: Long): Flow<LocationFormDto>
 
     @Query("UPDATE location_forms SET address = :newAddress, " +
-            "city = :newCity, " +
-            "postal_code = :newPostalCode, " +
             "latitude = :newLatitude, " +
             "longitude = :newLongitude WHERE property_form_id = :propertyFormId")
     fun update(
         newAddress: String?,
-        newCity: String?,
-        newPostalCode: String?,
-        newLatitude: Double?,
-        newLongitude: Double?,
+        newLatitude: String?,
+        newLongitude: String?,
         propertyFormId: Long
     ): Int
 

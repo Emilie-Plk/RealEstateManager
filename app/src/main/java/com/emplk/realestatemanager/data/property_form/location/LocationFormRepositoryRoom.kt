@@ -23,8 +23,6 @@ class LocationFormRepositoryRoom @Inject constructor(
             val locationFormDto = locationFormMapper.mapToLocationDto(locationFormEntity, propertyFormId)
             locationFormDao.update(
                 locationFormDto.address,
-                locationFormDto.city,
-                locationFormDto.postalCode,
                 locationFormDto.latitude,
                 locationFormDto.longitude,
                 propertyFormId
