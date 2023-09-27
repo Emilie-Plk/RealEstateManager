@@ -89,7 +89,7 @@
                     app:layout_constraintEnd_toStartOf="@id/detail_entry_date_tv"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/detail_type_tv"
-                    tools:text="123456789123\nMain Street\n12345\nSuper Long City Name City" />
+                    tools:text="2, rue de la Pergola, 77410 Charny, France" />
 
                 <TextView
                     android:id="@+id/detail_entry_date_tv"

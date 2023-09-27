@@ -37,7 +37,7 @@
     <string name="detail_amenities_concierge_tv">Concierge</string>
     <string name="detail_amenities_flexbox_title_tv">Nearby amenities</string>
     <string name="detail_sold_date_tv">SOLD DATE: %s</string>
-    <string name="detail_location_tv">%1s\n%2s\n%3s</string>
+    <string name="detail_location_tv">%s</string>
     <string name="detail_entry_date_tv">Entry date: %s</string>
     <string name="menu_map_view">Map view</string>
     <string name="menu_filter_property">Filter properties</string>

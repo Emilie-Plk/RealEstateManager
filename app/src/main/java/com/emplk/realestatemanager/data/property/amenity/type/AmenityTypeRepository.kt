@@ -1,4 +1,4 @@
-package com.emplk.realestatemanager.data.amenity.type
+package com.emplk.realestatemanager.data.property.amenity.type
 
 import com.emplk.realestatemanager.domain.amenity.AmenityType
 import com.emplk.realestatemanager.domain.amenity.type.AmenityTypeRepository

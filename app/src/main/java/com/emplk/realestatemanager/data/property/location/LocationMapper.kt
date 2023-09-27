@@ -1,4 +1,4 @@
-package com.emplk.realestatemanager.data.location
+package com.emplk.realestatemanager.data.property.location
 
 import com.emplk.realestatemanager.domain.location.LocationEntity
 import javax.inject.Inject
@@ -10,8 +10,7 @@ class LocationMapper @Inject constructor() {
             id = locationEntity.id,
             propertyId = propertyId,
             address = locationEntity.address,
-            city = locationEntity.city,
-            postalCode = locationEntity.postalCode,
+            miniatureMapPath = locationEntity.miniatureMapPath,
             latitude = locationEntity.latitude,
             longitude = locationEntity.longitude,
         )
@@ -21,8 +20,7 @@ class LocationMapper @Inject constructor() {
             id = locationDto.id,
             propertyId = locationDto.propertyId,
             address = locationDto.address,
-            city = locationDto.city,
-            postalCode = locationDto.postalCode,
+            miniatureMapPath = locationDto.miniatureMapPath,
             latitude = locationDto.latitude,
             longitude = locationDto.longitude,
         )

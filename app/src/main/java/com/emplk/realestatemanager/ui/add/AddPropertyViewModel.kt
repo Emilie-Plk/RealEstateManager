@@ -22,6 +22,7 @@ import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.AddPropertyUseCase
 import com.emplk.realestatemanager.domain.property_form.AddTemporaryPropertyFormUseCase
+import com.emplk.realestatemanager.domain.property_form.GetSavedPropertyFormEventUseCase
 import com.emplk.realestatemanager.domain.property_form.InitTemporaryPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_form.PropertyFormDatabaseState
 import com.emplk.realestatemanager.domain.property_form.PropertyFormEntity
@@ -29,7 +30,6 @@ import com.emplk.realestatemanager.domain.property_form.SetPropertyFormProgressU
 import com.emplk.realestatemanager.domain.property_form.UpdatePropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_form.location.LocationFormEntity
 import com.emplk.realestatemanager.domain.property_form.picture_preview.AddPicturePreviewUseCase
-import com.emplk.realestatemanager.domain.property_form.picture_preview.DeletePicturePreviewUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.GetPicturePreviewsAsFlowUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.UpdatePicturePreviewUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.id.AddPicturePreviewIdUseCase
@@ -53,6 +53,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.flow.update
@@ -67,7 +68,7 @@ import kotlin.time.Duration.Companion.seconds
 class AddPropertyViewModel @Inject constructor(
     private val addPropertyUseCase: AddPropertyUseCase,
     private val addTemporaryPropertyFormUseCase: AddTemporaryPropertyFormUseCase,
-    private val deletePicturePreviewUseCase: DeletePicturePreviewUseCase,
+    private val getSavedPropertyFormEventUseCase: GetSavedPropertyFormEventUseCase,
     private val addPicturePreviewUseCase: AddPicturePreviewUseCase,
     private val addPicturePreviewIdUseCase: AddPicturePreviewIdUseCase,
     private val deletePicturePreviewIdUseCase: DeletePicturePreviewIdUseCase,
@@ -125,6 +126,7 @@ class AddPropertyViewModel @Inject constructor(
     private val isPropertySuccessfullyAddedInDatabaseMutableSharedFlow =
         MutableSharedFlow<Boolean>(extraBufferCapacity = 1)
     private val onCreateButtonClickedMutableSharedFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+    private val onSavePropertyFormDraftMutableSharedFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
 
     val viewEventLiveData: LiveData<Event<AddPropertyViewEvent>> = liveData {
         onCreateButtonClickedMutableSharedFlow.collect {
@@ -306,33 +308,65 @@ class AddPropertyViewModel @Inject constructor(
             }
 
             launch {
-                formMutableStateFlow.transform {
-                    emit(it)
-                    delay(10.seconds)
-                }.collect {
-                    updatePropertyFormUseCase.invoke(
-                        PropertyFormEntity(
-                            type = it.propertyType,
-                            price = it.price,
-                            surface = it.surface,
-                            description = it.description,
-                            rooms = it.nbRooms,
-                            bathrooms = it.nbBathrooms,
-                            location = LocationFormEntity(
-                                address = it.address,
-                                latitude = it.lat,
-                                longitude = it.lng,
-                            ),
-                            bedrooms = it.nbBedrooms,
-                            agentName = it.agent,
-                            amenities = it.amenities.map { amenity ->
-                                AmenityEntity(
-                                    id = amenity.id,
-                                    type = amenity.type,
-                                )
-                            },
+                onSavePropertyFormDraftMutableSharedFlow.collect {
+                    formMutableStateFlow.transform {
+                        emit(it)
+                        delay(10.seconds)
+                    }.collect {
+                        updatePropertyFormUseCase.invoke(
+                            PropertyFormEntity(
+                                type = it.propertyType,
+                                price = it.price,
+                                surface = it.surface,
+                                description = it.description,
+                                rooms = it.nbRooms,
+                                bathrooms = it.nbBathrooms,
+                                location = LocationFormEntity(
+                                    address = it.address,
+                                    latitude = it.lat,
+                                    longitude = it.lng,
+                                ),
+                                bedrooms = it.nbBedrooms,
+                                agentName = it.agent,
+                                amenities = it.amenities.map { amenity ->
+                                    AmenityEntity(
+                                        id = amenity.id,
+                                        type = amenity.type,
+                                    )
+                                },
+                            )
                         )
-                    )
+                    }
+                }
+            }
+
+            launch {
+                getSavedPropertyFormEventUseCase.invoke().collect {
+                    formMutableStateFlow.map {
+                        updatePropertyFormUseCase.invoke(
+                            PropertyFormEntity(
+                                type = it.propertyType,
+                                price = it.price,
+                                surface = it.surface,
+                                description = it.description,
+                                rooms = it.nbRooms,
+                                bathrooms = it.nbBathrooms,
+                                location = LocationFormEntity(
+                                    address = it.address,
+                                    latitude = it.lat,
+                                    longitude = it.lng,
+                                ),
+                                bedrooms = it.nbBedrooms,
+                                agentName = it.agent,
+                                amenities = it.amenities.map { amenity ->
+                                    AmenityEntity(
+                                        id = amenity.id,
+                                        type = amenity.type,
+                                    )
+                                },
+                            )
+                        )
+                    }.collect()
                 }
             }
         }
@@ -478,5 +512,9 @@ class AddPropertyViewModel @Inject constructor(
 
     fun onAddPropertyClicked() {
         onCreateButtonClickedMutableSharedFlow.tryEmit(Unit)
+    }
+
+    fun savePropertyDraft() {
+        TODO("Not yet implemented")
     }
 }

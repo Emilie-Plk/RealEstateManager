@@ -93,13 +93,9 @@ class DetailViewModel @Inject constructor(
                             propertyEntity.bedrooms
                         ),
                         description = propertyEntity.description,
-                        address = NativeText.Arguments(
+                        address = NativeText.Argument(
                             R.string.detail_location_tv,
-                            listOf(
-                                propertyEntity.location.address,
-                                propertyEntity.location.postalCode,
-                                propertyEntity.location.city,
-                            )
+                            propertyEntity.location.address
                         ),
                         amenitySchool = propertyEntity.amenities.any {
                             it.type == AmenityType.SCHOOL

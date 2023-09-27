@@ -4,11 +4,11 @@ import android.app.Application
 import android.content.res.Resources
 import androidx.work.WorkManager
 import com.emplk.realestatemanager.BuildConfig
-import com.emplk.realestatemanager.data.amenity.AmenityDao
 import com.emplk.realestatemanager.data.api.GoogleApi
-import com.emplk.realestatemanager.data.location.LocationDao
-import com.emplk.realestatemanager.data.picture.PictureDao
 import com.emplk.realestatemanager.data.property.PropertyDao
+import com.emplk.realestatemanager.data.property.amenity.AmenityDao
+import com.emplk.realestatemanager.data.property.location.LocationDao
+import com.emplk.realestatemanager.data.property.picture.PictureDao
 import com.emplk.realestatemanager.data.property_form.PropertyFormDao
 import com.emplk.realestatemanager.data.property_form.amenity.AmenityFormDao
 import com.emplk.realestatemanager.data.property_form.location.LocationFormDao

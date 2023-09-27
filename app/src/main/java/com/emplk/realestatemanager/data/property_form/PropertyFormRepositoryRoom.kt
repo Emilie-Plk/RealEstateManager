@@ -13,6 +13,7 @@ import com.emplk.realestatemanager.domain.property_form.PropertyFormEntity
 import com.emplk.realestatemanager.domain.property_form.PropertyFormRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
@@ -29,6 +30,8 @@ class PropertyFormRepositoryRoom @Inject constructor(
     private val picturePreviewMapper: PicturePreviewMapper,
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : PropertyFormRepository {
+
+    private val savePropertyDraftMutableSharedFlow: MutableSharedFlow<Unit> = MutableSharedFlow(extraBufferCapacity = 1)
 
     private val isPropertyFormInProgressMutableStateFlow = MutableStateFlow(false)
 
@@ -143,7 +146,6 @@ class PropertyFormRepositoryRoom @Inject constructor(
                 propertyFormId
             )
 
-            // region add/remove amenities
             val amenityIdsStoredInDb = amenityFormDao.getAllIds(propertyFormId)
 
             propertyFormEntity.amenities.forEach {
@@ -158,7 +160,6 @@ class PropertyFormRepositoryRoom @Inject constructor(
                     amenityFormDao.delete(amenityIdStoredInDatabase)
                 }
             }
-            // endregion amenities
         }
 
     override suspend fun delete(propertyFormId: Long) = withContext(coroutineDispatcherProvider.io) {
@@ -167,4 +168,10 @@ class PropertyFormRepositoryRoom @Inject constructor(
         picturePreviewDao.deleteAll(propertyFormId)
         locationFormDao.delete(propertyFormId)
     }
+
+    override fun onSavePropertyFormEvent() {
+        savePropertyDraftMutableSharedFlow.tryEmit(Unit)
+    }
+
+    override fun getSavedPropertyFormEvent(): Flow<Unit> = savePropertyDraftMutableSharedFlow
 }

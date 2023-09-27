@@ -1,4 +1,4 @@
-package com.emplk.realestatemanager.data.location
+package com.emplk.realestatemanager.data.property.location
 
 import android.database.sqlite.SQLiteException
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider

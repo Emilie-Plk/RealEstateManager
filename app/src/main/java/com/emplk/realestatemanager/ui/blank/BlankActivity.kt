@@ -13,7 +13,7 @@ import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.BlankActivityBinding
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.ui.add.AddPropertyFragment
-import com.emplk.realestatemanager.ui.add.add_dialog.AddDraftDialogFragment
+import com.emplk.realestatemanager.ui.add.draft_dialog.PropertyDraftDialogFragment
 import com.emplk.realestatemanager.ui.edit.EditPropertyFragment
 import com.emplk.realestatemanager.ui.main.MainActivity
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
@@ -73,7 +73,7 @@ class BlankActivity : AppCompatActivity() {
                 }
 
                 BlankViewEvent.DisplayDraftDialog ->
-                    AddDraftDialogFragment.newInstance().show(supportFragmentManager, null)
+                    PropertyDraftDialogFragment.newInstance().show(supportFragmentManager, null)
             }
         }
     }

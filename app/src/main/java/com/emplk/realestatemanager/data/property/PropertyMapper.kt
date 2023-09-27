@@ -1,11 +1,11 @@
 package com.emplk.realestatemanager.data.property
 
-import com.emplk.realestatemanager.data.amenity.AmenityDto
-import com.emplk.realestatemanager.data.amenity.AmenityMapper
-import com.emplk.realestatemanager.data.location.LocationDto
-import com.emplk.realestatemanager.data.location.LocationMapper
-import com.emplk.realestatemanager.data.picture.PictureDto
-import com.emplk.realestatemanager.data.picture.PictureMapper
+import com.emplk.realestatemanager.data.property.amenity.AmenityDto
+import com.emplk.realestatemanager.data.property.amenity.AmenityMapper
+import com.emplk.realestatemanager.data.property.location.LocationDto
+import com.emplk.realestatemanager.data.property.location.LocationMapper
+import com.emplk.realestatemanager.data.property.picture.PictureDto
+import com.emplk.realestatemanager.data.property.picture.PictureMapper
 import com.emplk.realestatemanager.domain.property.PropertyEntity
 import javax.inject.Inject
 

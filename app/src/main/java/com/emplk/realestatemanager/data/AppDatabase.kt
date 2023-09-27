@@ -9,14 +9,14 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
-import com.emplk.realestatemanager.data.amenity.AmenityDao
-import com.emplk.realestatemanager.data.amenity.AmenityDto
-import com.emplk.realestatemanager.data.location.LocationDao
-import com.emplk.realestatemanager.data.location.LocationDto
-import com.emplk.realestatemanager.data.picture.PictureDao
-import com.emplk.realestatemanager.data.picture.PictureDto
 import com.emplk.realestatemanager.data.property.PropertyDao
 import com.emplk.realestatemanager.data.property.PropertyDto
+import com.emplk.realestatemanager.data.property.amenity.AmenityDao
+import com.emplk.realestatemanager.data.property.amenity.AmenityDto
+import com.emplk.realestatemanager.data.property.location.LocationDao
+import com.emplk.realestatemanager.data.property.location.LocationDto
+import com.emplk.realestatemanager.data.property.picture.PictureDao
+import com.emplk.realestatemanager.data.property.picture.PictureDto
 import com.emplk.realestatemanager.data.property_form.PropertyFormDao
 import com.emplk.realestatemanager.data.property_form.PropertyFormDto
 import com.emplk.realestatemanager.data.property_form.amenity.AmenityFormDao
@@ -128,27 +128,24 @@ abstract class AppDatabase : RoomDatabase() {
                         listOf(
                             LocationDto(
                                 propertyId = 1,
-                                latitude = 40.765076,
-                                longitude = -73.976693,
+                                latitude = "40.765076",
+                                longitude = "-73.976693",
                                 address = "Chambers Street",
-                                city = "New York City",
-                                postalCode = "10019",
+                                miniatureMapPath = ""
                             ),
                             LocationDto(
                                 propertyId = 2,
-                                latitude = 40.710525,
-                                longitude = -74.008368,
+                                latitude = "40.710525",
+                                longitude = "-74.008368",
                                 address = "Fulton Street",
-                                city = "New York City",
-                                postalCode = "10038",
+                                miniatureMapPath = ""
                             ),
                             LocationDto(
                                 propertyId = 3,
-                                latitude = 40.765076,
-                                longitude = -73.976693,
+                                latitude = "40.765076",
+                                longitude = "-73.976693",
                                 address = "Chambers Street",
-                                city = "New York City",
-                                postalCode = "10019",
+                                miniatureMapPath = ""
                             ),
                         )
                     )

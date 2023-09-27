@@ -2,9 +2,9 @@ package com.emplk.realestatemanager.data.property
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.emplk.realestatemanager.data.amenity.AmenityDto
-import com.emplk.realestatemanager.data.location.LocationDto
-import com.emplk.realestatemanager.data.picture.PictureDto
+import com.emplk.realestatemanager.data.property.amenity.AmenityDto
+import com.emplk.realestatemanager.data.property.location.LocationDto
+import com.emplk.realestatemanager.data.property.picture.PictureDto
 
 data class PropertyWithDetails(
     @Embedded

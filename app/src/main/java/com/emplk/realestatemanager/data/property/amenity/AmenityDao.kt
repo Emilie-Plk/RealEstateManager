@@ -1,4 +1,4 @@
-package com.emplk.realestatemanager.data.amenity
+package com.emplk.realestatemanager.data.property.amenity
 
 import androidx.room.Dao
 import androidx.room.Insert
