@@ -68,6 +68,9 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
                     binding.detailRoomTv.text = detailViewState.rooms.toCharSequence(requireContext())
                     binding.detailBathroomTv.text = detailViewState.bathrooms.toCharSequence(requireContext())
                     binding.detailBedroomTv.text = detailViewState.bedrooms.toCharSequence(requireContext())
+                    detailViewState.mapMiniature.load(binding.detailMapIv)
+                        .error(R.drawable.baseline_villa_24)
+                        .into(binding.detailMapIv)
 
                     mapOf(
                         binding.detailAmenitiesConciergeTv to detailViewState.amenityConcierge,

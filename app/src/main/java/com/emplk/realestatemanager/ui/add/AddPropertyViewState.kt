@@ -1,6 +1,6 @@
 package com.emplk.realestatemanager.ui.add
 
-import com.emplk.realestatemanager.domain.amenity.AmenityEntity
+import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
 import com.emplk.realestatemanager.ui.add.address_predictions.PredictionViewState
 import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem
 import com.emplk.realestatemanager.ui.add.amenity.AmenityViewStateItem

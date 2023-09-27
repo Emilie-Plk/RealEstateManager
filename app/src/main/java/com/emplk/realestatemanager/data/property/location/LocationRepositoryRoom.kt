@@ -2,8 +2,8 @@ package com.emplk.realestatemanager.data.property.location
 
 import android.database.sqlite.SQLiteException
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
-import com.emplk.realestatemanager.domain.location.LocationEntity
-import com.emplk.realestatemanager.domain.location.LocationRepository
+import com.emplk.realestatemanager.domain.property.location.LocationEntity
+import com.emplk.realestatemanager.domain.property.location.LocationRepository
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 

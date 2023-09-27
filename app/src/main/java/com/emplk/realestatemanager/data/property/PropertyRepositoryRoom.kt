@@ -47,9 +47,9 @@ class PropertyRepositoryRoom @Inject constructor(
                 locationDao.insert(locationDtoEntity)
             }
 
-            val picturesAsync = propertyEntity.pictures.map { pictureEntity ->
+            val picturesAsync = propertyEntity.pictures.map {
                 async {
-                    val pictureDtoEntity = pictureMapper.mapToDtoEntity(pictureEntity, propertyId)
+                    val pictureDtoEntity = pictureMapper.mapToDtoEntity(it, propertyId)
                     pictureDao.insert(pictureDtoEntity)
                 }
             }

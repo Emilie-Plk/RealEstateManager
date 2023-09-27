@@ -9,7 +9,7 @@ class GetMapPictureUseCase @Inject constructor(
     suspend fun invoke(
         latitude: String,
         longitude: String,
-    ) = mapPictureRepository.getMapPicture(
+    ) : MapWrapper = mapPictureRepository.getMapPicture(
         latitude = latitude,
         longitude = longitude,
         zoom = 15,

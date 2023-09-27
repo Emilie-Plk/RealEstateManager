@@ -1,4 +1,4 @@
-package com.emplk.realestatemanager.domain.amenity
+package com.emplk.realestatemanager.domain.property.amenity
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes

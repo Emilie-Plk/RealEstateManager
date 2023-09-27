@@ -1,8 +1,8 @@
 package com.emplk.realestatemanager.domain.property
 
-import com.emplk.realestatemanager.domain.amenity.AmenityEntity
-import com.emplk.realestatemanager.domain.location.LocationEntity
-import com.emplk.realestatemanager.domain.pictures.PictureEntity
+import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
+import com.emplk.realestatemanager.domain.property.location.LocationEntity
+import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
 import java.math.BigDecimal
 import java.time.LocalDateTime
 

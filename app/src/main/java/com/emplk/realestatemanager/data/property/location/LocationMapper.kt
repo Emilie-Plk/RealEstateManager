@@ -1,6 +1,6 @@
 package com.emplk.realestatemanager.data.property.location
 
-import com.emplk.realestatemanager.domain.location.LocationEntity
+import com.emplk.realestatemanager.domain.property.location.LocationEntity
 import javax.inject.Inject
 
 class LocationMapper @Inject constructor() {
@@ -18,7 +18,6 @@ class LocationMapper @Inject constructor() {
     fun mapToDomainEntity(locationDto: LocationDto) =
         LocationEntity(
             id = locationDto.id,
-            propertyId = locationDto.propertyId,
             address = locationDto.address,
             miniatureMapPath = locationDto.miniatureMapPath,
             latitude = locationDto.latitude,

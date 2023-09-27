@@ -106,5 +106,6 @@
         dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
     <string name="prediction_no_address_found">No address found</string>
+    <string name="add_property_error_message">Oops, an error occured, try again later!</string>
 
 </resources>

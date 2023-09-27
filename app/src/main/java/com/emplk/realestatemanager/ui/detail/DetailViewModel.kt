@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
-import com.emplk.realestatemanager.domain.amenity.AmenityType
 import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdFlowUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
@@ -14,6 +13,7 @@ import com.emplk.realestatemanager.domain.locale_formatting.SurfaceUnitType
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.GetPropertyByItsIdUseCase
+import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.ui.utils.NativePhoto
 import com.emplk.realestatemanager.ui.utils.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -51,14 +51,15 @@ class DetailViewModel @Inject constructor(
                         id = propertyEntity.id,
                         propertyType = propertyEntity.type,
                         featuredPicture = NativePhoto.Uri(
-                            propertyEntity.pictures.first { picture ->
-                                picture.isFeatured
-                            }.uri
+                            propertyEntity.pictures.first().uri,
                         ),
                         pictures = propertyEntity.pictures.map { picture ->
                             picture.uri
                         },
-                        price = when (currencyType) {
+                        mapMiniature = NativePhoto.Uri(
+                            propertyEntity.location.miniatureMapPath,
+                        ),
+                                price = when (currencyType) {
                             CurrencyType.DOLLAR -> NativeText.Argument(
                                 R.string.price_in_dollar,
                                 propertyEntity.price

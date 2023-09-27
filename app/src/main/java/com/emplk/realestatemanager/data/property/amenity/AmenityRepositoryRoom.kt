@@ -2,8 +2,8 @@ package com.emplk.realestatemanager.data.property.amenity
 
 import android.database.sqlite.SQLiteException
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
-import com.emplk.realestatemanager.domain.amenity.AmenityEntity
-import com.emplk.realestatemanager.domain.amenity.AmenityRepository
+import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
+import com.emplk.realestatemanager.domain.property.amenity.AmenityRepository
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 

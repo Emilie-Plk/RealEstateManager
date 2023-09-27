@@ -7,9 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.agent.GetAgentsFlowUseCase
-import com.emplk.realestatemanager.domain.amenity.AmenityEntity
-import com.emplk.realestatemanager.domain.amenity.AmenityType
-import com.emplk.realestatemanager.domain.amenity.type.GetAmenityTypeUseCase
+import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
+import com.emplk.realestatemanager.domain.property.amenity.AmenityType
+import com.emplk.realestatemanager.domain.property.amenity.type.GetAmenityTypeUseCase
 import com.emplk.realestatemanager.domain.autocomplete.GetAddressPredictionsUseCase
 import com.emplk.realestatemanager.domain.autocomplete.PredictionWrapper
 import com.emplk.realestatemanager.domain.geocoding.GeocodingWrapper
@@ -17,10 +17,14 @@ import com.emplk.realestatemanager.domain.geocoding.GetAddressLatLongUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
+import com.emplk.realestatemanager.domain.property.location.LocationEntity
 import com.emplk.realestatemanager.domain.map_picture.GetMapPictureUseCase
+import com.emplk.realestatemanager.domain.map_picture.MapWrapper
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
+import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
 import com.emplk.realestatemanager.domain.property.AddPropertyUseCase
+import com.emplk.realestatemanager.domain.property.PropertyEntity
 import com.emplk.realestatemanager.domain.property_form.AddTemporaryPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_form.GetSavedPropertyFormEventUseCase
 import com.emplk.realestatemanager.domain.property_form.InitTemporaryPropertyFormUseCase
@@ -52,6 +56,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.transform
@@ -60,6 +65,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.time.Clock
+import java.time.LocalDateTime
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
@@ -113,7 +119,7 @@ class AddPropertyViewModel @Inject constructor(
     private val currentAddressInputMutableStateFlow: MutableStateFlow<String?> = MutableStateFlow(null)
     private val currentPredictionAddressesFlow: Flow<PredictionWrapper?> =
         currentAddressInputMutableStateFlow.transformLatest { input ->
-            if (input.isNullOrBlank()) {
+            if (input.isNullOrBlank() || input.length < 3) {
                 emit(null)
             } else {
                 delay(400.milliseconds)
@@ -123,32 +129,86 @@ class AddPropertyViewModel @Inject constructor(
 
     private val isEveryFieldFilledMutableStateFlow = MutableStateFlow(false)
     private val isAddingPropertyInDatabaseMutableStateFlow = MutableStateFlow(false)
-    private val isPropertySuccessfullyAddedInDatabaseMutableSharedFlow =
-        MutableSharedFlow<Boolean>(extraBufferCapacity = 1)
     private val onCreateButtonClickedMutableSharedFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
     private val onSavePropertyFormDraftMutableSharedFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
 
-    val viewEventLiveData: LiveData<Event<AddPropertyViewEvent>> = liveData {
+    val viewEventLiveData: LiveData<Event<AddPropertyEvent>> = liveData {
         onCreateButtonClickedMutableSharedFlow.collect {
-            emit(Event(AddPropertyViewEvent.OnAddPropertyClicked))
             viewModelScope.launch(coroutineDispatcherProvider.io) {
                 isAddingPropertyInDatabaseMutableStateFlow.value = true
-                // Time to add property
-                isAddingPropertyInDatabaseMutableStateFlow.value = false
-                // isPropertySuccessfullyAddedInDatabaseMutableSharedFlow.tryEmit(success)
-            }
+                formMutableStateFlow.collect { form ->
+                    if (form.propertyType != null &&
+                        form.address != null &&
+                        form.lat != null &&
+                        form.lng != null &&
+                        form.price > BigDecimal.ZERO &&
+                        form.surface > 0 &&
+                        form.description != null &&
+                        form.nbRooms > 0 &&
+                        form.nbBathrooms > 0 &&
+                        form.nbBedrooms > 0 &&
+                        form.agent != null &&
+                        form.amenities.isNotEmpty() &&
+                        form.picturesId.isNotEmpty()
+                    ) {
+                        val success = addPropertyUseCase.invoke(
+                            PropertyEntity(
+                                type = form.propertyType,
+                                price = form.price,
+                                surface = form.surface,
+                                description = form.description,
+                                rooms = form.nbRooms,
+                                bathrooms = form.nbBathrooms,
+                                location = LocationEntity(
+                                    address = form.address,
+                                    latitude = form.lat,
+                                    longitude = form.lng,
+                                    miniatureMapPath = when (val wrapper =
+                                        getMapPictureUseCase.invoke(form.lat, form.lng)) {
+                                        is MapWrapper.Success -> {
+                                            wrapper.mapPicture
+                                        }
 
-            isPropertySuccessfullyAddedInDatabaseMutableSharedFlow.collect { success ->
-                if (success) {
-                    // Delete stored form
-                    setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
-                    emit(
-                        Event(
-                            AddPropertyViewEvent.ShowSnackBarPropertyCreated(
-                                NativeText.Resource(R.string.add_property_successfully_created_snackBar_message)
-                            )
+                                        is MapWrapper.Error -> "OUPS"
+                                    },
+                                ),
+                                bedrooms = form.nbBedrooms,
+                                agentName = form.agent,
+                                amenities = form.amenities,
+                                pictures = form.picturesId.map {
+                                    PictureEntity(
+                                        uri = "",
+                                        description = "",
+                                        isFeatured = false,
+                                    )
+                                },
+                                entryDate = LocalDateTime.now(clock),
+                                isAvailableForSale = false,
+                                isSold = false,
+                                saleDate = null,
+                            ),
                         )
-                    )
+                        isAddingPropertyInDatabaseMutableStateFlow.value = false
+                        if (success) {
+                            // Delete stored form
+                            setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
+                            emit(
+                                Event(
+                                    AddPropertyEvent.ShowToast(
+                                        NativeText.Resource(R.string.add_property_successfully_created_snackBar_message)
+                                    )
+                                )
+                            )
+                        } else {
+                            emit(
+                                Event(
+                                    AddPropertyEvent.ShowToast(
+                                        NativeText.Resource(R.string.add_property_error_message)
+                                    )
+                                )
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -199,12 +259,27 @@ class AddPropertyViewModel @Inject constructor(
                             form.surface > 0 ||
                             !form.description.isNullOrBlank() ||
                             form.nbRooms > 0 ||
+                            form.lat != null ||
+                            form.lng != null ||
                             form.nbBathrooms > 0 ||
                             form.nbBedrooms > 0 ||
                             !form.agent.isNullOrBlank() ||
                             form.amenities.isNotEmpty() ||
                             form.picturesId.isNotEmpty()
                     setPropertyFormProgressUseCase.invoke(isFormInProgress)
+                    isEveryFieldFilledMutableStateFlow.value = form.propertyType != null &&
+                            form.address != null &&
+                            form.lat != null &&
+                            form.lng != null &&
+                            form.price > BigDecimal.ZERO &&
+                            form.surface > 0 &&
+                            form.description != null &&
+                            form.nbRooms > 0 &&
+                            form.nbBathrooms > 0 &&
+                            form.nbBedrooms > 0 &&
+                            form.agent != null &&
+                            form.amenities.isNotEmpty() &&
+                            form.picturesId.isNotEmpty()
                     emit(
                         AddPropertyViewState(
                             propertyType = form.propertyType,
@@ -218,6 +293,7 @@ class AddPropertyViewModel @Inject constructor(
                             nbBathrooms = form.nbBathrooms,
                             nbBedrooms = form.nbBedrooms,
                             pictures = picturePreviews
+
                                 .filter { picturePreview -> form.picturesId.contains(picturePreview.id) }
                                 .map { picturePreview ->
                                     PicturePreviewStateItem.AddPropertyPicturePreview(
@@ -341,7 +417,7 @@ class AddPropertyViewModel @Inject constructor(
             }
 
             launch {
-                getSavedPropertyFormEventUseCase.invoke().collect {
+                getSavedPropertyFormEventUseCase.invoke().collectLatest {
                     formMutableStateFlow.map {
                         updatePropertyFormUseCase.invoke(
                             PropertyFormEntity(
@@ -383,7 +459,6 @@ class AddPropertyViewModel @Inject constructor(
 
                                 when (val wrapper = getAddressLatLongUseCase.invoke(selectedAddress)) {
                                     is GeocodingWrapper.Success -> {
-                                        getMapPictureUseCase.invoke(wrapper.result.lat, wrapper.result.lng)
                                         formMutableStateFlow.update {
                                             it.copy(
                                                 address = selectedAddress,
@@ -512,9 +587,5 @@ class AddPropertyViewModel @Inject constructor(
 
     fun onAddPropertyClicked() {
         onCreateButtonClickedMutableSharedFlow.tryEmit(Unit)
-    }
-
-    fun savePropertyDraft() {
-        TODO("Not yet implemented")
     }
 }
