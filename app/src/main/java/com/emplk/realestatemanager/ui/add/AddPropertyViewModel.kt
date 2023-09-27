@@ -9,8 +9,11 @@ import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.agent.GetAgentsFlowUseCase
 import com.emplk.realestatemanager.domain.amenity.AmenityEntity
 import com.emplk.realestatemanager.domain.amenity.AmenityType
-import com.emplk.realestatemanager.domain.amenity.type.GetAmenityTypeFlowUseCase
+import com.emplk.realestatemanager.domain.amenity.type.GetAmenityTypeUseCase
 import com.emplk.realestatemanager.domain.autocomplete.GetAddressPredictionsUseCase
+import com.emplk.realestatemanager.domain.autocomplete.PredictionWrapper
+import com.emplk.realestatemanager.domain.geocoding.GeocodingWrapper
+import com.emplk.realestatemanager.domain.geocoding.GetAddressLatLongUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
@@ -41,7 +44,6 @@ import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParam
 import com.emplk.realestatemanager.ui.utils.Event
 import com.emplk.realestatemanager.ui.utils.NativeText
-import com.emplk.realestatemanager.ui.utils.combine
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
@@ -49,6 +51,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.flow.update
@@ -71,6 +74,7 @@ class AddPropertyViewModel @Inject constructor(
     private val updatePicturePreviewUseCase: UpdatePicturePreviewUseCase,
     private val updatePropertyFormUseCase: UpdatePropertyFormUseCase,
     private val getAddressPredictionsUseCase: GetAddressPredictionsUseCase,
+    private val getAddressLatLongUseCase: GetAddressLatLongUseCase,
     private val initTemporaryPropertyFormUseCase: InitTemporaryPropertyFormUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val getCurrencyTypeUseCase: GetCurrencyTypeUseCase,
@@ -78,7 +82,7 @@ class AddPropertyViewModel @Inject constructor(
     private val getPicturePreviewsAsFlowUseCase: GetPicturePreviewsAsFlowUseCase,
     private val getAgentsFlowUseCase: GetAgentsFlowUseCase,
     private val setPropertyFormProgressUseCase: SetPropertyFormProgressUseCase,
-    private val getAmenityTypeFlowUseCase: GetAmenityTypeFlowUseCase,
+    private val getAmenityTypeUseCase: GetAmenityTypeUseCase,
     private val getPropertyTypeFlowUseCase: GetPropertyTypeFlowUseCase,
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
     private val clock: Clock,
@@ -98,16 +102,16 @@ class AddPropertyViewModel @Inject constructor(
         val nbBedrooms: Int = 0,
         val agent: String? = null,
         val amenities: List<AmenityEntity> = emptyList(),
-        val picturesCount: Int = 0,
+        val picturesId: List<Long> = emptyList(),
     )
 
     private val formMutableStateFlow = MutableStateFlow(AddPropertyForm())
 
     private val currentAddressInputMutableStateFlow: MutableStateFlow<String?> = MutableStateFlow(null)
-    private val currentPredictionAddressesFlow: Flow<List<String>> =
+    private val currentPredictionAddressesFlow: Flow<PredictionWrapper?> =
         currentAddressInputMutableStateFlow.transformLatest { input ->
             if (input.isNullOrBlank()) {
-                emit(emptyList())
+                emit(null)
             } else {
                 delay(400.milliseconds)
                 emit(getAddressPredictionsUseCase.invoke(input))
@@ -176,14 +180,13 @@ class AddPropertyViewModel @Inject constructor(
                 combine(
                     formMutableStateFlow,
                     getAgentsFlowUseCase.invoke(),
-                    getPropertyTypeFlowUseCase.invoke(),
-                    getAmenityTypeFlowUseCase.invoke(),
                     getPicturePreviewsAsFlowUseCase.invoke(),
-                    getPicturePreviewIdsAsFlowUseCase.invoke(),
                     currentPredictionAddressesFlow,
                     isAddingPropertyInDatabaseMutableStateFlow,
-                ) { form, agents, propertyTypes, amenityTypes, picturePreviews, picturePreviewIds, currentPredictionAddresses, isAddingPropertyInDatabase ->
+                ) { form, agents, picturePreviews, currentPredictionAddresses, isAddingPropertyInDatabase ->
                     val currencyType = getCurrencyTypeUseCase.invoke()
+                    val amenityTypes = getAmenityTypeUseCase.invoke()
+                    val propertyTypes = getPropertyTypeFlowUseCase.invoke()
 
                     val isFormInProgress = !form.propertyType.isNullOrBlank() ||
                             !form.address.isNullOrBlank() ||
@@ -195,7 +198,7 @@ class AddPropertyViewModel @Inject constructor(
                             form.nbBedrooms > 0 ||
                             !form.agent.isNullOrBlank() ||
                             form.amenities.isNotEmpty() ||
-                            form.picturesCount > 0
+                            form.picturesId.isNotEmpty()
                     setPropertyFormProgressUseCase.invoke(isFormInProgress)
                     emit(
                         AddPropertyViewState(
@@ -210,7 +213,7 @@ class AddPropertyViewModel @Inject constructor(
                             nbBathrooms = form.nbBathrooms,
                             nbBedrooms = form.nbBedrooms,
                             pictures = picturePreviews
-                                .filter { picturePreview -> picturePreviewIds.contains(picturePreview.id) }
+                                .filter { picturePreview -> form.picturesId.contains(picturePreview.id) }
                                 .map { picturePreview ->
                                     PicturePreviewStateItem.AddPropertyPicturePreview(
                                         id = picturePreview.id,
@@ -230,7 +233,7 @@ class AddPropertyViewModel @Inject constructor(
                                         description = picturePreview.description,
                                         onDeleteEvent = EquatableCallback {
                                             formMutableStateFlow.update {
-                                                it.copy(picturesCount = it.picturesCount - 1)
+                                                it.copy(picturesId = it.picturesId.filter { id -> id != picturePreview.id })
                                             }
                                             deletePicturePreviewIdUseCase.invoke(picturePreview.id)
                                         },
@@ -293,19 +296,7 @@ class AddPropertyViewModel @Inject constructor(
                                     name = agent.value
                                 )
                             },
-                            addressPredictions = currentPredictionAddresses.map { address ->
-                                PredictionViewState.Prediction(
-                                    address = address,
-                                    onClickEvent = EquatableCallbackWithParam { prediction ->
-                                        formMutableStateFlow.update {
-                                            it.copy(
-                                                address = prediction,
-                                                addressPredictions = emptyList(),
-                                            )
-                                        }
-                                    }
-                                )
-                            },
+                            addressPredictions = mapPredictionsToViewState(currentPredictionAddresses),
                         )
                     )
                 }.collect()
@@ -343,6 +334,45 @@ class AddPropertyViewModel @Inject constructor(
             }
         }
     }
+
+    private fun mapPredictionsToViewState(currentPredictionAddresses: PredictionWrapper?): List<PredictionViewState> {
+        return when (currentPredictionAddresses) {
+            is PredictionWrapper.Success -> {
+                currentPredictionAddresses.predictions.map { prediction ->
+                    PredictionViewState.Prediction(
+                        address = prediction,
+                        onClickEvent = EquatableCallbackWithParam { selectedAddress ->
+                            viewModelScope.launch {
+                                when (val wrapper = getAddressLatLongUseCase.invoke(selectedAddress)) {
+                                    is GeocodingWrapper.Success -> {
+                                        formMutableStateFlow.update {
+                                            it.copy(
+                                                address = selectedAddress,
+                                                lat = wrapper.result.lat,
+                                                lng = wrapper.result.lng,
+                                                addressPredictions = emptyList()
+                                            )
+                                        }
+                                    }
+                                    is GeocodingWrapper.Error -> Unit
+                                    GeocodingWrapper.NoResult -> Unit
+                                }
+                            }
+
+
+                        }
+                    )
+                }
+            }
+
+            is PredictionWrapper.NoResult -> listOf(PredictionViewState.EmptyState)
+            is PredictionWrapper.Error -> emptyList()
+            is PredictionWrapper.Failure -> emptyList()
+
+            null -> emptyList()
+        }
+    }
+
 
     private fun mapAmenityTypesToViewStates(amenityTypes: List<AmenityType>): List<AmenityViewStateItem> {
         val viewStates = amenityTypes.map { amenityType ->
@@ -388,6 +418,7 @@ class AddPropertyViewModel @Inject constructor(
     }
 
     fun onAddressChanged(input: String) {
+
         currentAddressInputMutableStateFlow.value = input
     }
 
@@ -412,7 +443,7 @@ class AddPropertyViewModel @Inject constructor(
             val addedPictureId = addPicturePreviewUseCase.invoke(uriToString)
             addPicturePreviewIdUseCase.invoke(addedPictureId)
             formMutableStateFlow.update {
-                it.copy(picturesCount = it.picturesCount + 1)
+                it.copy(picturesId = it.picturesId + addedPictureId)
             }
         }
     }
