@@ -13,8 +13,8 @@ interface GoogleApi {
         @Query("type") type: String
     ): AutocompleteResponse
 
-    @GET("/geocode/json")
+    @GET("geocode/json")
     suspend fun getGeocode(
-        @Query("place_id") placeId: String,
+        @Query("address") address: String,
     ): GeocodingResponse
 }

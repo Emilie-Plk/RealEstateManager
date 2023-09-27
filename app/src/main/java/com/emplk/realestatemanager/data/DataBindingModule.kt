@@ -6,6 +6,7 @@ import com.emplk.realestatemanager.data.amenity.type.AmenityTypeRepositoryImpl
 import com.emplk.realestatemanager.data.autocomplete.PredictionRepositoryAutocomplete
 import com.emplk.realestatemanager.data.currency.LocaleFormattingRepositoryImpl
 import com.emplk.realestatemanager.data.current_property.CurrentPropertyRepositoryImpl
+import com.emplk.realestatemanager.data.geocoding.GeocodingRepositoryGoogle
 import com.emplk.realestatemanager.data.location.LocationRepositoryRoom
 import com.emplk.realestatemanager.data.navigation.NavigationRepositoryImpl
 import com.emplk.realestatemanager.data.picture.PictureRepositoryRoom
@@ -22,6 +23,7 @@ import com.emplk.realestatemanager.domain.amenity.AmenityRepository
 import com.emplk.realestatemanager.domain.amenity.type.AmenityTypeRepository
 import com.emplk.realestatemanager.domain.autocomplete.PredictionRepository
 import com.emplk.realestatemanager.domain.current_property.CurrentPropertyRepository
+import com.emplk.realestatemanager.domain.geocoding.GeocodingRepository
 import com.emplk.realestatemanager.domain.locale_formatting.LocaleFormattingRepository
 import com.emplk.realestatemanager.domain.location.LocationRepository
 import com.emplk.realestatemanager.domain.navigation.NavigationRepository
@@ -107,6 +109,10 @@ abstract class DataBindingModule {
     @Singleton
     @Binds
     abstract fun bindPredictionRepository(implementation: PredictionRepositoryAutocomplete): PredictionRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindGeoCodingRepository(implementation: GeocodingRepositoryGoogle): GeocodingRepository
 
     @Singleton
     @Binds

@@ -2,8 +2,6 @@ package com.emplk.realestatemanager.data.amenity.type
 
 import com.emplk.realestatemanager.domain.amenity.AmenityType
 import com.emplk.realestatemanager.domain.amenity.type.AmenityTypeRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class AmenityTypeRepositoryImpl @Inject constructor() : AmenityTypeRepository {
@@ -19,8 +17,5 @@ class AmenityTypeRepositoryImpl @Inject constructor() : AmenityTypeRepository {
         AmenityType.LIBRARY,
     )
 
-    override fun getAmenityTypesAsFlow(): Flow<List<AmenityType>> =
-        flow {
-            emit(amenityTypes)
-        }
+    override fun getAmenityTypes(): List<AmenityType> = amenityTypes
 }

@@ -1,8 +1,6 @@
 package com.emplk.realestatemanager.data.property_type
 
 import com.emplk.realestatemanager.domain.property_type.PropertyTypeRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class PropertyTypeRepositoryImpl @Inject() constructor() : PropertyTypeRepository {
@@ -25,7 +23,5 @@ class PropertyTypeRepositoryImpl @Inject() constructor() : PropertyTypeRepositor
         7L to "Other",
     )
 
-    override fun getPropertyTypeListFlow(): Flow<Map<Long, String>> = flow {
-        emit(propertyTypeMap)
-    }
+    override fun getPropertyTypes(): Map<Long, String> = propertyTypeMap
 }
