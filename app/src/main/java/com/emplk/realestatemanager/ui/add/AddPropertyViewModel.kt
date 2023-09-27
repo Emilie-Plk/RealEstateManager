@@ -7,9 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.agent.GetAgentsFlowUseCase
-import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
-import com.emplk.realestatemanager.domain.property.amenity.AmenityType
-import com.emplk.realestatemanager.domain.property.amenity.type.GetAmenityTypeUseCase
 import com.emplk.realestatemanager.domain.autocomplete.GetAddressPredictionsUseCase
 import com.emplk.realestatemanager.domain.autocomplete.PredictionWrapper
 import com.emplk.realestatemanager.domain.geocoding.GeocodingWrapper
@@ -17,15 +14,19 @@ import com.emplk.realestatemanager.domain.geocoding.GetAddressLatLongUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
-import com.emplk.realestatemanager.domain.property.location.LocationEntity
 import com.emplk.realestatemanager.domain.map_picture.GetMapPictureUseCase
 import com.emplk.realestatemanager.domain.map_picture.MapWrapper
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
-import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
 import com.emplk.realestatemanager.domain.property.AddPropertyUseCase
 import com.emplk.realestatemanager.domain.property.PropertyEntity
+import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
+import com.emplk.realestatemanager.domain.property.amenity.AmenityType
+import com.emplk.realestatemanager.domain.property.amenity.type.GetAmenityTypeUseCase
+import com.emplk.realestatemanager.domain.property.location.LocationEntity
+import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
 import com.emplk.realestatemanager.domain.property_form.AddTemporaryPropertyFormUseCase
+import com.emplk.realestatemanager.domain.property_form.DeleteTemporaryPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_form.GetSavedPropertyFormEventUseCase
 import com.emplk.realestatemanager.domain.property_form.InitTemporaryPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_form.PropertyFormDatabaseState
@@ -37,8 +38,8 @@ import com.emplk.realestatemanager.domain.property_form.picture_preview.AddPictu
 import com.emplk.realestatemanager.domain.property_form.picture_preview.GetPicturePreviewsAsFlowUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.UpdatePicturePreviewUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.id.AddPicturePreviewIdUseCase
+import com.emplk.realestatemanager.domain.property_form.picture_preview.id.DeleteAllPicturePreviewIdsUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.id.DeletePicturePreviewIdUseCase
-import com.emplk.realestatemanager.domain.property_form.picture_preview.id.GetPicturePreviewIdsAsFlowUseCase
 import com.emplk.realestatemanager.domain.property_type.GetPropertyTypeFlowUseCase
 import com.emplk.realestatemanager.ui.add.address_predictions.PredictionViewState
 import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem
@@ -75,10 +76,11 @@ class AddPropertyViewModel @Inject constructor(
     private val addPropertyUseCase: AddPropertyUseCase,
     private val addTemporaryPropertyFormUseCase: AddTemporaryPropertyFormUseCase,
     private val getSavedPropertyFormEventUseCase: GetSavedPropertyFormEventUseCase,
+    private val deleteTemporaryPropertyFormUseCase: DeleteTemporaryPropertyFormUseCase,
     private val addPicturePreviewUseCase: AddPicturePreviewUseCase,
     private val addPicturePreviewIdUseCase: AddPicturePreviewIdUseCase,
     private val deletePicturePreviewIdUseCase: DeletePicturePreviewIdUseCase,
-    private val getPicturePreviewIdsAsFlowUseCase: GetPicturePreviewIdsAsFlowUseCase,
+    private val deleteAllPicturePreviewIdsUseCase: DeleteAllPicturePreviewIdsUseCase,
     private val getMapPictureUseCase: GetMapPictureUseCase,
     private val updatePicturePreviewUseCase: UpdatePicturePreviewUseCase,
     private val updatePropertyFormUseCase: UpdatePropertyFormUseCase,
@@ -190,7 +192,8 @@ class AddPropertyViewModel @Inject constructor(
                         )
                         isAddingPropertyInDatabaseMutableStateFlow.value = false
                         if (success) {
-                            // Delete stored form
+                            deleteTemporaryPropertyFormUseCase.invoke()
+                            deleteAllPicturePreviewIdsUseCase.invoke()
                             setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
                             emit(
                                 Event(

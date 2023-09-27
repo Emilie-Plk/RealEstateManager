@@ -34,5 +34,5 @@ interface PicturePreviewDao {
     suspend fun delete(picturePreviewId: Long): Int
 
     @Query("DELETE FROM picture_previews WHERE property_form_id = :propertyFormId")
-    suspend fun deleteAll(propertyFormId: Long)
+    suspend fun deleteAll(propertyFormId: Long): Int
 }
