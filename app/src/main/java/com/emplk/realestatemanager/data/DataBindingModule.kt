@@ -8,6 +8,7 @@ import com.emplk.realestatemanager.data.currency.LocaleFormattingRepositoryImpl
 import com.emplk.realestatemanager.data.current_property.CurrentPropertyRepositoryImpl
 import com.emplk.realestatemanager.data.geocoding.GeocodingRepositoryGoogle
 import com.emplk.realestatemanager.data.location.LocationRepositoryRoom
+import com.emplk.realestatemanager.data.map_picture.MapPictureRepositoryStaticmap
 import com.emplk.realestatemanager.data.navigation.NavigationRepositoryImpl
 import com.emplk.realestatemanager.data.picture.PictureRepositoryRoom
 import com.emplk.realestatemanager.data.property.PropertyRepositoryRoom
@@ -26,6 +27,7 @@ import com.emplk.realestatemanager.domain.current_property.CurrentPropertyReposi
 import com.emplk.realestatemanager.domain.geocoding.GeocodingRepository
 import com.emplk.realestatemanager.domain.locale_formatting.LocaleFormattingRepository
 import com.emplk.realestatemanager.domain.location.LocationRepository
+import com.emplk.realestatemanager.domain.map_picture.MapPictureRepository
 import com.emplk.realestatemanager.domain.navigation.NavigationRepository
 import com.emplk.realestatemanager.domain.pictures.PictureRepository
 import com.emplk.realestatemanager.domain.property.PropertyRepository
@@ -117,4 +119,8 @@ abstract class DataBindingModule {
     @Singleton
     @Binds
     abstract fun bindPicturePreviewIdRepository(implementation: PicturePreviewIdRepositoryImpl): PicturePreviewIdRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindMapPictureRepository(implementation: MapPictureRepositoryStaticmap): MapPictureRepository
 }

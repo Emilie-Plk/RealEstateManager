@@ -17,6 +17,7 @@ import com.emplk.realestatemanager.domain.geocoding.GetAddressLatLongUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
+import com.emplk.realestatemanager.domain.map_picture.GetMapPictureUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.AddPropertyUseCase
@@ -71,6 +72,7 @@ class AddPropertyViewModel @Inject constructor(
     private val addPicturePreviewIdUseCase: AddPicturePreviewIdUseCase,
     private val deletePicturePreviewIdUseCase: DeletePicturePreviewIdUseCase,
     private val getPicturePreviewIdsAsFlowUseCase: GetPicturePreviewIdsAsFlowUseCase,
+    private val getMapPictureUseCase: GetMapPictureUseCase,
     private val updatePicturePreviewUseCase: UpdatePicturePreviewUseCase,
     private val updatePropertyFormUseCase: UpdatePropertyFormUseCase,
     private val getAddressPredictionsUseCase: GetAddressPredictionsUseCase,
@@ -157,8 +159,8 @@ class AddPropertyViewModel @Inject constructor(
                 }
 
                 is PropertyFormDatabaseState.DraftAlreadyExists -> {
-                    formMutableStateFlow.update {
-                        it.copy(
+                    formMutableStateFlow.update { addPropertyForm ->
+                        addPropertyForm.copy(
                             propertyType = initTemporaryPropertyFormUseCase.propertyFormEntity.type,
                             address = initTemporaryPropertyFormUseCase.propertyFormEntity.location?.address,
                             lat = initTemporaryPropertyFormUseCase.propertyFormEntity.location?.latitude,
@@ -171,6 +173,7 @@ class AddPropertyViewModel @Inject constructor(
                             nbBedrooms = initTemporaryPropertyFormUseCase.propertyFormEntity.bedrooms ?: 0,
                             agent = initTemporaryPropertyFormUseCase.propertyFormEntity.agentName,
                             amenities = initTemporaryPropertyFormUseCase.propertyFormEntity.amenities,
+                            picturesId = initTemporaryPropertyFormUseCase.propertyFormEntity.pictures.map { it.id },
                         )
                     }
                 }
@@ -343,8 +346,10 @@ class AddPropertyViewModel @Inject constructor(
                         address = prediction,
                         onClickEvent = EquatableCallbackWithParam { selectedAddress ->
                             viewModelScope.launch {
+
                                 when (val wrapper = getAddressLatLongUseCase.invoke(selectedAddress)) {
                                     is GeocodingWrapper.Success -> {
+                                        getMapPictureUseCase.invoke(wrapper.result.lat, wrapper.result.lng)
                                         formMutableStateFlow.update {
                                             it.copy(
                                                 address = selectedAddress,
@@ -354,12 +359,11 @@ class AddPropertyViewModel @Inject constructor(
                                             )
                                         }
                                     }
+
                                     is GeocodingWrapper.Error -> Unit
                                     GeocodingWrapper.NoResult -> Unit
                                 }
                             }
-
-
                         }
                     )
                 }
