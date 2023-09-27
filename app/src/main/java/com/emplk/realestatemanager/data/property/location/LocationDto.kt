@@ -1,4 +1,4 @@
-package com.emplk.realestatemanager.data.location
+package com.emplk.realestatemanager.data.property.location
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -11,9 +11,8 @@ data class LocationDto(
     @ColumnInfo(name = "property_id", index = true)
     val propertyId: Long,
     val address: String,
-    val city: String,
-    @ColumnInfo(name = "postal_code")
-    val postalCode: String,
-    val latitude: Double,
-    val longitude: Double,
+    @ColumnInfo(name = "miniature_map_path")
+    val miniatureMapPath: String,
+    val latitude: String,
+    val longitude: String,
 )

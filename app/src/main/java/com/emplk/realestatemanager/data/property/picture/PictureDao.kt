@@ -1,4 +1,4 @@
-package com.emplk.realestatemanager.data.picture
+package com.emplk.realestatemanager.data.property.picture
 
 import androidx.room.Dao
 import androidx.room.Insert

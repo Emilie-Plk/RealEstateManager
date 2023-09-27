@@ -1,12 +1,12 @@
 package com.emplk.realestatemanager.data.property
 
 import android.database.sqlite.SQLiteException
-import com.emplk.realestatemanager.data.amenity.AmenityDao
-import com.emplk.realestatemanager.data.amenity.AmenityMapper
-import com.emplk.realestatemanager.data.location.LocationDao
-import com.emplk.realestatemanager.data.location.LocationMapper
-import com.emplk.realestatemanager.data.picture.PictureDao
-import com.emplk.realestatemanager.data.picture.PictureMapper
+import com.emplk.realestatemanager.data.property.amenity.AmenityDao
+import com.emplk.realestatemanager.data.property.amenity.AmenityMapper
+import com.emplk.realestatemanager.data.property.location.LocationDao
+import com.emplk.realestatemanager.data.property.location.LocationMapper
+import com.emplk.realestatemanager.data.property.picture.PictureDao
+import com.emplk.realestatemanager.data.property.picture.PictureMapper
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.property.PropertyEntity
 import com.emplk.realestatemanager.domain.property.PropertyRepository

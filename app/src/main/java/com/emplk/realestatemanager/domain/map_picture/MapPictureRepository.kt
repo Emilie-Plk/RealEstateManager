@@ -7,5 +7,5 @@ interface MapPictureRepository {
         zoom: Int,
         size: String,
         markers: String,
-    )
+    ): MapWrapper
 }

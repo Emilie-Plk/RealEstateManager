@@ -101,7 +101,7 @@ class PropertiesViewModel @Inject constructor(
                         id = property.id,
                         propertyType = property.type,
                         featuredPicture = featuredPicture,
-                        address = property.location.city,
+                        address = property.location.address,
                         price = priceText,
                         isSold = property.isSold,
                         room = property.rooms.toString(),

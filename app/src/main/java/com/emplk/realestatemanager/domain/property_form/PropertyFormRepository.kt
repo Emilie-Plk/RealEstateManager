@@ -22,4 +22,8 @@ interface PropertyFormRepository {
     suspend fun update(propertyFormEntity: PropertyFormEntity, propertyFormId: Long)
 
     suspend fun delete(propertyFormId: Long)
+
+    fun onSavePropertyFormEvent()
+
+    fun getSavedPropertyFormEvent(): Flow<Unit>
 }

@@ -1,4 +1,4 @@
-package com.emplk.realestatemanager.data.picture
+package com.emplk.realestatemanager.data.property.picture
 
 import android.database.sqlite.SQLiteException
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider

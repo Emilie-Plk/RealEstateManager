@@ -1,4 +1,4 @@
-package com.emplk.realestatemanager.data.picture
+package com.emplk.realestatemanager.data.property.picture
 
 import com.emplk.realestatemanager.domain.pictures.PictureEntity
 import javax.inject.Inject

@@ -1,17 +1,17 @@
 package com.emplk.realestatemanager.data
 
 import com.emplk.realestatemanager.data.agent.RealEstateAgentRepositoryImpl
-import com.emplk.realestatemanager.data.amenity.AmenityRepositoryRoom
-import com.emplk.realestatemanager.data.amenity.type.AmenityTypeRepositoryImpl
 import com.emplk.realestatemanager.data.autocomplete.PredictionRepositoryAutocomplete
 import com.emplk.realestatemanager.data.currency.LocaleFormattingRepositoryImpl
 import com.emplk.realestatemanager.data.current_property.CurrentPropertyRepositoryImpl
 import com.emplk.realestatemanager.data.geocoding.GeocodingRepositoryGoogle
-import com.emplk.realestatemanager.data.location.LocationRepositoryRoom
-import com.emplk.realestatemanager.data.map_picture.MapPictureRepositoryStaticmap
+import com.emplk.realestatemanager.data.map_picture.MapPictureRepositoryStaticMap
 import com.emplk.realestatemanager.data.navigation.NavigationRepositoryImpl
-import com.emplk.realestatemanager.data.picture.PictureRepositoryRoom
 import com.emplk.realestatemanager.data.property.PropertyRepositoryRoom
+import com.emplk.realestatemanager.data.property.amenity.AmenityRepositoryRoom
+import com.emplk.realestatemanager.data.property.amenity.type.AmenityTypeRepositoryImpl
+import com.emplk.realestatemanager.data.property.location.LocationRepositoryRoom
+import com.emplk.realestatemanager.data.property.picture.PictureRepositoryRoom
 import com.emplk.realestatemanager.data.property_form.PropertyFormRepositoryRoom
 import com.emplk.realestatemanager.data.property_form.amenity.AmenityFormRepositoryRoom
 import com.emplk.realestatemanager.data.property_form.location.LocationFormRepositoryRoom
@@ -122,5 +122,5 @@ abstract class DataBindingModule {
 
     @Singleton
     @Binds
-    abstract fun bindMapPictureRepository(implementation: MapPictureRepositoryStaticmap): MapPictureRepository
+    abstract fun bindMapPictureRepository(implementation: MapPictureRepositoryStaticMap): MapPictureRepository
 }

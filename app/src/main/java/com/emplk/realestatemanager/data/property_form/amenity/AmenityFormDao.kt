@@ -2,12 +2,13 @@ package com.emplk.realestatemanager.data.property_form.amenity
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface AmenityFormDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(amenityFormDto: AmenityFormDto): Long?
 
     @Insert
