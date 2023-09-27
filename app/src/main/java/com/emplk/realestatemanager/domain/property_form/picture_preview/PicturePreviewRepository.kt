@@ -14,4 +14,6 @@ interface PicturePreviewRepository {
     suspend fun update(picturePreviewId: Long, isFeatured: Boolean?, description: String?): Boolean
 
     suspend fun delete(picturePreviewId: Long): Boolean
+
+    suspend fun deleteAll(picturePreviewId: Long) : Boolean
 }
