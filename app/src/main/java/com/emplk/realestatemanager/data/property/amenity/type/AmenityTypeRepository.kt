@@ -1,7 +1,7 @@
 package com.emplk.realestatemanager.data.property.amenity.type
 
-import com.emplk.realestatemanager.domain.amenity.AmenityType
-import com.emplk.realestatemanager.domain.amenity.type.AmenityTypeRepository
+import com.emplk.realestatemanager.domain.property.amenity.AmenityType
+import com.emplk.realestatemanager.domain.property.amenity.type.AmenityTypeRepository
 import javax.inject.Inject
 
 class AmenityTypeRepositoryImpl @Inject constructor() : AmenityTypeRepository {

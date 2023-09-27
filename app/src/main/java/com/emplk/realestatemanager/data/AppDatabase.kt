@@ -27,7 +27,7 @@ import com.emplk.realestatemanager.data.property_form.picture_preview.PicturePre
 import com.emplk.realestatemanager.data.property_form.picture_preview.PicturePreviewFormDto
 import com.emplk.realestatemanager.data.utils.type_converters.BigDecimalTypeConverter
 import com.emplk.realestatemanager.data.utils.type_converters.LocalDateTimeTypeConverter
-import com.emplk.realestatemanager.domain.amenity.AmenityType
+import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.google.gson.Gson
 import java.math.BigDecimal
 import java.time.LocalDateTime

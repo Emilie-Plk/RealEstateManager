@@ -1,4 +1,4 @@
-package com.emplk.realestatemanager.domain.pictures
+package com.emplk.realestatemanager.domain.property.pictures
 
 interface PictureRepository {
     suspend fun add(pictureEntity: PictureEntity, propertyId: Long): Boolean

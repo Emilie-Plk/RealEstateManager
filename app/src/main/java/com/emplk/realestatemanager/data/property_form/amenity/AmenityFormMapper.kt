@@ -1,7 +1,7 @@
 package com.emplk.realestatemanager.data.property_form.amenity
 
-import com.emplk.realestatemanager.domain.amenity.AmenityEntity
-import com.emplk.realestatemanager.domain.amenity.AmenityType
+import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
+import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import javax.inject.Inject
 
 class AmenityFormMapper @Inject constructor() {

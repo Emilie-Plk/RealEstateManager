@@ -15,6 +15,7 @@ sealed class DetailViewState(val type: Type) {
         val propertyType: String,
         val featuredPicture: NativePhoto,
         val pictures: List<String>,
+        val mapMiniature: NativePhoto,
         val price: NativeText,
         val surface: NativeText,
         val rooms: NativeText,

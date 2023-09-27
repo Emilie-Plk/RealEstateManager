@@ -2,8 +2,8 @@ package com.emplk.realestatemanager.data.property.picture
 
 import android.database.sqlite.SQLiteException
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
-import com.emplk.realestatemanager.domain.pictures.PictureEntity
-import com.emplk.realestatemanager.domain.pictures.PictureRepository
+import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
+import com.emplk.realestatemanager.domain.property.pictures.PictureRepository
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 

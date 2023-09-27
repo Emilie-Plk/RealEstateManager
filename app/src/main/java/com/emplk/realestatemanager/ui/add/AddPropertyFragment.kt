@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
@@ -21,7 +22,6 @@ import com.emplk.realestatemanager.ui.add.picture_preview.PropertyPicturePreview
 import com.emplk.realestatemanager.ui.add.type.AddPropertyTypeSpinnerAdapter
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.viewBinding
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 
@@ -74,17 +74,14 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
 
         viewModel.viewEventLiveData.observeEvent(viewLifecycleOwner) { event ->
             when (event) {
-                is AddPropertyViewEvent.ShowSnackBarPropertyCreated -> {
-                    Snackbar.make(
-                        binding.root,
-                        event.text.toCharSequence(requireContext()), Snackbar.LENGTH_LONG
-                    ).show()
+                is AddPropertyEvent.ShowToast -> {
+                    Toast.makeText(
+                        requireContext(),
+                        event.text.toCharSequence(requireContext()),
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
                 }
-
-                is AddPropertyViewEvent.OnAddPropertyClicked -> {
-                }
-
-                AddPropertyViewEvent.SavePropertyDraft -> viewModel.savePropertyDraft()
             }
         }
 
@@ -96,7 +93,6 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
             predictionAdapter.submitList(viewState.addressPredictions)
             binding.addPropertyCreateButton.isEnabled = viewState.isAddButtonEnabled
             binding.addPropertyProgressBar.isVisible = viewState.isProgressBarVisible
-
             binding.addPropertyDescriptionTextInputEditText.setText(viewState.description)
             binding.addPropertySurfaceTextInputEditText.setText(viewState.surface)
             binding.addPropertyPriceTextInputEditText.setText(viewState.price)

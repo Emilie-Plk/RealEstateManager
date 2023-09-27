@@ -32,7 +32,6 @@ class PropertyFormRepositoryRoom @Inject constructor(
 ) : PropertyFormRepository {
 
     private val savePropertyDraftMutableSharedFlow: MutableSharedFlow<Unit> = MutableSharedFlow(extraBufferCapacity = 1)
-
     private val isPropertyFormInProgressMutableStateFlow = MutableStateFlow(false)
 
     override suspend fun add(propertyFormEntity: PropertyFormEntity): Long? =

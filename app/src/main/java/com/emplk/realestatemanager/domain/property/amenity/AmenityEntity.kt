@@ -1,4 +1,4 @@
-package com.emplk.realestatemanager.domain.amenity
+package com.emplk.realestatemanager.domain.property.amenity
 
 data class AmenityEntity(
     val id: Long = 0,
