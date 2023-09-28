@@ -1,6 +1,5 @@
 package com.emplk.realestatemanager.ui.add.draft_dialog
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
@@ -29,8 +28,8 @@ class PropertyDraftDialogViewModel @Inject constructor(
     fun onCancelClicked() {
         viewModelScope.launch {
             deleteTemporaryPropertyFormUseCase.invoke()
+            deleteAllPicturePreviewIdsUseCase.invoke()
+            setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
         }
-        deleteAllPicturePreviewIdsUseCase.invoke()
-        setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
     }
 }
