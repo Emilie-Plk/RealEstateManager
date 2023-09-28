@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.ui.add.draft_dialog
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType

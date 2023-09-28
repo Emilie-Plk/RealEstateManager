@@ -12,6 +12,7 @@ import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.property_form.PropertyFormEntity
 import com.emplk.realestatemanager.domain.property_form.PropertyFormRepository
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -161,11 +162,24 @@ class PropertyFormRepositoryRoom @Inject constructor(
             }
         }
 
-    override suspend fun delete(propertyFormId: Long) = withContext(coroutineDispatcherProvider.io) {
-        propertyFormDao.delete(propertyFormId)
-        amenityFormDao.deleteAll(propertyFormId)
-        picturePreviewDao.deleteAll(propertyFormId)
-        locationFormDao.delete(propertyFormId)
+
+    override suspend fun delete(propertyFormId: Long): Boolean = withContext(coroutineDispatcherProvider.io) {
+        val amenityDeletionDeferred = async {
+            amenityFormDao.deleteAll(propertyFormId)
+        }
+
+        val picturePreviewDeletionDeferred = async {
+            picturePreviewDao.deleteAll(propertyFormId) }
+
+        val locationDeletionDeferred = async {
+            locationFormDao.delete(propertyFormId) }
+
+        val propertyDeletionDeferred = async {
+            propertyFormDao.delete(propertyFormId)
+        }
+
+        (listOf(propertyDeletionDeferred) + amenityDeletionDeferred + picturePreviewDeletionDeferred + locationDeletionDeferred).awaitAll()
+            .all { it != null }
     }
 
     override fun onSavePropertyFormEvent() {

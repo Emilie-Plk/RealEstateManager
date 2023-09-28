@@ -27,5 +27,5 @@ interface LocationFormDao {
     ): Int
 
     @Query("DELETE FROM location_forms WHERE property_form_id = :propertyFormId")
-    suspend fun delete(propertyFormId: Long)
+    suspend fun delete(propertyFormId: Long) : Int?
 }

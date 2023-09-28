@@ -7,5 +7,5 @@ class DeleteAllPicturePreviewUseCase @Inject constructor(
     private val picturePreviewRepository: PicturePreviewRepository,
     private val getCurrentPropertyFormIdUseCase: GetCurrentPropertyFormIdUseCase,
 ) {
-    suspend fun invoke() = getCurrentPropertyFormIdUseCase.invoke()?.let { picturePreviewRepository.delete(it) }
+    suspend fun invoke() : Boolean? = getCurrentPropertyFormIdUseCase.invoke()?.let { picturePreviewRepository.delete(it) }
 }
