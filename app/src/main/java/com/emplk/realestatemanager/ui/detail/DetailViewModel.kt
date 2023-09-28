@@ -14,6 +14,7 @@ import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.GetPropertyByItsIdUseCase
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
+import com.emplk.realestatemanager.ui.detail.picture_banner.PictureBannerViewState
 import com.emplk.realestatemanager.ui.utils.NativePhoto
 import com.emplk.realestatemanager.ui.utils.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -54,12 +55,15 @@ class DetailViewModel @Inject constructor(
                             propertyEntity.pictures.first().uri,
                         ),
                         pictures = propertyEntity.pictures.map { picture ->
-                            picture.uri
+                            PictureBannerViewState(
+                                pictureUri = NativePhoto.Uri(picture.uri),
+                                description = picture.description
+                            )
                         },
                         mapMiniature = NativePhoto.Uri(
                             propertyEntity.location.miniatureMapPath,
                         ),
-                                price = when (currencyType) {
+                        price = when (currencyType) {
                             CurrencyType.DOLLAR -> NativeText.Argument(
                                 R.string.price_in_dollar,
                                 propertyEntity.price

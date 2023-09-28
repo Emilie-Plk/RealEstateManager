@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.DetailFragmentBinding
+import com.emplk.realestatemanager.ui.detail.picture_banner.PictureBannerListAdapter
 import com.emplk.realestatemanager.ui.utils.NativePhoto.Companion.load
 import com.emplk.realestatemanager.ui.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,15 +40,18 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
                 }
 
                 is DetailViewState.PropertyDetail -> {
+                    val adapter = PictureBannerListAdapter()
+                    binding.detailPhotoCarouselRv.adapter = adapter
+                    binding.detailPhotoCarouselRv.apply {
+                        set3DItem(true)
+                        setInfinite(true)
+                        setAlpha(true)
+                    }
+                    adapter.submitList(detailViewState.pictures)
                     binding.detailProgressBar.isVisible = false
                     binding.root.isVisible = true
-                    detailViewState.featuredPicture
-                        .load(binding.detailFeaturedImage)
-                        .error(R.drawable.baseline_villa_24)
-                        .into(binding.detailFeaturedImage)
 
                     binding.detailEditFab.setOnClickListener {
-                        Log.d("COUCOU", "onEditClicked: setonclicklistener")
                         viewModel.onEditClicked()
                     }
 

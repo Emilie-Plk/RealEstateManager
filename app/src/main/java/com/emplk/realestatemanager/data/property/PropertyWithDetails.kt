@@ -18,10 +18,10 @@ data class PropertyWithDetails(
         entity = LocationDto::class,
         parentColumn = "id",
         entityColumn = "property_id"
-    ) val location: LocationDto,
+    ) val location: LocationDto?,
     @Relation(
         entity = AmenityDto::class,
         parentColumn = "id",
         entityColumn = "property_id"
-    ) val amenities: List<AmenityDto> = emptyList(),
+    ) val amenities: List<AmenityDto>,
 )

@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.ui.detail
 
+import com.emplk.realestatemanager.ui.detail.picture_banner.PictureBannerViewState
 import com.emplk.realestatemanager.ui.utils.NativePhoto
 import com.emplk.realestatemanager.ui.utils.NativeText
 
@@ -14,7 +15,7 @@ sealed class DetailViewState(val type: Type) {
         val id: Long,
         val propertyType: String,
         val featuredPicture: NativePhoto,
-        val pictures: List<String>,
+        val pictures: List<PictureBannerViewState>,
         val mapMiniature: NativePhoto,
         val price: NativeText,
         val surface: NativeText,

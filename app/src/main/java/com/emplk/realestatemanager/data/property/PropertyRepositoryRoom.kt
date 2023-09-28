@@ -14,6 +14,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -69,12 +70,12 @@ class PropertyRepositoryRoom @Inject constructor(
     override fun getPropertiesAsFlow(): Flow<List<PropertyEntity>> = propertyDao
         .getPropertiesWithDetailsAsFlow()
         .map { propertyWithDetailsEntities ->
-            propertyWithDetailsEntities.map { propertyWithDetailsEntity ->
+            propertyWithDetailsEntities.mapNotNull { propertyWithDetailsEntity ->
                 propertyMapper.mapToDomainEntity(
                     propertyWithDetailsEntity.property,
-                    propertyWithDetailsEntity.location,
+                    propertyWithDetailsEntity.location ?: return@mapNotNull null,
                     propertyWithDetailsEntity.pictures,
-                    propertyWithDetailsEntity.amenities
+                    propertyWithDetailsEntity.amenities,
                 )
             }
         }
@@ -82,12 +83,12 @@ class PropertyRepositoryRoom @Inject constructor(
 
     override fun getPropertyByIdAsFlow(propertyId: Long): Flow<PropertyEntity> = propertyDao
         .getPropertyByIdAsFlow(propertyId)
-        .map {
+        .mapNotNull {
             propertyMapper.mapToDomainEntity(
                 it.property,
-                it.location,
+                it.location ?: return@mapNotNull null,
                 it.pictures,
-                it.amenities
+                it.amenities,
             )
         }
         .flowOn(coroutineDispatcherProvider.io)

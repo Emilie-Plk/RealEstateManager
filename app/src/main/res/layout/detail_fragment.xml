@@ -16,13 +16,13 @@
 
         <ProgressBar
             android:id="@+id/detail_progressBar"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/detail_top_info_cardView"
@@ -47,31 +47,29 @@
                     android:contentDescription="TODO"
                     android:src="@drawable/baseline_edit_24"
                     app:fabSize="mini"
-                    app:layout_constraintBottom_toBottomOf="@id/detail_featured_image"
+                    app:layout_constraintBottom_toBottomOf="@id/detail_photo_carouselRv"
                     app:layout_constraintEnd_toEndOf="parent" />
 
-                <ImageView
-                    android:id="@+id/detail_featured_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="160dp"
-                    android:contentDescription="@string/detail_fragment_featured_picture_a11y"
-                    android:scaleType="centerCrop"
-                    tools:src="@drawable/tools_villa"
+                <com.jackandphantom.carouselrecyclerview.CarouselRecyclerview
+                    android:id="@+id/detail_photo_carouselRv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:listitem="@layout/detail_picture_banner" />
 
                 <TextView
                     android:id="@+id/detail_type_tv"
                     style="@style/Theme.RealEstateManager.TitleTV"
                     android:layout_width="0dp"
-                    android:textSize="18sp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="14dp"
+                    android:textSize="18sp"
                     app:layout_constraintEnd_toStartOf="@id/detail_price_tv"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/detail_featured_image"
+                    app:layout_constraintTop_toBottomOf="@id/detail_photo_carouselRv"
                     tools:text="Villa" />
 
                 <TextView
@@ -395,11 +393,11 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            tools:src="@drawable/detail_dummy_map"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/detail_amenities_flexbox" />
+            app:layout_constraintTop_toBottomOf="@id/detail_amenities_flexbox"
+            tools:src="@drawable/detail_dummy_map" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
