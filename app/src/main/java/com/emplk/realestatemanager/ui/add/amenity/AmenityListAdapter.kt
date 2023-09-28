@@ -13,9 +13,9 @@ class AmenityListAdapter :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AmenityViewHolder =
         AmenityViewHolder.create(parent)
 
-    override fun onBindViewHolder(holder: AmenityViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: AmenityViewHolder, position: Int) =
         holder.bind(getItem(position))
-    }
+
 
     class AmenityViewHolder(private val binding: AmenityCheckboxItemBinding) : RecyclerView.ViewHolder(binding.root) {
         companion object {

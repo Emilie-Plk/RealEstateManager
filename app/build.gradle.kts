@@ -66,6 +66,9 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.15.1")
     kapt("com.github.bumptech.glide:compiler:4.15.1")
 
+    // CarouselRecyclerView
+    implementation("com.github.sparrow007:carouselrecyclerview:1.2.6")
+
     // HILT
     implementation("com.google.dagger:hilt-android:2.46.1")
     kapt("com.google.dagger:hilt-compiler:2.46.1")
