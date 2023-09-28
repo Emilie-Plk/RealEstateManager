@@ -72,6 +72,6 @@ class PicturePreviewRepositoryRoom @Inject constructor(
     }
 
     override suspend fun deleteAll(picturePreviewId: Long) : Boolean = withContext(coroutineDispatcherProvider.io) {
-        picturePreviewDao.deleteAll(picturePreviewId) == 1
+        picturePreviewDao.deleteAll(picturePreviewId) != null
     }
 }

@@ -24,5 +24,5 @@ interface AmenityFormDao {
     suspend fun delete(amenityFormId: Long): Int
 
     @Query("DELETE FROM amenity_forms WHERE property_form_id = :propertyFormId")
-    suspend fun deleteAll(propertyFormId: Long)
+    suspend fun deleteAll(propertyFormId: Long) : Int?
 }

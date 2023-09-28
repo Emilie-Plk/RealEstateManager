@@ -29,7 +29,7 @@ class LocationFormRepositoryRoom @Inject constructor(
             )
         }
 
-    override suspend fun delete(locationFormId: Long) =
+    override suspend fun delete(locationFormId: Long) : Int? =
         withContext(coroutineDispatcherProvider.io) {
             locationFormDao.delete(locationFormId)
         }

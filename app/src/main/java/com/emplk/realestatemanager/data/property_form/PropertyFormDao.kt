@@ -48,5 +48,5 @@ interface PropertyFormDao {
     ): Int
 
     @Query("DELETE FROM property_forms WHERE id = :propertyFormId")
-    suspend fun delete(propertyFormId: Long)
+    suspend fun delete(propertyFormId: Long) : Int?
 }

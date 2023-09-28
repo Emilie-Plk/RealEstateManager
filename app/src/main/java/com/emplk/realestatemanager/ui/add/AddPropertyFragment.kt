@@ -79,8 +79,7 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
                         requireContext(),
                         event.text.toCharSequence(requireContext()),
                         Toast.LENGTH_SHORT
-                    )
-                        .show()
+                    ).show()
                 }
             }
         }
@@ -93,15 +92,18 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
             predictionAdapter.submitList(viewState.addressPredictions)
             binding.addPropertyCreateButton.isEnabled = viewState.isAddButtonEnabled
             binding.addPropertyProgressBar.isVisible = viewState.isProgressBarVisible
-            binding.addPropertyDescriptionTextInputEditText.setText(viewState.description)
-            binding.addPropertySurfaceTextInputEditText.setText(viewState.surface)
-            binding.addPropertyPriceTextInputEditText.setText(viewState.price)
+
+
             binding.addPropertyRoomsNumberPicker.value = viewState.nbRooms
             binding.addPropertyBedroomsNumberPicker.value = viewState.nbBedrooms
             binding.addPropertyBathroomsNumberPicker.value = viewState.nbBathrooms
-            //  binding.addPropertyAddressTextInputEditText.setText(viewState.address)
-            binding.addPropertyTypeActv.setText(viewState.propertyType, false)
-            binding.addPropertyAgentActv.setText(viewState.selectedAgent, false)
+
+            binding.addPropertyDescriptionTextInputEditText.setText(viewState.description)
+              binding.addPropertySurfaceTextInputEditText.setText(viewState.surface)
+            binding.addPropertyPriceTextInputEditText.setText(viewState.price)
+         //   binding.addPropertyAddressTextInputEditText.setText(viewState.address)
+             binding.addPropertyTypeActv.setText(viewState.propertyType, false)
+           binding.addPropertyAgentActv.setText(viewState.selectedAgent, false)
         }
 
         // region Import pictures
