@@ -32,7 +32,7 @@ class PictureBannerListAdapter :
             item.pictureUri.load(binding.ivBanner)
                 .error(R.drawable.baseline_villa_24)
                 .into(binding.ivBanner)
-
+            binding.ivBanner.contentDescription = item.description
             binding.tvBanner.text = item.description
         }
     }
