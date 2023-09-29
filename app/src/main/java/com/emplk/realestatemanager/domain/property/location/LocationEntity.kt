@@ -1,9 +1,9 @@
 package com.emplk.realestatemanager.domain.property.location
 
+import com.google.android.gms.maps.model.LatLng
+
 data class LocationEntity(
-    val id: Long = 0,
     val address: String,
-    val miniatureMapPath: String,
-    val latitude: String,
-    val longitude: String,
+    val miniatureMapPath: String?,
+    val latLng: LatLng?,
 )

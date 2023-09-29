@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -98,10 +99,30 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
             binding.addPropertyBedroomsNumberPicker.value = viewState.nbBedrooms
             binding.addPropertyBathroomsNumberPicker.value = viewState.nbBathrooms
 
-            binding.addPropertyDescriptionTextInputEditText.setText(viewState.description)
-            binding.addPropertySurfaceTextInputEditText.setText(viewState.surface)
-            binding.addPropertyPriceTextInputEditText.setText(viewState.price)
-            // binding.addPropertyAddressTextInputEditText.setText(viewState.address) // TODO: gérer ça
+            val currentDescription = binding.addPropertyDescriptionTextInputEditText.text?.toString()
+            if (currentDescription != viewState.description) {
+                binding.addPropertyDescriptionTextInputEditText.setText(viewState.description)
+            }
+            val currentSurface = binding.addPropertySurfaceTextInputEditText.text?.toString()
+            if (currentSurface != viewState.surface) {
+                binding.addPropertySurfaceTextInputEditText.setText(viewState.surface)
+            }
+
+            val currentPrice = binding.addPropertyPriceTextInputEditText.text?.toString()
+            if (currentPrice != viewState.price) {
+                binding.addPropertyPriceTextInputEditText.setText(viewState.price)
+            }
+            val currentAddress = binding.addPropertyAddressTextInputEditText.text?.toString()
+            if (currentAddress != viewState.address) {
+                binding.addPropertyAddressTextInputEditText.setText(viewState.address)
+            }
+            binding.addPropertyAddressTextInputEditText.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    viewModel.onAddressChanged(null)
+                    return@setOnEditorActionListener true
+                }
+                false // Return false to indicate that you didn't handle the event
+            }
             binding.addPropertyTypeActv.setText(viewState.propertyType, false)
             binding.addPropertyAgentActv.setText(viewState.selectedAgent, false)
         }
@@ -156,10 +177,6 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
 
         binding.addPropertyDescriptionTextInputEditText.doAfterTextChanged {
             viewModel.onDescriptionChanged(it.toString())
-        }
-
-        binding.addPropertyAddressTextInputEditText.doAfterTextChanged { editable ->
-            viewModel.onAddressChanged(editable.toString())
         }
     }
 

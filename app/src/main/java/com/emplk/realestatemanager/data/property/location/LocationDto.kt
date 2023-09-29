@@ -12,7 +12,7 @@ data class LocationDto(
     val propertyId: Long,
     val address: String,
     @ColumnInfo(name = "miniature_map_path")
-    val miniatureMapPath: String,
-    val latitude: String,
-    val longitude: String,
+    val miniatureMapPath: String?,
+    val latitude: Double?,
+    val longitude: Double?,
 )

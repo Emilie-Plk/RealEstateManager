@@ -29,6 +29,7 @@ interface PropertyFormDao {
         "UPDATE property_forms SET type = :newType," +
                 " price = :newPrice," +
                 " surface = :newSurface," +
+                " address = :newAddress," +
                 " rooms = :newRooms," +
                 " bedrooms = :newBedrooms," +
                 " bathrooms = :newBathrooms," +
@@ -39,6 +40,7 @@ interface PropertyFormDao {
         newType: String?,
         newPrice: BigDecimal?,
         newSurface: Int?,
+        newAddress: String?,
         newRooms: Int?,
         newBedrooms: Int?,
         newBathrooms: Int?,

@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.domain.map_picture
 
+import com.google.android.gms.maps.model.LatLng
 import javax.inject.Inject
 
 class GetMapPictureUseCase @Inject constructor(
@@ -7,13 +8,12 @@ class GetMapPictureUseCase @Inject constructor(
 ) {
 
     suspend fun invoke(
-        latitude: String,
-        longitude: String,
+      latLng: LatLng
     ) : MapWrapper = mapPictureRepository.getMapPicture(
-        latitude = latitude,
-        longitude = longitude,
+        latitude = latLng.latitude.toString(),
+        longitude = latLng.longitude.toString(),
         zoom = 16,
         size = "480x320",
-        markers = "color:red|$latitude,$longitude"
+        markers = "color:red|${latLng.latitude},${latLng.longitude}"
     )
 }

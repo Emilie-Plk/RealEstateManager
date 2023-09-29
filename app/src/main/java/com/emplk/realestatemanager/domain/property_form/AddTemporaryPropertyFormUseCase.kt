@@ -16,11 +16,7 @@ class AddTemporaryPropertyFormUseCase @Inject constructor(
             bedrooms = 0,
             bathrooms = 0,
             description = "",
-            location = LocationFormEntity(
-                address = "",
-                latitude = null,
-                longitude = null,
-            ),
+            address = "",
             agentName = "",
         )
     )
