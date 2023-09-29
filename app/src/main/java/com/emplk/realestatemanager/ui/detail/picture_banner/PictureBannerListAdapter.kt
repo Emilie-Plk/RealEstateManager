@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.DetailPictureBannerBinding
 import com.emplk.realestatemanager.ui.utils.NativePhoto.Companion.load
@@ -31,8 +32,10 @@ class PictureBannerListAdapter :
         fun bind(item: PictureBannerViewState) {
             item.pictureUri
                 .load(binding.ivBanner)
+                .transform(CenterCrop())
                 .error(R.drawable.baseline_villa_24)
                 .into(binding.ivBanner)
+
             binding.ivBanner.contentDescription = item.description
             binding.tvBanner.text = item.description
         }

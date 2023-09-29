@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:background="@color/almost_white"
         android:padding="8dp"
-        android:textSize="16dp"
+        android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

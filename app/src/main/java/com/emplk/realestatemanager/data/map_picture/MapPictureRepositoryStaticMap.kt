@@ -42,7 +42,11 @@ class MapPictureRepositoryStaticMap @Inject constructor(
             )
             if (byteArray.isSuccessful) {
                 val picturePath = savePicture(byteArray, latitude, longitude)
-                MapWrapper.Success(picturePath)
+                if (picturePath != null) {
+                    MapWrapper.Success(picturePath)
+                } else {
+                    MapWrapper.Error
+                }
             } else {
                 MapWrapper.Error
             }.also { mapWrapperLruCache.put("$latitude,$longitude", it) }
@@ -52,22 +56,26 @@ class MapPictureRepositoryStaticMap @Inject constructor(
         }
     }
 
-    private fun savePicture(byteArray: Response<ResponseBody>, latitude: String, longitude: String): String {
-        val picturesDirectory = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "")
-        val pictureFileName = "JPEG_$latitude$longitude.jpg"
-        val pictureFile = File(picturesDirectory, pictureFileName)
-        val picturePath = FileProvider.getUriForFile(
-            context,
-            "${context.packageName}.provider",
-            pictureFile
-        ).toString()
+    private fun savePicture(byteArray: Response<ResponseBody>, latitude: String, longitude: String): String? {
+        try {
+            val picturesDirectory = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "")
+            val pictureFileName = "JPEG_$latitude$longitude.jpg"
+            val pictureFile = File(picturesDirectory, pictureFileName)
+            val picturePath = FileProvider.getUriForFile(
+                context,
+                "${context.packageName}.provider",
+                pictureFile
+            ).toString()
 
-        val outputStream = FileOutputStream(pictureFile)
-        BitmapFactory
-            .decodeStream(byteArray.body()?.byteStream())
-            .compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-        outputStream.close()
-
-        return picturePath
+            val outputStream = FileOutputStream(pictureFile)
+            BitmapFactory
+                .decodeStream(byteArray.body()?.byteStream())
+                .compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+            outputStream.close()
+            return picturePath
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return null
+        }
     }
 }

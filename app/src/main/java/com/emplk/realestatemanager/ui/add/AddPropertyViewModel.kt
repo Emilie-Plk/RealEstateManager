@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.ui.add
 
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -38,6 +39,7 @@ import com.emplk.realestatemanager.domain.property_form.location.LocationFormEnt
 import com.emplk.realestatemanager.domain.property_form.picture_preview.AddPicturePreviewUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.GetPicturePreviewsAsFlowUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.GetPicturePreviewsUseCase
+import com.emplk.realestatemanager.domain.property_form.picture_preview.SavePictureFromGalleryToAppFilesUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.UpdatePicturePreviewUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.id.AddPicturePreviewIdUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.id.DeleteAllPicturePreviewIdsUseCase
@@ -81,6 +83,7 @@ class AddPropertyViewModel @Inject constructor(
     private val deleteTemporaryPropertyFormUseCase: DeleteTemporaryPropertyFormUseCase,
     private val addPicturePreviewUseCase: AddPicturePreviewUseCase,
     private val addPicturePreviewIdUseCase: AddPicturePreviewIdUseCase,
+    private val savePictureFromGalleryToAppFilesUseCase: SavePictureFromGalleryToAppFilesUseCase,
     private val getPicturePreviewsUseCase: GetPicturePreviewsUseCase,
     private val deletePicturePreviewIdUseCase: DeletePicturePreviewIdUseCase,
     private val deleteAllPicturePreviewIdsUseCase: DeleteAllPicturePreviewIdsUseCase,
@@ -556,9 +559,20 @@ class AddPropertyViewModel @Inject constructor(
         }
     }
 
-    fun onPictureAdded(uriToString: String) {
+    fun onPictureFromCameraTaken(uriToString: String) {
         viewModelScope.launch {
             val addedPictureId = addPicturePreviewUseCase.invoke(uriToString)
+            addPicturePreviewIdUseCase.invoke(addedPictureId)
+            formMutableStateFlow.update {
+                it.copy(picturesId = it.picturesId + addedPictureId)
+            }
+        }
+    }
+
+    fun onPictureFromGallerySelected(uri: Uri) {
+        viewModelScope.launch {
+            val picturePath = savePictureFromGalleryToAppFilesUseCase.invoke(uri)
+            val addedPictureId = addPicturePreviewUseCase.invoke(picturePath ?: "") // TODO: manage case fail
             addPicturePreviewIdUseCase.invoke(addedPictureId)
             formMutableStateFlow.update {
                 it.copy(picturesId = it.picturesId + addedPictureId)
