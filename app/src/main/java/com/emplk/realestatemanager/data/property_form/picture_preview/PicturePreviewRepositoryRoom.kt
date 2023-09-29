@@ -36,14 +36,20 @@ class PicturePreviewRepositoryRoom @Inject constructor(
             )
         }
 
-    override fun getAllAsFlow(): Flow<List<PicturePreviewEntity>> = picturePreviewDao
-        .getAllAsFlow()
+    override fun getAllAsFlow(propertyFormId: Long): Flow<List<PicturePreviewEntity>> = picturePreviewDao
+        .getAllAsFlow(propertyFormId)
         .map { picturePreviewDtoList ->
             picturePreviewDtoList.map { picturePreviewDto ->
                 picturePreviewMapper.mapToPicturePreviewEntity(picturePreviewDto)
             }
         }
         .flowOn(coroutineDispatcherProvider.io)
+
+    override suspend fun getAll(propertyFormId: Long): List<PicturePreviewEntity> = withContext(coroutineDispatcherProvider.io) {
+        picturePreviewDao.getAll(propertyFormId).map { picturePreviewDto ->
+            picturePreviewMapper.mapToPicturePreviewEntity(picturePreviewDto)
+        }
+    }
 
     override suspend fun getPictureById(picturePreviewId: Long): PicturePreviewEntity? =
         withContext(coroutineDispatcherProvider.io) {

@@ -1,6 +1,7 @@
 package com.emplk.realestatemanager.data.property
 
 import android.database.sqlite.SQLiteException
+import android.util.Log
 import com.emplk.realestatemanager.data.property.amenity.AmenityDao
 import com.emplk.realestatemanager.data.property.amenity.AmenityMapper
 import com.emplk.realestatemanager.data.property.location.LocationDao
@@ -42,11 +43,13 @@ class PropertyRepositoryRoom @Inject constructor(
     override suspend fun addPropertyWithDetails(propertyEntity: PropertyEntity): Boolean =
         withContext(coroutineDispatcherProvider.io) {
             val propertyId = add(propertyEntity) ?: return@withContext false
+            Log.d("COUCOU", "addPropertyWithDetails: $propertyId")
 
             val locationAsync = async {
                 val locationDtoEntity = locationMapper.mapToDtoEntity(propertyEntity.location, propertyId)
                 locationDao.insert(locationDtoEntity)
             }
+            Log.d("COUCOU", "addPropertyWithDetails: $locationAsync")
 
             val picturesAsync = propertyEntity.pictures.map {
                 async {
@@ -54,11 +57,13 @@ class PropertyRepositoryRoom @Inject constructor(
                     pictureDao.insert(pictureDtoEntity)
                 }
             }
+            Log.d("COUCOU", "addPropertyWithDetails: $picturesAsync")
 
             val amenitiesAsync = propertyEntity.amenities.map {
                 async {
                     val amenityDtoEntity = amenityMapper.mapToDtoEntity(it, propertyId)
                     amenityDao.insert(amenityDtoEntity)
+                    Log.d("COUCOU", "addPropertyWithDetails: $it")
                 }
             }
 
