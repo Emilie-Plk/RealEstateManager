@@ -9,12 +9,12 @@ data class PropertyFormEntity(
     val type: String?,
     val price: BigDecimal? = BigDecimal.ZERO,
     val surface: Int?,
+    val address: String?,
     val rooms: Int?,
     val bedrooms: Int?,
     val bathrooms: Int?,
     val description: String?,
     val agentName: String?,
-    val location: LocationFormEntity?,  // TODO: NOT SURE
     val pictures: List<PicturePreviewEntity> = emptyList(),
     val amenities: List<AmenityEntity> = emptyList(),
 )

@@ -7,6 +7,7 @@ import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.geocoding.GeocodingRepository
 import com.emplk.realestatemanager.domain.geocoding.GeocodingResultEntity
 import com.emplk.realestatemanager.domain.geocoding.GeocodingWrapper
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -25,7 +26,7 @@ class GeocodingRepositoryGoogle @Inject constructor(
                     val result = mapResults(response)
 
                     if (result != null) {
-                        GeocodingWrapper.Success(result)
+                        GeocodingWrapper.Success(LatLng(result.lat.toDouble(), result.lng.toDouble()))
                     } else {
                         GeocodingWrapper.Error("Status OK but error while trying to get Geocoding results")
                     }

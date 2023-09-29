@@ -57,9 +57,10 @@ class DetailViewModel @Inject constructor(
                                 description = picture.description
                             )
                         },
-                        mapMiniature = NativePhoto.Uri(
-                            propertyEntity.location.miniatureMapPath,
-                        ),
+                        mapMiniature = if (propertyEntity.location.miniatureMapPath != null)
+                            NativePhoto.Uri(
+                                propertyEntity.location.miniatureMapPath,
+                            ) else NativePhoto.Uri(""),
                         price = when (currencyType) {
                             CurrencyType.DOLLAR -> NativeText.Argument(
                                 R.string.price_in_dollar,

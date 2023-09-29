@@ -21,8 +21,6 @@ import com.emplk.realestatemanager.data.property_form.PropertyFormDao
 import com.emplk.realestatemanager.data.property_form.PropertyFormDto
 import com.emplk.realestatemanager.data.property_form.amenity.AmenityFormDao
 import com.emplk.realestatemanager.data.property_form.amenity.AmenityFormDto
-import com.emplk.realestatemanager.data.property_form.location.LocationFormDao
-import com.emplk.realestatemanager.data.property_form.location.LocationFormDto
 import com.emplk.realestatemanager.data.property_form.picture_preview.PicturePreviewDao
 import com.emplk.realestatemanager.data.property_form.picture_preview.PicturePreviewFormDto
 import com.emplk.realestatemanager.data.utils.type_converters.BigDecimalTypeConverter
@@ -40,7 +38,6 @@ import java.time.LocalDateTime
         AmenityDto::class,
         PropertyFormDto::class,
         PicturePreviewFormDto::class,
-        LocationFormDto::class,
         AmenityFormDto::class,
     ],
     version = 1,
@@ -58,7 +55,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun getAmenityDao(): AmenityDao
     abstract fun getPropertyFormDao(): PropertyFormDao
     abstract fun getPicturePreviewDao(): PicturePreviewDao
-    abstract fun getLocationFormDao(): LocationFormDao
     abstract fun getAmenityFormDao(): AmenityFormDao
 
     companion object {
@@ -128,22 +124,22 @@ abstract class AppDatabase : RoomDatabase() {
                         listOf(
                             LocationDto(
                                 propertyId = 1,
-                                latitude = "40.765076",
-                                longitude = "-73.976693",
+                                latitude = 40.765076,
+                                longitude = -73.976693,
                                 address = "Chambers Street",
                                 miniatureMapPath = ""
                             ),
                             LocationDto(
                                 propertyId = 2,
-                                latitude = "40.710525",
-                                longitude = "-74.008368",
+                                latitude = 40.710525,
+                                longitude = -74.008368,
                                 address = "Fulton Street",
                                 miniatureMapPath = ""
                             ),
                             LocationDto(
                                 propertyId = 3,
-                                latitude = "40.765076",
-                                longitude = "-73.976693",
+                                latitude = 40.765076,
+                                longitude = -73.976693,
                                 address = "Chambers Street",
                                 miniatureMapPath = ""
                             ),

@@ -3,8 +3,6 @@ package com.emplk.realestatemanager.data.property_form
 import android.database.sqlite.SQLiteException
 import com.emplk.realestatemanager.data.property_form.amenity.AmenityFormDao
 import com.emplk.realestatemanager.data.property_form.amenity.AmenityFormMapper
-import com.emplk.realestatemanager.data.property_form.location.LocationFormDao
-import com.emplk.realestatemanager.data.property_form.location.LocationFormMapper
 import com.emplk.realestatemanager.data.property_form.picture_preview.PicturePreviewDao
 import com.emplk.realestatemanager.data.property_form.picture_preview.PicturePreviewMapper
 import com.emplk.realestatemanager.data.property_form.picture_preview.PropertyFormMapper
@@ -22,12 +20,10 @@ import javax.inject.Inject
 
 class PropertyFormRepositoryRoom @Inject constructor(
     private val propertyFormDao: PropertyFormDao,
-    private val locationFormDao: LocationFormDao,
     private val picturePreviewDao: PicturePreviewDao,
     private val amenityFormDao: AmenityFormDao,
     private val propertyFormMapper: PropertyFormMapper,
     private val amenityFormMapper: AmenityFormMapper,
-    private val locationFormMapper: LocationFormMapper,
     private val picturePreviewMapper: PicturePreviewMapper,
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : PropertyFormRepository {
@@ -49,10 +45,6 @@ class PropertyFormRepositoryRoom @Inject constructor(
         withContext(coroutineDispatcherProvider.io) {
             val propertyFormId = add(propertyFormEntity) ?: return@withContext -1L
 
-            val locationFormAsync = async {
-                val locationFormDto = locationFormMapper.mapToLocationDto(propertyFormEntity.location, propertyFormId)
-                locationFormDao.insert(locationFormDto)
-            }
             val picturePreviewsFormAsync = propertyFormEntity.pictures.map { picturePreviewEntity ->
                 async {
                     val picturePreviewFormDto =
@@ -68,7 +60,7 @@ class PropertyFormRepositoryRoom @Inject constructor(
                 }
             }
 
-            (listOf(locationFormAsync) + picturePreviewsFormAsync + amenitiesFormAsync).all { it.await() != null }
+            (picturePreviewsFormAsync + amenitiesFormAsync).all { it.await() != null }
             propertyFormId
         }
 
@@ -93,7 +85,6 @@ class PropertyFormRepositoryRoom @Inject constructor(
             propertyFormDao.getExistingPropertyForm()?.let { propertyFormWithDetails ->
                 propertyFormMapper.mapToPropertyFormEntity(
                     propertyFormWithDetails.propertyForm,
-                    propertyFormWithDetails.location,
                     propertyFormWithDetails.picturePreviews,
                     propertyFormWithDetails.amenities,
                 )
@@ -109,7 +100,6 @@ class PropertyFormRepositoryRoom @Inject constructor(
             propertyFormDao.getPropertyFormById(propertyFormId).let { propertyFormWithDetails ->
                 propertyFormMapper.mapToPropertyFormEntity(
                     propertyFormWithDetails.propertyForm,
-                    propertyFormWithDetails.location,
                     propertyFormWithDetails.picturePreviews,
                     propertyFormWithDetails.amenities,
                 )
@@ -130,6 +120,7 @@ class PropertyFormRepositoryRoom @Inject constructor(
                 propertyFormDto.type,
                 propertyFormDto.price,
                 propertyFormDto.surface,
+                propertyFormDto.address,
                 propertyFormDto.rooms,
                 propertyFormDto.bedrooms,
                 propertyFormDto.bathrooms,
@@ -138,13 +129,6 @@ class PropertyFormRepositoryRoom @Inject constructor(
                 propertyFormId
             )
 
-            val locationFormDto = locationFormMapper.mapToLocationDto(propertyFormEntity.location, propertyFormId)
-            locationFormDao.update(
-                locationFormDto.address,
-                locationFormDto.latitude,
-                locationFormDto.longitude,
-                propertyFormId
-            )
 
             val amenityIdsStoredInDb = amenityFormDao.getAllIds(propertyFormId)
 
@@ -169,16 +153,14 @@ class PropertyFormRepositoryRoom @Inject constructor(
         }
 
         val picturePreviewDeletionDeferred = async {
-            picturePreviewDao.deleteAll(propertyFormId) }
-
-        val locationDeletionDeferred = async {
-            locationFormDao.delete(propertyFormId) }
+            picturePreviewDao.deleteAll(propertyFormId)
+        }
 
         val propertyDeletionDeferred = async {
             propertyFormDao.delete(propertyFormId)
         }
 
-        (listOf(propertyDeletionDeferred) + amenityDeletionDeferred + picturePreviewDeletionDeferred + locationDeletionDeferred).awaitAll()
+        (listOf(propertyDeletionDeferred) + amenityDeletionDeferred + picturePreviewDeletionDeferred).awaitAll()
             .all { it != null }
     }
 

@@ -1,7 +1,6 @@
 package com.emplk.realestatemanager.ui.add
 
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
@@ -35,7 +34,6 @@ import com.emplk.realestatemanager.domain.property_form.PropertyFormDatabaseStat
 import com.emplk.realestatemanager.domain.property_form.PropertyFormEntity
 import com.emplk.realestatemanager.domain.property_form.SetPropertyFormProgressUseCase
 import com.emplk.realestatemanager.domain.property_form.UpdatePropertyFormUseCase
-import com.emplk.realestatemanager.domain.property_form.location.LocationFormEntity
 import com.emplk.realestatemanager.domain.property_form.picture_preview.AddPicturePreviewUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.GetPicturePreviewsAsFlowUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.GetPicturePreviewsUseCase
@@ -109,8 +107,6 @@ class AddPropertyViewModel @Inject constructor(
         val propertyType: String? = null,
         val address: String? = null,
         val addressPredictions: List<PredictionViewState> = emptyList(),
-        val lat: String? = null,
-        val lng: String? = null,
         val price: BigDecimal = BigDecimal.ZERO,
         val surface: Int = 0,
         val description: String? = null,
@@ -123,21 +119,21 @@ class AddPropertyViewModel @Inject constructor(
     )
 
     private val formMutableStateFlow = MutableStateFlow(AddPropertyForm())
-
     private val currentAddressInputMutableStateFlow: MutableStateFlow<String?> = MutableStateFlow(null)
+    private val perfectMatchPredictionMutableStateFlow = MutableStateFlow<Boolean?>(null)  // TODO not sure at all!..
+    private val isEveryFieldFilledMutableStateFlow = MutableStateFlow(false)
+    private val isAddingPropertyInDatabaseMutableStateFlow = MutableStateFlow(false)
+    private val onCreateButtonClickedMutableSharedFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+
     private val currentPredictionAddressesFlow: Flow<PredictionWrapper?> =
         currentAddressInputMutableStateFlow.transformLatest { input ->
-            if (input.isNullOrBlank() || input.length < 3) {
+            if (input.isNullOrBlank() || input.length < 3 || perfectMatchPredictionMutableStateFlow.value == true) {
                 emit(null)
             } else {
                 delay(400.milliseconds)
                 emit(getAddressPredictionsUseCase.invoke(input))
             }
         }
-
-    private val isEveryFieldFilledMutableStateFlow = MutableStateFlow(false)
-    private val isAddingPropertyInDatabaseMutableStateFlow = MutableStateFlow(false)
-    private val onCreateButtonClickedMutableSharedFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
 
     val viewEventLiveData: LiveData<Event<AddPropertyEvent>> = liveData {
         onCreateButtonClickedMutableSharedFlow.collect {
@@ -146,8 +142,6 @@ class AddPropertyViewModel @Inject constructor(
                 formMutableStateFlow.collectLatest { form ->
                     if (form.propertyType != null &&
                         form.address != null &&
-                        form.lat != null &&
-                        form.lng != null &&
                         form.price > BigDecimal.ZERO &&
                         form.surface > 0 &&
                         form.description != null &&
@@ -158,7 +152,13 @@ class AddPropertyViewModel @Inject constructor(
                         form.amenities.isNotEmpty() &&
                         form.picturesId.isNotEmpty()
                     ) {
-                        Log.d("COUCOU", "entering form collect: $form")
+                        val geocodingWrapper = getAddressLatLongUseCase.invoke(form.address)
+                        when (geocodingWrapper) {
+                            is GeocodingWrapper.Success -> geocodingWrapper.latLng
+                            is GeocodingWrapper.Error -> null
+                            is GeocodingWrapper.NoResult -> null
+                        }
+
                         val success = addPropertyUseCase.invoke(
                             PropertyEntity(
                                 type = form.propertyType,
@@ -169,12 +169,22 @@ class AddPropertyViewModel @Inject constructor(
                                 bathrooms = form.nbBathrooms,
                                 location = LocationEntity(
                                     address = form.address,
-                                    latitude = form.lat,
-                                    longitude = form.lng,
-                                    miniatureMapPath = when (val mapWrapper =
-                                        getMapPictureUseCase.invoke(form.lat, form.lng)) {
-                                        is MapWrapper.Success -> mapWrapper.mapPicture
-                                        else -> "Error"
+                                    latLng = when (geocodingWrapper) {
+                                        is GeocodingWrapper.Success -> geocodingWrapper.latLng
+                                        is GeocodingWrapper.Error -> null
+                                        is GeocodingWrapper.NoResult -> null
+                                    },
+                                    miniatureMapPath = when (geocodingWrapper) {
+                                        is GeocodingWrapper.Success -> {
+                                            when (val mapWrapper =
+                                                getMapPictureUseCase.invoke(geocodingWrapper.latLng)) {
+                                                is MapWrapper.Success -> mapWrapper.mapPicture
+                                                is MapWrapper.Error -> null
+                                            }
+                                        }
+
+                                        is GeocodingWrapper.Error -> null
+                                        is GeocodingWrapper.NoResult -> null
                                     },
                                 ),
                                 bedrooms = form.nbBedrooms,
@@ -232,9 +242,7 @@ class AddPropertyViewModel @Inject constructor(
                     formMutableStateFlow.update { addPropertyForm ->
                         addPropertyForm.copy(
                             propertyType = initTemporaryPropertyFormUseCase.propertyFormEntity.type,
-                            address = initTemporaryPropertyFormUseCase.propertyFormEntity.location?.address,
-                            lat = initTemporaryPropertyFormUseCase.propertyFormEntity.location?.latitude,
-                            lng = initTemporaryPropertyFormUseCase.propertyFormEntity.location?.longitude,
+                            address = initTemporaryPropertyFormUseCase.propertyFormEntity.address,
                             price = initTemporaryPropertyFormUseCase.propertyFormEntity.price ?: BigDecimal.ZERO,
                             surface = initTemporaryPropertyFormUseCase.propertyFormEntity.surface ?: 0,
                             description = initTemporaryPropertyFormUseCase.propertyFormEntity.description,
@@ -267,8 +275,6 @@ class AddPropertyViewModel @Inject constructor(
                             form.surface > 0 ||
                             !form.description.isNullOrBlank() ||
                             form.nbRooms > 0 ||
-                            form.lat != null ||
-                            form.lng != null ||
                             form.nbBathrooms > 0 ||
                             form.nbBedrooms > 0 ||
                             !form.agent.isNullOrBlank() ||
@@ -276,10 +282,8 @@ class AddPropertyViewModel @Inject constructor(
                             form.picturesId.isNotEmpty()
 
                     setPropertyFormProgressUseCase.invoke(isFormInProgress)
-                    isEveryFieldFilledMutableStateFlow.value = form.propertyType != null &&
+                    isEveryFieldFilledMutableStateFlow.tryEmit(form.propertyType != null &&
                             form.address != null &&
-                            form.lat != null &&
-                            form.lng != null &&
                             form.price > BigDecimal.ZERO &&
                             form.surface > 0 &&
                             form.description != null &&
@@ -289,13 +293,12 @@ class AddPropertyViewModel @Inject constructor(
                             form.agent != null &&
                             form.amenities.isNotEmpty() &&
                             form.picturesId.isNotEmpty()
+                    )
 
                     emit(
                         AddPropertyViewState(
                             propertyType = form.propertyType,
                             address = form.address,
-                            lat = form.lat,
-                            lng = form.lng,
                             price = form.price.toString(),
                             surface = form.surface.toString(),
                             description = form.description,
@@ -406,11 +409,7 @@ class AddPropertyViewModel @Inject constructor(
                             description = it.description,
                             rooms = it.nbRooms,
                             bathrooms = it.nbBathrooms,
-                            location = LocationFormEntity(
-                                address = it.address,
-                                latitude = it.lat,
-                                longitude = it.lng,
-                            ),
+                            address = it.address,
                             bedrooms = it.nbBedrooms,
                             agentName = it.agent,
                             amenities = it.amenities.map { amenity ->
@@ -435,11 +434,7 @@ class AddPropertyViewModel @Inject constructor(
                                 description = it.description,
                                 rooms = it.nbRooms,
                                 bathrooms = it.nbBathrooms,
-                                location = LocationFormEntity(
-                                    address = it.address,
-                                    latitude = it.lat,
-                                    longitude = it.lng,
-                                ),
+                                address = it.address,
                                 bedrooms = it.nbBedrooms,
                                 agentName = it.agent,
                                 amenities = it.amenities.map { amenity ->
@@ -463,23 +458,13 @@ class AddPropertyViewModel @Inject constructor(
                     PredictionViewState.Prediction(
                         address = prediction,
                         onClickEvent = EquatableCallbackWithParam { selectedAddress ->
-                            viewModelScope.launch {
-
-                                when (val wrapper = getAddressLatLongUseCase.invoke(selectedAddress)) {
-                                    is GeocodingWrapper.Success -> {
-                                        formMutableStateFlow.update {
-                                            it.copy(
-                                                address = selectedAddress,
-                                                lat = wrapper.result.lat,
-                                                lng = wrapper.result.lng,
-                                                addressPredictions = emptyList()
-                                            )
-                                        }
-                                    }
-
-                                    is GeocodingWrapper.Error -> Unit
-                                    GeocodingWrapper.NoResult -> Unit
-                                }
+                            perfectMatchPredictionMutableStateFlow.value = true
+                            currentAddressInputMutableStateFlow.tryEmit(null)
+                            formMutableStateFlow.update {
+                                it.copy(
+                                    address = selectedAddress,
+                                    addressPredictions = emptyList(),
+                                )
                             }
                         }
                     )
@@ -538,9 +523,33 @@ class AddPropertyViewModel @Inject constructor(
         }
     }
 
-    fun onAddressChanged(input: String) {
-
-        currentAddressInputMutableStateFlow.value = input
+    fun onAddressChanged(input: String?) {
+        if (input.isNullOrBlank()) {
+            perfectMatchPredictionMutableStateFlow.tryEmit(null)
+            currentAddressInputMutableStateFlow.tryEmit(null)
+            formMutableStateFlow.update {
+                it.copy(
+                    address = input,
+                    addressPredictions = emptyList(),
+                )
+            }
+        } else if (perfectMatchPredictionMutableStateFlow.value == true) {
+            currentAddressInputMutableStateFlow.tryEmit(input)
+            formMutableStateFlow.update {
+                it.copy(
+                    address = input,
+                    addressPredictions = emptyList(),
+                )
+            }
+        } else {
+            perfectMatchPredictionMutableStateFlow.tryEmit(false)
+            currentAddressInputMutableStateFlow.tryEmit(input)
+            formMutableStateFlow.update {
+                it.copy(
+                    address = input,
+                )
+            }
+        }
     }
 
     fun onPriceChanged(price: String) {

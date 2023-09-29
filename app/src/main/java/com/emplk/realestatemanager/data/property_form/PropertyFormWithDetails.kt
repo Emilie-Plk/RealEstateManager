@@ -3,7 +3,6 @@ package com.emplk.realestatemanager.data.property_form
 import androidx.room.Embedded
 import androidx.room.Relation
 import com.emplk.realestatemanager.data.property_form.amenity.AmenityFormDto
-import com.emplk.realestatemanager.data.property_form.location.LocationFormDto
 import com.emplk.realestatemanager.data.property_form.picture_preview.PicturePreviewFormDto
 
 data class PropertyFormWithDetails(
@@ -19,9 +18,4 @@ data class PropertyFormWithDetails(
         parentColumn = "id",
         entityColumn = "property_form_id"
     ) val amenities: List<AmenityFormDto>,
-    @Relation(
-        entity = LocationFormDto::class,
-        parentColumn = "id",
-        entityColumn = "property_form_id"
-    ) val location: LocationFormDto,
 )

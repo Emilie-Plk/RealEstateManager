@@ -11,6 +11,7 @@ data class PropertyFormDto(
     val type: String?,
     val price: BigDecimal? = BigDecimal.ZERO,
     val surface: Int?,
+    val address: String?,
     val rooms: Int?,
     val bedrooms: Int?,
     val bathrooms: Int?,
