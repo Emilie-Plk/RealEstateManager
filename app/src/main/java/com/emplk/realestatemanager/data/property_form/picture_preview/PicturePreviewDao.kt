@@ -15,8 +15,11 @@ interface PicturePreviewDao {
     @Insert
     suspend fun insertAll(picturePreviewFormDtos: List<PicturePreviewFormDto>): List<Long?>
 
-    @Query("SELECT * FROM picture_previews")
-    fun getAllAsFlow(): Flow<List<PicturePreviewFormDto>>
+    @Query("SELECT * FROM picture_previews WHERE property_form_id = :propertyFormId")
+    fun getAllAsFlow(propertyFormId: Long): Flow<List<PicturePreviewFormDto>>
+
+    @Query("SELECT * FROM picture_previews WHERE property_form_id = :propertyFormId")
+    suspend fun getAll(propertyFormId: Long): List<PicturePreviewFormDto>
 
     @Query("SELECT id FROM picture_previews WHERE property_form_id = :propertyFormId")
     suspend fun getAllIds(propertyFormId: Long): List<Long>

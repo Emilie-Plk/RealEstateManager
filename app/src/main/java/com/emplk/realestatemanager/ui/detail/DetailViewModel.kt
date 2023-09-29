@@ -51,9 +51,6 @@ class DetailViewModel @Inject constructor(
                     DetailViewState.PropertyDetail(
                         id = propertyEntity.id,
                         propertyType = propertyEntity.type,
-                        featuredPicture = NativePhoto.Uri(
-                            propertyEntity.pictures.first().uri,
-                        ),
                         pictures = propertyEntity.pictures.map { picture ->
                             PictureBannerViewState(
                                 pictureUri = NativePhoto.Uri(picture.uri),

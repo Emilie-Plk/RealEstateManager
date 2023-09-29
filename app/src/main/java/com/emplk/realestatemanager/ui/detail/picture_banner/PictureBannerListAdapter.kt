@@ -29,7 +29,8 @@ class PictureBannerListAdapter :
         }
 
         fun bind(item: PictureBannerViewState) {
-            item.pictureUri.load(binding.ivBanner)
+            item.pictureUri
+                .load(binding.ivBanner)
                 .error(R.drawable.baseline_villa_24)
                 .into(binding.ivBanner)
             binding.ivBanner.contentDescription = item.description
@@ -41,6 +42,7 @@ class PictureBannerListAdapter :
 object PictureDiffCallback : DiffUtil.ItemCallback<PictureBannerViewState>() {
     override fun areItemsTheSame(oldItem: PictureBannerViewState, newItem: PictureBannerViewState): Boolean =
         oldItem.pictureUri == newItem.pictureUri && oldItem.description == newItem.description
+
 
     override fun areContentsTheSame(oldItem: PictureBannerViewState, newItem: PictureBannerViewState): Boolean =
         oldItem == newItem

@@ -37,6 +37,7 @@ import com.emplk.realestatemanager.domain.property_form.UpdatePropertyFormUseCas
 import com.emplk.realestatemanager.domain.property_form.location.LocationFormEntity
 import com.emplk.realestatemanager.domain.property_form.picture_preview.AddPicturePreviewUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.GetPicturePreviewsAsFlowUseCase
+import com.emplk.realestatemanager.domain.property_form.picture_preview.GetPicturePreviewsUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.UpdatePicturePreviewUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.id.AddPicturePreviewIdUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.id.DeleteAllPicturePreviewIdsUseCase
@@ -65,7 +66,6 @@ import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.supervisorScope
 import java.math.BigDecimal
 import java.time.Clock
 import java.time.LocalDateTime
@@ -81,6 +81,7 @@ class AddPropertyViewModel @Inject constructor(
     private val deleteTemporaryPropertyFormUseCase: DeleteTemporaryPropertyFormUseCase,
     private val addPicturePreviewUseCase: AddPicturePreviewUseCase,
     private val addPicturePreviewIdUseCase: AddPicturePreviewIdUseCase,
+    private val getPicturePreviewsUseCase: GetPicturePreviewsUseCase,
     private val deletePicturePreviewIdUseCase: DeletePicturePreviewIdUseCase,
     private val deleteAllPicturePreviewIdsUseCase: DeleteAllPicturePreviewIdsUseCase,
     private val getMapPictureUseCase: GetMapPictureUseCase,
@@ -110,7 +111,7 @@ class AddPropertyViewModel @Inject constructor(
         val price: BigDecimal = BigDecimal.ZERO,
         val surface: Int = 0,
         val description: String? = null,
-        val nbRooms: Int = 0,
+        val nbRooms: Int = 0,  // TODO: change to Int? = null ?
         val nbBathrooms: Int = 0,
         val nbBedrooms: Int = 0,
         val agent: String? = null,
@@ -139,7 +140,7 @@ class AddPropertyViewModel @Inject constructor(
         onCreateButtonClickedMutableSharedFlow.collect {
             viewModelScope.launch(coroutineDispatcherProvider.io) {
                 isAddingPropertyInDatabaseMutableStateFlow.value = true
-                formMutableStateFlow.collect { form ->
+                formMutableStateFlow.collectLatest { form ->
                     if (form.propertyType != null &&
                         form.address != null &&
                         form.lat != null &&
@@ -154,6 +155,7 @@ class AddPropertyViewModel @Inject constructor(
                         form.amenities.isNotEmpty() &&
                         form.picturesId.isNotEmpty()
                     ) {
+                        Log.d("COUCOU", "entering form collect: $form")
                         val success = addPropertyUseCase.invoke(
                             PropertyEntity(
                                 type = form.propertyType,
@@ -166,23 +168,20 @@ class AddPropertyViewModel @Inject constructor(
                                     address = form.address,
                                     latitude = form.lat,
                                     longitude = form.lng,
-                                    miniatureMapPath = when (val wrapper =
+                                    miniatureMapPath = when (val mapWrapper =
                                         getMapPictureUseCase.invoke(form.lat, form.lng)) {
-                                        is MapWrapper.Success -> {
-                                            wrapper.mapPicture
-                                        }
-
-                                        is MapWrapper.Error -> "OUPS"
+                                        is MapWrapper.Success -> mapWrapper.mapPicture
+                                        else -> "Error"
                                     },
                                 ),
                                 bedrooms = form.nbBedrooms,
                                 agentName = form.agent,
                                 amenities = form.amenities,
-                                pictures = form.picturesId.map {
+                                pictures = getPicturePreviewsUseCase.invoke().map {
                                     PictureEntity(
-                                        uri = "",
-                                        description = "",
-                                        isFeatured = false,
+                                        uri = it.uri,
+                                        description = it.description ?: "",
+                                        isFeatured = it.isFeatured,
                                     )
                                 },
                                 entryDate = LocalDateTime.now(clock),

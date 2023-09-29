@@ -12,8 +12,8 @@ class GetMapPictureUseCase @Inject constructor(
     ) : MapWrapper = mapPictureRepository.getMapPicture(
         latitude = latitude,
         longitude = longitude,
-        zoom = 15,
-        size = "200x200",
+        zoom = 16,
+        size = "480x320",
         markers = "color:red|$latitude,$longitude"
     )
 }
