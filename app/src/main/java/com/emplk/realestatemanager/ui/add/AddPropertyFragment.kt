@@ -99,18 +99,18 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
             binding.addPropertyBathroomsNumberPicker.value = viewState.nbBathrooms
 
             binding.addPropertyDescriptionTextInputEditText.setText(viewState.description)
-              binding.addPropertySurfaceTextInputEditText.setText(viewState.surface)
+            binding.addPropertySurfaceTextInputEditText.setText(viewState.surface)
             binding.addPropertyPriceTextInputEditText.setText(viewState.price)
-         //   binding.addPropertyAddressTextInputEditText.setText(viewState.address)
-             binding.addPropertyTypeActv.setText(viewState.propertyType, false)
-           binding.addPropertyAgentActv.setText(viewState.selectedAgent, false)
+            // binding.addPropertyAddressTextInputEditText.setText(viewState.address) // TODO: gérer ça
+            binding.addPropertyTypeActv.setText(viewState.propertyType, false)
+            binding.addPropertyAgentActv.setText(viewState.selectedAgent, false)
         }
 
         // region Import pictures
         val importPictureCallback = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) {
                 Log.d("PhotoPicker", "Selected URI: $uri")
-                viewModel.onPictureAdded(uri.toString())
+                viewModel.onPictureFromGallerySelected(uri)
             } else {
                 Log.d("PhotoPicker", "No media selected")
             }
@@ -118,7 +118,7 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
 
         val takePictureCallback = registerForActivityResult(ActivityResultContracts.TakePicture()) { successful ->
             if (successful) {
-                currentPhotoUri?.let { viewModel.onPictureAdded(it.toString()) }
+                currentPhotoUri?.let { viewModel.onPictureFromCameraTaken(it.toString()) }
             }
         }
 

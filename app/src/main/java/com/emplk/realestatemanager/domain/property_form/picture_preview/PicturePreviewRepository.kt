@@ -1,11 +1,14 @@
 package com.emplk.realestatemanager.domain.property_form.picture_preview
 
+import android.net.Uri
 import kotlinx.coroutines.flow.Flow
 
 interface PicturePreviewRepository {
     suspend fun add(picturePreviewEntity: PicturePreviewEntity, propertyFormId: Long): Long?
 
     suspend fun addAll(picturePreviewEntities: List<PicturePreviewEntity>, propertyFormId: Long): List<Long?>
+
+    suspend fun saveToAppFiles(uri: Uri): String?
 
     fun getAllAsFlow(propertyFormId: Long): Flow<List<PicturePreviewEntity>>
 
