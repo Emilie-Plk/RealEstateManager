@@ -1,6 +1,5 @@
 package com.emplk.realestatemanager.domain.property_form
 
-import android.text.BoringLayout
 import kotlinx.coroutines.flow.Flow
 
 interface PropertyFormRepository {
@@ -22,7 +21,7 @@ interface PropertyFormRepository {
 
     suspend fun update(propertyFormEntity: PropertyFormEntity, propertyFormId: Long)
 
-    suspend fun delete(propertyFormId: Long) : Boolean?
+    suspend fun delete(propertyFormId: Long): Boolean
 
     fun onSavePropertyFormEvent()
 

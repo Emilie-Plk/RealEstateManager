@@ -1,7 +1,5 @@
 package com.emplk.realestatemanager.domain.property_form
 
-import com.emplk.realestatemanager.domain.property_form.location.LocationFormEntity
-import java.math.BigDecimal
 import javax.inject.Inject
 
 class AddTemporaryPropertyFormUseCase @Inject constructor(

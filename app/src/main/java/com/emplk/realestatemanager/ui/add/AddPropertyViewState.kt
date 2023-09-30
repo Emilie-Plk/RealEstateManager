@@ -9,6 +9,7 @@ import com.emplk.realestatemanager.ui.add.type.AddPropertyTypeViewStateItem
 import com.emplk.realestatemanager.ui.utils.NativeText
 
 data class AddPropertyViewState(
+    // TODO: generalize to be used for both Add/EditProperty? (PropertyFormViewState?)
     val propertyType: String?,
     val addressPredictions: List<PredictionViewState>,
     val address: String?,

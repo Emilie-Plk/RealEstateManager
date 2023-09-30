@@ -13,6 +13,25 @@
         android:layout_margin="8dp">
 
         <TextView
+            android:id="@+id/add_property_soldStatus_tv"
+            style="@style/Theme.RealEstateManager.AddPropertySubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:text="Sold"
+            app:layout_constraintEnd_toStartOf="@id/add_property_soldStatus_switch"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Switch
+            android:id="@+id/add_property_soldStatus_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/add_property_soldStatus_tv"
+            app:layout_constraintEnd_toEndOf="@+id/add_property_type_textInputLayout"
+            app:layout_constraintTop_toTopOf="@id/add_property_soldStatus_tv"
+            tools:checked="true" />
+
+        <TextView
             android:id="@+id/add_property_type_tv"
             style="@style/Theme.RealEstateManager.AddPropertySubtitle"
             android:layout_width="0dp"
@@ -370,11 +389,11 @@
             android:id="@+id/add_property_address_predictions_recyclerView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            tools:itemCount="6"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintTop_toBottomOf="@id/add_property_address_textInputLayout"
             app:layout_constraintEnd_toEndOf="@id/add_property_address_textInputLayout"
             app:layout_constraintStart_toStartOf="@id/add_property_address_textInputLayout"
+            app:layout_constraintTop_toBottomOf="@id/add_property_address_textInputLayout"
+            tools:itemCount="6"
             tools:listitem="@layout/property_address_prediction_item" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,7 +10,6 @@ import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.property_form.PropertyFormEntity
 import com.emplk.realestatemanager.domain.property_form.PropertyFormRepository
 import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,7 +43,8 @@ class PropertyFormRepositoryRoom @Inject constructor(
     override suspend fun addPropertyFormWithDetails(propertyFormEntity: PropertyFormEntity): Long =
         withContext(coroutineDispatcherProvider.io) {
             try {
-                val propertyFormId = add(propertyFormEntity) ?: return@withContext -1L // TODO: revoir ça et mettre du null
+                val propertyFormId =
+                    add(propertyFormEntity) ?: return@withContext -1L // TODO: revoir ça et mettre du null
 
                 val picturePreviewsFormAsync = propertyFormEntity.pictures.map { picturePreviewEntity ->
                     async {
@@ -164,9 +164,8 @@ class PropertyFormRepositoryRoom @Inject constructor(
         val propertyDeletionDeferred = async {
             propertyFormDao.delete(propertyFormId)
         }
-
-        (listOf(propertyDeletionDeferred) + amenityDeletionDeferred + picturePreviewDeletionDeferred).awaitAll()
-            .all { it != null }
+        (listOf(propertyDeletionDeferred) + amenityDeletionDeferred + picturePreviewDeletionDeferred)
+            .all { it.await() != null }
     }
 
     override fun onSavePropertyFormEvent() {

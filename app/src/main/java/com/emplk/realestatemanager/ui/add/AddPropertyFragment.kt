@@ -42,6 +42,9 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.addPropertySoldStatusTv.isVisible = false
+        binding.addPropertySoldStatusSwitch.isVisible = false
+
         val typeAdapter = AddPropertyTypeSpinnerAdapter()
         binding.addPropertyTypeActv.setAdapter(typeAdapter)
         binding.addPropertyTypeActv.setOnItemClickListener { _, _, position, _ ->

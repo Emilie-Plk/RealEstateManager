@@ -20,5 +20,5 @@ interface PicturePreviewRepository {
 
     suspend fun delete(picturePreviewId: Long): Boolean
 
-    suspend fun deleteAll(picturePreviewId: Long) : Boolean
+    suspend fun deleteAll(picturePreviewId: Long): Boolean
 }
