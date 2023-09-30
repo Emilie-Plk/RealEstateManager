@@ -12,8 +12,7 @@ class InitTemporaryPropertyFormUseCase @Inject constructor(
         return if (existingPropertyFormEntity != null) {
             PropertyFormDatabaseState.DraftAlreadyExists(existingPropertyFormEntity)
         } else {
-            val newPropertyFormId = addTemporaryPropertyFormUseCase.invoke()
-            PropertyFormDatabaseState.Empty(newPropertyFormId)
+            PropertyFormDatabaseState.Empty(addTemporaryPropertyFormUseCase.invoke())
         }
     }
 }

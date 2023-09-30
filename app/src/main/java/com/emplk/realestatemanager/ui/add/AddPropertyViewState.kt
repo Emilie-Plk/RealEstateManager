@@ -12,7 +12,7 @@ data class AddPropertyViewState(
     val propertyType: String?,
     val addressPredictions: List<PredictionViewState>,
     val address: String?,
-    val price: String,
+    val price: String?,
     val surface: String?,
     val description: String?,
     val nbRooms: Int,

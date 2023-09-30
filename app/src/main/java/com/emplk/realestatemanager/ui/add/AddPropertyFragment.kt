@@ -1,11 +1,13 @@
 package com.emplk.realestatemanager.ui.add
 
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -99,26 +101,31 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
             binding.addPropertyBedroomsNumberPicker.value = viewState.nbBedrooms
             binding.addPropertyBathroomsNumberPicker.value = viewState.nbBathrooms
 
-            val currentDescription = binding.addPropertyDescriptionTextInputEditText.text?.toString()
+            val currentDescription = binding.addPropertyDescriptionTextInputEditText.text.toString()
             if (currentDescription != viewState.description) {
                 binding.addPropertyDescriptionTextInputEditText.setText(viewState.description)
             }
-            val currentSurface = binding.addPropertySurfaceTextInputEditText.text?.toString()
+
+            val currentSurface = binding.addPropertySurfaceTextInputEditText.text.toString()
             if (currentSurface != viewState.surface) {
                 binding.addPropertySurfaceTextInputEditText.setText(viewState.surface)
             }
 
-            val currentPrice = binding.addPropertyPriceTextInputEditText.text?.toString()
+            val currentPrice = binding.addPropertyPriceTextInputEditText.text.toString()
             if (currentPrice != viewState.price) {
                 binding.addPropertyPriceTextInputEditText.setText(viewState.price)
             }
-            val currentAddress = binding.addPropertyAddressTextInputEditText.text?.toString()
-            if (currentAddress != viewState.address) {
+
+            val currentAddress = binding.addPropertyAddressTextInputEditText.text.toString()
+            if (viewState.address != null && currentAddress != viewState.address) {
                 binding.addPropertyAddressTextInputEditText.setText(viewState.address)
             }
+
             binding.addPropertyAddressTextInputEditText.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     viewModel.onAddressChanged(null)
+                    binding.addPropertyAddressTextInputEditText.clearFocus()
+                    hideKeyboard(binding.addPropertyAddressTextInputEditText)
                     return@setOnEditorActionListener true
                 }
                 false // Return false to indicate that you didn't handle the event
@@ -160,6 +167,14 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
             takePictureCallback.launch(currentPhotoUri)
         }
         // endregion Import pictures
+    }
+
+    private fun hideKeyboard(view: View?) {
+        if (view != null) {
+            val inputMethodManager =
+                requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+        }
     }
 
     private fun initFormFieldsTextWatchers() {
