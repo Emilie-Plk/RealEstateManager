@@ -120,13 +120,14 @@ class AddPropertyViewModel @Inject constructor(
     private val formMutableStateFlow = MutableStateFlow(AddPropertyForm())
     private val currentAddressInputMutableStateFlow: MutableStateFlow<String?> = MutableStateFlow(null)
     private val perfectMatchPredictionMutableStateFlow = MutableStateFlow<Boolean?>(null)  // TODO not sure at all!..
+    private val hasAddressEditTextFocus = MutableStateFlow(false)
     private val isEveryFieldFilledMutableStateFlow = MutableStateFlow(false)
     private val isAddingPropertyInDatabaseMutableStateFlow = MutableStateFlow(false)
     private val onCreateButtonClickedMutableSharedFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
 
     private val currentPredictionAddressesFlow: Flow<PredictionWrapper?> =
         currentAddressInputMutableStateFlow.transformLatest { input ->
-            if (input.isNullOrBlank() || input.length < 3 || perfectMatchPredictionMutableStateFlow.value == true) {
+            if (input.isNullOrBlank() || input.length < 3 || perfectMatchPredictionMutableStateFlow.value == true || hasAddressEditTextFocus.value.not()) {
                 emit(null)
             } else {
                 delay(400.milliseconds)
@@ -611,5 +612,9 @@ class AddPropertyViewModel @Inject constructor(
 
     fun onAddPropertyClicked() {
         onCreateButtonClickedMutableSharedFlow.tryEmit(Unit)
+    }
+
+    fun onAddressEditTextFocused(hasFocus: Boolean) {
+        hasAddressEditTextFocus.tryEmit(hasFocus)
     }
 }
