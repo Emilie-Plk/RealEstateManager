@@ -66,7 +66,6 @@ import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.math.BigDecimal
 import java.time.Clock
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -107,8 +106,8 @@ class AddPropertyViewModel @Inject constructor(
         val propertyType: String? = null,
         val address: String? = null,
         val addressPredictions: List<PredictionViewState> = emptyList(),
-        val price: BigDecimal = BigDecimal.ZERO,
-        val surface: Int = 0,
+        val price: String? = null,
+        val surface: String? = null,
         val description: String? = null,
         val nbRooms: Int = 0,  // TODO: change to Int? = null ?
         val nbBathrooms: Int = 0,
@@ -142,8 +141,8 @@ class AddPropertyViewModel @Inject constructor(
                 formMutableStateFlow.collectLatest { form ->
                     if (form.propertyType != null &&
                         form.address != null &&
-                        form.price > BigDecimal.ZERO &&
-                        form.surface > 0 &&
+                        form.price != null &&
+                        form.surface != null &&
                         form.description != null &&
                         form.nbRooms > 0 &&
                         form.nbBathrooms > 0 &&
@@ -162,8 +161,8 @@ class AddPropertyViewModel @Inject constructor(
                         val success = addPropertyUseCase.invoke(
                             PropertyEntity(
                                 type = form.propertyType,
-                                price = form.price,
-                                surface = form.surface,
+                                price = form.price.toBigDecimal(),
+                                surface = form.surface.toInt(),
                                 description = form.description,
                                 rooms = form.nbRooms,
                                 bathrooms = form.nbBathrooms,
@@ -243,8 +242,8 @@ class AddPropertyViewModel @Inject constructor(
                         addPropertyForm.copy(
                             propertyType = initTemporaryPropertyFormUseCase.propertyFormEntity.type,
                             address = initTemporaryPropertyFormUseCase.propertyFormEntity.address,
-                            price = initTemporaryPropertyFormUseCase.propertyFormEntity.price ?: BigDecimal.ZERO,
-                            surface = initTemporaryPropertyFormUseCase.propertyFormEntity.surface ?: 0,
+                            price = initTemporaryPropertyFormUseCase.propertyFormEntity.price,
+                            surface = initTemporaryPropertyFormUseCase.propertyFormEntity.surface,
                             description = initTemporaryPropertyFormUseCase.propertyFormEntity.description,
                             nbRooms = initTemporaryPropertyFormUseCase.propertyFormEntity.rooms ?: 0,
                             nbBathrooms = initTemporaryPropertyFormUseCase.propertyFormEntity.bathrooms ?: 0,
@@ -271,8 +270,8 @@ class AddPropertyViewModel @Inject constructor(
 
                     val isFormInProgress = !form.propertyType.isNullOrBlank() ||
                             !form.address.isNullOrBlank() ||
-                            form.price > BigDecimal.ZERO ||
-                            form.surface > 0 ||
+                            !form.price.isNullOrBlank() ||
+                            !form.surface.isNullOrBlank() ||
                             !form.description.isNullOrBlank() ||
                             form.nbRooms > 0 ||
                             form.nbBathrooms > 0 ||
@@ -282,25 +281,26 @@ class AddPropertyViewModel @Inject constructor(
                             form.picturesId.isNotEmpty()
 
                     setPropertyFormProgressUseCase.invoke(isFormInProgress)
-                    isEveryFieldFilledMutableStateFlow.tryEmit(form.propertyType != null &&
-                            form.address != null &&
-                            form.price > BigDecimal.ZERO &&
-                            form.surface > 0 &&
-                            form.description != null &&
-                            form.nbRooms > 0 &&
-                            form.nbBathrooms > 0 &&
-                            form.nbBedrooms > 0 &&
-                            form.agent != null &&
-                            form.amenities.isNotEmpty() &&
-                            form.picturesId.isNotEmpty()
+                    isEveryFieldFilledMutableStateFlow.tryEmit(
+                        form.propertyType != null &&
+                                form.address != null &&
+                                form.price != null &&
+                                form.surface != null &&
+                                form.description != null &&
+                                form.nbRooms > 0 &&
+                                form.nbBathrooms > 0 &&
+                                form.nbBedrooms > 0 &&
+                                form.agent != null &&
+                                form.amenities.isNotEmpty() &&
+                                form.picturesId.isNotEmpty()
                     )
 
                     emit(
                         AddPropertyViewState(
                             propertyType = form.propertyType,
                             address = form.address,
-                            price = form.price.toString(),
-                            surface = form.surface.toString(),
+                            price = form.price,
+                            surface = form.surface,
                             description = form.description,
                             nbRooms = form.nbRooms,
                             nbBathrooms = form.nbBathrooms,
@@ -552,19 +552,15 @@ class AddPropertyViewModel @Inject constructor(
         }
     }
 
-    fun onPriceChanged(price: String) {
+    fun onPriceChanged(price: String?) {
         formMutableStateFlow.update {
-            if (price.isBlank()) {
-                it.copy(price = BigDecimal.ZERO)
-            } else {
-                it.copy(price = price.toBigDecimal())
-            }
+            it.copy(price = price)
         }
     }
 
-    fun onSurfaceChanged(surface: String) {
+    fun onSurfaceChanged(surface: String?) {
         formMutableStateFlow.update {
-            it.copy(surface = surface.toIntOrNull() ?: 0)
+            it.copy(surface = surface)
         }
     }
 

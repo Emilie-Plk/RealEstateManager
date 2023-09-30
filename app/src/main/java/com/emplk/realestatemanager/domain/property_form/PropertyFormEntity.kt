@@ -7,8 +7,8 @@ import java.math.BigDecimal
 
 data class PropertyFormEntity(
     val type: String?,
-    val price: BigDecimal? = BigDecimal.ZERO,
-    val surface: Int?,
+    val price: String?,
+    val surface: String?,
     val address: String?,
     val rooms: Int?,
     val bedrooms: Int?,

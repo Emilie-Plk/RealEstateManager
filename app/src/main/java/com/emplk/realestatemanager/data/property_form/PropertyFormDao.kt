@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
-import java.math.BigDecimal
 
 @Dao
 interface PropertyFormDao {
@@ -38,8 +37,8 @@ interface PropertyFormDao {
     )
     suspend fun update(
         newType: String?,
-        newPrice: BigDecimal?,
-        newSurface: Int?,
+        newPrice: String?,
+        newSurface: String?,
         newAddress: String?,
         newRooms: Int?,
         newBedrooms: Int?,
@@ -50,5 +49,5 @@ interface PropertyFormDao {
     ): Int
 
     @Query("DELETE FROM property_forms WHERE id = :propertyFormId")
-    suspend fun delete(propertyFormId: Long) : Int?
+    suspend fun delete(propertyFormId: Long): Int?
 }

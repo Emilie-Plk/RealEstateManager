@@ -1,8 +1,10 @@
 package com.emplk.realestatemanager.ui.add.picture_preview
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -80,10 +82,20 @@ class PropertyPicturePreviewListAdapter :
                 binding.previewPictureTitleEt.setOnFocusChangeListener { _, hasFocus ->
                     if (!hasFocus) {
                         item.onDescriptionChanged.invoke(binding.previewPictureTitleEt.text.toString())
+                        hideKeyboard(itemView)
                     }
                 }
                 binding.previewPictureTitleEt.setText(item.description)
             }
+
+            private fun hideKeyboard(view: View?) {
+                if (view != null) {
+                    val inputMethodManager =
+                        view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+                }
+            }
+
         }
 
         class EditPropertyPicturePreview(private val binding: PropertyPreviewPictureItemBinding) :

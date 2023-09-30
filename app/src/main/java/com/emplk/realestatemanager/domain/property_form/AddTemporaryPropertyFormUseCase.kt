@@ -10,8 +10,8 @@ class AddTemporaryPropertyFormUseCase @Inject constructor(
     suspend fun invoke(): Long = propertyFormRepository.addPropertyFormWithDetails(
         PropertyFormEntity(
             type = "",
-            price = BigDecimal.ZERO,
-            surface = 0,
+            price = "",
+            surface = "",
             rooms = 0,
             bedrooms = 0,
             bathrooms = 0,

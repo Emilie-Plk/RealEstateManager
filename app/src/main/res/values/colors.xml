@@ -7,6 +7,7 @@
     <color name="lighter_gray">#7A7A7A</color>
     <color name="silver">#cccccc</color>
     <color name="dull_silver">#BBBBBB</color>
+    <color name="transparent_silver">#9AC1C8CC</color>
     <color name="primary">#384260</color>
     <color name="primary_dark">#2d3246</color>
     <color name="primary_light">#677491</color>

@@ -43,25 +43,30 @@ class PropertyFormRepositoryRoom @Inject constructor(
 
     override suspend fun addPropertyFormWithDetails(propertyFormEntity: PropertyFormEntity): Long =
         withContext(coroutineDispatcherProvider.io) {
-            val propertyFormId = add(propertyFormEntity) ?: return@withContext -1L
+            try {
+                val propertyFormId = add(propertyFormEntity) ?: return@withContext -1L // TODO: revoir ça et mettre du null
 
-            val picturePreviewsFormAsync = propertyFormEntity.pictures.map { picturePreviewEntity ->
-                async {
-                    val picturePreviewFormDto =
-                        picturePreviewMapper.mapToPicturePreviewDto(picturePreviewEntity, propertyFormId)
-                    picturePreviewDao.insert(picturePreviewFormDto)
+                val picturePreviewsFormAsync = propertyFormEntity.pictures.map { picturePreviewEntity ->
+                    async {
+                        val picturePreviewFormDto =
+                            picturePreviewMapper.mapToPicturePreviewDto(picturePreviewEntity, propertyFormId)
+                        picturePreviewDao.insert(picturePreviewFormDto)
+                    }
                 }
-            }
 
-            val amenitiesFormAsync = propertyFormEntity.amenities.map {
-                async {
-                    val amenityFormDto = amenityFormMapper.mapToAmenityDto(it, propertyFormId)
-                    amenityFormDao.insert(amenityFormDto)
+                val amenitiesFormAsync = propertyFormEntity.amenities.map {
+                    async {
+                        val amenityFormDto = amenityFormMapper.mapToAmenityDto(it, propertyFormId)
+                        amenityFormDao.insert(amenityFormDto)
+                    }
                 }
-            }
 
-            (picturePreviewsFormAsync + amenitiesFormAsync).all { it.await() != null }
-            propertyFormId
+                (picturePreviewsFormAsync + amenitiesFormAsync).all { it.await() != null }
+                propertyFormId
+            } catch (e: SQLiteException) {
+                e.printStackTrace()
+                -1L
+            }
         }
 
     override fun setPropertyFormProgress(isPropertyFormInProgress: Boolean) {
