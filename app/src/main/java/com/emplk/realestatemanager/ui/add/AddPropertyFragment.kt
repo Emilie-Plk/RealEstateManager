@@ -121,11 +121,15 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
                 binding.addPropertyAddressTextInputEditText.setText(viewState.address)
             }
 
+            binding.addPropertyAddressTextInputEditText.setOnFocusChangeListener { _, hasFocus ->
+                viewModel.onAddressEditTextFocused(hasFocus)
+            }
+
             binding.addPropertyAddressTextInputEditText.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     viewModel.onAddressChanged(null)
-                    binding.addPropertyAddressTextInputEditText.clearFocus()
                     hideKeyboard(binding.addPropertyAddressTextInputEditText)
+                    binding.addPropertyAddressTextInputEditText.clearFocus()
                     return@setOnEditorActionListener true
                 }
                 false // Return false to indicate that you didn't handle the event
@@ -180,6 +184,7 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
     private fun initFormFieldsTextWatchers() {
         binding.addPropertyAddressTextInputEditText.doAfterTextChanged {
             viewModel.onAddressChanged(it.toString())
+            binding.addPropertyAddressTextInputEditText.setSelection(it.toString().length)
         }
 
         binding.addPropertyPriceTextInputEditText.doAfterTextChanged {
