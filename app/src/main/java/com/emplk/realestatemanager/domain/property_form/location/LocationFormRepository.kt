@@ -5,5 +5,5 @@ interface LocationFormRepository {
 
     suspend fun update(locationFormEntity: LocationFormEntity, propertyFormId: Long): Int
 
-    suspend fun delete(locationFormId: Long) : Int?
+    suspend fun delete(locationFormId: Long): Int?
 }

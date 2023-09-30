@@ -2,7 +2,6 @@ package com.emplk.realestatemanager.data.property_form
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.math.BigDecimal
 
 @Entity(tableName = "property_forms")
 data class PropertyFormDto(

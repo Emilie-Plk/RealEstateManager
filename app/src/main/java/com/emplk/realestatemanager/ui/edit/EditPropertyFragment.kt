@@ -1,5 +1,8 @@
 package com.emplk.realestatemanager.ui.edit
 
+import android.os.Bundle
+import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.AddPropertyFragmentBinding
@@ -12,5 +15,11 @@ class EditPropertyFragment : Fragment(R.layout.add_property_fragment) {
 
     companion object {
         fun newInstance() = EditPropertyFragment()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.addPropertySoldStatusTv.isVisible = true
+        binding.addPropertySoldStatusSwitch.isVisible = true
     }
 }

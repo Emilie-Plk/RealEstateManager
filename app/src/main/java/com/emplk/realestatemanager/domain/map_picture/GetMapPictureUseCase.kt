@@ -8,8 +8,8 @@ class GetMapPictureUseCase @Inject constructor(
 ) {
 
     suspend fun invoke(
-      latLng: LatLng
-    ) : MapWrapper = mapPictureRepository.getMapPicture(
+        latLng: LatLng
+    ): MapWrapper = mapPictureRepository.getMapPicture(
         latitude = latLng.latitude.toString(),
         longitude = latLng.longitude.toString(),
         zoom = 16,

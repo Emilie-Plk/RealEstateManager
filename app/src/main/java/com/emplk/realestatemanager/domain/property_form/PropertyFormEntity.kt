@@ -1,9 +1,7 @@
 package com.emplk.realestatemanager.domain.property_form
 
 import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
-import com.emplk.realestatemanager.domain.property_form.location.LocationFormEntity
 import com.emplk.realestatemanager.domain.property_form.picture_preview.PicturePreviewEntity
-import java.math.BigDecimal
 
 data class PropertyFormEntity(
     val type: String?,

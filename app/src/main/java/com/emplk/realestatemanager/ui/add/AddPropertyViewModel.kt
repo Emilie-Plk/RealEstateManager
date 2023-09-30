@@ -205,10 +205,8 @@ class AddPropertyViewModel @Inject constructor(
                         )
                         isAddingPropertyInDatabaseMutableStateFlow.value = false
                         if (success) {
-                            val deletionSuccess = deleteTemporaryPropertyFormUseCase.invoke()
-                            if (deletionSuccess != null && deletionSuccess) {
-                                deleteAllPicturePreviewIdsUseCase.invoke()
-                            }
+                            deleteTemporaryPropertyFormUseCase.invoke() // TODO: same issue as in PropertyDraftDialogViewModel
+                            deleteAllPicturePreviewIdsUseCase.invoke()
                             setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
                             emit(
                                 Event(
