@@ -56,6 +56,11 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:2.5.3")
     implementation("com.google.android.gms:play-services-awareness:19.0.1")
 
+
+    // GOOGLE MAPS SDK
+    implementation("com.google.android.gms:play-services-maps:18.1.0")
+    implementation("com.google.maps.android:android-maps-utils:2.3.0")
+
     // DESUGARING
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
 

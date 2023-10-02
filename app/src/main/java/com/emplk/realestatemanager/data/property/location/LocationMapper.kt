@@ -1,6 +1,7 @@
 package com.emplk.realestatemanager.data.property.location
 
 import com.emplk.realestatemanager.domain.property.location.LocationEntity
+import com.emplk.realestatemanager.domain.property.location.PropertyLatLongEntity
 import com.google.android.gms.maps.model.LatLng
 import javax.inject.Inject
 
@@ -25,4 +26,14 @@ class LocationMapper @Inject constructor() {
                 }
             }
         )
+
+    fun mapToPropertyLatLongEntity(propertyLatLongDto: PropertyLatLongDto): PropertyLatLongEntity? =
+        propertyLatLongDto.latitude?.let { latitude ->
+        propertyLatLongDto.longitude?.let { longitude ->
+            PropertyLatLongEntity(
+                propertyId = propertyLatLongDto.propertyId,
+                latLng = LatLng(latitude, longitude)
+            )
+        }
+    }
 }

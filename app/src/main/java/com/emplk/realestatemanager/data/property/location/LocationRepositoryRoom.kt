@@ -1,9 +1,11 @@
 package com.emplk.realestatemanager.data.property.location
 
 import android.database.sqlite.SQLiteException
+import android.util.Log
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.property.location.LocationEntity
 import com.emplk.realestatemanager.domain.property.location.LocationRepository
+import com.emplk.realestatemanager.domain.property.location.PropertyLatLongEntity
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -21,6 +23,18 @@ class LocationRepositoryRoom @Inject constructor(
             } catch (e: SQLiteException) {
                 e.printStackTrace()
                 false
+            }
+        }
+
+    override suspend fun getAllPropertyLatLong(): List<PropertyLatLongEntity> =
+        withContext(coroutineDispatcherProvider.io) {
+            try {
+                locationDao.getAllPropertyLatLong().mapNotNull { propertyLatLongDto ->
+                    locationMapper.mapToPropertyLatLongEntity(propertyLatLongDto)
+                }
+            } catch (e: SQLiteException) {
+                e.printStackTrace()
+                emptyList()
             }
         }
 

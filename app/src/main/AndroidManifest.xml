@@ -17,11 +17,27 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RealEstateManager"
         tools:targetApi="31">
+
+        <!--
+             TODO: Before you run your application, you need a Google Maps API key.
+
+             To get one, follow the directions here:
+
+                https://developers.google.com/maps/documentation/android-sdk/get-api-key
+
+             Once you have your API key (it starts with "AIza"), define a new property in your
+             project's local.properties file (e.g. MAPS_API_KEY=Aiza...), and replace the
+             "YOUR_API_KEY" string in this file with "${MAPS_API_KEY}".
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${GOOGLE_API_KEY}" />
+
         <activity
             android:name=".ui.blank.BlankActivity"
             android:exported="false"
-            android:parentActivityName=".ui.main.MainActivity"
             android:label="@string/title_activity_blank"
+            android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/Theme.RealEstateManager" />
         <activity
             android:name=".ui.main.MainActivity"
@@ -32,10 +48,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="${GOOGLE_API_KEY}" />
 
         <provider
             android:name="androidx.startup.InitializationProvider"

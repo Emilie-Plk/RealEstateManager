@@ -16,6 +16,9 @@ interface LocationDao {
     @Query("SELECT * FROM locations WHERE property_id = :propertyId LIMIT 1")
     fun getLocationAsFlow(propertyId: Long): Flow<LocationDto>
 
+    @Query("SELECT * FROM locations")
+    suspend fun getAllPropertyLatLong(): List<PropertyLatLongDto>
+
     @Update
     suspend fun update(locationDto: LocationDto): Int
 }
