@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    tools:context=".ui.map.bottom_sheet.MapBottomSheetFragment">
+
+    <ImageView
+        android:id="@+id/mapBottomSheet_property_imageView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:contentDescription="Picture of %s1 with %s2 rooms, %s3 bathrooms, and %s4 bedrooms"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toTopOf="@id/mapBottomSheet_property_detail_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/tools_villa" />
+
+    <TextView
+        android:id="@+id/mapBottomSheet_property_type_tv"
+        style="@style/Theme.RealEstateManager.TextOverlayTransparentGray"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toBottomOf="@id/mapBottomSheet_property_imageView"
+        android:background="@color/transparent_silver"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="413dp"
+        tools:text="Villa" />
+
+    <TextView
+        android:id="@+id/mapBottomSheet_property_surface_tv"
+        style="@style/Theme.RealEstateManager.TextOverlayTransparentGray"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@id/mapBottomSheet_property_type_tv"
+        app:layout_constraintStart_toEndOf="@+id/mapBottomSheet_property_type_tv"
+        app:layout_constraintTop_toTopOf="@id/mapBottomSheet_property_type_tv"
+        tools:text="200m²" />
+
+    <TextView
+        android:id="@+id/mapBottomSheet_property_price_tv"
+        style="@style/Theme.RealEstateManager.TextOverlayTransparentGray"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        android:textColor="@color/secondary_light"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/mapBottomSheet_property_imageView"
+        tools:text="$200,000" />
+
+
+    <Button
+        android:id="@+id/mapBottomSheet_property_detail_btn"
+        style="@style/Widget.Material3.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:text="Go to detail page"
+        android:textAllCaps="true"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mapBottomSheet_property_imageView" />
+
+    <Button
+        android:id="@+id/mapBottomSheet_property_edit_btn"
+        style="@style/Widget.Material3.Button.TextButton.Icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:text="edit"
+        android:textAllCaps="true"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:icon="@drawable/baseline_edit_24"
+        app:iconTint="@color/primary_light"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mapBottomSheet_property_imageView" />
+</androidx.constraintlayout.widget.ConstraintLayout>
