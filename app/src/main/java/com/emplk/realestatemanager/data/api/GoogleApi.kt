@@ -25,7 +25,7 @@ interface GoogleApi {
     @Streaming
     suspend fun getMap(
         @Query("center") center: String,
-        @Query("zoom") zoom: Int,
+        @Query("zoom") zoom: String,
         @Query("size") size: String,
         @Query("markers") markers: String,
     ): Response<ResponseBody>

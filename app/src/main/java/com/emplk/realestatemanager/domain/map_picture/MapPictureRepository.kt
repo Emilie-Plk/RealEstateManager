@@ -4,7 +4,7 @@ interface MapPictureRepository {
     suspend fun getMapPicture(
         latitude: String,
         longitude: String,
-        zoom: Int,
+        zoom: String,
         size: String,
         markers: String,
     ): MapWrapper

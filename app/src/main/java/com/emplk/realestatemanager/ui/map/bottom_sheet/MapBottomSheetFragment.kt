@@ -1,19 +1,17 @@
 package com.emplk.realestatemanager.ui.map.bottom_sheet
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.commitNow
+import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.MapBottomSheetFragmentBinding
-import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.ui.edit.EditPropertyFragment
 import com.emplk.realestatemanager.ui.main.MainActivity
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.NativePhoto.Companion.load
 import com.emplk.realestatemanager.ui.utils.viewBinding
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -26,20 +24,15 @@ class MapBottomSheetFragment : BottomSheetDialogFragment(R.layout.map_bottom_she
         const val DETAIL_PROPERTY_TAG = "DETAIL_PROPERTY_TAG"
         const val KEY_PROPERTY_ID = "KEY_PROPERTY_ID"
         fun newInstance() = MapBottomSheetFragment()
-
     }
 
     private val viewModel: MapBottomSheetViewModel by viewModels()
     private val binding by viewBinding { MapBottomSheetFragmentBinding.bind(it) }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val propertyId = arguments?.getLong(KEY_PROPERTY_ID)
-        viewModel.propertyIdMutableStateFlow.tryEmit(propertyId)
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        val standardBottomSheetBehavior = BottomSheetBehavior.from(binding.root.parent as View)
+        standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
 
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
             binding.mapBottomSheetPropertyTypeTv.text = viewState.type
@@ -70,14 +63,13 @@ class MapBottomSheetFragment : BottomSheetDialogFragment(R.layout.map_bottom_she
                 }
 
                 is MapBottomSheetEvent.OnEditClick ->
-                    parentFragmentManager.commitNow {
+                    childFragmentManager.commit {
+                        dismiss()
                         replace(
                             R.id.blank_frameLayout_container,
-                            EditPropertyFragment.newInstance(),
-                            NavigationFragmentType.EDIT_FRAGMENT.name
+                            EditPropertyFragment.newInstance()
                         )
                     }
-
             }
         }
     }
