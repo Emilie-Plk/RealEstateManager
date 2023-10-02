@@ -10,7 +10,7 @@ class CurrentPropertyRepositoryImpl @Inject constructor() : CurrentPropertyRepos
 
     private var currentPropertyIdMutableStateFlow = MutableStateFlow(-1L)
 
-    override fun getCurrentPropertyIdAsFlow(): Flow<Long> = currentPropertyIdMutableStateFlow.asStateFlow()
+    override fun getCurrentPropertyIdAsFlow(): Flow<Long> = currentPropertyIdMutableStateFlow
 
     override fun setCurrentPropertyId(id: Long) {
         currentPropertyIdMutableStateFlow.value = id

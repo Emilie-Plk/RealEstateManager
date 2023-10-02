@@ -16,6 +16,7 @@ import com.emplk.realestatemanager.ui.add.AddPropertyFragment
 import com.emplk.realestatemanager.ui.add.draft_dialog.PropertyDraftDialogFragment
 import com.emplk.realestatemanager.ui.edit.EditPropertyFragment
 import com.emplk.realestatemanager.ui.main.MainActivity
+import com.emplk.realestatemanager.ui.map.MapsFragment
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,19 +49,30 @@ class BlankActivity : AppCompatActivity() {
         val fragmentTag = intent.getStringExtra(KEY_FRAGMENT_TAG)
 
         if (savedInstanceState == null) {
-            if (fragmentTag == NavigationFragmentType.EDIT_FRAGMENT.name) {
-                supportFragmentManager.commitNow {
-                    add(
-                        binding.blankFrameLayoutContainer.id,
-                        EditPropertyFragment.newInstance()
-                    )
+            when (fragmentTag) {
+                NavigationFragmentType.EDIT_FRAGMENT.name -> {
+                    supportFragmentManager.commitNow {
+                        add(
+                            binding.blankFrameLayoutContainer.id,
+                            EditPropertyFragment.newInstance()
+                        )
+                    }
                 }
-            } else if (fragmentTag == NavigationFragmentType.ADD_FRAGMENT.name) {
-                supportFragmentManager.commitNow {
-                    add(
-                        binding.blankFrameLayoutContainer.id,
-                        AddPropertyFragment.newInstance()
-                    )
+                NavigationFragmentType.MAP_FRAGMENT.name -> {
+                    supportFragmentManager.commitNow {
+                        add(
+                            binding.blankFrameLayoutContainer.id,
+                            MapsFragment.newInstance()
+                        )
+                    }
+                }
+                NavigationFragmentType.ADD_FRAGMENT.name -> {
+                    supportFragmentManager.commitNow {
+                        add(
+                            binding.blankFrameLayoutContainer.id,
+                            AddPropertyFragment.newInstance()
+                        )
+                    }
                 }
             }
         }

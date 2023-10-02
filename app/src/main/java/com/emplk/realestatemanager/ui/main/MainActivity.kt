@@ -132,7 +132,11 @@ class MainActivity : AppCompatActivity() {
                     startActivity(BlankActivity.navigate(this, NavigationFragmentType.EDIT_FRAGMENT.name))
                 }
 
-                is MainViewEvent.NavigateToBlank -> Unit
+                MainViewEvent.NavigateToBlank(NavigationFragmentType.MAP_FRAGMENT.name) -> {
+                    startActivity(BlankActivity.navigate(this, NavigationFragmentType.MAP_FRAGMENT.name))
+                }
+
+                is MainViewEvent.NavigateToBlank -> TODO()
             }
         }
     }
@@ -145,6 +149,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.main_menu_map_view -> {
+                viewModel.onMapClicked()
                 true
             }
 

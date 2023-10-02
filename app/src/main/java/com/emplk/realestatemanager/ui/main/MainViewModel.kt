@@ -7,12 +7,14 @@ import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdFlowUseCase
 import com.emplk.realestatemanager.domain.navigation.GetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.navigation.GetToolbarSubtitleUseCase
+import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.ADD_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.DETAIL_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.DRAFT_DIALOG_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.EDIT_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.FILTER_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.LIST_FRAGMENT
+import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.MAP_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.screen_width.SetScreenWidthTypeUseCase
 import com.emplk.realestatemanager.ui.utils.Event
@@ -107,6 +109,7 @@ class MainViewModel @Inject constructor(
                 }
 
                 DRAFT_DIALOG_FRAGMENT -> Unit
+                MAP_FRAGMENT -> Unit
             }
         }.collect()
     }
@@ -120,13 +123,9 @@ class MainViewModel @Inject constructor(
             when (navigationType) {
                 LIST_FRAGMENT -> emit(Event(MainViewEvent.DisplayPropertyList))
 
-                ADD_FRAGMENT -> {
-                    emit(Event(MainViewEvent.NavigateToBlank(ADD_FRAGMENT.name)))
-                }
+                ADD_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(ADD_FRAGMENT.name)))
 
-                EDIT_FRAGMENT -> {
-                    emit(Event(MainViewEvent.NavigateToBlank(EDIT_FRAGMENT.name)))
-                }
+                EDIT_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(EDIT_FRAGMENT.name)))
 
                 DETAIL_FRAGMENT ->
                     if (currentPropertyId >= 1) {
@@ -145,6 +144,8 @@ class MainViewModel @Inject constructor(
                     }
 
                 DRAFT_DIALOG_FRAGMENT -> Unit
+
+                MAP_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(MAP_FRAGMENT.name)))
             }
         }.collect()
     }
@@ -159,6 +160,12 @@ class MainViewModel @Inject constructor(
         setNavigationTypeUseCase.invoke(
             FILTER_FRAGMENT
         )
+    }
+
+    fun onMapClicked() {
+       setNavigationTypeUseCase.invoke(
+           MAP_FRAGMENT
+       )
     }
 
     fun onResume(isTablet: Boolean) {

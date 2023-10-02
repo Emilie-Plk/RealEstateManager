@@ -35,7 +35,7 @@ class DetailViewModel @Inject constructor(
     coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : ViewModel() {
 
-    val viewState: LiveData<DetailViewState> = liveData(coroutineDispatcherProvider.io) {
+    val viewState: LiveData<DetailViewState> = liveData {
         getCurrentPropertyIdFlowUseCase.invoke()
             .filterNotNull()
             .flatMapLatest { propertyId ->
