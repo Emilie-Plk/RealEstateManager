@@ -20,13 +20,11 @@
 
     <TextView
         android:id="@+id/tv_banner"
+        style="@style/Theme.RealEstateManager.TextOverlayTransparentGray"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/transparent_silver"
-        android:padding="8dp"
-        android:textColor="@color/almost_white"
-        android:textSize="14sp"
-        android:textStyle="bold"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:text="Front picture" />
