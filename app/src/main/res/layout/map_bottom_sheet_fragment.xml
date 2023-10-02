@@ -4,21 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
     tools:context=".ui.map.bottom_sheet.MapBottomSheetFragment">
 
     <ImageView
         android:id="@+id/mapBottomSheet_property_imageView"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="H,3:2"
         android:contentDescription="Picture of %s1 with %s2 rooms, %s3 bathrooms, and %s4 bedrooms"
         android:scaleType="centerCrop"
+        android:src="@drawable/tools_villa"
         app:layout_constraintBottom_toTopOf="@id/mapBottomSheet_property_detail_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/tools_villa" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/mapBottomSheet_property_type_tv"
@@ -27,8 +27,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginBottom="24dp"
-        app:layout_constraintBottom_toBottomOf="@id/mapBottomSheet_property_imageView"
         android:background="@color/transparent_silver"
+        app:layout_constraintBottom_toBottomOf="@id/mapBottomSheet_property_imageView"
         app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteY="413dp"
         tools:text="Villa" />
@@ -82,7 +82,7 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:icon="@drawable/baseline_edit_24"
-        app:iconTint="@color/primary_light"
+        app:iconTint="@color/secondary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/mapBottomSheet_property_imageView" />

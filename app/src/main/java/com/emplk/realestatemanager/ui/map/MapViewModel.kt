@@ -7,11 +7,11 @@ import androidx.lifecycle.viewModelScope
 import com.emplk.realestatemanager.domain.current_property.SetCurrentPropertyIdUseCase
 import com.emplk.realestatemanager.domain.map.GetAllPropertiesLatLongUseCase
 import com.emplk.realestatemanager.domain.navigation.GetNavigationTypeUseCase
-import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParam
 import com.emplk.realestatemanager.ui.utils.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,9 +19,9 @@ import javax.inject.Inject
 class MapViewModel @Inject constructor(
     private val getAllPropertiesLatLongUseCase: GetAllPropertiesLatLongUseCase,
     private val setCurrentPropertyIdUseCase: SetCurrentPropertyIdUseCase,
-    private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
-    private val getNavigationTypeUseCase: GetNavigationTypeUseCase,
 ) : ViewModel() {
+
+    private val clickedPropertyIdMutableStateFlow: MutableStateFlow<Long?> = MutableStateFlow(null)
 
     val viewState: LiveData<List<MarkerViewState>> = liveData {
         viewModelScope.launch {
@@ -32,21 +32,23 @@ class MapViewModel @Inject constructor(
                         latLng = it.latLng,
                         onMarkerClicked = EquatableCallbackWithParam { propertyId ->
                             setCurrentPropertyIdUseCase.invoke(propertyId)
-                            setNavigationTypeUseCase.invoke(NavigationFragmentType.DETAIL_FRAGMENT)
                         }
                     )
                 })
-        }
+        }.join()
     }
 
     val viewEventLiveData: LiveData<Event<MapEvent>> = liveData {
         viewModelScope.launch {
-            getNavigationTypeUseCase.invoke().collect {
-                when (it) {
-                    NavigationFragmentType.DETAIL_FRAGMENT -> emit(Event(MapEvent.OnMarkerClicked))
-                    else -> Unit
+            clickedPropertyIdMutableStateFlow.collect {
+                it?.let { propertyId ->
+                    emit(Event(MapEvent.OnMarkerClicked(propertyId)))
                 }
             }
-        }
+        }.join()
+    }
+
+    fun onMarkerClicked(propertyId: Long) {
+        clickedPropertyIdMutableStateFlow.tryEmit(propertyId)
     }
 }

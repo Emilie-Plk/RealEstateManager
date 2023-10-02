@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.emplk.realestatemanager.ui.main.MainActivity
+import com.emplk.realestatemanager.ui.map.bottom_sheet.MapBottomSheetFragment
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -56,7 +56,7 @@ class MapsFragment : SupportMapFragment(), OnMapReadyCallback {
 
                 googleMap.setOnMarkerClickListener { clickedMarker ->
                     val propertyId = clickedMarker.tag as? Long
-                    propertyId?.let { markerViewState.onMarkerClicked(it) }
+                    propertyId?.let { viewModel.onMarkerClicked(it) }
                     true
                 }
             }
@@ -64,9 +64,12 @@ class MapsFragment : SupportMapFragment(), OnMapReadyCallback {
 
         viewModel.viewEventLiveData.observeEvent(this) { event ->
             when (event) {
-                MapEvent.OnMarkerClicked -> {
-                    MainActivity.navigate(requireContext())
-                    requireActivity().finish()
+                is MapEvent.OnMarkerClicked -> {
+                    val intent = MapBottomSheetFragment.newInstance()
+                    intent.arguments = Bundle().apply {
+                        putLong(MapBottomSheetFragment.KEY_PROPERTY_ID, event.propertyId)
+                    }
+                    intent.show(childFragmentManager, MapBottomSheetFragment.TAG)
                 }
             }
         }
