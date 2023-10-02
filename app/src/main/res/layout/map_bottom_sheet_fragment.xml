@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mapBottomSheet_property_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-    tools:context=".ui.map.bottom_sheet.MapBottomSheetFragment">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
 
     <ImageView
         android:id="@+id/mapBottomSheet_property_imageView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintDimensionRatio="H,3:2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
         android:contentDescription="Picture of %s1 with %s2 rooms, %s3 bathrooms, and %s4 bedrooms"
+        android:fitsSystemWindows="true"
         android:scaleType="centerCrop"
         android:src="@drawable/tools_villa"
-        app:layout_constraintBottom_toTopOf="@id/mapBottomSheet_property_detail_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_anchorGravity="top|center_horizontal" />
 
     <TextView
         android:id="@+id/mapBottomSheet_property_type_tv"
@@ -26,11 +26,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginBottom="24dp"
         android:background="@color/transparent_silver"
-        app:layout_constraintBottom_toBottomOf="@id/mapBottomSheet_property_imageView"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="413dp"
+        android:fitsSystemWindows="true"
+        app:layout_anchor="@id/mapBottomSheet_property_imageView"
+        app:layout_anchorGravity="bottom|start"
         tools:text="Villa" />
 
     <TextView
@@ -39,10 +38,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="@id/mapBottomSheet_property_type_tv"
-        app:layout_constraintStart_toEndOf="@+id/mapBottomSheet_property_type_tv"
-        app:layout_constraintTop_toTopOf="@id/mapBottomSheet_property_type_tv"
+        android:fitsSystemWindows="true"
         tools:text="200m²" />
+
 
     <TextView
         android:id="@+id/mapBottomSheet_property_price_tv"
@@ -52,8 +50,8 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="24dp"
         android:textColor="@color/secondary_light"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/mapBottomSheet_property_imageView"
+        app:layout_anchor="@id/mapBottomSheet_property_imageView"
+        app:layout_anchorGravity="top|end"
         tools:text="$200,000" />
 
 
@@ -62,14 +60,14 @@
         style="@style/Widget.Material3.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
         android:layout_marginStart="24dp"
         android:text="Go to detail page"
         android:textAllCaps="true"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mapBottomSheet_property_imageView" />
+        app:layout_anchor="@id/mapBottomSheet_property_imageView"
+        app:layout_anchorGravity="bottom|start" />
 
     <Button
         android:id="@+id/mapBottomSheet_property_edit_btn"
@@ -77,13 +75,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
+        app:layout_anchorGravity="bottom|end"
+        android:layout_marginStart="24dp"
+        app:layout_anchor="@id/mapBottomSheet_property_imageView"
         android:text="edit"
         android:textAllCaps="true"
         android:textSize="16sp"
         android:textStyle="bold"
         app:icon="@drawable/baseline_edit_24"
         app:iconTint="@color/secondary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mapBottomSheet_property_imageView" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+       />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

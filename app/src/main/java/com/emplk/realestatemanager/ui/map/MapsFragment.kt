@@ -33,43 +33,43 @@ class MapsFragment : SupportMapFragment(), OnMapReadyCallback {
 
     @SuppressLint("PotentialBehaviorOverride")
     override fun onMapReady(googleMap: GoogleMap) {
-        //   googleMap.mapType = GoogleMap.MAP_TYPE_HYBRID
+        googleMap.mapType = GoogleMap.MAP_TYPE_HYBRID
         googleMap.uiSettings.isZoomControlsEnabled = true
+        googleMap.uiSettings.isCompassEnabled = true
 
 
-        val parisCameraPosition = CameraPosition.Builder()
-            .target(LatLng(48.8566, 2.3522))  // Sets the center of the map to Paris
+        val manhattanCameraPosition = CameraPosition.Builder()
+            .target(LatLng(40.7128, -74.0060))  // Sets the center of the map to Paris
             .zoom(12f)            // Sets the zoom level (adjust as needed)
             .build()
 
-        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(parisCameraPosition))
+        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(manhattanCameraPosition))
 
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
-            viewState.map { markerViewState ->
+            // Clear existing markers
+            googleMap.clear()
+
+            // Add new markers and set the click listener for each
+            viewState.forEach { markerViewState ->
                 val marker = MarkerOptions()
                     .position(markerViewState.latLng)
                     .title(markerViewState.propertyId.toString())
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-                googleMap.addMarker(marker)
+
                 val googleMarker = googleMap.addMarker(marker)
                 googleMarker?.tag = markerViewState.propertyId
-
-                googleMap.setOnMarkerClickListener { clickedMarker ->
-                    val propertyId = clickedMarker.tag as? Long
-                    propertyId?.let { viewModel.onMarkerClicked(it) }
+                googleMap.setOnMarkerClickListener {
+                    markerViewState.onMarkerClicked.invoke(markerViewState.propertyId)
                     true
                 }
             }
         }
 
+
         viewModel.viewEventLiveData.observeEvent(this) { event ->
             when (event) {
                 is MapEvent.OnMarkerClicked -> {
-                    val intent = MapBottomSheetFragment.newInstance()
-                    intent.arguments = Bundle().apply {
-                        putLong(MapBottomSheetFragment.KEY_PROPERTY_ID, event.propertyId)
-                    }
-                    intent.show(childFragmentManager, MapBottomSheetFragment.TAG)
+                    MapBottomSheetFragment.newInstance().show(childFragmentManager, MapBottomSheetFragment.TAG)
                 }
             }
         }
