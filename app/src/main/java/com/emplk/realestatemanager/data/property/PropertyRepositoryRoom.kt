@@ -11,6 +11,7 @@ import com.emplk.realestatemanager.data.property.picture.PictureMapper
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.property.PropertyEntity
 import com.emplk.realestatemanager.domain.property.PropertyRepository
+import com.emplk.realestatemanager.domain.property.type_price_surface.PropertyTypePriceAndSurfaceEntity
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
@@ -25,6 +26,7 @@ class PropertyRepositoryRoom @Inject constructor(
     private val pictureDao: PictureDao,
     private val amenityDao: AmenityDao,
     private val propertyMapper: PropertyMapper,
+    private val propertyTypePriceAndSurfaceMapper: PropertyTypeSurfacePriceAndPictureDtoMapper,
     private val locationMapper: LocationMapper,
     private val pictureMapper: PictureMapper,
     private val amenityMapper: AmenityMapper,
@@ -98,9 +100,13 @@ class PropertyRepositoryRoom @Inject constructor(
         }
         .flowOn(coroutineDispatcherProvider.io)
 
+    override suspend fun getPropertyTypeSurfaceAndPriceById(propertyId: Long): PropertyTypePriceAndSurfaceEntity =
+        withContext(coroutineDispatcherProvider.io) {
+            propertyTypePriceAndSurfaceMapper.toEntity(propertyDao.getPropertyTypePriceAndSurfaceById(propertyId))
+        }
+
     override suspend fun update(propertyEntity: PropertyEntity): Int =
         withContext(coroutineDispatcherProvider.io) {
-            val propertyDtoEntity = propertyMapper.mapToDtoEntity(propertyEntity)
-            propertyDao.update(propertyDtoEntity)
+            propertyDao.update(propertyMapper.mapToDtoEntity(propertyEntity))
         }
 }

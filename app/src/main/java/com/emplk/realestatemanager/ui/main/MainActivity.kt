@@ -25,9 +25,10 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     companion object {
-        fun navigate(context: Context) {
+        fun navigate(context: Context) : Intent {
             val intent = Intent(context, MainActivity::class.java)
             context.startActivity(intent)
+            return intent
         }
 
         private const val PROPERTIES_FRAGMENT_TAG = "PROPERTIES_FRAGMENT_TAG"

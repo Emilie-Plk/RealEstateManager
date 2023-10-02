@@ -1,5 +1,5 @@
 package com.emplk.realestatemanager.ui.map
 
 sealed class MapEvent {
-    object OnMarkerClicked : MapEvent()
+    data class OnMarkerClicked(val propertyId: Long) : MapEvent()
 }
