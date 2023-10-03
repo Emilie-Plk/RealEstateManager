@@ -1,7 +1,5 @@
 package com.emplk.realestatemanager.data.property
 
-import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
-import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.type_price_surface.PropertyTypePriceAndSurfaceEntity
 import javax.inject.Inject
 
@@ -14,8 +12,8 @@ class PropertyTypeSurfacePriceAndPictureDtoMapper @Inject constructor() {
             surface = propertyTypeSurfacePriceAndPictureDto.surface,
             featuredPictureUri = propertyTypeSurfacePriceAndPictureDto.pictureUri,
             pictureUri = propertyTypeSurfacePriceAndPictureDto.pictureUri,
-        /*    amenities = propertyTypeSurfacePriceAndPictureDto.amenities.map {
-                AmenityEntity(type = AmenityType.valueOf(it)) },*/
+            /*    amenities = propertyTypeSurfacePriceAndPictureDto.amenities.map {
+                    AmenityEntity(type = AmenityType.valueOf(it)) },*/
             rooms = propertyTypeSurfacePriceAndPictureDto.rooms,
             bedrooms = propertyTypeSurfacePriceAndPictureDto.bedrooms,
             bathrooms = propertyTypeSurfacePriceAndPictureDto.bathrooms,
@@ -29,7 +27,7 @@ class PropertyTypeSurfacePriceAndPictureDtoMapper @Inject constructor() {
             price = propertyTypePriceAndSurfaceEntity.price,
             surface = propertyTypePriceAndSurfaceEntity.surface,
             pictureUri = propertyTypePriceAndSurfaceEntity.featuredPictureUri,
-       //     amenities = propertyTypePriceAndSurfaceEntity.amenities.map { it.type.name },
+            //     amenities = propertyTypePriceAndSurfaceEntity.amenities.map { it.type.name },
             rooms = propertyTypePriceAndSurfaceEntity.rooms,
             bedrooms = propertyTypePriceAndSurfaceEntity.bedrooms,
             bathrooms = propertyTypePriceAndSurfaceEntity.bathrooms,

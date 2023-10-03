@@ -29,11 +29,11 @@ class LocationMapper @Inject constructor() {
 
     fun mapToPropertyLatLongEntity(propertyLatLongDto: PropertyLatLongDto): PropertyLatLongEntity? =
         propertyLatLongDto.latitude?.let { latitude ->
-        propertyLatLongDto.longitude?.let { longitude ->
-            PropertyLatLongEntity(
-                propertyId = propertyLatLongDto.propertyId,
-                latLng = LatLng(latitude, longitude)
-            )
+            propertyLatLongDto.longitude?.let { longitude ->
+                PropertyLatLongEntity(
+                    propertyId = propertyLatLongDto.propertyId,
+                    latLng = LatLng(latitude, longitude)
+                )
+            }
         }
-    }
 }

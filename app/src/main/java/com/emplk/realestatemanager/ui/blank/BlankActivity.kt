@@ -58,6 +58,7 @@ class BlankActivity : AppCompatActivity() {
                         )
                     }
                 }
+
                 NavigationFragmentType.MAP_FRAGMENT.name -> {
                     supportFragmentManager.commitNow {
                         add(
@@ -66,6 +67,7 @@ class BlankActivity : AppCompatActivity() {
                         )
                     }
                 }
+
                 NavigationFragmentType.ADD_FRAGMENT.name -> {
                     supportFragmentManager.commitNow {
                         add(

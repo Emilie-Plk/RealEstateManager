@@ -1,7 +1,6 @@
 package com.emplk.realestatemanager.data.property.location
 
 import android.database.sqlite.SQLiteException
-import android.util.Log
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.property.location.LocationEntity
 import com.emplk.realestatemanager.domain.property.location.LocationRepository
