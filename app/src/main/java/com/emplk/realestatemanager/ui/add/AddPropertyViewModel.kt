@@ -1,6 +1,7 @@
 package com.emplk.realestatemanager.ui.add
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
@@ -136,94 +137,92 @@ class AddPropertyViewModel @Inject constructor(
         }
 
     val viewEventLiveData: LiveData<Event<AddPropertyEvent>> = liveData {
-        onCreateButtonClickedMutableSharedFlow.collect {
-            viewModelScope.launch(coroutineDispatcherProvider.io) {
-                isAddingPropertyInDatabaseMutableStateFlow.value = true
-                formMutableStateFlow.collectLatest { form ->
-                    if (form.propertyType != null &&
-                        form.address != null &&
-                        form.price != null &&
-                        form.surface != null &&
-                        form.description != null &&
-                        form.nbRooms > 0 &&
-                        form.nbBathrooms > 0 &&
-                        form.nbBedrooms > 0 &&
-                        form.agent != null &&
-                        form.amenities.isNotEmpty() &&
-                        form.picturesId.isNotEmpty()
-                    ) {
-                        val geocodingWrapper = getAddressLatLongUseCase.invoke(form.address)
-                        when (geocodingWrapper) {
-                            is GeocodingWrapper.Success -> geocodingWrapper.latLng
-                            is GeocodingWrapper.Error -> null
-                            is GeocodingWrapper.NoResult -> null
-                        }
+        onCreateButtonClickedMutableSharedFlow.collectLatest {
+            isAddingPropertyInDatabaseMutableStateFlow.tryEmit(true)
+            formMutableStateFlow.collect { form ->
+                if (form.propertyType != null &&
+                    form.address != null &&
+                    form.price != null &&
+                    form.surface != null &&
+                    form.description != null &&
+                    form.nbRooms > 0 &&
+                    form.nbBathrooms > 0 &&
+                    form.nbBedrooms > 0 &&
+                    form.agent != null &&
+                    form.amenities.isNotEmpty() &&
+                    form.picturesId.isNotEmpty()
+                ) {
+                    val geocodingWrapper = getAddressLatLongUseCase.invoke(form.address)
+                    when (geocodingWrapper) {
+                        is GeocodingWrapper.Success -> geocodingWrapper.latLng
+                        is GeocodingWrapper.Error -> Log.e("AddPropertyViewModel", "Error: ${geocodingWrapper.error}")
+                        is GeocodingWrapper.NoResult -> Log.e("AddPropertyViewModel", "No geocoding result")
+                    }
 
-                        val success = addPropertyUseCase.invoke(
-                            PropertyEntity(
-                                type = form.propertyType,
-                                price = form.price.toBigDecimal(),
-                                surface = form.surface.toInt(),
-                                description = form.description,
-                                rooms = form.nbRooms,
-                                bathrooms = form.nbBathrooms,
-                                location = LocationEntity(
-                                    address = form.address,
-                                    latLng = when (geocodingWrapper) {
-                                        is GeocodingWrapper.Success -> geocodingWrapper.latLng
-                                        is GeocodingWrapper.Error -> null
-                                        is GeocodingWrapper.NoResult -> null
-                                    },
-                                    miniatureMapPath = when (geocodingWrapper) {
-                                        is GeocodingWrapper.Success -> {
-                                            when (val mapWrapper =
-                                                getMapPictureUseCase.invoke(geocodingWrapper.latLng)) {
-                                                is MapWrapper.Success -> mapWrapper.mapPicture
-                                                is MapWrapper.Error -> null
-                                            }
-                                        }
-
-                                        is GeocodingWrapper.Error -> null
-                                        is GeocodingWrapper.NoResult -> null
-                                    },
-                                ),
-                                bedrooms = form.nbBedrooms,
-                                agentName = form.agent,
-                                amenities = form.amenities,
-                                pictures = getPicturePreviewsUseCase.invoke().map {
-                                    PictureEntity(
-                                        uri = it.uri,
-                                        description = it.description ?: "",
-                                        isFeatured = it.isFeatured,
-                                    )
+                    val success = addPropertyUseCase.invoke(
+                        PropertyEntity(
+                            type = form.propertyType,
+                            price = form.price.toBigDecimal(),
+                            surface = form.surface.toInt(),
+                            description = form.description,
+                            rooms = form.nbRooms,
+                            bathrooms = form.nbBathrooms,
+                            location = LocationEntity(
+                                address = form.address,
+                                latLng = when (geocodingWrapper) {
+                                    is GeocodingWrapper.Success -> geocodingWrapper.latLng
+                                    is GeocodingWrapper.Error -> null
+                                    is GeocodingWrapper.NoResult -> null
                                 },
-                                entryDate = LocalDateTime.now(clock),
-                                isAvailableForSale = false,
-                                isSold = false,
-                                saleDate = null,
+                                miniatureMapPath = when (geocodingWrapper) {
+                                    is GeocodingWrapper.Success -> {
+                                        when (val mapWrapper =
+                                            getMapPictureUseCase.invoke(geocodingWrapper.latLng)) {
+                                            is MapWrapper.Success -> mapWrapper.mapPicture
+                                            is MapWrapper.Error -> null
+                                        }
+                                    }
+
+                                    is GeocodingWrapper.Error -> null
+                                    is GeocodingWrapper.NoResult -> null
+                                },
                             ),
+                            bedrooms = form.nbBedrooms,
+                            agentName = form.agent,
+                            amenities = form.amenities,
+                            pictures = getPicturePreviewsUseCase.invoke().map {
+                                PictureEntity(
+                                    uri = it.uri,
+                                    description = it.description ?: "",
+                                    isFeatured = it.isFeatured,
+                                )
+                            },
+                            entryDate = LocalDateTime.now(clock),
+                            isAvailableForSale = false,
+                            isSold = false,
+                            saleDate = null,
+                        ),
+                    )
+                    isAddingPropertyInDatabaseMutableStateFlow.tryEmit(false)
+                    if (success) {
+                        deleteTemporaryPropertyFormUseCase.invoke()
+                        deleteAllPicturePreviewIdsUseCase.invoke()
+                        setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
+                        emit(
+                            Event(
+                                AddPropertyEvent.ShowToast(
+                                    NativeText.Resource(R.string.add_property_successfully_created_snackBar_message)
+                                )
+                            )
                         )
-                        isAddingPropertyInDatabaseMutableStateFlow.value = false
-                        if (success) {
-                            deleteTemporaryPropertyFormUseCase.invoke() // TODO: same issue as in PropertyDraftDialogViewModel
-                            deleteAllPicturePreviewIdsUseCase.invoke()
-                            setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
-                            emit(
-                                Event(
-                                    AddPropertyEvent.ShowToast(
-                                        NativeText.Resource(R.string.add_property_successfully_created_snackBar_message)
-                                    )
+                    } else {
+                        emit(
+                            Event(
+                                AddPropertyEvent.ShowToast(
+                                    NativeText.Resource(R.string.add_property_error_message)
                                 )
                             )
-                        } else {
-                            emit(
-                                Event(
-                                    AddPropertyEvent.ShowToast(
-                                        NativeText.Resource(R.string.add_property_error_message)
-                                    )
-                                )
-                            )
-                        }
+                        )
                     }
                 }
             }

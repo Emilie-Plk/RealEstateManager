@@ -1,6 +1,7 @@
 package com.emplk.realestatemanager.data.property_form
 
 import android.database.sqlite.SQLiteException
+import android.util.Log
 import com.emplk.realestatemanager.data.property_form.amenity.AmenityFormDao
 import com.emplk.realestatemanager.data.property_form.amenity.AmenityFormMapper
 import com.emplk.realestatemanager.data.property_form.picture_preview.PicturePreviewDao
@@ -153,20 +154,22 @@ class PropertyFormRepositoryRoom @Inject constructor(
 
 
     override suspend fun delete(propertyFormId: Long): Boolean = withContext(coroutineDispatcherProvider.io) {
-        val amenityDeletionDeferred = async {
-            amenityFormDao.deleteAll(propertyFormId)
-        }
+        try {
+            val amenityDeletionAsync = async { amenityFormDao.deleteAll(propertyFormId) }
 
-        val picturePreviewDeletionDeferred = async {
-            picturePreviewDao.deleteAll(propertyFormId)
-        }
+            val picturePreviewDeletionAsync = async { picturePreviewDao.deleteAll(propertyFormId) }
 
-        val propertyDeletionDeferred = async {
-            propertyFormDao.delete(propertyFormId)
+            val propertyDeletionAsync = async { propertyFormDao.delete(propertyFormId) }
+
+            (listOf(propertyDeletionAsync) + amenityDeletionAsync + picturePreviewDeletionAsync)
+                .all { it.await() != null }
+        } catch (e: SQLiteException) {
+            Log.d("COUCOU", "delete: ${e.message}")
+            e.printStackTrace()
+            false
         }
-        (listOf(propertyDeletionDeferred) + amenityDeletionDeferred + picturePreviewDeletionDeferred)
-            .all { it.await() != null }
     }
+
 
     override fun onSavePropertyFormEvent() {
         savePropertyDraftMutableSharedFlow.tryEmit(Unit)

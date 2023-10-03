@@ -1,11 +1,18 @@
 package com.emplk.realestatemanager.domain.property_form
 
+import android.util.Log
 import javax.inject.Inject
 
 class DeleteTemporaryPropertyFormUseCase @Inject constructor(
     private val propertyFormRepository: PropertyFormRepository,
     private val getCurrentPropertyFormIdUseCase: GetCurrentPropertyFormIdUseCase,
 ) {
-    suspend fun invoke(): Boolean =
-        propertyFormRepository.delete(getCurrentPropertyFormIdUseCase.invoke() ?: 0)
+    suspend fun invoke(): Boolean {
+        val currentPropertyFormId = getCurrentPropertyFormIdUseCase.invoke()
+        return if (currentPropertyFormId != null) {
+            propertyFormRepository.delete(currentPropertyFormId)
+        } else {
+            false
+        }
+    }
 }
