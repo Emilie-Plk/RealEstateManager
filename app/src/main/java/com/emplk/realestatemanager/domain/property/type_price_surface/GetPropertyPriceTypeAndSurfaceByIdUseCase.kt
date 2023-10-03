@@ -5,7 +5,7 @@ import javax.inject.Inject
 
 class GetPropertyPriceTypeAndSurfaceByIdUseCase @Inject constructor(
     private val propertyRepository: PropertyRepository,
-)   {
+) {
     suspend fun invoke(propertyId: Long): PropertyTypePriceAndSurfaceEntity {
         return propertyRepository.getPropertyTypeSurfaceAndPriceById(propertyId)
     }

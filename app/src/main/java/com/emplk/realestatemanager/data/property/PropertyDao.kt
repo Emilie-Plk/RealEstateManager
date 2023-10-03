@@ -26,7 +26,7 @@ interface PropertyDao {
         "SELECT properties.*, pictures.uri " +
                 "FROM properties " +
                 "INNER JOIN pictures ON properties.id = pictures.property_id " +
-               // "LEFT JOIN amenities ON properties.id = amenities.property_id " +
+                // "LEFT JOIN amenities ON properties.id = amenities.property_id " +
                 "WHERE properties.id = :propertyId LIMIT 1"
     )
     suspend fun getPropertyTypePriceAndSurfaceById(propertyId: Long): PropertyTypeSurfacePriceAndPictureDto
