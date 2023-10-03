@@ -2,6 +2,7 @@ package com.emplk.realestatemanager.ui.map.bottom_sheet
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import com.emplk.realestatemanager.R
@@ -31,13 +32,17 @@ class MapBottomSheetFragment : BottomSheetDialogFragment(R.layout.map_bottom_she
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val standardBottomSheetBehavior = BottomSheetBehavior.from(binding.root.parent as View)
-        standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        super.onViewCreated(view, savedInstanceState)
+        val standardBottomSheetBehavior = BottomSheetBehavior.from(binding.mapBottomSheetPropertyDetailLayout as View)
+        standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        standardBottomSheetBehavior.peekHeight = 20
+
+
 
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
             binding.mapBottomSheetPropertyTypeTv.text = viewState.type
             binding.mapBottomSheetPropertyPriceTv.text = viewState.price
-            binding.mapBottomSheetPropertySurfaceTv.text = viewState.surface
+
             viewState.featuredPicture
                 .load(binding.mapBottomSheetPropertyImageView)
                 .centerCrop()
@@ -46,10 +51,12 @@ class MapBottomSheetFragment : BottomSheetDialogFragment(R.layout.map_bottom_she
             binding.mapBottomSheetPropertyEditBtn.setOnClickListener {
                 viewState.onEditClick.invoke(viewState.propertyId)
             }
-
-            binding.mapBottomSheetPropertyDetailBtn.setOnClickListener {
-                viewState.onDetailClick.invoke(viewState.propertyId)
-            }
+            binding.mapBottomSheetPropertyDescriptionTv.text = viewState.description
+            binding.mapBottomSheetPropertyRoomsTv.text = viewState.rooms
+            binding.mapBottomSheetPropertyBedroomsTv.text = viewState.bedrooms
+            binding.mapBottomSheetPropertyBathroomsTv.text = viewState.bathrooms
+            binding.mapBottomSheetPropertyProgressBar.isVisible = viewState.isProgressBarVisible
+            binding.root.isVisible = !viewState.isProgressBarVisible
         }
 
         viewModel.viewEvent.observeEvent(viewLifecycleOwner) { viewEvent ->
@@ -74,3 +81,4 @@ class MapBottomSheetFragment : BottomSheetDialogFragment(R.layout.map_bottom_she
         }
     }
 }
+

@@ -1,16 +1,23 @@
 package com.emplk.realestatemanager.ui.map
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.DrawableRes
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.ui.map.bottom_sheet.MapBottomSheetFragment
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -33,7 +40,6 @@ class MapsFragment : SupportMapFragment(), OnMapReadyCallback {
 
     @SuppressLint("PotentialBehaviorOverride")
     override fun onMapReady(googleMap: GoogleMap) {
-        googleMap.mapType = GoogleMap.MAP_TYPE_HYBRID
         googleMap.uiSettings.isZoomControlsEnabled = true
         googleMap.uiSettings.isCompassEnabled = true
 
@@ -48,18 +54,22 @@ class MapsFragment : SupportMapFragment(), OnMapReadyCallback {
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
             // Clear existing markers
             googleMap.clear()
+            val customMarkerIcon = vectorToBitmap(requireContext(), R.drawable.baseline_house_pin_circle_24)
 
-            // Add new markers and set the click listener for each
             viewState.forEach { markerViewState ->
                 val marker = MarkerOptions()
                     .position(markerViewState.latLng)
                     .title(markerViewState.propertyId.toString())
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                    .icon(customMarkerIcon)
 
                 val googleMarker = googleMap.addMarker(marker)
                 googleMarker?.tag = markerViewState.propertyId
                 googleMap.setOnMarkerClickListener {
-                    markerViewState.onMarkerClicked.invoke(markerViewState.propertyId)
+                    markerViewState.onMarkerClicked.invoke(it.tag as Long)
+                    googleMap.moveCamera(
+                        CameraUpdateFactory.newLatLng(it.position)
+                    )
+                    googleMap.animateCamera(CameraUpdateFactory.zoomTo(15f))
                     true
                 }
             }
@@ -73,5 +83,20 @@ class MapsFragment : SupportMapFragment(), OnMapReadyCallback {
                 }
             }
         }
+    }
+
+    private fun vectorToBitmap(context: Context, @DrawableRes vectorResourceId: Int): BitmapDescriptor {
+        val vectorDrawable = ContextCompat.getDrawable(context, vectorResourceId)
+        vectorDrawable?.setBounds(0, 0, vectorDrawable.intrinsicWidth, vectorDrawable.intrinsicHeight)
+
+        val bitmap = Bitmap.createBitmap(
+            vectorDrawable?.intrinsicWidth ?: 0,
+            vectorDrawable?.intrinsicHeight ?: 0,
+            Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(bitmap)
+        vectorDrawable?.draw(canvas)
+
+        return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
 }

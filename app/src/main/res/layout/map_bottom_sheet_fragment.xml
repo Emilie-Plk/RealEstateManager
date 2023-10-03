@@ -5,85 +5,270 @@
     android:id="@+id/mapBottomSheet_property_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+    android:fitsSystemWindows="true">
 
-
-    <ImageView
-        android:id="@+id/mapBottomSheet_property_imageView"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mapBottomSheet_property_detail_layout"
+        style="@style/Widget.Material3.BottomSheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="top|center_horizontal"
-        android:contentDescription="Picture of %s1 with %s2 rooms, %s3 bathrooms, and %s4 bedrooms"
-        android:fitsSystemWindows="true"
-        android:scaleType="centerCrop"
-        android:src="@drawable/tools_villa"
-        app:layout_anchorGravity="top|center_horizontal" />
-
-    <TextView
-        android:id="@+id/mapBottomSheet_property_type_tv"
-        style="@style/Theme.RealEstateManager.TextOverlayTransparentGray"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:background="@color/transparent_silver"
-        android:fitsSystemWindows="true"
-        app:layout_anchor="@id/mapBottomSheet_property_imageView"
-        app:layout_anchorGravity="bottom|start"
-        tools:text="Villa" />
-
-    <TextView
-        android:id="@+id/mapBottomSheet_property_surface_tv"
-        style="@style/Theme.RealEstateManager.TextOverlayTransparentGray"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:fitsSystemWindows="true"
-        tools:text="200m²" />
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
 
-    <TextView
-        android:id="@+id/mapBottomSheet_property_price_tv"
-        style="@style/Theme.RealEstateManager.TextOverlayTransparentGray"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="24dp"
-        android:textColor="@color/secondary_light"
-        app:layout_anchor="@id/mapBottomSheet_property_imageView"
-        app:layout_anchorGravity="top|end"
-        tools:text="$200,000" />
+
+        <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+            android:id="@+id/drag_handle"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/mapBottomSheet_property_imageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:contentDescription="Picture of %s1 with %s2 rooms, %s3 bathrooms, and %s4 bedrooms"
+            android:maxHeight="220dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toTopOf="@id/mapBottomSheet_property_description_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/drag_handle"
+            tools:src="@drawable/tools_villa" />
+
+        <TextView
+            android:id="@+id/mapBottomSheet_property_type_tv"
+            style="@style/Theme.RealEstateManager.TextOverlayTransparentGray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/mapBottomSheet_property_imageView"
+            tools:text="Villa" />
+
+        <TextView
+            android:id="@+id/mapBottomSheet_property_price_tv"
+            style="@style/Theme.RealEstateManager.TextOverlayTransparentGray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:textColor="@color/secondary_light"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/mapBottomSheet_property_imageView"
+            tools:text="$200,000" />
 
 
-    <Button
-        android:id="@+id/mapBottomSheet_property_detail_btn"
-        style="@style/Widget.Material3.Button.TextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
-        android:layout_marginStart="24dp"
-        android:text="Go to detail page"
-        android:textAllCaps="true"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_anchor="@id/mapBottomSheet_property_imageView"
-        app:layout_anchorGravity="bottom|start" />
+        <TextView
+            android:id="@+id/mapBottomSheet_property_surface_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:drawableStartCompat="@drawable/round_square_foot_24"
+            app:layout_constraintEnd_toStartOf="@id/mapBottomSheet_property_rooms_tv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/mapBottomSheet_property_description_tv"
+            tools:text="260m²" />
 
-    <Button
-        android:id="@+id/mapBottomSheet_property_edit_btn"
-        style="@style/Widget.Material3.Button.TextButton.Icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        app:layout_anchorGravity="bottom|end"
-        android:layout_marginStart="24dp"
-        app:layout_anchor="@id/mapBottomSheet_property_imageView"
-        android:text="edit"
-        android:textAllCaps="true"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:icon="@drawable/baseline_edit_24"
-        app:iconTint="@color/secondary"
-       />
+        <TextView
+            android:id="@+id/mapBottomSheet_property_description_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="12dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="8dp"
+            tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi."
+            app:layout_constraintBottom_toTopOf="@id/mapBottomSheet_property_rooms_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mapBottomSheet_property_imageView" />
+
+        <TextView
+            android:id="@+id/mapBottomSheet_property_rooms_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:drawableStartCompat="@drawable/round_home_24"
+            app:layout_constraintEnd_toStartOf="@id/mapBottomSheet_property_bathrooms_tv"
+            app:layout_constraintStart_toEndOf="@+id/mapBottomSheet_property_surface_tv"
+            app:layout_constraintTop_toBottomOf="@id/mapBottomSheet_property_description_tv"
+            tools:layout_editor_absoluteY="297dp"
+            tools:text="5 RM" />
+
+        <TextView
+            android:id="@+id/mapBottomSheet_property_bathrooms_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:drawableStartCompat="@drawable/round_bathtub_24"
+            app:layout_constraintBottom_toBottomOf="@id/mapBottomSheet_property_rooms_tv"
+            app:layout_constraintEnd_toStartOf="@id/mapBottomSheet_property_bedrooms_tv"
+            app:layout_constraintStart_toEndOf="@id/mapBottomSheet_property_rooms_tv"
+            tools:text="3 BA" />
+
+        <TextView
+            android:id="@+id/mapBottomSheet_property_bedrooms_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:drawableStartCompat="@drawable/round_king_bed_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/mapBottomSheet_property_bathrooms_tv"
+            app:layout_constraintTop_toBottomOf="@+id/mapBottomSheet_property_description_tv"
+            tools:text="3 BR" />
+
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/detail_amenities_flexbox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            android:layout_marginTop="8dp"
+            android:alpha="1"
+            app:alignItems="center"
+            app:flexWrap="wrap"
+            app:justifyContent="space_evenly"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/mapBottomSheet_property_rooms_tv">
+
+            <TextView
+                android:id="@+id/detail_amenities_school_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:drawablePadding="8dp"
+                android:text="@string/detail_amenities_school_tv"
+                app:drawableStartCompat="@drawable/baseline_school_24"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/detail_amenities_park_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:drawablePadding="8dp"
+                android:text="@string/detail_amenities_park_tv"
+                app:drawableStartCompat="@drawable/baseline_park_24"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/detail_amenities_restaurant_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:drawablePadding="8dp"
+                android:text="@string/detail_amenities_restaurant_tv"
+                app:drawableStartCompat="@drawable/baseline_restaurant_24"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/detail_amenities_shopping_mall_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:drawablePadding="8dp"
+                android:text="@string/detail_amenities_shopping_tv"
+                app:drawableStartCompat="@drawable/baseline_shopping_cart_24"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/detail_amenities_public_transportation_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:drawablePadding="8dp"
+                android:text="@string/detail_amenities_transportation_tv"
+                app:drawableStartCompat="@drawable/baseline_directions_bus_24"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/detail_amenities_hospital_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:drawablePadding="8dp"
+                android:text="@string/detail_amenities_hospital_tv"
+                app:drawableStartCompat="@drawable/baseline_local_hospital_24"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/detail_amenities_gym_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:drawablePadding="8dp"
+                android:text="@string/detail_amenities_gym_tv"
+                app:drawableStartCompat="@drawable/baseline_dumbbell_24"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/detail_amenities_library_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:drawablePadding="8dp"
+                android:text="@string/detail_amenities_library_tv"
+                app:drawableStartCompat="@drawable/baseline_local_library_24"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/detail_amenities_concierge_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:drawablePadding="8dp"
+                android:text="@string/detail_amenities_concierge_tv"
+                app:drawableStartCompat="@drawable/sharp_doorbell_24"
+                tools:visibility="visible" />
+        </com.google.android.flexbox.FlexboxLayout>
+
+        <Button
+            android:id="@+id/mapBottomSheet_property_detail_btn"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:text="More detail"
+            android:textAllCaps="true"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_anchor="@id/mapBottomSheet_property_imageView"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/detail_amenities_flexbox" />
+
+        <Button
+            android:id="@+id/mapBottomSheet_property_edit_btn"
+            style="@style/Widget.Material3.Button.TextButton.Icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="edit"
+            android:textAllCaps="true"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:icon="@drawable/baseline_edit_24"
+            app:iconTint="@color/secondary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/detail_amenities_flexbox" />
+
+        <ProgressBar
+            android:id="@+id/mapBottomSheet_property_progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
