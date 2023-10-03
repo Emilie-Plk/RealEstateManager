@@ -20,6 +20,7 @@ class AmenityMapper @Inject constructor() {
 
     private fun mapToDomainEntity(amenityDto: AmenityDto) =
         AmenityEntity(
+            id = AmenityType.valueOf(amenityDto.name).id,
             type = AmenityType.valueOf(amenityDto.name),
         )
 }

@@ -271,119 +271,24 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/horizontal_barrier" />
 
-        <com.google.android.flexbox.FlexboxLayout
-            android:id="@+id/detail_amenities_flexbox"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/detail_amenities_recyclerView_flexbox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="12dp"
             android:layout_marginTop="8dp"
-            android:alpha="1"
-            app:alignItems="center"
+            android:orientation="horizontal"
+            app:flexDirection="row"
             app:flexWrap="wrap"
-            app:justifyContent="space_evenly"
+            app:layout_constraintBottom_toTopOf="@id/detail_map_iv"
+            app:justifyContent="space_around"
+            app:alignItems="center"
+            app:layoutManager="com.google.android.flexbox.FlexboxLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/detail_amenities_tv">
-
-            <TextView
-                android:id="@+id/detail_amenities_school_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:drawablePadding="8dp"
-                android:text="@string/detail_amenities_school_tv"
-                app:drawableStartCompat="@drawable/baseline_school_24"
-                tools:visibility="visible" />
-
-            <TextView
-                android:id="@+id/detail_amenities_park_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:drawablePadding="8dp"
-                android:text="@string/detail_amenities_park_tv"
-                app:drawableStartCompat="@drawable/baseline_park_24"
-                tools:visibility="visible" />
-
-            <TextView
-                android:id="@+id/detail_amenities_restaurant_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:drawablePadding="8dp"
-                android:text="@string/detail_amenities_restaurant_tv"
-                app:drawableStartCompat="@drawable/baseline_restaurant_24"
-                tools:visibility="visible" />
-
-            <TextView
-                android:id="@+id/detail_amenities_shopping_mall_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:drawablePadding="8dp"
-                android:text="@string/detail_amenities_shopping_tv"
-                app:drawableStartCompat="@drawable/baseline_shopping_cart_24"
-                tools:visibility="visible" />
-
-            <TextView
-                android:id="@+id/detail_amenities_public_transportation_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:drawablePadding="8dp"
-                android:text="@string/detail_amenities_transportation_tv"
-                app:drawableStartCompat="@drawable/baseline_directions_bus_24"
-                tools:visibility="visible" />
-
-            <TextView
-                android:id="@+id/detail_amenities_hospital_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:drawablePadding="8dp"
-                android:text="@string/detail_amenities_hospital_tv"
-                app:drawableStartCompat="@drawable/baseline_local_hospital_24"
-                tools:visibility="visible" />
-
-            <TextView
-                android:id="@+id/detail_amenities_gym_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:drawablePadding="8dp"
-                android:text="@string/detail_amenities_gym_tv"
-                app:drawableStartCompat="@drawable/baseline_dumbbell_24"
-                tools:visibility="visible" />
-
-            <TextView
-                android:id="@+id/detail_amenities_library_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:drawablePadding="8dp"
-                android:text="@string/detail_amenities_library_tv"
-                app:drawableStartCompat="@drawable/baseline_local_library_24"
-                tools:visibility="visible" />
-
-            <TextView
-                android:id="@+id/detail_amenities_concierge_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:drawablePadding="8dp"
-                android:text="@string/detail_amenities_concierge_tv"
-                app:drawableStartCompat="@drawable/sharp_doorbell_24"
-                tools:visibility="visible" />
-        </com.google.android.flexbox.FlexboxLayout>
+            app:layout_constraintTop_toBottomOf="@id/detail_amenities_tv"
+            tools:itemCount="7"
+            tools:listitem="@layout/amenity_item" />
 
         <ImageView
             android:id="@+id/detail_map_iv"
@@ -396,7 +301,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/detail_amenities_flexbox"
+            app:layout_constraintTop_toBottomOf="@id/detail_amenities_recyclerView_flexbox"
             tools:src="@drawable/detail_dummy_map" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

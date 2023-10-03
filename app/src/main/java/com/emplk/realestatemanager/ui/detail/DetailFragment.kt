@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.DetailFragmentBinding
+import com.emplk.realestatemanager.ui.add.amenity.AmenityListAdapter
 import com.emplk.realestatemanager.ui.detail.picture_banner.PictureBannerListAdapter
 import com.emplk.realestatemanager.ui.utils.NativePhoto.Companion.load
 import com.emplk.realestatemanager.ui.utils.viewBinding
@@ -31,6 +32,12 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val pictureBannerAdapter = PictureBannerListAdapter()
+        binding.detailPhotoCarouselRv.adapter = pictureBannerAdapter
+
+        val amenityAdapter = AmenityListAdapter()
+        binding.detailAmenitiesRecyclerViewFlexbox.adapter = amenityAdapter
+
         viewModel.viewState.observe(viewLifecycleOwner) { detailViewState ->
             when (detailViewState) {
                 is DetailViewState.LoadingState -> {
@@ -39,16 +46,16 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
                 }
 
                 is DetailViewState.PropertyDetail -> {
-                    val adapter = PictureBannerListAdapter()
-                    binding.detailPhotoCarouselRv.adapter = adapter
                     binding.detailPhotoCarouselRv.apply {
                         set3DItem(true)
                         setInfinite(true)
                         setAlpha(true)
                     }
-                    adapter.submitList(detailViewState.pictures)
+                    pictureBannerAdapter.submitList(detailViewState.pictures)
                     binding.detailProgressBar.isVisible = false
                     binding.root.isVisible = true
+
+                    amenityAdapter.submitList(detailViewState.amenities)
 
                     binding.detailEditFab.setOnClickListener {
                         viewModel.onEditClicked()
@@ -74,20 +81,6 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
                     detailViewState.mapMiniature.load(binding.detailMapIv)
                         .error(R.drawable.baseline_villa_24)
                         .into(binding.detailMapIv)
-
-                    mapOf(
-                        binding.detailAmenitiesConciergeTv to detailViewState.amenityConcierge,
-                        binding.detailAmenitiesHospitalTv to detailViewState.amenityHospital,
-                        binding.detailAmenitiesGymTv to detailViewState.amenityGym,
-                        binding.detailAmenitiesLibraryTv to detailViewState.amenityLibrary,
-                        binding.detailAmenitiesParkTv to detailViewState.amenityPark,
-                        binding.detailAmenitiesPublicTransportationTv to detailViewState.amenityPublicTransportation,
-                        binding.detailAmenitiesRestaurantTv to detailViewState.amenityRestaurant,
-                        binding.detailAmenitiesSchoolTv to detailViewState.amenitySchool,
-                        binding.detailAmenitiesShoppingMallTv to detailViewState.amenityShoppingMall,
-                    ).forEach { (tv, isAvailable) ->
-                        tv.visibility = if (isAvailable) View.VISIBLE else View.GONE
-                    }
                 }
             }
         }
