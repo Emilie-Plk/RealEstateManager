@@ -45,7 +45,7 @@ import com.emplk.realestatemanager.domain.property_form.picture_preview.id.Delet
 import com.emplk.realestatemanager.domain.property_type.GetPropertyTypeFlowUseCase
 import com.emplk.realestatemanager.ui.add.address_predictions.PredictionViewState
 import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem
-import com.emplk.realestatemanager.ui.add.amenity.AmenityViewStateItem
+import com.emplk.realestatemanager.ui.add.amenity.AmenityViewState
 import com.emplk.realestatemanager.ui.add.picture_preview.PicturePreviewStateItem
 import com.emplk.realestatemanager.ui.add.type.AddPropertyTypeViewStateItem
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
@@ -479,9 +479,9 @@ class AddPropertyViewModel @Inject constructor(
     }
 
 
-    private fun mapAmenityTypesToViewStates(amenityTypes: List<AmenityType>): List<AmenityViewStateItem> {
+    private fun mapAmenityTypesToViewStates(amenityTypes: List<AmenityType>): List<AmenityViewState> {
         val viewStates = amenityTypes.map { amenityType ->
-            AmenityViewStateItem(
+            AmenityViewState.AmenityCheckbox(
                 id = amenityType.id,
                 name = amenityType.name,
                 isChecked = formMutableStateFlow.value.amenities.any { amenity -> amenity.type.name == amenityType.name },

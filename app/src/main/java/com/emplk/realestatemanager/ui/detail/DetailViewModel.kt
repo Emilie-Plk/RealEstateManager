@@ -13,7 +13,7 @@ import com.emplk.realestatemanager.domain.locale_formatting.SurfaceUnitType
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.GetPropertyByItsIdUseCase
-import com.emplk.realestatemanager.domain.property.amenity.AmenityType
+import com.emplk.realestatemanager.ui.add.amenity.AmenityViewState
 import com.emplk.realestatemanager.ui.detail.picture_banner.PictureBannerViewState
 import com.emplk.realestatemanager.ui.utils.NativePhoto
 import com.emplk.realestatemanager.ui.utils.NativeText
@@ -100,32 +100,11 @@ class DetailViewModel @Inject constructor(
                             R.string.detail_location_tv,
                             propertyEntity.location.address
                         ),
-                        amenitySchool = propertyEntity.amenities.any {
-                            it.type == AmenityType.SCHOOL
-                        },
-                        amenityPark = propertyEntity.amenities.any {
-                            it.type == AmenityType.PARK
-                        },
-                        amenityShoppingMall = propertyEntity.amenities.any {
-                            it.type == AmenityType.SHOPPING_MALL
-                        },
-                        amenityRestaurant = propertyEntity.amenities.any {
-                            it.type == AmenityType.RESTAURANT
-                        },
-                        amenityConcierge = propertyEntity.amenities.any {
-                            it.type == AmenityType.CONCIERGE
-                        },
-                        amenityPublicTransportation = propertyEntity.amenities.any {
-                            it.type == AmenityType.PUBLIC_TRANSPORTATION
-                        },
-                        amenityHospital = propertyEntity.amenities.any {
-                            it.type == AmenityType.HOSPITAL
-                        },
-                        amenityLibrary = propertyEntity.amenities.any {
-                            it.type == AmenityType.LIBRARY
-                        },
-                        amenityGym = propertyEntity.amenities.any {
-                            it.type == AmenityType.GYM
+                        amenities = propertyEntity.amenities.map {
+                            AmenityViewState.AmenityItem(
+                                stringRes = it.type.stringRes,
+                                iconDrawable = it.type.iconDrawable,
+                            )
                         },
                         entryDate = NativeText.Argument(
                             R.string.detail_entry_date_tv,

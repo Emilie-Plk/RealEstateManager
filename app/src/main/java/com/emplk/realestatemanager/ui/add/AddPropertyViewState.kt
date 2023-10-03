@@ -3,7 +3,7 @@ package com.emplk.realestatemanager.ui.add
 import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
 import com.emplk.realestatemanager.ui.add.address_predictions.PredictionViewState
 import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem
-import com.emplk.realestatemanager.ui.add.amenity.AmenityViewStateItem
+import com.emplk.realestatemanager.ui.add.amenity.AmenityViewState
 import com.emplk.realestatemanager.ui.add.picture_preview.PicturePreviewStateItem
 import com.emplk.realestatemanager.ui.add.type.AddPropertyTypeViewStateItem
 import com.emplk.realestatemanager.ui.utils.NativeText
@@ -20,7 +20,7 @@ data class AddPropertyViewState(
     val nbBathrooms: Int,
     val nbBedrooms: Int,
     val selectedAmenities: List<AmenityEntity>,
-    val amenities: List<AmenityViewStateItem>,
+    val amenities: List<AmenityViewState>,
     val pictures: List<PicturePreviewStateItem>,
     val agents: List<AddPropertyAgentViewStateItem>,
     val selectedAgent: String?,
