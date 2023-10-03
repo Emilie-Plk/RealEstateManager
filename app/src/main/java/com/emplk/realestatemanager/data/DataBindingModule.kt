@@ -2,6 +2,7 @@ package com.emplk.realestatemanager.data
 
 import com.emplk.realestatemanager.data.agent.RealEstateAgentRepositoryImpl
 import com.emplk.realestatemanager.data.autocomplete.PredictionRepositoryAutocomplete
+import com.emplk.realestatemanager.data.connectivity.InternetConnectivityRepositoryBroadcastReceiver
 import com.emplk.realestatemanager.data.currency.LocaleFormattingRepositoryImpl
 import com.emplk.realestatemanager.data.current_property.CurrentPropertyRepositoryImpl
 import com.emplk.realestatemanager.data.geocoding.GeocodingRepositoryGoogle
@@ -20,6 +21,7 @@ import com.emplk.realestatemanager.data.property_type.PropertyTypeRepositoryImpl
 import com.emplk.realestatemanager.data.screen_width.ScreenWidthTypeRepositoryImpl
 import com.emplk.realestatemanager.domain.agent.RealEstateAgentRepository
 import com.emplk.realestatemanager.domain.autocomplete.PredictionRepository
+import com.emplk.realestatemanager.domain.connectivity.InternetConnectivityRepository
 import com.emplk.realestatemanager.domain.current_property.CurrentPropertyRepository
 import com.emplk.realestatemanager.domain.geocoding.GeocodingRepository
 import com.emplk.realestatemanager.domain.locale_formatting.LocaleFormattingRepository
@@ -117,4 +119,8 @@ abstract class DataBindingModule {
     @Singleton
     @Binds
     abstract fun bindMapPictureRepository(implementation: MapPictureRepositoryStaticMap): MapPictureRepository
+
+@Singleton
+@Binds
+abstract fun bindInternetConnectivityRepositoryRepository(implementation: InternetConnectivityRepositoryBroadcastReceiver): InternetConnectivityRepository
 }
