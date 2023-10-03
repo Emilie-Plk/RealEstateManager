@@ -2,9 +2,14 @@ package com.emplk.realestatemanager
 
 import android.app.Activity
 import android.app.Application
+import android.content.Intent
+import android.content.IntentFilter
+import android.location.LocationManager
+import android.net.ConnectivityManager
 import android.os.Bundle
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
+import com.emplk.realestatemanager.data.connectivity.InternetConnectivityRepositoryBroadcastReceiver
 import com.emplk.realestatemanager.domain.screen_width.SetScreenWidthTypeUseCase
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
@@ -18,14 +23,26 @@ class MainApplication : Application(), Configuration.Provider, Application.Activ
     @Inject
     lateinit var setScreenWidthTypeFlowUseCase: SetScreenWidthTypeUseCase
 
+    @Inject
+    lateinit var internetConnectivityRepositoryBroadcastReceiver: InternetConnectivityRepositoryBroadcastReceiver
 
     override fun getWorkManagerConfiguration() = Configuration.Builder()
         .setWorkerFactory(workerFactory)
         .build()
 
+
     override fun onCreate() {
         super.onCreate()
         registerActivityLifecycleCallbacks(this)
+        registerConnectivityBroadcastReceiver()
+    }
+
+    private fun registerConnectivityBroadcastReceiver() {
+        val intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(
+            internetConnectivityRepositoryBroadcastReceiver,
+            intentFilter
+        )
     }
 
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
