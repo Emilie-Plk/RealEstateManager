@@ -12,6 +12,7 @@ import com.emplk.realestatemanager.ui.utils.Event
 import com.emplk.realestatemanager.ui.utils.NativePhoto
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import javax.inject.Inject
 
@@ -24,8 +25,12 @@ class MapBottomSheetViewModel @Inject constructor(
     private val onActionClickedMutableSharedFlow: MutableSharedFlow<Pair<String, Long>> =
         MutableSharedFlow(extraBufferCapacity = 1)
 
+    private val isProgressBarVisibleMutableLiveData: MutableStateFlow<Boolean> = MutableStateFlow(false)
+
     val viewState: LiveData<PropertyMapBottomSheetViewState> = liveData {
+        if (latestValue == null) isProgressBarVisibleMutableLiveData.tryEmit(true)
         getCurrentPropertyIdFlowUseCase.invoke().filterNotNull().collect { propertyId ->
+            isProgressBarVisibleMutableLiveData.tryEmit(false)
             val currentProperty =
                 getPropertyPriceTypeAndSurfaceByIdUseCase.invoke(propertyId)
             emit(
@@ -41,6 +46,11 @@ class MapBottomSheetViewModel @Inject constructor(
                     onEditClick = EquatableCallbackWithParam {
                         onActionClickedMutableSharedFlow.tryEmit(Pair(EDIT_PROPERTY_TAG, propertyId))
                     },
+                    description = currentProperty.description,
+                    rooms = currentProperty.rooms.toString(),
+                    bedrooms = currentProperty.bedrooms.toString(),
+                    bathrooms = currentProperty.bathrooms.toString(),
+                    isProgressBarVisible = isProgressBarVisibleMutableLiveData.value
                 )
             )
         }

@@ -8,7 +8,13 @@ data class PropertyMapBottomSheetViewState(
     val type: String,
     val price: String,
     val surface: String,
+    // val amenities: List<String>,
+    val rooms: String,
+    val bedrooms: String,
+    val bathrooms: String,
+    val description: String,
     val featuredPicture: NativePhoto,
     val onDetailClick: EquatableCallbackWithParam<Long>,
     val onEditClick: EquatableCallbackWithParam<Long>,
+    val isProgressBarVisible: Boolean,
 )
