@@ -69,7 +69,7 @@ class PropertyPicturePreviewListAdapter :
                     .into(binding.previewPictureIv)
 
                 binding.previewPictureStarFeaturedIv.setOnClickListener {
-                    item.onFeaturedEvent.invoke(!item.isFeatured) // TODO: noooot sure at all lol
+                    item.onFeaturedEvent.invoke(!item.isFeatured)
                 }
 
                 binding.previewPictureStarFeaturedIv.setImageResource(
@@ -146,10 +146,7 @@ object PropertyPicturePreviewDiffCallback : DiffUtil.ItemCallback<PicturePreview
         when {
             oldItem is PicturePreviewStateItem.AddPropertyPicturePreview &&
                     newItem is PicturePreviewStateItem.AddPropertyPicturePreview ->
-                oldItem.id == newItem.id &&
-                        oldItem.uri == newItem.uri &&
-                        oldItem.isFeatured == newItem.isFeatured &&
-                        oldItem.description == newItem.description
+                oldItem.id == newItem.id
 
             oldItem is PicturePreviewStateItem.EditPropertyPicturePreview &&
                     newItem is PicturePreviewStateItem.EditPropertyPicturePreview ->
