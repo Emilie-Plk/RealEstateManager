@@ -32,7 +32,6 @@ class DetailViewModel @Inject constructor(
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
     private val getCurrentPropertyIdFlowUseCase: GetCurrentPropertyIdFlowUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
-    coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : ViewModel() {
 
     val viewState: LiveData<DetailViewState> = liveData {
@@ -47,16 +46,16 @@ class DetailViewModel @Inject constructor(
                 val currencyType = getCurrencyTypeUseCase.invoke()
                 val surfaceUnitType = getSurfaceUnitUseCase.invoke()
 
-                emit(
-                    DetailViewState.PropertyDetail(
+                emit(DetailViewState.PropertyDetail(
                         id = propertyEntity.id,
                         propertyType = propertyEntity.type,
                         pictures = propertyEntity.pictures.map { picture ->
                             PictureBannerViewState(
                                 pictureUri = NativePhoto.Uri(picture.uri),
-                                description = picture.description
+                                description = picture.description,
+                                isFeatured = picture.isFeatured
                             )
-                        },
+                        }.sortedByDescending { it.isFeatured },
                         mapMiniature = if (propertyEntity.location.miniatureMapPath != null)
                             NativePhoto.Uri(
                                 propertyEntity.location.miniatureMapPath,
