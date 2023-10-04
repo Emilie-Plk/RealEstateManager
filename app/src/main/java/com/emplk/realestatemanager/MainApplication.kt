@@ -2,12 +2,11 @@ package com.emplk.realestatemanager
 
 import android.app.Activity
 import android.app.Application
-import android.content.Intent
 import android.content.IntentFilter
-import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.os.Bundle
 import androidx.hilt.work.HiltWorkerFactory
+import androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance
 import androidx.work.Configuration
 import com.emplk.realestatemanager.data.connectivity.InternetConnectivityRepositoryBroadcastReceiver
 import com.emplk.realestatemanager.domain.screen_width.SetScreenWidthTypeUseCase
@@ -23,6 +22,10 @@ class MainApplication : Application(), Configuration.Provider, Application.Activ
     @Inject
     lateinit var setScreenWidthTypeFlowUseCase: SetScreenWidthTypeUseCase
 
+    private var activityCount = 0
+
+    private var isInternetConnectivityReceiverRegistered = false
+
     @Inject
     lateinit var internetConnectivityRepositoryBroadcastReceiver: InternetConnectivityRepositoryBroadcastReceiver
 
@@ -37,18 +40,21 @@ class MainApplication : Application(), Configuration.Provider, Application.Activ
         registerConnectivityBroadcastReceiver()
     }
 
+    @Suppress("DEPRECATION")
     private fun registerConnectivityBroadcastReceiver() {
         val intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
         registerReceiver(
             internetConnectivityRepositoryBroadcastReceiver,
             intentFilter
         )
+        isInternetConnectivityReceiverRegistered = true
     }
 
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
     }
 
     override fun onActivityStarted(activity: Activity) {
+        activityCount++
     }
 
     override fun onActivityResumed(activity: Activity) {
@@ -59,7 +65,13 @@ class MainApplication : Application(), Configuration.Provider, Application.Activ
     }
 
     override fun onActivityStopped(activity: Activity) {
+        activityCount--
+        if (activityCount == 0 && isInternetConnectivityReceiverRegistered) {
+           unregisterReceiver(internetConnectivityRepositoryBroadcastReceiver)
+            isInternetConnectivityReceiverRegistered = false
+        }
     }
+
 
     override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
     }
