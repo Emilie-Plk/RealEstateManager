@@ -25,6 +25,7 @@ import com.emplk.realestatemanager.ui.add.picture_preview.PropertyPicturePreview
 import com.emplk.realestatemanager.ui.add.type.AddPropertyTypeSpinnerAdapter
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.viewBinding
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 
@@ -80,13 +81,11 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
 
         viewModel.viewEventLiveData.observeEvent(viewLifecycleOwner) { event ->
             when (event) {
-                is AddPropertyEvent.ShowToast -> {
-                    Toast.makeText(
-                        requireContext(),
-                        event.text.toCharSequence(requireContext()),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+                is AddPropertyEvent.Toast -> Toast.makeText(
+                    requireContext(),
+                    event.text.toCharSequence(requireContext()),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 

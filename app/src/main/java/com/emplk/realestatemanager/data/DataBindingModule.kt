@@ -120,7 +120,7 @@ abstract class DataBindingModule {
     @Binds
     abstract fun bindMapPictureRepository(implementation: MapPictureRepositoryStaticMap): MapPictureRepository
 
-@Singleton
-@Binds
-abstract fun bindInternetConnectivityRepositoryRepository(implementation: InternetConnectivityRepositoryBroadcastReceiver): InternetConnectivityRepository
+    @Singleton
+    @Binds
+    abstract fun bindInternetConnectivityRepositoryRepository(implementation: InternetConnectivityRepositoryBroadcastReceiver): InternetConnectivityRepository
 }

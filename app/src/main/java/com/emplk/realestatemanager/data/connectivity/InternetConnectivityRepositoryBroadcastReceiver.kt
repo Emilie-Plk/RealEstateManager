@@ -3,34 +3,52 @@ package com.emplk.realestatemanager.data.connectivity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.location.LocationManager
 import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.util.Log
+import androidx.annotation.CallSuper
 import com.emplk.realestatemanager.domain.connectivity.InternetConnectivityRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
-class InternetConnectivityRepositoryBroadcastReceiver @Inject constructor(
-    @ApplicationContext private val context: Context,
-) : InternetConnectivityRepository,
-    BroadcastReceiver() {
-    private val isInternetEnabledMutableStateFlow: MutableStateFlow<Boolean?> = MutableStateFlow(null)
 
-    override fun isInternetEnabledAsFlow(): Flow<Boolean?> = isInternetEnabledMutableStateFlow.asStateFlow()
+class InternetConnectivityRepositoryBroadcastReceiver @Inject constructor() : InternetConnectivityRepository,
+    BroadcastReceiver() {
+    private val isInternetEnabledMutableStateFlow: MutableStateFlow<Boolean> = MutableStateFlow(false)
+
+    override fun isInternetEnabledAsFlow(): Flow<Boolean> = isInternetEnabledMutableStateFlow
 
     @Suppress("DEPRECATION")
     override fun onReceive(context: Context?, intent: Intent?) {
-        val action = intent?.action
-        if (action != null && action == ConnectivityManager.CONNECTIVITY_ACTION) {
-            val connectivityManager = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        Log.d("COUCOU", "onReceive tiramisu 1st: ${isInternetEnabledMutableStateFlow.value}")
+        val connectivityManager = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (connectivityManager.activeNetwork == null) {
+                isInternetEnabledMutableStateFlow.tryEmit(false)
+                Log.d("COUCOU", "onReceive tiramisu: false")
+            } else {
+                val networkCapabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+                if (networkCapabilities != null) {
+                    isInternetEnabledMutableStateFlow.tryEmit(
+                        networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                                networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
+                    )
+                    Log.d(
+                        "COUCOU",
+                        "onReceive tiramisu: ${networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)}"
+                    )
+                } else {
+                    isInternetEnabledMutableStateFlow.tryEmit(false)
+                    Log.d("COUCOU", "onReceive tiramisu: false")
+                }
+            }
+        } else {
             val networkInfo = connectivityManager.activeNetworkInfo
-            val isConnected = networkInfo != null && networkInfo.isConnected
-            isInternetEnabledMutableStateFlow.tryEmit(isConnected)
-            Log.d("COUCOU", "onReceive: Internet is connected: $isConnected")
+            isInternetEnabledMutableStateFlow.tryEmit(networkInfo != null && networkInfo.isConnected)
+            Log.d("COUCOU", "onReceive tiramisu old version: ${networkInfo != null && networkInfo.isConnected}")
         }
     }
 }
