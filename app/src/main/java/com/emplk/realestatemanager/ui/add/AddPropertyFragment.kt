@@ -25,7 +25,6 @@ import com.emplk.realestatemanager.ui.add.picture_preview.PropertyPicturePreview
 import com.emplk.realestatemanager.ui.add.type.AddPropertyTypeSpinnerAdapter
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.viewBinding
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 
@@ -144,7 +143,7 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
         val importPictureCallback = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) {
                 Log.d("PhotoPicker", "Selected URI: $uri")
-                viewModel.onPictureFromGallerySelected(uri)
+                viewModel.onPictureFromGallerySelected(uri.toString())
             } else {
                 Log.d("PhotoPicker", "No media selected")
             }

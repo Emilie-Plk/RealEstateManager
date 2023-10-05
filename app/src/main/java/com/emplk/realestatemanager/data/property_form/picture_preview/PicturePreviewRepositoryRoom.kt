@@ -46,12 +46,9 @@ class PicturePreviewRepositoryRoom @Inject constructor(
         }
 
     @Suppress("BlockingMethodInNonBlockingContext")
-    override suspend fun saveToAppFiles(uri: Uri): String? = withContext(coroutineDispatcherProvider.io) {
+    override suspend fun saveToAppFiles(stringUri: String): String? = withContext(coroutineDispatcherProvider.io) {
         try {
-            val contentResolver = context.contentResolver
-
-            // inputStream from the selected URI
-            val inputStream = contentResolver.openInputStream(uri)
+            val inputStream = context.contentResolver.openInputStream(Uri.parse(stringUri))
 
             if (inputStream != null) {
                 // File object in your app's private files directory
@@ -59,15 +56,12 @@ class PicturePreviewRepositoryRoom @Inject constructor(
                 val pictureFileName = "propertyPic_${System.currentTimeMillis()}.jpg"
                 val pictureFile = File(picturesDirectory, pictureFileName)
 
-                // Copy the content from the InputStream to the File
                 pictureFile.outputStream().use { outputStream ->
                     inputStream.copyTo(outputStream)
                 }
 
-                // Close the InputStream
                 inputStream.close()
 
-                // Get the URI for the saved image file
                 FileProvider.getUriForFile(
                     context,
                     "${context.packageName}.provider",
