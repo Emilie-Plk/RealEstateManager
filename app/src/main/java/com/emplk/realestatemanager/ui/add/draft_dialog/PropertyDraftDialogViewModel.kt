@@ -6,7 +6,7 @@ import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property_form.DeleteTemporaryPropertyFormUseCase
-import com.emplk.realestatemanager.domain.property_form.OnSavePropertyFormEventUseCase
+import com.emplk.realestatemanager.domain.property_form.SavePropertyFormEventUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.id.DeleteAllPicturePreviewIdsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -17,12 +17,12 @@ class PropertyDraftDialogViewModel @Inject constructor(
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val deleteTemporaryPropertyFormUseCase: DeleteTemporaryPropertyFormUseCase,
     private val deleteAllPicturePreviewIdsUseCase: DeleteAllPicturePreviewIdsUseCase,
-    private val onSavePropertyFormEventUseCase: OnSavePropertyFormEventUseCase,
+    private val savePropertyFormEventUseCase: SavePropertyFormEventUseCase,
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : ViewModel() {
 
     fun onAddDraftClicked() {
-        onSavePropertyFormEventUseCase.invoke()
+        savePropertyFormEventUseCase.invoke()
         setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
     }
 

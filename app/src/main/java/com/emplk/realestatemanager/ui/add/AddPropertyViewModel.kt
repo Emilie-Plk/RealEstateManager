@@ -110,12 +110,13 @@ class AddPropertyViewModel @Inject constructor(
         val price: String? = null,
         val surface: String? = null,
         val description: String? = null,
-        val nbRooms: Int = 0,  // TODO: change to Int? = null ?
+        val nbRooms: Int = 0,
         val nbBathrooms: Int = 0,
         val nbBedrooms: Int = 0,
         val agent: String? = null,
         val amenities: List<AmenityEntity> = emptyList(),
-        val picturesId: Map<Long, Boolean> = emptyMap(),
+        val pictureIds: List<Long> = emptyList(),
+        val featuredPictureId: Long? = null,
     )
 
     private val formMutableStateFlow = MutableStateFlow(AddPropertyForm())
@@ -154,7 +155,7 @@ class AddPropertyViewModel @Inject constructor(
                         form.nbBedrooms > 0 &&
                         form.agent != null &&
                         form.amenities.isNotEmpty() &&
-                        form.picturesId.isNotEmpty()
+                        form.pictureIds.isNotEmpty()
                     ) {
                         val geocodingWrapper = getAddressLatLongUseCase.invoke(form.address)
                         when (geocodingWrapper) {
@@ -202,7 +203,7 @@ class AddPropertyViewModel @Inject constructor(
                                     PictureEntity(
                                         uri = it.uri,
                                         description = it.description ?: "",
-                                        isFeatured = form.picturesId.get(it.id) ?: false,
+                                        isFeatured = it.id == form.featuredPictureId,
                                     )
                                 },
                                 entryDate = LocalDateTime.now(clock),
@@ -276,7 +277,8 @@ class AddPropertyViewModel @Inject constructor(
                             nbBedrooms = initTemporaryPropertyFormUseCase.propertyFormEntity.bedrooms ?: 0,
                             agent = initTemporaryPropertyFormUseCase.propertyFormEntity.agentName,
                             amenities = initTemporaryPropertyFormUseCase.propertyFormEntity.amenities,
-                            picturesId = initTemporaryPropertyFormUseCase.propertyFormEntity.pictures.associate { it.id to it.isFeatured },
+                            pictureIds = initTemporaryPropertyFormUseCase.propertyFormEntity.pictures.map { it.id },
+                            featuredPictureId = initTemporaryPropertyFormUseCase.propertyFormEntity.pictures.find { it.isFeatured }?.id,
                         )
                     }
 
@@ -309,7 +311,8 @@ class AddPropertyViewModel @Inject constructor(
                             form.nbBedrooms > 0 ||
                             !form.agent.isNullOrBlank() ||
                             form.amenities.isNotEmpty() ||
-                            form.picturesId.isNotEmpty()
+                            form.pictureIds.isNotEmpty() ||
+                            form.featuredPictureId != null
 
                     setPropertyFormProgressUseCase.invoke(isFormInProgress)
                     isEveryFieldFilledMutableStateFlow.tryEmit(
@@ -323,7 +326,8 @@ class AddPropertyViewModel @Inject constructor(
                                 form.nbBedrooms > 0 &&
                                 form.agent != null &&
                                 form.amenities.isNotEmpty() &&
-                                form.picturesId.isNotEmpty()
+                                form.pictureIds.isNotEmpty() &&
+                                form.featuredPictureId != null
                     )
 
                     emit(
@@ -337,7 +341,6 @@ class AddPropertyViewModel @Inject constructor(
                             nbBathrooms = form.nbBathrooms,
                             nbBedrooms = form.nbBedrooms,
                             pictures = picturePreviews
-                                .filter { picturePreview -> form.picturesId.contains(picturePreview.id) }
                                 .map { picturePreview ->
                                     PicturePreviewStateItem.AddPropertyPicturePreview(
                                         id = picturePreview.id,
@@ -345,21 +348,42 @@ class AddPropertyViewModel @Inject constructor(
                                         isFeatured = picturePreview.isFeatured,
                                         description = picturePreview.description,
                                         onDeleteEvent = EquatableCallback {
+                                            if (form.featuredPictureId == picturePreview.id) {
+                                                val newFeaturedId = form.pictureIds.find { it != picturePreview.id }
+
+                                                formMutableStateFlow.update {
+                                                    it.copy(
+                                                        pictureIds = it.pictureIds.filter { id -> id != picturePreview.id },
+                                                        featuredPictureId = newFeaturedId
+                                                    )
+                                                }
+
+                                                viewModelScope.launch {
+                                                    if (newFeaturedId != null) {
+                                                        updatePicturePreviewUseCase.invoke(
+                                                            newFeaturedId,
+                                                            true,
+                                                            picturePreviews.find { it.id == newFeaturedId }?.description
+                                                        )
+                                                    }
+                                                }
+                                            }
+
+                                            formMutableStateFlow.update {
+                                                it.copy(
+                                                    pictureIds = it.pictureIds.filter { id -> id != picturePreview.id }
+                                                )
+                                            }
+
                                             viewModelScope.launch {
                                                 deletePicturePreviewByIdUseCase.invoke(picturePreview.id)
                                             }
-                                            formMutableStateFlow.update {
-                                                it.copy(picturesId = it.picturesId.filter { id -> id.key != picturePreview.id })
-                                            }
                                             deletePicturePreviewIdUseCase.invoke(picturePreview.id)
-
                                         },
                                         onFeaturedEvent = EquatableCallbackWithParam { isFeatured ->
                                             if (picturePreview.isFeatured) return@EquatableCallbackWithParam
-                                            form.picturesId.filterKeys { true }.forEach { (key, _) ->
-                                                formMutableStateFlow.update {
-                                                    it.copy(picturesId = it.picturesId.filter { id -> id.key != key } + (key to false))
-                                                }
+                                            formMutableStateFlow.update {
+                                                it.copy(featuredPictureId = picturePreview.id)
                                             }
                                             viewModelScope.launch {
                                                 updatePicturePreviewUseCase.invoke(
@@ -587,37 +611,41 @@ class AddPropertyViewModel @Inject constructor(
         }
     }
 
-    fun onPictureFromCameraTaken(uriToString: String) {
+    fun onPictureFromCameraTaken(stringUri: String) {
         viewModelScope.launch {
             val addedPictureId =
-                addPicturePreviewUseCase.invoke(uriToString, formMutableStateFlow.value.picturesId.isEmpty())
+                addPicturePreviewUseCase.invoke(stringUri, formMutableStateFlow.value.pictureIds.isEmpty())
             addPicturePreviewIdUseCase.invoke(addedPictureId)
-            formMutableStateFlow.update { currentState ->
-                val updatedPicturesId = if (currentState.picturesId.isEmpty()) {
-                    mapOf(addedPictureId to true) // First picture is featured
+            formMutableStateFlow.update {
+                if (it.pictureIds.isEmpty()) {
+                    it.copy(
+                        pictureIds = listOf(addedPictureId),
+                        featuredPictureId = addedPictureId
+                    )
                 } else {
-                    currentState.picturesId + (addedPictureId to false) // New picture is not featured
+                    it.copy(pictureIds = it.pictureIds + addedPictureId)
                 }
-                currentState.copy(picturesId = updatedPicturesId)
             }
         }
     }
 
 
-    fun onPictureFromGallerySelected(uri: Uri) {
+    fun onPictureFromGallerySelected(stringUri: String) {
         viewModelScope.launch {
-            val picturePath = savePictureFromGalleryToAppFilesUseCase.invoke(uri)
+            val picturePath = savePictureFromGalleryToAppFilesUseCase.invoke(stringUri)
             val addedPictureId = addPicturePreviewUseCase.invoke(
                 picturePath ?: "",
-                formMutableStateFlow.value.picturesId.isEmpty()
+                formMutableStateFlow.value.pictureIds.isEmpty()
             ) // TODO: better mgmt of picturePath nullability
-            formMutableStateFlow.update { currentState ->
-                val updatedPicturesId = if (currentState.picturesId.isEmpty()) {
-                    mapOf(addedPictureId to true) // First picture is featured
+            formMutableStateFlow.update {
+                if (it.pictureIds.isEmpty()) {
+                    it.copy(
+                        pictureIds = listOf(addedPictureId),
+                        featuredPictureId = addedPictureId
+                    )
                 } else {
-                    currentState.picturesId + (addedPictureId to false) // New picture is not featured
+                    it.copy(pictureIds = it.pictureIds + addedPictureId)
                 }
-                currentState.copy(picturesId = updatedPicturesId)
             }
         }
     }
@@ -654,3 +682,4 @@ class AddPropertyViewModel @Inject constructor(
         hasAddressEditTextFocus.tryEmit(hasFocus)
     }
 }
+
