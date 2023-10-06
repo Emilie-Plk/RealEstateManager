@@ -3,10 +3,10 @@ package com.emplk.realestatemanager.data
 import com.emplk.realestatemanager.data.agent.RealEstateAgentRepositoryImpl
 import com.emplk.realestatemanager.data.autocomplete.PredictionRepositoryAutocomplete
 import com.emplk.realestatemanager.data.connectivity.InternetConnectivityRepositoryBroadcastReceiver
+import com.emplk.realestatemanager.data.content_resolver.PictureFileRepositoryContentResolver
 import com.emplk.realestatemanager.data.currency.LocaleFormattingRepositoryImpl
 import com.emplk.realestatemanager.data.current_property.CurrentPropertyRepositoryImpl
 import com.emplk.realestatemanager.data.geocoding.GeocodingRepositoryGoogle
-import com.emplk.realestatemanager.data.map_picture.MapPictureRepositoryStaticMap
 import com.emplk.realestatemanager.data.navigation.NavigationRepositoryImpl
 import com.emplk.realestatemanager.data.property.PropertyRepositoryRoom
 import com.emplk.realestatemanager.data.property.amenity.AmenityRepositoryRoom
@@ -22,10 +22,10 @@ import com.emplk.realestatemanager.data.screen_width.ScreenWidthTypeRepositoryIm
 import com.emplk.realestatemanager.domain.agent.RealEstateAgentRepository
 import com.emplk.realestatemanager.domain.autocomplete.PredictionRepository
 import com.emplk.realestatemanager.domain.connectivity.InternetConnectivityRepository
+import com.emplk.realestatemanager.domain.content_resolver.PictureFileRepository
 import com.emplk.realestatemanager.domain.current_property.CurrentPropertyRepository
 import com.emplk.realestatemanager.domain.geocoding.GeocodingRepository
 import com.emplk.realestatemanager.domain.locale_formatting.LocaleFormattingRepository
-import com.emplk.realestatemanager.domain.map_picture.MapPictureRepository
 import com.emplk.realestatemanager.domain.navigation.NavigationRepository
 import com.emplk.realestatemanager.domain.property.PropertyRepository
 import com.emplk.realestatemanager.domain.property.amenity.AmenityRepository
@@ -118,9 +118,9 @@ abstract class DataBindingModule {
 
     @Singleton
     @Binds
-    abstract fun bindMapPictureRepository(implementation: MapPictureRepositoryStaticMap): MapPictureRepository
+    abstract fun bindInternetConnectivityRepositoryRepository(implementation: InternetConnectivityRepositoryBroadcastReceiver): InternetConnectivityRepository
 
     @Singleton
     @Binds
-    abstract fun bindInternetConnectivityRepositoryRepository(implementation: InternetConnectivityRepositoryBroadcastReceiver): InternetConnectivityRepository
+    abstract fun bindPictureFileRepository(implementation: PictureFileRepositoryContentResolver): PictureFileRepository
 }

@@ -11,7 +11,7 @@ class LocationMapper @Inject constructor() {
         LocationDto(
             propertyId = propertyId,
             address = locationEntity.address,
-            miniatureMapPath = locationEntity.miniatureMapPath,
+            miniatureMapUrl = locationEntity.miniatureMapUrl,
             latitude = locationEntity.latLng?.latitude,
             longitude = locationEntity.latLng?.longitude,
         )
@@ -19,7 +19,7 @@ class LocationMapper @Inject constructor() {
     fun mapToDomainEntity(locationDto: LocationDto) =
         LocationEntity(
             address = locationDto.address,
-            miniatureMapPath = locationDto.miniatureMapPath,
+            miniatureMapUrl = locationDto.miniatureMapUrl,
             latLng = locationDto.latitude?.let { latitude ->
                 locationDto.longitude?.let { longitude ->
                     LatLng(latitude, longitude)

@@ -1,6 +1,5 @@
 package com.emplk.realestatemanager.ui.add
 
-import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -11,13 +10,13 @@ import com.emplk.realestatemanager.domain.agent.GetAgentsFlowUseCase
 import com.emplk.realestatemanager.domain.autocomplete.GetAddressPredictionsUseCase
 import com.emplk.realestatemanager.domain.autocomplete.PredictionWrapper
 import com.emplk.realestatemanager.domain.connectivity.IsInternetEnabledFlowUseCase
+import com.emplk.realestatemanager.domain.content_resolver.SaveFileToLocalAppFilesUseCase
 import com.emplk.realestatemanager.domain.geocoding.GeocodingWrapper
 import com.emplk.realestatemanager.domain.geocoding.GetAddressLatLongUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
-import com.emplk.realestatemanager.domain.map_picture.GetMapPictureUseCase
-import com.emplk.realestatemanager.domain.map_picture.MapWrapper
+import com.emplk.realestatemanager.domain.map_picture.GenerateMapBaseUrlWithParamsUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.AddPropertyUseCase
@@ -38,7 +37,6 @@ import com.emplk.realestatemanager.domain.property_form.picture_preview.AddPictu
 import com.emplk.realestatemanager.domain.property_form.picture_preview.DeletePicturePreviewByIdUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.GetPicturePreviewsAsFlowUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.GetPicturePreviewsUseCase
-import com.emplk.realestatemanager.domain.property_form.picture_preview.SavePictureFromGalleryToAppFilesUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.UpdatePicturePreviewUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.id.AddPicturePreviewIdUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.id.DeleteAllPicturePreviewIdsUseCase
@@ -80,12 +78,12 @@ class AddPropertyViewModel @Inject constructor(
     private val deleteTemporaryPropertyFormUseCase: DeleteTemporaryPropertyFormUseCase,
     private val addPicturePreviewUseCase: AddPicturePreviewUseCase,
     private val addPicturePreviewIdUseCase: AddPicturePreviewIdUseCase,
-    private val savePictureFromGalleryToAppFilesUseCase: SavePictureFromGalleryToAppFilesUseCase,
+    private val saveFileToLocalAppFilesUseCase: SaveFileToLocalAppFilesUseCase,
     private val getPicturePreviewsUseCase: GetPicturePreviewsUseCase,
     private val deletePicturePreviewIdUseCase: DeletePicturePreviewIdUseCase,
     private val deletePicturePreviewByIdUseCase: DeletePicturePreviewByIdUseCase,
     private val deleteAllPicturePreviewIdsUseCase: DeleteAllPicturePreviewIdsUseCase,
-    private val getMapPictureUseCase: GetMapPictureUseCase,
+    private val generateMapBaseUrlWithParamsUseCase: GenerateMapBaseUrlWithParamsUseCase,
     private val updatePicturePreviewUseCase: UpdatePicturePreviewUseCase,
     private val updatePropertyFormUseCase: UpdatePropertyFormUseCase,
     private val getAddressPredictionsUseCase: GetAddressPredictionsUseCase,
@@ -143,7 +141,7 @@ class AddPropertyViewModel @Inject constructor(
                 formMutableStateFlow,
                 isInternetEnabledFlowUseCase.invoke()
             ) { form, isInternetEnabled ->
-                if (isInternetEnabled) {
+                if (true) { // TODO: change that of course
                     isAddingPropertyInDatabaseMutableStateFlow.tryEmit(true)
                     if (form.propertyType != null &&
                         form.address != null &&
@@ -183,17 +181,12 @@ class AddPropertyViewModel @Inject constructor(
                                         is GeocodingWrapper.Error -> null
                                         is GeocodingWrapper.NoResult -> null
                                     },
-                                    miniatureMapPath = when (geocodingWrapper) {
-                                        is GeocodingWrapper.Success -> {
-                                            when (val mapWrapper =
-                                                getMapPictureUseCase.invoke(geocodingWrapper.latLng)) {
-                                                is MapWrapper.Success -> mapWrapper.mapPicture
-                                                is MapWrapper.Error -> null
-                                            }
-                                        }
+                                    miniatureMapUrl = when (geocodingWrapper) {
+                                        is GeocodingWrapper.Success ->
+                                            generateMapBaseUrlWithParamsUseCase.invoke(geocodingWrapper.latLng)
+                                        is GeocodingWrapper.Error -> ""
+                                        is GeocodingWrapper.NoResult -> ""
 
-                                        is GeocodingWrapper.Error -> null
-                                        is GeocodingWrapper.NoResult -> null
                                     },
                                 ),
                                 bedrooms = form.nbBedrooms,
@@ -228,7 +221,7 @@ class AddPropertyViewModel @Inject constructor(
                             emit(Event(AddPropertyEvent.Toast(NativeText.Resource(R.string.add_property_error_message))))
                         }
                     }
-                } else {
+                }/* else {
                     updatePropertyFormUseCase.invoke(
                         PropertyFormEntity(
                             type = form.propertyType,
@@ -250,7 +243,7 @@ class AddPropertyViewModel @Inject constructor(
                     )
                     emit(Event(AddPropertyEvent.Toast(NativeText.Resource(R.string.no_internet_connection_draft_saved))))
                     setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
-                }
+                }*/
             }.collect()
         }
     }
@@ -611,32 +604,12 @@ class AddPropertyViewModel @Inject constructor(
         }
     }
 
-    fun onPictureFromCameraTaken(stringUri: String) {
+    fun onPictureSelected(stringUri: String) {
         viewModelScope.launch {
+            val picturePath = saveFileToLocalAppFilesUseCase.invoke(stringUri)
             val addedPictureId =
-                addPicturePreviewUseCase.invoke(stringUri, formMutableStateFlow.value.pictureIds.isEmpty())
+                addPicturePreviewUseCase.invoke(picturePath, formMutableStateFlow.value.pictureIds.isEmpty())
             addPicturePreviewIdUseCase.invoke(addedPictureId)
-            formMutableStateFlow.update {
-                if (it.pictureIds.isEmpty()) {
-                    it.copy(
-                        pictureIds = listOf(addedPictureId),
-                        featuredPictureId = addedPictureId
-                    )
-                } else {
-                    it.copy(pictureIds = it.pictureIds + addedPictureId)
-                }
-            }
-        }
-    }
-
-
-    fun onPictureFromGallerySelected(stringUri: String) {
-        viewModelScope.launch {
-            val picturePath = savePictureFromGalleryToAppFilesUseCase.invoke(stringUri)
-            val addedPictureId = addPicturePreviewUseCase.invoke(
-                picturePath ?: "",
-                formMutableStateFlow.value.pictureIds.isEmpty()
-            ) // TODO: better mgmt of picturePath nullability
             formMutableStateFlow.update {
                 if (it.pictureIds.isEmpty()) {
                     it.copy(

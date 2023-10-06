@@ -11,8 +11,8 @@ data class LocationDto(
     @ColumnInfo(name = "property_id", index = true)
     val propertyId: Long,
     val address: String,
-    @ColumnInfo(name = "miniature_map_path")
-    val miniatureMapPath: String?,
+    @ColumnInfo(name = "miniature_map_url")
+    val miniatureMapUrl: String,
     val latitude: Double?,
     val longitude: Double?,
 )

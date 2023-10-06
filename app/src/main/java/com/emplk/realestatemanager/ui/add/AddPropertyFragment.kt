@@ -1,13 +1,17 @@
 package com.emplk.realestatemanager.ui.add
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.NumberPicker
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -16,6 +20,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.emplk.realestatemanager.BuildConfig
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.AddPropertyFragmentBinding
 import com.emplk.realestatemanager.ui.add.address_predictions.PredictionListAdapter
@@ -33,6 +38,7 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
 
     companion object {
         fun newInstance(): Fragment = AddPropertyFragment()
+        private const val PICTURE_PREVIEW_PREFIX = "property_preview"
     }
 
     private val binding by viewBinding { AddPropertyFragmentBinding.bind(it) }
@@ -143,15 +149,9 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
         val importPictureCallback = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) {
                 Log.d("PhotoPicker", "Selected URI: $uri")
-                viewModel.onPictureFromGallerySelected(uri.toString())
+                viewModel.onPictureSelected(uri.toString())
             } else {
                 Log.d("PhotoPicker", "No media selected")
-            }
-        }
-
-        val takePictureCallback = registerForActivityResult(ActivityResultContracts.TakePicture()) { successful ->
-            if (successful) {
-                currentPhotoUri?.let { viewModel.onPictureFromCameraTaken(it.toString()) }
             }
         }
 
@@ -162,16 +162,29 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
         binding.addPropertyFromCameraButton.setOnClickListener {
             currentPhotoUri = FileProvider.getUriForFile(
                 requireContext(),
-                requireContext().packageName + ".provider",
+                BuildConfig.APPLICATION_ID + ".provider",
                 File.createTempFile(
                     "JPEG_",
                     ".jpg",
                     requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
                 )
             )
-            takePictureCallback.launch(currentPhotoUri)
+
+            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                .putExtra(MediaStore.EXTRA_OUTPUT, currentPhotoUri)
+
+            startActivityForResult(intent, 0)
+            // endregion Import pictures
         }
-        // endregion Import pictures
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        @Suppress("DEPRECATION")
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            viewModel.onPictureSelected(currentPhotoUri.toString())
+        }
     }
 
     private fun hideKeyboard(view: View?) {
