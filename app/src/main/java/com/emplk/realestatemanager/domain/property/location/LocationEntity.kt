@@ -4,6 +4,6 @@ import com.google.android.gms.maps.model.LatLng
 
 data class LocationEntity(
     val address: String,
-    val miniatureMapPath: String?,
+    val miniatureMapUrl: String,
     val latLng: LatLng?,
 )

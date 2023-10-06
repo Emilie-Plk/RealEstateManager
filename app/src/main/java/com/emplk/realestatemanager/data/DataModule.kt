@@ -1,6 +1,7 @@
 package com.emplk.realestatemanager.data
 
 import android.app.Application
+import android.content.ContentResolver
 import android.content.res.Resources
 import androidx.work.WorkManager
 import com.emplk.realestatemanager.BuildConfig
@@ -95,6 +96,11 @@ class DataModule {
                 }
             )
             .build()
+
+    @Singleton
+    @Provides
+    fun provideContentResolver(application: Application): ContentResolver =
+        application.contentResolver
 
     // region DAOs
 

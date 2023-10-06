@@ -127,21 +127,21 @@ abstract class AppDatabase : RoomDatabase() {
                                 latitude = 40.765076,
                                 longitude = -73.976693,
                                 address = "Chambers Street",
-                                miniatureMapPath = ""
+                                miniatureMapUrl = ""
                             ),
                             LocationDto(
                                 propertyId = 2,
                                 latitude = 40.710525,
                                 longitude = -74.008368,
                                 address = "Fulton Street",
-                                miniatureMapPath = ""
+                                miniatureMapUrl = ""
                             ),
                             LocationDto(
                                 propertyId = 3,
                                 latitude = 40.765076,
                                 longitude = -73.976693,
                                 address = "Chambers Street",
-                                miniatureMapPath = ""
+                                miniatureMapUrl = ""
                             ),
                         )
                     )

@@ -8,8 +8,6 @@ interface PicturePreviewRepository {
 
     suspend fun addAll(picturePreviewEntities: List<PicturePreviewEntity>, propertyFormId: Long): List<Long?>
 
-    suspend fun saveToAppFiles(stringUri: String): String?
-
     fun getAllAsFlow(propertyFormId: Long): Flow<List<PicturePreviewEntity>>
 
     suspend fun getAll(propertyFormId: Long): List<PicturePreviewEntity>
