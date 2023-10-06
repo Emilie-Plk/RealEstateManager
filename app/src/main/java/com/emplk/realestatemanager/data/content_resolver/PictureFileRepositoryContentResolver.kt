@@ -23,6 +23,7 @@ class PictureFileRepositoryContentResolver @Inject constructor(
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
     private val clock: Clock,
 ) : PictureFileRepository {
+
     /**
      * @return Absolute path of the file where this data is stored (internal app's storage, in "temp" folder)
      */

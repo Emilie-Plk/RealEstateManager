@@ -10,36 +10,23 @@ import com.emplk.realestatemanager.domain.agent.GetAgentsFlowUseCase
 import com.emplk.realestatemanager.domain.autocomplete.GetAddressPredictionsUseCase
 import com.emplk.realestatemanager.domain.autocomplete.PredictionWrapper
 import com.emplk.realestatemanager.domain.connectivity.IsInternetEnabledFlowUseCase
-import com.emplk.realestatemanager.domain.content_resolver.SaveFileToLocalAppFilesUseCase
-import com.emplk.realestatemanager.domain.geocoding.GeocodingWrapper
-import com.emplk.realestatemanager.domain.geocoding.GetAddressLatLongUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
-import com.emplk.realestatemanager.domain.map_picture.GenerateMapBaseUrlWithParamsUseCase
-import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
-import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.AddPropertyUseCase
-import com.emplk.realestatemanager.domain.property.PropertyEntity
 import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.amenity.type.GetAmenityTypeUseCase
-import com.emplk.realestatemanager.domain.property.location.LocationEntity
-import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
-import com.emplk.realestatemanager.domain.property_form.DeleteTemporaryPropertyFormUseCase
+import com.emplk.realestatemanager.domain.property_form.AddPropertyFormEntity
 import com.emplk.realestatemanager.domain.property_form.GetSavedPropertyFormEventUseCase
 import com.emplk.realestatemanager.domain.property_form.InitTemporaryPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_form.PropertyFormDatabaseState
-import com.emplk.realestatemanager.domain.property_form.PropertyFormEntity
 import com.emplk.realestatemanager.domain.property_form.SetPropertyFormProgressUseCase
 import com.emplk.realestatemanager.domain.property_form.UpdatePropertyFormUseCase
-import com.emplk.realestatemanager.domain.property_form.picture_preview.AddPicturePreviewUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.DeletePicturePreviewByIdUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.GetPicturePreviewsAsFlowUseCase
-import com.emplk.realestatemanager.domain.property_form.picture_preview.GetPicturePreviewsUseCase
+import com.emplk.realestatemanager.domain.property_form.picture_preview.SavePictureToLocalAppFilesAndToLocalDatabaseUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.UpdatePicturePreviewUseCase
-import com.emplk.realestatemanager.domain.property_form.picture_preview.id.AddPicturePreviewIdUseCase
-import com.emplk.realestatemanager.domain.property_form.picture_preview.id.DeleteAllPicturePreviewIdsUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.id.DeletePicturePreviewIdUseCase
 import com.emplk.realestatemanager.domain.property_type.GetPropertyTypeFlowUseCase
 import com.emplk.realestatemanager.ui.add.address_predictions.PredictionViewState
@@ -65,8 +52,6 @@ import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.Clock
-import java.time.LocalDateTime
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
@@ -75,21 +60,13 @@ import kotlin.time.Duration.Companion.seconds
 class AddPropertyViewModel @Inject constructor(
     private val addPropertyUseCase: AddPropertyUseCase,
     private val getSavedPropertyFormEventUseCase: GetSavedPropertyFormEventUseCase,
-    private val deleteTemporaryPropertyFormUseCase: DeleteTemporaryPropertyFormUseCase,
-    private val addPicturePreviewUseCase: AddPicturePreviewUseCase,
-    private val addPicturePreviewIdUseCase: AddPicturePreviewIdUseCase,
-    private val saveFileToLocalAppFilesUseCase: SaveFileToLocalAppFilesUseCase,
-    private val getPicturePreviewsUseCase: GetPicturePreviewsUseCase,
-    private val deletePicturePreviewIdUseCase: DeletePicturePreviewIdUseCase,
-    private val deletePicturePreviewByIdUseCase: DeletePicturePreviewByIdUseCase,
-    private val deleteAllPicturePreviewIdsUseCase: DeleteAllPicturePreviewIdsUseCase,
-    private val generateMapBaseUrlWithParamsUseCase: GenerateMapBaseUrlWithParamsUseCase,
+    private val deletePicturePreviewIdUseCase: DeletePicturePreviewIdUseCase, // à refacto
+    private val deletePicturePreviewByIdUseCase: DeletePicturePreviewByIdUseCase, // à refacto
     private val updatePicturePreviewUseCase: UpdatePicturePreviewUseCase,
-    private val updatePropertyFormUseCase: UpdatePropertyFormUseCase,
-    private val getAddressPredictionsUseCase: GetAddressPredictionsUseCase,
-    private val getAddressLatLongUseCase: GetAddressLatLongUseCase,
+    private val savePictureToLocalAppFilesAndToLocalDatabaseUseCase: SavePictureToLocalAppFilesAndToLocalDatabaseUseCase,
+    private val updatePropertyFormUseCase: UpdatePropertyFormUseCase, // à refacto si chui une ouf
+    private val getAddressPredictionsUseCase: GetAddressPredictionsUseCase, // à refacto
     private val initTemporaryPropertyFormUseCase: InitTemporaryPropertyFormUseCase,
-    private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val getCurrencyTypeUseCase: GetCurrencyTypeUseCase,
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
     private val getPicturePreviewsAsFlowUseCase: GetPicturePreviewsAsFlowUseCase,
@@ -97,27 +74,10 @@ class AddPropertyViewModel @Inject constructor(
     private val setPropertyFormProgressUseCase: SetPropertyFormProgressUseCase,
     private val getAmenityTypeUseCase: GetAmenityTypeUseCase,
     private val getPropertyTypeFlowUseCase: GetPropertyTypeFlowUseCase,
-    private val isInternetEnabledFlowUseCase: IsInternetEnabledFlowUseCase,
-    private val clock: Clock,
+    private val isInternetEnabledFlowUseCase: IsInternetEnabledFlowUseCase,  // à garder I suppose
 ) : ViewModel() {
 
-    private data class AddPropertyForm(
-        val propertyType: String? = null,
-        val address: String? = null,
-        val addressPredictions: List<PredictionViewState> = emptyList(),
-        val price: String? = null,
-        val surface: String? = null,
-        val description: String? = null,
-        val nbRooms: Int = 0,
-        val nbBathrooms: Int = 0,
-        val nbBedrooms: Int = 0,
-        val agent: String? = null,
-        val amenities: List<AmenityEntity> = emptyList(),
-        val pictureIds: List<Long> = emptyList(),
-        val featuredPictureId: Long? = null,
-    )
-
-    private val formMutableStateFlow = MutableStateFlow(AddPropertyForm())
+    private val formMutableStateFlow = MutableStateFlow(AddPropertyFormEntity())
     private val currentAddressInputMutableStateFlow: MutableStateFlow<String?> = MutableStateFlow(null)
     private val perfectMatchPredictionMutableStateFlow = MutableStateFlow<Boolean?>(null)  // TODO not sure at all!..
     private val hasAddressEditTextFocus = MutableStateFlow(false)
@@ -155,95 +115,15 @@ class AddPropertyViewModel @Inject constructor(
                         form.amenities.isNotEmpty() &&
                         form.pictureIds.isNotEmpty()
                     ) {
-                        val geocodingWrapper = getAddressLatLongUseCase.invoke(form.address)
-                        when (geocodingWrapper) {
-                            is GeocodingWrapper.Success -> geocodingWrapper.latLng
-                            is GeocodingWrapper.Error -> Log.e(
-                                "AddPropertyViewModel",
-                                "Error: ${geocodingWrapper.error}"
-                            )
-
-                            is GeocodingWrapper.NoResult -> Log.e("AddPropertyViewModel", "No geocoding result")
-                        }
-
-                        val success = addPropertyUseCase.invoke(
-                            PropertyEntity(
-                                type = form.propertyType,
-                                price = form.price.toBigDecimal(),
-                                surface = form.surface.toInt(),
-                                description = form.description,
-                                rooms = form.nbRooms,
-                                bathrooms = form.nbBathrooms,
-                                location = LocationEntity(
-                                    address = form.address,
-                                    latLng = when (geocodingWrapper) {
-                                        is GeocodingWrapper.Success -> geocodingWrapper.latLng
-                                        is GeocodingWrapper.Error -> null
-                                        is GeocodingWrapper.NoResult -> null
-                                    },
-                                    miniatureMapUrl = when (geocodingWrapper) {
-                                        is GeocodingWrapper.Success ->
-                                            generateMapBaseUrlWithParamsUseCase.invoke(geocodingWrapper.latLng)
-                                        is GeocodingWrapper.Error -> ""
-                                        is GeocodingWrapper.NoResult -> ""
-
-                                    },
-                                ),
-                                bedrooms = form.nbBedrooms,
-                                agentName = form.agent,
-                                amenities = form.amenities,
-                                pictures = getPicturePreviewsUseCase.invoke().map {
-                                    PictureEntity(
-                                        uri = it.uri,
-                                        description = it.description ?: "",
-                                        isFeatured = it.id == form.featuredPictureId,
-                                    )
-                                },
-                                entryDate = LocalDateTime.now(clock),
-                                isAvailableForSale = false,
-                                isSold = false,
-                                saleDate = null,
-                            ),
-                        )
+                        val success = addPropertyUseCase.invoke(form)
+                        if (success) emit(Event(AddPropertyEvent.Toast(NativeText.Resource(R.string.add_property_successfully_created_message))))
+                        else emit(Event(AddPropertyEvent.Toast(NativeText.Resource(R.string.add_property_error_message))))
                         isAddingPropertyInDatabaseMutableStateFlow.tryEmit(false)
-                        if (success) {
-                            deleteTemporaryPropertyFormUseCase.invoke()
-                            deleteAllPicturePreviewIdsUseCase.invoke()
-                            setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
-                            emit(
-                                Event(
-                                    AddPropertyEvent.Toast(
-                                        NativeText.Resource(R.string.add_property_successfully_created_snackBar_message)
-                                    )
-                                )
-                            )
-                        } else {
-                            emit(Event(AddPropertyEvent.Toast(NativeText.Resource(R.string.add_property_error_message))))
-                        }
                     }
-                }/* else {
-                    updatePropertyFormUseCase.invoke(
-                        PropertyFormEntity(
-                            type = form.propertyType,
-                            price = form.price,
-                            surface = form.surface,
-                            description = form.description,
-                            rooms = form.nbRooms,
-                            bathrooms = form.nbBathrooms,
-                            address = form.address,
-                            bedrooms = form.nbBedrooms,
-                            agentName = form.agent,
-                            amenities = form.amenities.map { amenity ->
-                                AmenityEntity(
-                                    id = amenity.id,
-                                    type = amenity.type,
-                                )
-                            },
-                        )
-                    )
+                } else {
+                    updatePropertyFormUseCase.invoke(form)
                     emit(Event(AddPropertyEvent.Toast(NativeText.Resource(R.string.no_internet_connection_draft_saved))))
-                    setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
-                }*/
+                }
             }.collect()
         }
     }
@@ -441,50 +321,14 @@ class AddPropertyViewModel @Inject constructor(
                     emit(it)
                     delay(10.seconds)
                 }.collect {
-                    updatePropertyFormUseCase.invoke(
-                        PropertyFormEntity(
-                            type = it.propertyType,
-                            price = it.price,
-                            surface = it.surface,
-                            description = it.description,
-                            rooms = it.nbRooms,
-                            bathrooms = it.nbBathrooms,
-                            address = it.address,
-                            bedrooms = it.nbBedrooms,
-                            agentName = it.agent,
-                            amenities = it.amenities.map { amenity ->
-                                AmenityEntity(
-                                    id = amenity.id,
-                                    type = amenity.type,
-                                )
-                            },
-                        )
-                    )
+                    updatePropertyFormUseCase.invoke(formMutableStateFlow.value)
                 }
             }
 
             launch {
                 getSavedPropertyFormEventUseCase.invoke().collectLatest {
-                    formMutableStateFlow.map {
-                        updatePropertyFormUseCase.invoke(
-                            PropertyFormEntity(
-                                type = it.propertyType,
-                                price = it.price,
-                                surface = it.surface,
-                                description = it.description,
-                                rooms = it.nbRooms,
-                                bathrooms = it.nbBathrooms,
-                                address = it.address,
-                                bedrooms = it.nbBedrooms,
-                                agentName = it.agent,
-                                amenities = it.amenities.map { amenity ->
-                                    AmenityEntity(
-                                        id = amenity.id,
-                                        type = amenity.type,
-                                    )
-                                },
-                            )
-                        )
+                    formMutableStateFlow.map { form ->
+                        updatePropertyFormUseCase.invoke(form)
                     }.collect()
                 }
             }
@@ -606,18 +450,18 @@ class AddPropertyViewModel @Inject constructor(
 
     fun onPictureSelected(stringUri: String) {
         viewModelScope.launch {
-            val picturePath = saveFileToLocalAppFilesUseCase.invoke(stringUri)
-            val addedPictureId =
-                addPicturePreviewUseCase.invoke(picturePath, formMutableStateFlow.value.pictureIds.isEmpty())
-            addPicturePreviewIdUseCase.invoke(addedPictureId)
+            val addedPicturePreviewId = savePictureToLocalAppFilesAndToLocalDatabaseUseCase.invoke(
+                stringUri = stringUri,
+                isFormPictureIdEmpty = formMutableStateFlow.value.pictureIds.isEmpty()
+            )
             formMutableStateFlow.update {
                 if (it.pictureIds.isEmpty()) {
                     it.copy(
-                        pictureIds = listOf(addedPictureId),
-                        featuredPictureId = addedPictureId
+                        pictureIds = listOf(addedPicturePreviewId),
+                        featuredPictureId = addedPicturePreviewId
                     )
                 } else {
-                    it.copy(pictureIds = it.pictureIds + addedPictureId)
+                    it.copy(pictureIds = it.pictureIds + addedPicturePreviewId)
                 }
             }
         }
