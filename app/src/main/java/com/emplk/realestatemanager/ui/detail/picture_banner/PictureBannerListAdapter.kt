@@ -2,6 +2,7 @@ package com.emplk.realestatemanager.ui.detail.picture_banner
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -36,8 +37,12 @@ class PictureBannerListAdapter :
                 .error(R.drawable.baseline_villa_24)
                 .into(binding.ivBanner)
 
-            binding.ivBanner.contentDescription = item.description
-            binding.tvBanner.text = item.description
+            if (item.description.isEmpty()) {
+                binding.tvBanner.isVisible = false
+            } else {
+                binding.tvBanner.text = item.description
+                binding.tvBanner.contentDescription = item.description
+            }
         }
     }
 }

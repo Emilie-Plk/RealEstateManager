@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.ui.detail
 
+import android.graphics.Paint
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -38,8 +39,8 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
         val amenityAdapter = AmenityListAdapter()
         binding.detailAmenitiesRecyclerViewFlexbox.adapter = amenityAdapter
 
-        viewModel.viewState.observe(viewLifecycleOwner) { detailViewState ->
-            when (detailViewState) {
+        viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
+            when (viewState) {
                 is DetailViewState.LoadingState -> {
                     binding.root.isVisible = false
                     binding.detailProgressBar.isVisible = true
@@ -51,34 +52,39 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
                         setInfinite(true)
                         setAlpha(true)
                     }
-                    pictureBannerAdapter.submitList(detailViewState.pictures)
+                    pictureBannerAdapter.submitList(viewState.pictures)
                     binding.detailProgressBar.isVisible = false
                     binding.root.isVisible = true
 
-                    amenityAdapter.submitList(detailViewState.amenities)
+                    amenityAdapter.submitList(viewState.amenities)
 
                     binding.detailEditFab.setOnClickListener {
                         viewModel.onEditClicked()
                     }
 
-                    if (detailViewState.isSold) {
+                    if (viewState.isSold) {
                         binding.detailSoldDateTv.visibility = View.VISIBLE
-                        binding.detailSoldDateTv.text = detailViewState.saleDate?.toCharSequence(requireContext())
+                        binding.detailSoldDateTv.text = viewState.saleDate?.toCharSequence(requireContext())
                     } else {
                         binding.detailSoldDateTv.visibility = View.GONE
                     }
 
-                    binding.detailTypeTv.text = detailViewState.propertyType
-                    binding.detailPriceTv.text = detailViewState.price.toCharSequence(requireContext())
-                    binding.detailDescriptionTv.text = detailViewState.description
-                    binding.detailLocationTv.text = detailViewState.address.toCharSequence(requireContext())
-                    binding.detailSurfaceTv.text = detailViewState.surface.toCharSequence(requireContext())
-                    binding.detailAgentNameTv.text = detailViewState.agentName.toCharSequence(requireContext())
-                    binding.detailEntryDateTv.text = detailViewState.entryDate.toCharSequence(requireContext())
-                    binding.detailRoomTv.text = detailViewState.rooms.toCharSequence(requireContext())
-                    binding.detailBathroomTv.text = detailViewState.bathrooms.toCharSequence(requireContext())
-                    binding.detailBedroomTv.text = detailViewState.bedrooms.toCharSequence(requireContext())
-                    detailViewState.mapMiniature.load(binding.detailMapIv)
+                    binding.detailTypeTv.text = viewState.propertyType
+                    binding.detailPriceTv.text = viewState.price
+                    if (viewState.isSold) {
+                        // strike through price
+                        binding.detailPriceTv.paintFlags = binding.detailPriceTv.paintFlags or
+                                Paint.STRIKE_THRU_TEXT_FLAG
+                    }
+                    binding.detailDescriptionTv.text = viewState.description
+                    binding.detailLocationTv.text = viewState.address.toCharSequence(requireContext())
+                    binding.detailSurfaceTv.text = viewState.surface.toCharSequence(requireContext())
+                    binding.detailAgentNameTv.text = viewState.agentName.toCharSequence(requireContext())
+                    binding.detailEntryDateTv.text = viewState.entryDate.toCharSequence(requireContext())
+                    binding.detailRoomTv.text = viewState.rooms.toCharSequence(requireContext())
+                    binding.detailBathroomTv.text = viewState.bathrooms.toCharSequence(requireContext())
+                    binding.detailBedroomTv.text = viewState.bedrooms.toCharSequence(requireContext())
+                    viewState.mapMiniature.load(binding.detailMapIv)
                         .error(R.drawable.baseline_villa_24)
                         .into(binding.detailMapIv)
                 }

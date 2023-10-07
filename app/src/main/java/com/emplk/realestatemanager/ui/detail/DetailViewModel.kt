@@ -5,7 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdFlowUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
+import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceUnitByLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.FormatAndConvertPriceByLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.SurfaceUnitType
@@ -30,6 +31,8 @@ class DetailViewModel @Inject constructor(
     private val getPropertyByItsIdUseCase: GetPropertyByItsIdUseCase,
     private val getCurrencyTypeUseCase: GetCurrencyTypeUseCase,
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
+    private val formatAndConvertPriceByLocaleUseCase: FormatAndConvertPriceByLocaleUseCase,
+    private val convertSurfaceUnitByLocaleUseCase: ConvertSurfaceUnitByLocaleUseCase,
     private val getCurrentPropertyIdFlowUseCase: GetCurrentPropertyIdFlowUseCase,
     private val generateMapUrlWithApiKeyUseCase: GenerateMapUrlWithApiKeyUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
@@ -43,14 +46,13 @@ class DetailViewModel @Inject constructor(
                     emit(DetailViewState.LoadingState)
                 }
                 getPropertyByItsIdUseCase.invoke(propertyId)
-            }.collectLatest { propertyEntity ->
-                val currencyType = getCurrencyTypeUseCase.invoke()
+            }.collectLatest { property ->
                 val surfaceUnitType = getSurfaceUnitUseCase.invoke()
 
                 emit(DetailViewState.PropertyDetail(
-                    id = propertyEntity.id,
-                    propertyType = propertyEntity.type,
-                    pictures = propertyEntity.pictures.map { picture ->
+                    id = property.id,
+                    propertyType = property.type,
+                    pictures = property.pictures.map { picture ->
                         PictureBannerViewState(
                             pictureUri = NativePhoto.Uri(picture.uri),
                             description = picture.description,
@@ -59,49 +61,44 @@ class DetailViewModel @Inject constructor(
                     }.sortedByDescending { it.isFeatured },
                     mapMiniature = NativePhoto.Uri(
                         generateMapUrlWithApiKeyUseCase.invoke(
-                            propertyEntity.location.miniatureMapUrl
+                            property.location.miniatureMapUrl
                         )
                     ),
-                    price = when (currencyType) {
-                        CurrencyType.DOLLAR -> NativeText.Argument(
-                            R.string.price_in_dollar,
-                            propertyEntity.price
-                        )
-
-                        CurrencyType.EURO -> NativeText.Argument(
-                            R.string.price_in_euro,
-                            propertyEntity.price
-                        )
-                    },
+                    price = formatAndConvertPriceByLocaleUseCase.invoke(
+                        property.price
+                    ),
                     surface = when (surfaceUnitType) {
-                        SurfaceUnitType.SQUARE_FEET -> NativeText.Argument(
+                        SurfaceUnitType.SQUARE_FOOT -> NativeText.Argument(
                             R.string.surface_in_square_feet,
-                            propertyEntity.surface
+                            property.surface
                         )
 
                         SurfaceUnitType.SQUARE_METER -> NativeText.Argument(
                             R.string.surface_in_square_meters,
-                            propertyEntity.surface
+                            String.format(
+                                "%.0f",
+                                convertSurfaceUnitByLocaleUseCase.invoke(property.surface)
+                            )
                         )
                     },
                     rooms = NativeText.Argument(
                         R.string.detail_number_of_room_textview,
-                        propertyEntity.rooms
+                        property.rooms
                     ),
                     bathrooms = NativeText.Argument(
                         R.string.detail_number_of_bathroom_textview,
-                        propertyEntity.bathrooms
+                        property.bathrooms
                     ),
                     bedrooms = NativeText.Argument(
                         R.string.detail_number_of_bedroom_textview,
-                        propertyEntity.bedrooms
+                        property.bedrooms
                     ),
-                    description = propertyEntity.description,
+                    description = property.description,
                     address = NativeText.Argument(
                         R.string.detail_location_tv,
-                        propertyEntity.location.address
+                        property.location.address
                     ),
-                    amenities = propertyEntity.amenities.map {
+                    amenities = property.amenities.map {
                         AmenityViewState.AmenityItem(
                             stringRes = it.type.stringRes,
                             iconDrawable = it.type.iconDrawable,
@@ -109,7 +106,7 @@ class DetailViewModel @Inject constructor(
                     },
                     entryDate = NativeText.Argument(
                         R.string.detail_entry_date_tv,
-                        propertyEntity.entryDate.format(
+                        property.entryDate.format(
                             DateTimeFormatter.ofLocalizedDate(
                                 FormatStyle.SHORT
                             )
@@ -117,10 +114,10 @@ class DetailViewModel @Inject constructor(
                     ),
                     agentName = NativeText.Argument(
                         R.string.detail_manager_agent_name,
-                        propertyEntity.agentName
+                        property.agentName
                     ),
-                    isSold = propertyEntity.isSold,
-                    saleDate = propertyEntity.saleDate?.let { saleDate ->
+                    isSold = property.isSold,
+                    saleDate = property.saleDate?.let { saleDate ->
                         NativeText.Argument(
                             R.string.detail_sold_date_tv,
                             saleDate.format(

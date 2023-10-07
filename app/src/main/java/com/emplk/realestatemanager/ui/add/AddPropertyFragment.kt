@@ -31,6 +31,7 @@ import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
+import java.math.BigDecimal
 
 @AndroidEntryPoint
 class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
@@ -49,7 +50,7 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
 
         binding.addPropertySoldStatusTv.isVisible = false
         binding.addPropertySoldStatusSwitch.isVisible = false
-        binding.addPropertyCreateButton.text = getString(R.string.add_property_create_button)
+        binding.addPropertySubmitButton.text = getString(R.string.add_property_create_button)
 
         val typeAdapter = AddPropertyTypeSpinnerAdapter()
         binding.addPropertyTypeActv.setAdapter(typeAdapter)
@@ -80,7 +81,7 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
 
         initFormFieldsTextWatchers()
 
-        binding.addPropertyCreateButton.setOnClickListener {
+        binding.addPropertySubmitButton.setOnClickListener {
             viewModel.onAddPropertyClicked()
         }
 
@@ -100,7 +101,7 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
             picturePreviewAdapter.submitList(viewState.pictures)
             amenityAdapter.submitList(viewState.amenities)
             predictionAdapter.submitList(viewState.addressPredictions)
-            binding.addPropertyCreateButton.isEnabled = viewState.isAddButtonEnabled
+            binding.addPropertySubmitButton.isEnabled = viewState.isAddButtonEnabled
             binding.addPropertyProgressBar.isVisible = viewState.isProgressBarVisible
 
 
@@ -209,7 +210,11 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
         }
 
         binding.addPropertyPriceTextInputEditText.doAfterTextChanged {
-            viewModel.onPriceChanged(it.toString())
+            if (it.isNullOrBlank()) {
+                viewModel.onPriceChanged(BigDecimal.ZERO)
+                return@doAfterTextChanged
+            }
+            viewModel.onPriceChanged(BigDecimal(it.toString()))
         }
 
         binding.addPropertySurfaceTextInputEditText.doAfterTextChanged {

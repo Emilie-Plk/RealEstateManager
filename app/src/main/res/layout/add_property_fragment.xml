@@ -147,7 +147,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="@string/surface_unit_in_n"
             app:layout_constraintBottom_toBottomOf="@id/add_property_surface_tv"
             app:layout_constraintStart_toEndOf="@id/add_property_surface_tv"
             app:layout_constraintTop_toTopOf="@id/add_property_surface_tv"

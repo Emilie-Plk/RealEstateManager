@@ -16,15 +16,13 @@ data class PropertyDto(
     val id: Long = 0,
     val type: String,
     val price: BigDecimal,
-    val surface: Int,
+    val surface: Double,
     val rooms: Int,
     val bedrooms: Int,
     val bathrooms: Int,
     val description: String,
     @ColumnInfo(name = "agent_name")
     val agentName: String,
-    @ColumnInfo(name = "is_available_for_sale")
-    val isAvailableForSale: Boolean,
     @ColumnInfo(name = "is_sold")
     val isSold: Boolean,
     @ColumnInfo(name = "entry_date")

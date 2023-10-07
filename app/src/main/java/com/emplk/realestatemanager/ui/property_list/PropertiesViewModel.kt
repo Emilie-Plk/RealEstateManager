@@ -5,7 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.current_property.SetCurrentPropertyIdUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
+import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceUnitByLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.FormatAndConvertPriceByLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.SurfaceUnitType
@@ -31,6 +32,8 @@ class PropertiesViewModel @Inject constructor(
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
     private val getScreenWidthTypeFlowUseCase: GetScreenWidthTypeFlowUseCase,
     private val setCurrentPropertyIdUseCase: SetCurrentPropertyIdUseCase,
+    private val convertSurfaceUnitByLocaleUseCase: ConvertSurfaceUnitByLocaleUseCase,
+    private val formatAndConvertPriceByLocaleUseCase: FormatAndConvertPriceByLocaleUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
 ) : ViewModel() {
 
@@ -61,7 +64,6 @@ class PropertiesViewModel @Inject constructor(
     }
 
     val viewState: LiveData<List<PropertiesViewState>> = liveData {
-        val currencyType = getCurrencyTypeUseCase.invoke()
         val surfaceUnitType = getSurfaceUnitUseCase.invoke()
 
         if (latestValue == null) {
@@ -80,20 +82,18 @@ class PropertiesViewModel @Inject constructor(
                     val featuredPicture = photoUrl?.let { NativePhoto.Uri(it) }
                         ?: NativePhoto.Resource(R.drawable.baseline_villa_24)
 
-                    val priceText = when (currencyType) {
-                        CurrencyType.DOLLAR -> NativeText.Argument(R.string.price_in_dollar, property.price)
-                        CurrencyType.EURO -> NativeText.Argument(R.string.price_in_euro, property.price)
-                    }
-
                     val surfaceText = when (surfaceUnitType) {
-                        SurfaceUnitType.SQUARE_FEET -> NativeText.Argument(
+                        SurfaceUnitType.SQUARE_FOOT -> NativeText.Argument(
                             R.string.surface_in_square_feet,
-                            property.surface
+                            String.format("%.0f", property.surface)
                         )
 
                         SurfaceUnitType.SQUARE_METER -> NativeText.Argument(
                             R.string.surface_in_square_meters,
-                            property.surface
+                            String.format(
+                                "%.0f",
+                                convertSurfaceUnitByLocaleUseCase.invoke(property.surface)
+                            )
                         )
                     }
 
@@ -102,7 +102,7 @@ class PropertiesViewModel @Inject constructor(
                         propertyType = property.type,
                         featuredPicture = featuredPicture,
                         address = property.location.address,
-                        price = priceText,
+                        price = formatAndConvertPriceByLocaleUseCase.invoke(property.price),
                         isSold = property.isSold,
                         room = property.rooms.toString(),
                         bathroom = property.bathrooms.toString(),
