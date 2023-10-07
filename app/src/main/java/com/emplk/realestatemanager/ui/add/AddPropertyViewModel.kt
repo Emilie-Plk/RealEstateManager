@@ -13,21 +13,21 @@ import com.emplk.realestatemanager.domain.connectivity.IsInternetEnabledFlowUseC
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
+import com.emplk.realestatemanager.domain.navigation.draft.GetDraftNavigationUseCase
 import com.emplk.realestatemanager.domain.property.AddPropertyUseCase
 import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.amenity.type.GetAmenityTypeUseCase
-import com.emplk.realestatemanager.domain.property_form.AddPropertyFormEntity
-import com.emplk.realestatemanager.domain.property_form.GetSavedPropertyFormEventUseCase
-import com.emplk.realestatemanager.domain.property_form.InitTemporaryPropertyFormUseCase
-import com.emplk.realestatemanager.domain.property_form.PropertyFormDatabaseState
-import com.emplk.realestatemanager.domain.property_form.SetPropertyFormProgressUseCase
-import com.emplk.realestatemanager.domain.property_form.UpdatePropertyFormUseCase
-import com.emplk.realestatemanager.domain.property_form.picture_preview.DeletePicturePreviewByIdUseCase
-import com.emplk.realestatemanager.domain.property_form.picture_preview.GetPicturePreviewsAsFlowUseCase
-import com.emplk.realestatemanager.domain.property_form.picture_preview.SavePictureToLocalAppFilesAndToLocalDatabaseUseCase
-import com.emplk.realestatemanager.domain.property_form.picture_preview.UpdatePicturePreviewUseCase
-import com.emplk.realestatemanager.domain.property_form.picture_preview.id.DeletePicturePreviewIdUseCase
+import com.emplk.realestatemanager.domain.property_draft.AddPropertyFormEntity
+import com.emplk.realestatemanager.domain.property_draft.InitTemporaryPropertyFormUseCase
+import com.emplk.realestatemanager.domain.property_draft.PropertyFormDatabaseState
+import com.emplk.realestatemanager.domain.property_draft.SetPropertyFormProgressUseCase
+import com.emplk.realestatemanager.domain.property_draft.UpdatePropertyFormUseCase
+import com.emplk.realestatemanager.domain.property_draft.picture_preview.DeletePicturePreviewByIdUseCase
+import com.emplk.realestatemanager.domain.property_draft.picture_preview.GetPicturePreviewsAsFlowUseCase
+import com.emplk.realestatemanager.domain.property_draft.picture_preview.SavePictureToLocalAppFilesAndToLocalDatabaseUseCase
+import com.emplk.realestatemanager.domain.property_draft.picture_preview.UpdatePicturePreviewUseCase
+import com.emplk.realestatemanager.domain.property_draft.picture_preview.id.DeletePicturePreviewIdUseCase
 import com.emplk.realestatemanager.domain.property_type.GetPropertyTypeFlowUseCase
 import com.emplk.realestatemanager.ui.add.address_predictions.PredictionViewState
 import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem
@@ -52,6 +52,7 @@ import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
@@ -59,7 +60,7 @@ import kotlin.time.Duration.Companion.seconds
 @HiltViewModel
 class AddPropertyViewModel @Inject constructor(
     private val addPropertyUseCase: AddPropertyUseCase,
-    private val getSavedPropertyFormEventUseCase: GetSavedPropertyFormEventUseCase,
+    private val getDraftNavigationUseCase: GetDraftNavigationUseCase,
     private val deletePicturePreviewIdUseCase: DeletePicturePreviewIdUseCase, // à refacto
     private val deletePicturePreviewByIdUseCase: DeletePicturePreviewByIdUseCase, // à refacto
     private val updatePicturePreviewUseCase: UpdatePicturePreviewUseCase,
@@ -103,22 +104,9 @@ class AddPropertyViewModel @Inject constructor(
             ) { form, isInternetEnabled ->
                 if (true) { // TODO: change that of course
                     isAddingPropertyInDatabaseMutableStateFlow.tryEmit(true)
-                    if (form.propertyType != null &&
-                        form.address != null &&
-                        form.price != null &&
-                        form.surface != null &&
-                        form.description != null &&
-                        form.nbRooms > 0 &&
-                        form.nbBathrooms > 0 &&
-                        form.nbBedrooms > 0 &&
-                        form.agent != null &&
-                        form.amenities.isNotEmpty() &&
-                        form.pictureIds.isNotEmpty()
-                    ) {
-                        val resultEvent = addPropertyUseCase.invoke(form)
-                        emit(Event(resultEvent))
-                        isAddingPropertyInDatabaseMutableStateFlow.tryEmit(false)
-                    }
+                    val resultEvent = addPropertyUseCase.invoke(form)
+                    emit(Event(resultEvent))
+                    isAddingPropertyInDatabaseMutableStateFlow.tryEmit(false)
                 } else {
                     updatePropertyFormUseCase.invoke(form)
                     emit(Event(AddPropertyEvent.Toast(NativeText.Resource(R.string.no_internet_connection_draft_saved))))
@@ -139,24 +127,24 @@ class AddPropertyViewModel @Inject constructor(
                 is PropertyFormDatabaseState.DraftAlreadyExists -> {
                     formMutableStateFlow.update { addPropertyForm ->
                         addPropertyForm.copy(
-                            propertyType = initTemporaryPropertyFormUseCase.propertyFormEntity.type,
-                            address = initTemporaryPropertyFormUseCase.propertyFormEntity.address,
-                            price = initTemporaryPropertyFormUseCase.propertyFormEntity.price,
-                            surface = initTemporaryPropertyFormUseCase.propertyFormEntity.surface,
-                            description = initTemporaryPropertyFormUseCase.propertyFormEntity.description,
-                            nbRooms = initTemporaryPropertyFormUseCase.propertyFormEntity.rooms ?: 0,
-                            nbBathrooms = initTemporaryPropertyFormUseCase.propertyFormEntity.bathrooms ?: 0,
-                            nbBedrooms = initTemporaryPropertyFormUseCase.propertyFormEntity.bedrooms ?: 0,
-                            agent = initTemporaryPropertyFormUseCase.propertyFormEntity.agentName,
-                            amenities = initTemporaryPropertyFormUseCase.propertyFormEntity.amenities,
-                            pictureIds = initTemporaryPropertyFormUseCase.propertyFormEntity.pictures.map { it.id },
-                            featuredPictureId = initTemporaryPropertyFormUseCase.propertyFormEntity.pictures.find { it.isFeatured }?.id,
+                            propertyType = initTemporaryPropertyFormUseCase.propertyDraftEntity.type,
+                            address = initTemporaryPropertyFormUseCase.propertyDraftEntity.address,
+                            price = initTemporaryPropertyFormUseCase.propertyDraftEntity.price,
+                            surface = initTemporaryPropertyFormUseCase.propertyDraftEntity.surface,
+                            description = initTemporaryPropertyFormUseCase.propertyDraftEntity.description,
+                            nbRooms = initTemporaryPropertyFormUseCase.propertyDraftEntity.rooms ?: 0,
+                            nbBathrooms = initTemporaryPropertyFormUseCase.propertyDraftEntity.bathrooms ?: 0,
+                            nbBedrooms = initTemporaryPropertyFormUseCase.propertyDraftEntity.bedrooms ?: 0,
+                            agent = initTemporaryPropertyFormUseCase.propertyDraftEntity.agentName,
+                            amenities = initTemporaryPropertyFormUseCase.propertyDraftEntity.amenities,
+                            pictureIds = initTemporaryPropertyFormUseCase.propertyDraftEntity.pictures.map { it.id },
+                            featuredPictureId = initTemporaryPropertyFormUseCase.propertyDraftEntity.pictures.find { it.isFeatured }?.id,
                         )
                     }
 
                     Log.d(
                         "AddPropertyViewModel",
-                        "initTemporaryPropertyFormUseCase with existing propertyForm: ${initTemporaryPropertyFormUseCase.propertyFormEntity}"
+                        "initTemporaryPropertyFormUseCase with existing propertyForm: ${initTemporaryPropertyFormUseCase.propertyDraftEntity}"
                     )
                 }
             }
@@ -175,7 +163,7 @@ class AddPropertyViewModel @Inject constructor(
 
                     val isFormInProgress = !form.propertyType.isNullOrBlank() ||
                             !form.address.isNullOrBlank() ||
-                            !form.price.isNullOrBlank() ||
+                            (form.price == null || form.price == BigDecimal.ZERO) ||
                             !form.surface.isNullOrBlank() ||
                             !form.description.isNullOrBlank() ||
                             form.nbRooms > 0 ||
@@ -190,7 +178,7 @@ class AddPropertyViewModel @Inject constructor(
                     isEveryFieldFilledMutableStateFlow.tryEmit(
                         form.propertyType != null &&
                                 form.address != null &&
-                                form.price != null &&
+                                (form.price != null && form.price > BigDecimal.ZERO) &&
                                 form.surface != null &&
                                 form.description != null &&
                                 form.nbRooms > 0 &&
@@ -206,7 +194,7 @@ class AddPropertyViewModel @Inject constructor(
                         AddPropertyViewState(
                             propertyType = form.propertyType,
                             address = form.address,
-                            price = form.price,
+                            price = form.price?.toString() ?: "",
                             surface = form.surface,
                             description = form.description,
                             nbRooms = form.nbRooms,
@@ -324,8 +312,9 @@ class AddPropertyViewModel @Inject constructor(
                 }
             }
 
+            //
             launch {
-                getSavedPropertyFormEventUseCase.invoke().collectLatest {
+                getDraftNavigationUseCase.invoke().collectLatest {
                     formMutableStateFlow.map { form ->
                         updatePropertyFormUseCase.invoke(form)
                     }.collect()
@@ -433,9 +422,11 @@ class AddPropertyViewModel @Inject constructor(
         }
     }
 
-    fun onPriceChanged(price: String?) {
-        formMutableStateFlow.update {
-            it.copy(price = price)
+    fun onPriceChanged(price: BigDecimal?) {
+        if (price != null && price > BigDecimal.ZERO) {
+            formMutableStateFlow.update {
+                it.copy(price = price)
+            }
         }
     }
 

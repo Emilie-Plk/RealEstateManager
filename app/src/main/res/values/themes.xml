@@ -55,7 +55,7 @@
     </style>
 
     <style name="Theme.RealEstateManager.PropertyPrice">
-        <item name="android:textSize">22sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:ellipsize">end</item>
         <item name="android:textColor">@color/secondary_dark</item>
@@ -139,7 +139,7 @@
         <item name="android:background">@drawable/rounded_corners_background</item>
         <item name="android:padding">8dp</item>
         <item name="android:textColor">@color/almost_white</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">15sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 

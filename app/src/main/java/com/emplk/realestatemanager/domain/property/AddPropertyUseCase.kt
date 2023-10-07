@@ -3,23 +3,27 @@ package com.emplk.realestatemanager.domain.property
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.geocoding.GeocodingRepository
 import com.emplk.realestatemanager.domain.geocoding.GeocodingWrapper
+import com.emplk.realestatemanager.domain.locale_formatting.LocaleFormattingRepository
 import com.emplk.realestatemanager.domain.map_picture.GenerateMapBaseUrlWithParamsUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.location.LocationEntity
 import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
-import com.emplk.realestatemanager.domain.property_form.AddPropertyFormEntity
-import com.emplk.realestatemanager.domain.property_form.ClearPropertyFormUseCase
-import com.emplk.realestatemanager.domain.property_form.picture_preview.GetPicturePreviewsUseCase
+import com.emplk.realestatemanager.domain.property_draft.AddPropertyFormEntity
+import com.emplk.realestatemanager.domain.property_draft.ClearPropertyFormUseCase
+import com.emplk.realestatemanager.domain.property_draft.picture_preview.GetPicturePreviewsUseCase
 import com.emplk.realestatemanager.ui.add.AddPropertyEvent
 import com.emplk.realestatemanager.ui.utils.NativeText
+import java.math.BigDecimal
 import java.time.Clock
 import java.time.LocalDateTime
+import java.util.Locale
 import javax.inject.Inject
 
 class AddPropertyUseCase @Inject constructor(
     private val propertyRepository: PropertyRepository,
     private val geocodingRepository: GeocodingRepository,
+    private val localeFormattingRepository: LocaleFormattingRepository,
     private val generateMapBaseUrlWithParamsUseCase: GenerateMapBaseUrlWithParamsUseCase,
     private val clearPropertyFormUseCase: ClearPropertyFormUseCase,
     private val getPicturePreviewsUseCase: GetPicturePreviewsUseCase,
@@ -29,7 +33,7 @@ class AddPropertyUseCase @Inject constructor(
     suspend fun invoke(form: AddPropertyFormEntity): AddPropertyEvent {
         if (form.propertyType != null &&
             form.address != null &&
-            form.price != null &&
+            (form.price != null && form.price > BigDecimal.ZERO) &&
             form.surface != null &&
             form.description != null &&
             form.nbRooms > 0 &&
@@ -49,8 +53,12 @@ class AddPropertyUseCase @Inject constructor(
             val success = propertyRepository.addPropertyWithDetails(
                 PropertyEntity(
                     type = form.propertyType,
-                    price = form.price.toBigDecimal(),
-                    surface = form.surface.toInt(),
+                    price = when (localeFormattingRepository.getLocale()) {
+                        Locale.US -> form.price
+                        Locale.FRANCE -> localeFormattingRepository.convertEuroToDollar(form.price)
+                        else -> throw Exception("Error while converting price")
+                    },
+                    surface = form.surface.toDouble(),
                     description = form.description,
                     rooms = form.nbRooms,
                     bathrooms = form.nbBathrooms,
@@ -80,7 +88,6 @@ class AddPropertyUseCase @Inject constructor(
                         )
                     },
                     entryDate = LocalDateTime.now(clock),
-                    isAvailableForSale = false,
                     isSold = false,
                     saleDate = null,
                 ),

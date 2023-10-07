@@ -3,6 +3,7 @@ package com.emplk.realestatemanager.data
 import android.app.Application
 import android.content.ContentResolver
 import android.content.res.Resources
+import android.os.Build
 import androidx.work.WorkManager
 import com.emplk.realestatemanager.BuildConfig
 import com.emplk.realestatemanager.data.api.GoogleApi
@@ -10,9 +11,9 @@ import com.emplk.realestatemanager.data.property.PropertyDao
 import com.emplk.realestatemanager.data.property.amenity.AmenityDao
 import com.emplk.realestatemanager.data.property.location.LocationDao
 import com.emplk.realestatemanager.data.property.picture.PictureDao
-import com.emplk.realestatemanager.data.property_form.PropertyFormDao
-import com.emplk.realestatemanager.data.property_form.amenity.AmenityFormDao
-import com.emplk.realestatemanager.data.property_form.picture_preview.PicturePreviewDao
+import com.emplk.realestatemanager.data.property_draft.PropertyDraftDao
+import com.emplk.realestatemanager.data.property_draft.amenity.AmenityDraftDao
+import com.emplk.realestatemanager.data.property_draft.picture_preview.PicturePreviewDao
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -24,6 +25,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.time.Clock
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -51,6 +53,17 @@ class DataModule {
     @Singleton
     @Provides
     fun provideResources(application: Application): Resources = application.resources
+
+    @Suppress("DEPRECATION")
+    @Singleton
+    @Provides
+    fun provideLocale(application: Application): Locale {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            application.resources.configuration.locales[0]
+        } else {
+            application.resources.configuration.locale
+        }
+    }
 
     @Singleton
     @Provides
@@ -122,7 +135,7 @@ class DataModule {
 
     @Singleton
     @Provides
-    fun providePropertyFormDao(appDatabase: AppDatabase): PropertyFormDao = appDatabase.getPropertyFormDao()
+    fun providePropertyFormDao(appDatabase: AppDatabase): PropertyDraftDao = appDatabase.getPropertyFormDao()
 
     @Singleton
     @Provides
@@ -130,7 +143,7 @@ class DataModule {
 
     @Singleton
     @Provides
-    fun provideAmenityFormDao(appDatabase: AppDatabase): AmenityFormDao = appDatabase.getAmenityFormDao()
+    fun provideAmenityFormDao(appDatabase: AppDatabase): AmenityDraftDao = appDatabase.getAmenityFormDao()
 
     // endregion DAOs
 

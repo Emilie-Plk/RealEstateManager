@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.emplk.realestatemanager.domain.navigation.GetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
-import com.emplk.realestatemanager.domain.property_form.IsPropertyFormInProgressUseCase
+import com.emplk.realestatemanager.domain.property_draft.IsPropertyFormInProgressUseCase
 import com.emplk.realestatemanager.ui.utils.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

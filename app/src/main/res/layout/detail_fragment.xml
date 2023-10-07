@@ -79,6 +79,8 @@
                     android:layout_marginEnd="16dp"
                     android:drawablePadding="8dp"
                     android:ellipsize="end"
+                    android:paddingEnd="12dp"
+                    android:paddingStart="4dp"
                     android:maxLines="5"
                     android:text="@string/detail_location_tv"
                     app:drawableStartCompat="@drawable/baseline_location_on_24"
@@ -133,7 +135,6 @@
                     style="@style/Theme.RealEstateManager.PropertyPrice"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
                     android:layout_marginEnd="12dp"
                     android:layout_marginBottom="12dp"
                     android:gravity="end"
@@ -141,7 +142,7 @@
                     app:layout_constraintBottom_toTopOf="@+id/detail_location_tv"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/detail_type_tv"
-                    app:layout_constraintTop_toBottomOf="@+id/detail_featured_image"
+                    app:layout_constraintTop_toTopOf="@+id/detail_type_tv"
                     tools:text="$50000000" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,12 +17,12 @@ import com.emplk.realestatemanager.data.property.location.LocationDao
 import com.emplk.realestatemanager.data.property.location.LocationDto
 import com.emplk.realestatemanager.data.property.picture.PictureDao
 import com.emplk.realestatemanager.data.property.picture.PictureDto
-import com.emplk.realestatemanager.data.property_form.PropertyFormDao
-import com.emplk.realestatemanager.data.property_form.PropertyFormDto
-import com.emplk.realestatemanager.data.property_form.amenity.AmenityFormDao
-import com.emplk.realestatemanager.data.property_form.amenity.AmenityFormDto
-import com.emplk.realestatemanager.data.property_form.picture_preview.PicturePreviewDao
-import com.emplk.realestatemanager.data.property_form.picture_preview.PicturePreviewFormDto
+import com.emplk.realestatemanager.data.property_draft.PropertyDraftDao
+import com.emplk.realestatemanager.data.property_draft.PropertyDraftDto
+import com.emplk.realestatemanager.data.property_draft.amenity.AmenityDraftDao
+import com.emplk.realestatemanager.data.property_draft.amenity.AmenityDraftDto
+import com.emplk.realestatemanager.data.property_draft.picture_preview.PicturePreviewDao
+import com.emplk.realestatemanager.data.property_draft.picture_preview.PicturePreviewDto
 import com.emplk.realestatemanager.data.utils.type_converters.BigDecimalTypeConverter
 import com.emplk.realestatemanager.data.utils.type_converters.LocalDateTimeTypeConverter
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
@@ -36,9 +36,9 @@ import java.time.LocalDateTime
         PictureDto::class,
         LocationDto::class,
         AmenityDto::class,
-        PropertyFormDto::class,
-        PicturePreviewFormDto::class,
-        AmenityFormDto::class,
+        PropertyDraftDto::class,
+        PicturePreviewDto::class,
+        AmenityDraftDto::class,
     ],
     version = 1,
     exportSchema = false
@@ -53,9 +53,9 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun getLocationDao(): LocationDao
     abstract fun getPictureDao(): PictureDao
     abstract fun getAmenityDao(): AmenityDao
-    abstract fun getPropertyFormDao(): PropertyFormDao
+    abstract fun getPropertyFormDao(): PropertyDraftDao
     abstract fun getPicturePreviewDao(): PicturePreviewDao
-    abstract fun getAmenityFormDao(): AmenityFormDao
+    abstract fun getAmenityFormDao(): AmenityDraftDao
 
     companion object {
         private const val DATABASE_NAME = "RealEstateManager_database"
@@ -78,12 +78,11 @@ abstract class AppDatabase : RoomDatabase() {
                             PropertyDto(
                                 type = "Flat",
                                 price = BigDecimal(1000000),
-                                surface = 150,
+                                surface = 1700.0,
                                 rooms = 5,
                                 bathrooms = 2,
                                 bedrooms = 3,
                                 description = "Discover luxury living at its finest with this stunning and spacious home. Boasting elegant design, high-end finishes, and a prime location, this property offers everything you need for a comfortable and lavish lifestyle.",
-                                isAvailableForSale = true,
                                 entryDate = LocalDateTime.of(2023, 8, 24, 10, 0),
                                 saleDate = null,
                                 isSold = false,
@@ -92,12 +91,11 @@ abstract class AppDatabase : RoomDatabase() {
                             PropertyDto(
                                 type = "Villa",
                                 price = BigDecimal(5000000),
-                                surface = 200,
+                                surface = 1300.0,
                                 rooms = 8,
                                 bathrooms = 4,
                                 bedrooms = 4,
                                 description = " Experience the epitome of modern luxury in this exquisite villa that seamlessly blends sophistication with comfort. This architectural masterpiece features sleek lines, floor-to-ceiling windows, and cutting-edge design elements that create an unparalleled living experience. Enjoy spacious living areas, a state-of-the-art kitchen, and breathtaking panoramic views of the surrounding landscape. With its private infinity pool, landscaped gardens, and smart home technology, this villa offers the ultimate retreat for those seeking a contemporary and lavish lifestyle.",
-                                isAvailableForSale = false,
                                 entryDate = LocalDateTime.of(2023, 8, 25, 10, 0),
                                 saleDate = LocalDateTime.of(2023, 9, 3, 11, 0),
                                 isSold = true,
@@ -105,13 +103,12 @@ abstract class AppDatabase : RoomDatabase() {
                             ),
                             PropertyDto(
                                 type = "Penthouse",
-                                price = BigDecimal(2000000),
-                                surface = 100,
+                                price = BigDecimal(20000000),
+                                surface = 2500.0,
                                 rooms = 3,
                                 bathrooms = 2,
                                 bedrooms = 2,
                                 description = "This stunning penthouse offers the ultimate in luxury living with its sleek design, high-end finishes, and breathtaking views. The open floor plan features a spacious living area, a gourmet kitchen, and a private terrace that overlooks the city skyline. The master suite boasts a spa-like bathroom with a soaking tub and walk-in shower. With its prime location and modern amenities, this penthouse is perfect for those seeking an upscale lifestyle.",
-                                isAvailableForSale = true,
                                 entryDate = LocalDateTime.of(2023, 8, 26, 10, 0),
                                 saleDate = null,
                                 isSold = false,

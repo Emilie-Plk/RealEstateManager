@@ -53,7 +53,7 @@ class PropertyListAdapter :
                 binding.root.setOnClickListener { item.onClickEvent.invoke() }
                 binding.propertyItemTypeTextView.text = item.propertyType
                 binding.propertyItemLocationTextView.text = item.address
-                binding.propertyItemPriceTextView.text = item.price.toCharSequence(itemView.context)
+                binding.propertyItemPriceTextView.text = item.price
                 binding.propertyItemRoomTextView?.text = item.room
                 binding.propertyItemBathroomTextView?.text = item.bathroom
                 binding.propertyItemBedroomTextView?.text = item.bedroom

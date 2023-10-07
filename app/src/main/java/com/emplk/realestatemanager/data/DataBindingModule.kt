@@ -4,19 +4,20 @@ import com.emplk.realestatemanager.data.agent.RealEstateAgentRepositoryImpl
 import com.emplk.realestatemanager.data.autocomplete.PredictionRepositoryAutocomplete
 import com.emplk.realestatemanager.data.connectivity.InternetConnectivityRepositoryBroadcastReceiver
 import com.emplk.realestatemanager.data.content_resolver.PictureFileRepositoryContentResolver
-import com.emplk.realestatemanager.data.currency.LocaleFormattingRepositoryImpl
 import com.emplk.realestatemanager.data.current_property.CurrentPropertyRepositoryImpl
 import com.emplk.realestatemanager.data.geocoding.GeocodingRepositoryGoogle
+import com.emplk.realestatemanager.data.locale_formatting.LocaleFormattingRepositoryImpl
+import com.emplk.realestatemanager.data.navigation.NavigationDraftRepositoryImpl
 import com.emplk.realestatemanager.data.navigation.NavigationRepositoryImpl
 import com.emplk.realestatemanager.data.property.PropertyRepositoryRoom
 import com.emplk.realestatemanager.data.property.amenity.AmenityRepositoryRoom
 import com.emplk.realestatemanager.data.property.amenity.type.AmenityTypeRepositoryImpl
 import com.emplk.realestatemanager.data.property.location.LocationRepositoryRoom
 import com.emplk.realestatemanager.data.property.picture.PictureRepositoryRoom
-import com.emplk.realestatemanager.data.property_form.PropertyFormRepositoryRoom
-import com.emplk.realestatemanager.data.property_form.amenity.AmenityFormRepositoryRoom
-import com.emplk.realestatemanager.data.property_form.picture_preview.PicturePreviewRepositoryRoom
-import com.emplk.realestatemanager.data.property_form.picture_preview.id.PicturePreviewIdRepositoryImpl
+import com.emplk.realestatemanager.data.property_draft.PropertyDraftRepositoryRoom
+import com.emplk.realestatemanager.data.property_draft.amenity.AmenityDaftRepositoryRoom
+import com.emplk.realestatemanager.data.property_draft.picture_preview.PicturePreviewRepositoryRoom
+import com.emplk.realestatemanager.data.property_draft.picture_preview.id.PicturePreviewIdRepositoryImpl
 import com.emplk.realestatemanager.data.property_type.PropertyTypeRepositoryImpl
 import com.emplk.realestatemanager.data.screen_width.ScreenWidthTypeRepositoryImpl
 import com.emplk.realestatemanager.domain.agent.RealEstateAgentRepository
@@ -27,15 +28,16 @@ import com.emplk.realestatemanager.domain.current_property.CurrentPropertyReposi
 import com.emplk.realestatemanager.domain.geocoding.GeocodingRepository
 import com.emplk.realestatemanager.domain.locale_formatting.LocaleFormattingRepository
 import com.emplk.realestatemanager.domain.navigation.NavigationRepository
+import com.emplk.realestatemanager.domain.navigation.draft.NavigationDraftRepository
 import com.emplk.realestatemanager.domain.property.PropertyRepository
 import com.emplk.realestatemanager.domain.property.amenity.AmenityRepository
 import com.emplk.realestatemanager.domain.property.amenity.type.AmenityTypeRepository
 import com.emplk.realestatemanager.domain.property.location.LocationRepository
 import com.emplk.realestatemanager.domain.property.pictures.PictureRepository
-import com.emplk.realestatemanager.domain.property_form.PropertyFormRepository
-import com.emplk.realestatemanager.domain.property_form.amenity.AmenityFormRepository
-import com.emplk.realestatemanager.domain.property_form.picture_preview.PicturePreviewRepository
-import com.emplk.realestatemanager.domain.property_form.picture_preview.id.PicturePreviewIdRepository
+import com.emplk.realestatemanager.domain.property_draft.PropertyFormRepository
+import com.emplk.realestatemanager.domain.property_draft.amenity.AmenityFormRepository
+import com.emplk.realestatemanager.domain.property_draft.picture_preview.PicturePreviewRepository
+import com.emplk.realestatemanager.domain.property_draft.picture_preview.id.PicturePreviewIdRepository
 import com.emplk.realestatemanager.domain.property_type.PropertyTypeRepository
 import com.emplk.realestatemanager.domain.screen_width.ScreenWidthTypeRepository
 import dagger.Binds
@@ -94,7 +96,7 @@ abstract class DataBindingModule {
 
     @Singleton
     @Binds
-    abstract fun bindPropertyFormRepository(implementation: PropertyFormRepositoryRoom): PropertyFormRepository
+    abstract fun bindPropertyFormRepository(implementation: PropertyDraftRepositoryRoom): PropertyFormRepository
 
     @Singleton
     @Binds
@@ -102,7 +104,7 @@ abstract class DataBindingModule {
 
     @Singleton
     @Binds
-    abstract fun bindAmenityFormRepository(implementation: AmenityFormRepositoryRoom): AmenityFormRepository
+    abstract fun bindAmenityFormRepository(implementation: AmenityDaftRepositoryRoom): AmenityFormRepository
 
     @Singleton
     @Binds
@@ -123,4 +125,9 @@ abstract class DataBindingModule {
     @Singleton
     @Binds
     abstract fun bindPictureFileRepository(implementation: PictureFileRepositoryContentResolver): PictureFileRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindNavigationDraftRepository(implementation: NavigationDraftRepositoryImpl): NavigationDraftRepository
+
 }

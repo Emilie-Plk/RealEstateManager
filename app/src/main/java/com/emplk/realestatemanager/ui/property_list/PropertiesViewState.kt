@@ -17,7 +17,7 @@ sealed class PropertiesViewState(val type: Type) {
         val propertyType: String,
         val featuredPicture: NativePhoto,
         val address: String,
-        val price: NativeText,
+        val price: String,
         val isSold: Boolean,
         val room: String,
         val bathroom: String,
