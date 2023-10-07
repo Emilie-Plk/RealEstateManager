@@ -115,9 +115,8 @@ class AddPropertyViewModel @Inject constructor(
                         form.amenities.isNotEmpty() &&
                         form.pictureIds.isNotEmpty()
                     ) {
-                        val success = addPropertyUseCase.invoke(form)
-                        if (success) emit(Event(AddPropertyEvent.Toast(NativeText.Resource(R.string.add_property_successfully_created_message))))
-                        else emit(Event(AddPropertyEvent.Toast(NativeText.Resource(R.string.add_property_error_message))))
+                        val resultEvent = addPropertyUseCase.invoke(form)
+                        emit(Event(resultEvent))
                         isAddingPropertyInDatabaseMutableStateFlow.tryEmit(false)
                     }
                 } else {
@@ -342,7 +341,7 @@ class AddPropertyViewModel @Inject constructor(
                     PredictionViewState.Prediction(
                         address = prediction,
                         onClickEvent = EquatableCallbackWithParam { selectedAddress ->
-                            perfectMatchPredictionMutableStateFlow.value = true
+                            perfectMatchPredictionMutableStateFlow.tryEmit(true)
                             currentAddressInputMutableStateFlow.tryEmit(null)
                             formMutableStateFlow.update {
                                 it.copy(
@@ -364,8 +363,8 @@ class AddPropertyViewModel @Inject constructor(
     }
 
 
-    private fun mapAmenityTypesToViewStates(amenityTypes: List<AmenityType>): List<AmenityViewState> {
-        val viewStates = amenityTypes.map { amenityType ->
+    private fun mapAmenityTypesToViewStates(amenityTypes: List<AmenityType>): List<AmenityViewState> =
+        amenityTypes.map { amenityType ->
             AmenityViewState.AmenityCheckbox(
                 id = amenityType.id,
                 name = amenityType.name,
@@ -392,8 +391,6 @@ class AddPropertyViewModel @Inject constructor(
                 },
             )
         }
-        return viewStates
-    }
 
     fun onPropertyTypeSelected(propertyType: String) {
         formMutableStateFlow.update {

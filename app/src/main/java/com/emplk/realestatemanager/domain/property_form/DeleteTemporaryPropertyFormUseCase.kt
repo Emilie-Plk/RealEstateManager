@@ -1,6 +1,5 @@
 package com.emplk.realestatemanager.domain.property_form
 
-import android.util.Log
 import javax.inject.Inject
 
 class DeleteTemporaryPropertyFormUseCase @Inject constructor(

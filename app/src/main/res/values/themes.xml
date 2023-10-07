@@ -120,6 +120,13 @@
         <item name="android:focusable">true</item>
     </style>
 
+    <style name="Theme.RealEstateManager.SubmitButton" parent="ThemeOverlay.Material3.Button">
+        <item name="android:backgroundTint">@drawable/submit_btn_selector</item>
+    </style>
+
+
+    <!-- FILTER PROPERTY-->
+
     <style name="Theme.RealEstateManager.FilterPropertySubtitle">
         <item name="android:textColor">@color/medium_gray</item>
         <item name="android:textSize">16sp</item>

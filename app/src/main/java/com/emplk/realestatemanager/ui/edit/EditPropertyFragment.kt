@@ -21,5 +21,6 @@ class EditPropertyFragment : Fragment(R.layout.add_property_fragment) {
         super.onViewCreated(view, savedInstanceState)
         binding.addPropertySoldStatusTv.isVisible = true
         binding.addPropertySoldStatusSwitch.isVisible = true
+        binding.addPropertyCreateButton.text = getString(R.string.edit_property_btn)
     }
 }

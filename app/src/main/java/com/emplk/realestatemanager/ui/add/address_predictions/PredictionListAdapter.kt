@@ -1,10 +1,8 @@
 package com.emplk.realestatemanager.ui.add.address_predictions
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -46,17 +44,9 @@ class PredictionListAdapter :
             fun bind(item: PredictionViewState.Prediction) {
                 binding.root.setOnClickListener {
                     item.onClickEvent.invoke(item.address)
-                    hideKeyboard(binding.root)
+                    binding.addPropertySuggestionTextView.isCursorVisible = false
                 }
                 binding.addPropertySuggestionTextView.text = item.address
-            }
-
-            private fun hideKeyboard(view: View?) {
-                if (view != null) {
-                    val inputMethodManager =
-                        view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
-                }
             }
         }
 

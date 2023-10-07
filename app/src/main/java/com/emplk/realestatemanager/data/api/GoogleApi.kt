@@ -4,7 +4,6 @@ import com.emplk.realestatemanager.data.autocomplete.response.AutocompleteRespon
 import com.emplk.realestatemanager.data.geocoding.response.GeocodingResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
-import retrofit2.http.Streaming
 
 interface GoogleApi {
 

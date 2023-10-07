@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.domain.property
 
+import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.geocoding.GeocodingRepository
 import com.emplk.realestatemanager.domain.geocoding.GeocodingWrapper
 import com.emplk.realestatemanager.domain.map_picture.GenerateMapBaseUrlWithParamsUseCase
@@ -10,6 +11,8 @@ import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
 import com.emplk.realestatemanager.domain.property_form.AddPropertyFormEntity
 import com.emplk.realestatemanager.domain.property_form.ClearPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_form.picture_preview.GetPicturePreviewsUseCase
+import com.emplk.realestatemanager.ui.add.AddPropertyEvent
+import com.emplk.realestatemanager.ui.utils.NativeText
 import java.time.Clock
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -23,7 +26,7 @@ class AddPropertyUseCase @Inject constructor(
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val clock: Clock,
 ) {
-    suspend fun invoke(form: AddPropertyFormEntity): Boolean {
+    suspend fun invoke(form: AddPropertyFormEntity): AddPropertyEvent {
         if (form.propertyType != null &&
             form.address != null &&
             form.price != null &&
@@ -82,16 +85,15 @@ class AddPropertyUseCase @Inject constructor(
                     saleDate = null,
                 ),
             )
-
-           return if (success) {
+            return if (success) {
                 clearPropertyFormUseCase.invoke()
                 setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
-                true
+                AddPropertyEvent.Toast(NativeText.Resource(R.string.add_property_successfully_created_message))
             } else {
-                return false
+                AddPropertyEvent.Toast(NativeText.Resource(R.string.add_property_error_message))
             }
         } else {
-            return false
+            return AddPropertyEvent.Toast(NativeText.Resource(R.string.add_property_error_message))
         }
     }
 }

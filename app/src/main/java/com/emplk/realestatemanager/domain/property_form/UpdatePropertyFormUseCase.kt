@@ -1,6 +1,5 @@
 package com.emplk.realestatemanager.domain.property_form
 
-import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
 import javax.inject.Inject

@@ -1,6 +1,5 @@
 package com.emplk.realestatemanager.domain.property_form.picture_preview
 
-import android.net.Uri
 import kotlinx.coroutines.flow.Flow
 
 interface PicturePreviewRepository {
