@@ -1,7 +1,7 @@
 package com.emplk.realestatemanager.ui.add
 
 import android.app.Activity
-import android.content.Context
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -11,7 +11,6 @@ import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.NumberPicker
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -50,6 +49,7 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
 
         binding.addPropertySoldStatusTv.isVisible = false
         binding.addPropertySoldStatusSwitch.isVisible = false
+        binding.addPropertyCreateButton.text = getString(R.string.add_property_create_button)
 
         val typeAdapter = AddPropertyTypeSpinnerAdapter()
         binding.addPropertyTypeActv.setAdapter(typeAdapter)
@@ -130,7 +130,14 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
 
             binding.addPropertyAddressTextInputEditText.setOnFocusChangeListener { _, hasFocus ->
                 viewModel.onAddressEditTextFocused(hasFocus)
+                if (!hasFocus) {
+                    hideKeyboard(binding.addPropertyAddressTextInputEditText)
+                    binding.addPropertyAddressTextInputEditText.clearFocus()
+                }
             }
+
+            binding.addPropertyPriceCurrencyTv.text = viewState.priceCurrency.toCharSequence(requireContext())
+            binding.addPropertySurfaceUnitTv.text = viewState.surfaceUnit.toCharSequence(requireContext())
 
             binding.addPropertyAddressTextInputEditText.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -139,7 +146,7 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
                     binding.addPropertyAddressTextInputEditText.clearFocus()
                     return@setOnEditorActionListener true
                 }
-                false // Return false to indicate that you didn't handle the event
+                false
             }
             binding.addPropertyTypeActv.setText(viewState.propertyType, false)
             binding.addPropertyAgentActv.setText(viewState.selectedAgent, false)
@@ -190,7 +197,7 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
     private fun hideKeyboard(view: View?) {
         if (view != null) {
             val inputMethodManager =
-                requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }

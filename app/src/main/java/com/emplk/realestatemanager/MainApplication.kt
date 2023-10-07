@@ -6,7 +6,6 @@ import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.Bundle
 import androidx.hilt.work.HiltWorkerFactory
-import androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance
 import androidx.work.Configuration
 import com.emplk.realestatemanager.data.connectivity.InternetConnectivityRepositoryBroadcastReceiver
 import com.emplk.realestatemanager.domain.screen_width.SetScreenWidthTypeUseCase
@@ -67,7 +66,7 @@ class MainApplication : Application(), Configuration.Provider, Application.Activ
     override fun onActivityStopped(activity: Activity) {
         activityCount--
         if (activityCount == 0 && isInternetConnectivityReceiverRegistered) {
-           unregisterReceiver(internetConnectivityRepositoryBroadcastReceiver)
+            unregisterReceiver(internetConnectivityRepositoryBroadcastReceiver)
             isInternetConnectivityReceiverRegistered = false
         }
     }
