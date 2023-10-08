@@ -115,7 +115,6 @@ class AddPropertyViewModel @Inject constructor(
         }
     }
 
-
     val viewStateLiveData: LiveData<AddPropertyViewState> = liveData {
         coroutineScope {
             when (val initTemporaryPropertyFormUseCase = initTemporaryPropertyFormUseCase.invoke()) {
@@ -163,7 +162,7 @@ class AddPropertyViewModel @Inject constructor(
 
                     val isFormInProgress = !form.propertyType.isNullOrBlank() ||
                             !form.address.isNullOrBlank() ||
-                            (form.price == null || form.price == BigDecimal.ZERO) ||
+                            (form.price > BigDecimal.ZERO) ||
                             !form.surface.isNullOrBlank() ||
                             !form.description.isNullOrBlank() ||
                             form.nbRooms > 0 ||
@@ -178,7 +177,7 @@ class AddPropertyViewModel @Inject constructor(
                     isEveryFieldFilledMutableStateFlow.tryEmit(
                         form.propertyType != null &&
                                 form.address != null &&
-                                (form.price != null && form.price > BigDecimal.ZERO) &&
+                                (form.price > BigDecimal.ZERO) &&
                                 form.surface != null &&
                                 form.description != null &&
                                 form.nbRooms > 0 &&
@@ -194,7 +193,7 @@ class AddPropertyViewModel @Inject constructor(
                         AddPropertyViewState(
                             propertyType = form.propertyType,
                             address = form.address,
-                            price = form.price?.toString() ?: "",
+                            price = if (form.price == BigDecimal.ZERO) "" else form.price.toString(),  // TODO: amarchpo
                             surface = form.surface,
                             description = form.description,
                             nbRooms = form.nbRooms,
@@ -312,7 +311,7 @@ class AddPropertyViewModel @Inject constructor(
                 }
             }
 
-            //
+            // Save draft when navigating away
             launch {
                 getDraftNavigationUseCase.invoke().collectLatest {
                     formMutableStateFlow.map { form ->
@@ -422,8 +421,8 @@ class AddPropertyViewModel @Inject constructor(
         }
     }
 
-    fun onPriceChanged(price: BigDecimal?) {
-        if (price != null && price > BigDecimal.ZERO) {
+    fun onPriceChanged(price: BigDecimal) {
+        if (price > BigDecimal.ZERO) {
             formMutableStateFlow.update {
                 it.copy(price = price)
             }

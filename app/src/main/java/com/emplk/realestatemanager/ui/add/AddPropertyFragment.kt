@@ -38,7 +38,6 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
 
     companion object {
         fun newInstance(): Fragment = AddPropertyFragment()
-        private const val PICTURE_PREVIEW_PREFIX = "property_preview"
     }
 
     private val binding by viewBinding { AddPropertyFragmentBinding.bind(it) }

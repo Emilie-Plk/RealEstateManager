@@ -22,40 +22,10 @@ class PropertiesFragment : Fragment(R.layout.properties_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val adapter = PropertyListAdapter()
-        Log.d("COUCOU", "onViewCreated: ${viewModel.viewState.value?.size}")
         binding.propertiesRv.adapter = adapter
 
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
             adapter.submitList(viewState)
-            Log.d("COUCOU", "onViewCreated: ${viewState.size}")
-        }
-
-        viewModel.viewEventLiveData.observeEvent(this) { event ->
-            when (event) {
-                PropertiesViewEvent.DisplayDetailFragmentOnPhone ->
-                    parentFragmentManager.commit {
-                        replace(
-                            R.id.main_FrameLayout_container_properties,
-                            DetailFragment.newInstance()
-                        )
-                        addToBackStack(null)
-                    }
-
-                is PropertiesViewEvent.DisplayDetailFragmentOnTablet -> {
-                    parentFragmentManager.commit {
-                        replace(
-                            R.id.main_FrameLayout_container_properties,
-                            DetailFragment.newInstance()
-                        )
-                    }
-                    parentFragmentManager.commit {
-                        replace(
-                            R.id.main_FrameLayout_container_detail,
-                            DetailFragment.newInstance()
-                        )
-                    }
-                }
-            }
         }
     }
 

@@ -10,6 +10,7 @@ import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.MainActivityBinding
@@ -25,7 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     companion object {
-        fun navigate(context: Context): Intent {
+        fun navigate(context: Context): Intent {  // TODO maybe add stringExtra for fragment type
             val intent = Intent(context, MainActivity::class.java)
             context.startActivity(intent)
             return intent
@@ -49,7 +50,6 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager.commit {
-                Log.d("COUCOU MainActivity", "supportFragmentManager onCreate: ")
                 add(
                     binding.mainFrameLayoutContainerProperties.id,
                     PropertiesFragment.newInstance(),
@@ -170,8 +170,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun onBackPress() {
         onBackPressedDispatcher.addCallback(this) {
-            val backStackCount = supportFragmentManager.backStackEntryCount
-            if (backStackCount > 1) {
+            if (supportFragmentManager.backStackEntryCount > 0) {
                 supportFragmentManager.popBackStack()
             } else {
                 finish()
