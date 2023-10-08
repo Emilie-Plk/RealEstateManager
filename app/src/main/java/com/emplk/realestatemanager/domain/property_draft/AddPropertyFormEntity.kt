@@ -8,7 +8,7 @@ data class AddPropertyFormEntity(
     val propertyType: String? = null,
     val address: String? = null,
     val addressPredictions: List<PredictionViewState> = emptyList(),
-    val price: BigDecimal? = null,
+    val price: BigDecimal = BigDecimal.ZERO,
     val surface: String? = null,
     val description: String? = null,
     val nbRooms: Int = 0,

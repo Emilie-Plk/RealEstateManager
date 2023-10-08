@@ -29,7 +29,6 @@ class MainViewModel @Inject constructor(
     private val setScreenWidthTypeUseCase: SetScreenWidthTypeUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val getNavigationTypeUseCase: GetNavigationTypeUseCase,
-    private val getCurrentPropertyIdFlowUseCase: GetCurrentPropertyIdFlowUseCase,
     private val getToolbarSubtitleUseCase: GetToolbarSubtitleUseCase,
     coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : ViewModel() {
@@ -115,10 +114,9 @@ class MainViewModel @Inject constructor(
 
     val viewEventLiveData: LiveData<Event<MainViewEvent>> = liveData {
         combine(
-            isTabletMutableStateFlow.asStateFlow(),
+            isTabletMutableStateFlow,
             getNavigationTypeUseCase.invoke(),
-            getCurrentPropertyIdFlowUseCase.invoke(),
-        ) { isTablet, navigationType, currentPropertyId ->
+        ) { isTablet, navigationType ->
             when (navigationType) {
                 LIST_FRAGMENT -> emit(Event(MainViewEvent.DisplayPropertyList))
 
@@ -127,12 +125,10 @@ class MainViewModel @Inject constructor(
                 EDIT_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(EDIT_FRAGMENT.name)))
 
                 DETAIL_FRAGMENT ->
-                    if (currentPropertyId >= 1) {
-                        if (!isTablet) {
-                            emit(Event(MainViewEvent.DisplayDetailFragmentOnPhone))
-                        } else {
-                            emit(Event(MainViewEvent.DisplayDetailFragmentOnTablet))
-                        }
+                    if (!isTablet) {
+                        emit(Event(MainViewEvent.DisplayDetailFragmentOnPhone))
+                    } else {
+                        emit(Event(MainViewEvent.DisplayDetailFragmentOnTablet))
                     }
 
                 FILTER_FRAGMENT ->

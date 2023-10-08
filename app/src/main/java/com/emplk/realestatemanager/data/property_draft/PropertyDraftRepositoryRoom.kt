@@ -27,8 +27,6 @@ class PropertyDraftRepositoryRoom @Inject constructor(
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : PropertyFormRepository {
 
-    private val isPropertyFormInProgressMutableStateFlow = MutableStateFlow(false)
-
     override suspend fun add(propertyDraftEntity: PropertyDraftEntity): Long? =
         withContext(coroutineDispatcherProvider.io) {
             try {
@@ -68,13 +66,6 @@ class PropertyDraftRepositoryRoom @Inject constructor(
             }
         }
 
-    override fun setPropertyFormProgress(isPropertyFormInProgress: Boolean) {
-        isPropertyFormInProgressMutableStateFlow.tryEmit(isPropertyFormInProgress)
-    }
-
-    override fun isPropertyFormInProgressAsFlow(): Flow<Boolean> =
-        isPropertyFormInProgressMutableStateFlow.asStateFlow()
-
     override suspend fun getExistingPropertyFormId(): Long? = withContext(coroutineDispatcherProvider.io) {
         try {
             propertyDraftDao.getExistingPropertyFormId()
@@ -109,7 +100,6 @@ class PropertyDraftRepositoryRoom @Inject constructor(
                 )
             }
         }
-
 
     override suspend fun exists(): Boolean = withContext(coroutineDispatcherProvider.io) {
         propertyDraftDao.exists()

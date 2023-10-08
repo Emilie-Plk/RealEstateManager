@@ -6,7 +6,7 @@ import java.math.BigDecimal
 
 data class PropertyDraftEntity(
     val type: String?,
-    val price: BigDecimal?,
+    val price: BigDecimal,
     val surface: String?,
     val address: String?,
     val rooms: Int?,

@@ -38,7 +38,7 @@ interface PropertyDraftDao {
     )
     suspend fun update(
         newType: String?,
-        newPrice: BigDecimal?,
+        newPrice: BigDecimal,
         newSurface: String?,
         newAddress: String?,
         newRooms: Int?,

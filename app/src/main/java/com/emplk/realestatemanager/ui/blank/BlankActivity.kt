@@ -32,6 +32,7 @@ class BlankActivity : AppCompatActivity() {
         }
 
         private const val KEY_FRAGMENT_TAG = "KEY_FRAGMENT_TAG"
+        private const val ADD_FRAGMENT_TAG = "ADD_FRAGMENT_TAG"
     }
 
     private val binding by viewBinding { BlankActivityBinding.inflate(it) }
@@ -72,7 +73,8 @@ class BlankActivity : AppCompatActivity() {
                     supportFragmentManager.commitNow {
                         add(
                             binding.blankFrameLayoutContainer.id,
-                            AddPropertyFragment.newInstance()
+                            AddPropertyFragment.newInstance(),
+                            ADD_FRAGMENT_TAG
                         )
                     }
                 }
@@ -111,7 +113,11 @@ class BlankActivity : AppCompatActivity() {
     private fun onBackPress() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                //   viewModel.onBackClicked()
+// if fragment displayed is ADD_FRAGMENT_TAG
+                if (supportFragmentManager.findFragmentByTag(ADD_FRAGMENT_TAG) != null) {
+                    viewModel.onBackClicked()
+                    return
+                }
                 val backStackCount = supportFragmentManager.backStackEntryCount
                 if (backStackCount > 0) {
                     supportFragmentManager.popBackStack()

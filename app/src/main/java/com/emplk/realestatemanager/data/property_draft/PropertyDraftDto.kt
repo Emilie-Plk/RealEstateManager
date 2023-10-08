@@ -9,7 +9,7 @@ data class PropertyDraftDto(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val type: String?,
-    val price: BigDecimal?,
+    val price: BigDecimal,
     val surface: String?,
     val address: String?,
     val rooms: Int?,

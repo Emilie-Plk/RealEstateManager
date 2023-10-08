@@ -6,12 +6,12 @@ import java.math.BigDecimal
 class BigDecimalTypeConverter {
 
     @TypeConverter
-    fun fromBigDecimal(bigDecimal: BigDecimal?): String? {
-        return bigDecimal?.toString()
+    fun fromBigDecimal(bigDecimal: BigDecimal): String {
+        return bigDecimal.toString()
     }
 
     @TypeConverter
-    fun toBigDecimal(bigDecimalString: String?): BigDecimal {
+    fun toBigDecimal(bigDecimalString: String): BigDecimal {
         return BigDecimal(bigDecimalString)
     }
 }
