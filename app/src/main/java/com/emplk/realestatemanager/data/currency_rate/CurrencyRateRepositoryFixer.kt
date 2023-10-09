@@ -46,7 +46,7 @@ class CurrencyRateRepositoryFixer @Inject constructor(
         val cachedCurrencyRate = getCachedCurrencyRateFlow().firstOrNull()
         if (cachedCurrencyRate == null || cachedCurrencyRate.lastUpdatedDate != LocalDate.now(clock)) {
             try {
-                val response: FixerCurrencyRateResponse = fixerApi.getCurrencyRates()
+                val response: FixerCurrencyRateResponse = fixerApi.getLatestCurrencyRates()
                 if (response.success == true) {
                     val currencyRateEntity = mapToCurrencyRateWrapper(response)
                     if (currencyRateEntity != null) {

@@ -1,9 +1,12 @@
 package com.emplk.realestatemanager.domain.property
 
 import com.emplk.realestatemanager.R
+import com.emplk.realestatemanager.domain.currency_rate.ConvertEuroToDollarUseCase
+import com.emplk.realestatemanager.domain.currency_rate.CurrencyRateWrapper
+import com.emplk.realestatemanager.domain.currency_rate.GetCurrencyRateUseCase
 import com.emplk.realestatemanager.domain.geocoding.GeocodingRepository
 import com.emplk.realestatemanager.domain.geocoding.GeocodingWrapper
-import com.emplk.realestatemanager.domain.locale_formatting.LocaleFormattingRepository
+import com.emplk.realestatemanager.domain.locale_formatting.GetLocaleUseCase
 import com.emplk.realestatemanager.domain.map_picture.GenerateMapBaseUrlWithParamsUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
@@ -23,17 +26,24 @@ import javax.inject.Inject
 class AddPropertyUseCase @Inject constructor(
     private val propertyRepository: PropertyRepository,
     private val geocodingRepository: GeocodingRepository,
-    private val localeFormattingRepository: LocaleFormattingRepository,
+    private val getLocaleUseCase: GetLocaleUseCase,
     private val generateMapBaseUrlWithParamsUseCase: GenerateMapBaseUrlWithParamsUseCase,
+    private val getCurrencyRateUseCase: GetCurrencyRateUseCase,
+    private val convertEuroToDollarUseCase: ConvertEuroToDollarUseCase,
     private val clearPropertyFormUseCase: ClearPropertyFormUseCase,
     private val getPicturePreviewsUseCase: GetPicturePreviewsUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val clock: Clock,
 ) {
+    companion object {
+        private const val US = "US"
+        private const val FRANCE = "AddPropertyUseCase"
+    }
+
     suspend fun invoke(form: AddPropertyFormEntity): AddPropertyEvent {
         if (form.propertyType != null &&
             form.address != null &&
-            (form.price != null && form.price > BigDecimal.ZERO) &&
+            (form.price > BigDecimal.ZERO) &&
             form.surface != null &&
             form.description != null &&
             form.nbRooms > 0 &&
@@ -49,13 +59,29 @@ class AddPropertyUseCase @Inject constructor(
                 is GeocodingWrapper.Error -> Unit
                 is GeocodingWrapper.NoResult -> Unit
             }
+            val currencyWrapper = getCurrencyRateUseCase.invoke()
+            when (currencyWrapper) {
+                is CurrencyRateWrapper.Success -> currencyWrapper.currencyRateEntity.usdToEuroRate
+                is CurrencyRateWrapper.Error -> currencyWrapper.fallbackUsToEuroRate
+            }
 
             val success = propertyRepository.addPropertyWithDetails(
                 PropertyEntity(
                     type = form.propertyType,
-                    price = when (localeFormattingRepository.getLocale()) {
+                    price = when (getLocaleUseCase.invoke()) {
                         Locale.US -> form.price
-                        Locale.FRANCE -> localeFormattingRepository.convertEuroToDollar(form.price)
+                        Locale.FRANCE -> when (currencyWrapper) {
+                            is CurrencyRateWrapper.Success -> convertEuroToDollarUseCase.invoke(
+                                form.price,
+                                currencyWrapper.currencyRateEntity.usdToEuroRate
+                            )
+
+                            is CurrencyRateWrapper.Error -> convertEuroToDollarUseCase.invoke(
+                                form.price,
+                                currencyWrapper.fallbackUsToEuroRate
+                            )
+                        }
+
                         else -> throw Exception("Error while converting price")
                     },
                     surface = form.surface.toDouble(),

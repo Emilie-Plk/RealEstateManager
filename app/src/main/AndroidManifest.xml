@@ -10,6 +10,7 @@
         android:name=".MainApplication"
         android:allowBackup="true"
         android:configChanges="screenSize"
+        android:usesCleartextTraffic="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"

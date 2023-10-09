@@ -4,10 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.emplk.realestatemanager.R
+import com.emplk.realestatemanager.domain.currency_rate.CurrencyRateWrapper
+import com.emplk.realestatemanager.domain.currency_rate.GetCurrencyRateUseCase
 import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdFlowUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceUnitByLocaleUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.FormatAndConvertPriceByLocaleUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceByLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.GetLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.SurfaceUnitType
 import com.emplk.realestatemanager.domain.map_picture.GenerateMapUrlWithApiKeyUseCase
@@ -24,26 +26,35 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
     private val getPropertyByItsIdUseCase: GetPropertyByItsIdUseCase,
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
-    private val formatAndConvertPriceByLocaleUseCase: FormatAndConvertPriceByLocaleUseCase,
+    private val formatPriceByLocaleUseCase: FormatPriceByLocaleUseCase,
+    private val getCurrencyRateUseCase: GetCurrencyRateUseCase,
+    private val getLocaleUseCase: GetLocaleUseCase,
     private val convertSurfaceUnitByLocaleUseCase: ConvertSurfaceUnitByLocaleUseCase,
     private val getCurrentPropertyIdFlowUseCase: GetCurrentPropertyIdFlowUseCase,
     private val generateMapUrlWithApiKeyUseCase: GenerateMapUrlWithApiKeyUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
 ) : ViewModel() {
 
+    companion object {
+        private val US =  Locale.US
+        private val FRANCE = Locale.FRANCE
+    }
+
     val viewState: LiveData<DetailViewState> = liveData {
+        if (latestValue == null) {
+            emit(DetailViewState.LoadingState)
+        }
+
         getCurrentPropertyIdFlowUseCase.invoke()
             .filterNotNull()
             .flatMapLatest { propertyId ->
-                if (latestValue == null) {
-                    emit(DetailViewState.LoadingState)
-                }
                 getPropertyByItsIdUseCase.invoke(propertyId)
             }.collectLatest { property ->
                 val surfaceUnitType = getSurfaceUnitUseCase.invoke()
@@ -63,9 +74,37 @@ class DetailViewModel @Inject constructor(
                             property.location.miniatureMapUrl
                         )
                     ),
-                    price = formatAndConvertPriceByLocaleUseCase.invoke(
-                        property.price
-                    ),
+                    price = when (val currencyWrapper = getCurrencyRateUseCase.invoke()) {
+                        is CurrencyRateWrapper.Success -> formatPriceByLocaleUseCase.invoke(
+                            property.price,
+                            currencyWrapper.currencyRateEntity.usdToEuroRate
+                        )
+
+                        is CurrencyRateWrapper.Error -> formatPriceByLocaleUseCase.invoke(
+                            property.price,
+                            currencyWrapper.fallbackUsToEuroRate
+                        )
+                    },
+                    lastUpdatedCurrencyRateDate = when (val currencyWrapper = getCurrencyRateUseCase.invoke()) {
+                        is CurrencyRateWrapper.Success -> NativeText.Argument(
+                            R.string.currency_rate_tooltip,
+                            currencyWrapper.currencyRateEntity.lastUpdatedDate.format(
+                                DateTimeFormatter.ofLocalizedDate(
+                                    FormatStyle.SHORT
+                                )
+                            )
+                        )
+
+                        is CurrencyRateWrapper.Error -> NativeText.Argument(
+                            R.string.currency_rate_tooltip,
+                            "unknown"
+                        )
+                    },
+                    isTooltipVisible = when (getLocaleUseCase.invoke()) {
+                        US -> false
+                        FRANCE -> true
+                        else -> false
+                    },
                     surface = when (surfaceUnitType) {
                         SurfaceUnitType.SQUARE_FOOT -> NativeText.Argument(
                             R.string.surface_in_square_feet,

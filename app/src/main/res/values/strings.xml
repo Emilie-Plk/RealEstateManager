@@ -92,5 +92,6 @@
     <string name="no_internet_connection_draft_saved">Draft saved, please try when you\'ll be connected to the internet</string>
     <string name="edit_property_btn">Edit Property</string>
     <string name="missing_description_a11y">Missing description</string>
+    <string name="currency_rate_tooltip">Currency rate as of %s</string>
 
 </resources>

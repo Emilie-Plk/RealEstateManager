@@ -4,9 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.emplk.realestatemanager.R
+import com.emplk.realestatemanager.domain.currency_rate.CurrencyRateWrapper
+import com.emplk.realestatemanager.domain.currency_rate.GetCurrencyRateUseCase
 import com.emplk.realestatemanager.domain.current_property.SetCurrentPropertyIdUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceUnitByLocaleUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.FormatAndConvertPriceByLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceByLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.SurfaceUnitType
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
@@ -16,6 +18,9 @@ import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.NativePhoto
 import com.emplk.realestatemanager.ui.utils.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,7 +29,8 @@ class PropertiesViewModel @Inject constructor(
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
     private val setCurrentPropertyIdUseCase: SetCurrentPropertyIdUseCase,
     private val convertSurfaceUnitByLocaleUseCase: ConvertSurfaceUnitByLocaleUseCase,
-    private val formatAndConvertPriceByLocaleUseCase: FormatAndConvertPriceByLocaleUseCase,
+    private val getCurrencyRateUseCase: GetCurrencyRateUseCase,
+    private val formatPriceByLocaleUseCase: FormatPriceByLocaleUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
 ) : ViewModel() {
 
@@ -35,11 +41,17 @@ class PropertiesViewModel @Inject constructor(
 
         val surfaceUnitType = getSurfaceUnitUseCase.invoke()
 
-        getPropertiesAsFlowUseCase.invoke().collect { properties ->
+        combine(
+            getPropertiesAsFlowUseCase.invoke(),
+            flow {
+                emit(getCurrencyRateUseCase.invoke())
+            },
+        ) { properties, currencyRateWrapper ->
             if (properties.isEmpty()) {
                 emit(listOf(PropertiesViewState.EmptyState))
-                return@collect
+                return@combine
             }
+
 
             emit(properties.asSequence()
                 .map { property ->
@@ -62,12 +74,21 @@ class PropertiesViewModel @Inject constructor(
                         )
                     }
 
+                    val price = when (currencyRateWrapper) {
+                        is CurrencyRateWrapper.Success -> formatPriceByLocaleUseCase.invoke(
+                            property.price,
+                            currencyRateWrapper.currencyRateEntity.usdToEuroRate
+                        )
+
+                        is CurrencyRateWrapper.Error -> TODO()
+                    }
+
                     PropertiesViewState.Properties(
                         id = property.id,
                         propertyType = property.type,
                         featuredPicture = featuredPicture,
                         address = property.location.address,
-                        price = formatAndConvertPriceByLocaleUseCase.invoke(property.price),
+                        price = price,
                         isSold = property.isSold,
                         room = property.rooms.toString(),
                         bathroom = property.bathrooms.toString(),
@@ -82,6 +103,6 @@ class PropertiesViewModel @Inject constructor(
                 .sortedBy { it.isSold }
                 .toList()
             )
-        }
+        }.collect()
     }
 }

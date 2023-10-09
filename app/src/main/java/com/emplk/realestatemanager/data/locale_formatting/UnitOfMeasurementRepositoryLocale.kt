@@ -25,28 +25,27 @@ class UnitOfMeasurementRepositoryLocale @Inject constructor(
     override fun convertSquareMetersToSquareFeet(squareMeters: Double): Double =
         squareMeters * SQUARE_FEET_TO_SQUARE_METERS
 
-  /*  override fun convertDollarToEuro(dollar: BigDecimal): BigDecimal =
-        dollar.multiply(EURO_TO_USD_EXCHANGE_RATE)
+    override fun convertDollarToEuro(dollar: BigDecimal, currencyRate: Double): BigDecimal =
+        dollar.multiply(BigDecimal(currencyRate)).setScale(2, RoundingMode.HALF_UP)
 
-
-    override fun convertEuroToDollar(euro: BigDecimal): BigDecimal =
-        euro.divide(EURO_TO_USD_EXCHANGE_RATE, 2, RoundingMode.HALF_UP)*/
+    override fun convertEuroToDollar(euro: BigDecimal, currencyRate: Double): BigDecimal =
+        euro.divide(BigDecimal(currencyRate), 2, RoundingMode.HALF_UP)
 
     override fun getLocale(): Locale = locale
 
-   /* override fun formatPrice(price: BigDecimal): String {
+    override fun formatPrice(price: BigDecimal): String {
         val roundedPrice = price.setScale(2, RoundingMode.HALF_UP)
 
         val numberFormat = NumberFormat.getCurrencyInstance(locale)
         numberFormat.maximumFractionDigits = 0
         return numberFormat.format(roundedPrice)
-    }*/
+    }
 
-  /*  override fun getLocaleCurrencyFormatting(): CurrencyType = when (locale) {
+    override fun getLocaleCurrencyFormatting(): CurrencyType = when (locale) {
         Locale.FRANCE -> CurrencyType.EURO
         Locale.US -> CurrencyType.DOLLAR
         else -> CurrencyType.DOLLAR
-    }*/
+    }
 
     override fun getLocaleSurfaceUnitFormatting(): SurfaceUnitType = when (locale) {
         Locale.FRANCE -> SurfaceUnitType.SQUARE_METER
