@@ -88,13 +88,16 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
 
+    // GSON
+    implementation("com.google.code.gson:gson:2.10")
+
     // WORK
     implementation("androidx.work:work-runtime-ktx:2.8.1")
     implementation("androidx.hilt:hilt-work:1.0.0")
     implementation("androidx.hilt:hilt-compiler:1.0.0")
 
-    // GSON
-    implementation("com.google.code.gson:gson:2.10")
+    // DATASTORE
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     // TEST
     testImplementation("junit:junit:4.13.2")

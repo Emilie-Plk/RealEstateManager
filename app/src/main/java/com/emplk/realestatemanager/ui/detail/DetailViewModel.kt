@@ -29,7 +29,6 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailViewModel @Inject constructor(
     private val getPropertyByItsIdUseCase: GetPropertyByItsIdUseCase,
-    private val getCurrencyTypeUseCase: GetCurrencyTypeUseCase,
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
     private val formatAndConvertPriceByLocaleUseCase: FormatAndConvertPriceByLocaleUseCase,
     private val convertSurfaceUnitByLocaleUseCase: ConvertSurfaceUnitByLocaleUseCase,
