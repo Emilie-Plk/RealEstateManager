@@ -19,7 +19,7 @@ sealed class DetailViewState(val type: Type) {
         val mapMiniature: NativePhoto,
         val price: String,
         val lastUpdatedCurrencyRateDate: NativeText,
-        val isTooltipVisible: Boolean,
+        val isCurrencyLastUpdatedCurrencyRateVisible: Boolean,
         val surface: NativeText,
         val rooms: NativeText,
         val bathrooms: NativeText,
