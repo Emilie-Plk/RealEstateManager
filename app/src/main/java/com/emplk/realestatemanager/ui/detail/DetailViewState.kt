@@ -18,6 +18,8 @@ sealed class DetailViewState(val type: Type) {
         val pictures: List<PictureBannerViewState>,
         val mapMiniature: NativePhoto,
         val price: String,
+        val lastUpdatedCurrencyRateDate: NativeText,
+        val isTooltipVisible: Boolean,
         val surface: NativeText,
         val rooms: NativeText,
         val bathrooms: NativeText,

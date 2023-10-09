@@ -5,5 +5,5 @@ import retrofit2.http.GET
 
 interface FixerApi {
     @GET("latest")
-    suspend fun getCurrencyRates(): FixerCurrencyRateResponse
+    suspend fun getLatestCurrencyRates(): FixerCurrencyRateResponse
 }

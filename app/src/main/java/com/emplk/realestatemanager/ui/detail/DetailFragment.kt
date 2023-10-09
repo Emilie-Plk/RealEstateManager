@@ -3,6 +3,7 @@ package com.emplk.realestatemanager.ui.detail
 import android.graphics.Paint
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -75,6 +76,18 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
                         // strike through price
                         binding.detailPriceTv.paintFlags = binding.detailPriceTv.paintFlags or
                                 Paint.STRIKE_THRU_TEXT_FLAG
+                    }
+                    binding.detailPriceTooltipBtn.isVisible = viewState.isTooltipVisible
+
+                    // tooltip
+                    if (viewState.isTooltipVisible) {
+                        binding.detailPriceTooltipBtn.setOnClickListener {
+                            Toast.makeText(
+                                requireContext(),
+                                viewState.lastUpdatedCurrencyRateDate.toCharSequence(requireContext()),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                     binding.detailDescriptionTv.text = viewState.description
                     binding.detailLocationTv.text = viewState.address.toCharSequence(requireContext())
