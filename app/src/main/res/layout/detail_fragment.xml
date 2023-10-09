@@ -4,8 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginStart="8dp"
-    android:layout_marginEnd="8dp"
     tools:context=".ui.detail.DetailFragment">
 
 
@@ -67,7 +65,7 @@
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="14dp"
                     android:textSize="18sp"
-                    app:layout_constraintEnd_toStartOf="@+id/detail_price_tooltip_btn"
+                    app:layout_constraintEnd_toStartOf="@+id/detail_last_updated_currency_rate_tv"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/detail_photo_carouselRv"
                     tools:text="Villa" />
@@ -95,13 +93,11 @@
                     android:id="@+id/detail_entry_date_tv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:text="@string/detail_entry_date_tv"
                     android:textAlignment="textEnd"
                     app:layout_constraintBottom_toTopOf="@id/detail_agent_name_tv"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/detail_price_tv"
                     tools:text="Entry date: 01/01/2020" />
 
                 <TextView
@@ -110,6 +106,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:text="@string/detail_manager_agent_name"
+                    android:layout_marginBottom="12dp"
+
                     android:textAlignment="textEnd"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/detail_entry_date_tv"
@@ -119,14 +117,17 @@
                     android:id="@+id/detail_sold_date_tv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginBottom="2dp"
                     android:text="@string/detail_sold_date_tv"
                     android:textAlignment="textEnd"
                     android:textAllCaps="true"
                     android:textColor="@color/cherry_red"
                     android:textStyle="bold"
                     android:visibility="gone"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/detail_agent_name_tv"
+                    app:layout_constraintBottom_toTopOf="@+id/detail_location_tv"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/detail_type_tv"
                     tools:text="Sold date: 01/01/2020"
                     tools:visibility="visible" />
 
@@ -135,24 +136,31 @@
                     style="@style/Theme.RealEstateManager.PropertyPrice"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:gravity="end"
                     android:layout_marginEnd="8dp"
+                    android:gravity="end"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@+id/detail_type_tv"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/detail_type_tv"
                     tools:text="$50000000" />
 
-                <Button
-                    android:id="@+id/detail_price_tooltip_btn"
+                <TextView
+                    android:id="@+id/detail_last_updated_currency_rate_tv"
                     style="@style/Widget.Material3.Button.IconButton"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    app:icon="@drawable/baseline_info_24"
-                    app:iconTint="@color/dull_silver"
-                    app:layout_constraintBottom_toBottomOf="@+id/detail_price_tv"
-                    app:layout_constraintEnd_toStartOf="@+id/detail_price_tv"
-                    app:layout_constraintTop_toTopOf="@+id/detail_price_tv" />
+                    android:drawablePadding="4dp"
+                    android:gravity="start"
+                    android:textColor="@color/medium_gray"
+                    android:text="@string/currency_rate_tooltip"
+                    android:textSize="11sp"
+                    app:drawableStartCompat="@drawable/baseline_info_24"
+                    app:drawableTint="@color/dull_silver"
+                    app:layout_constraintBottom_toTopOf="@+id/detail_entry_date_tv"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/detail_entry_date_tv"
+                    app:layout_constraintTop_toBottomOf="@+id/detail_price_tv"
+                    tools:text="Currency rate as of 09/10/2023" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

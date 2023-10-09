@@ -4,6 +4,8 @@ import android.app.Application
 import android.content.ContentResolver
 import android.content.res.Resources
 import android.os.Build
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.work.WorkManager
 import com.emplk.realestatemanager.BuildConfig
 import com.emplk.realestatemanager.data.api.FixerApi

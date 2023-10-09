@@ -43,24 +43,25 @@ class CurrencyRateRepositoryFixer @Inject constructor(
     private val Context.currencyRateDatastore: DataStore<Preferences> by preferencesDataStore(name = CURRENCY_RATE)
 
     override suspend fun getCurrentCurrencyRate(): CurrencyRateWrapper = withContext(coroutineDispatcherProvider.io) {
-        val cachedCurrencyRate = getCachedCurrencyRateFlow().firstOrNull()
-        if (cachedCurrencyRate == null || cachedCurrencyRate.lastUpdatedDate != LocalDate.now(clock)) {
-            try {
+        try {
+            val cachedCurrencyRate: CurrencyRateEntity? = getCachedCurrencyRateFlow().firstOrNull()
+            if (cachedCurrencyRate == null || cachedCurrencyRate.lastUpdatedDate != LocalDate.now(clock)) {
                 val response: FixerCurrencyRateResponse = fixerApi.getLatestCurrencyRates()
-                if (response.success == true) {
+                if (response.success == true && response.rateResponse != null) {
                     val currencyRateEntity = mapToCurrencyRateWrapper(response)
                     if (currencyRateEntity != null) {
                         updateCachedCurrencyRate(currencyRateEntity)
                         CurrencyRateWrapper.Success(currencyRateEntity)
                     } else CurrencyRateWrapper.Error(USD_TO_EURO_RATE_FALLBACK)
                 } else CurrencyRateWrapper.Error(USD_TO_EURO_RATE_FALLBACK)
-            } catch (exception: Exception) {
-                coroutineContext.ensureActive()
-                exception.printStackTrace()
-                CurrencyRateWrapper.Error(USD_TO_EURO_RATE_FALLBACK)
-            }
-        } else CurrencyRateWrapper.Success(cachedCurrencyRate)
+            } else CurrencyRateWrapper.Success(cachedCurrencyRate)
+        } catch (exception: Exception) {
+            coroutineContext.ensureActive()
+            exception.printStackTrace()
+            CurrencyRateWrapper.Error(USD_TO_EURO_RATE_FALLBACK)
+        }
     }
+
 
     private suspend fun updateCachedCurrencyRate(currencyRateEntity: CurrencyRateEntity) {
         try {

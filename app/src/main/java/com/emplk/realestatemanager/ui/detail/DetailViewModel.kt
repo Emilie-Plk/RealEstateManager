@@ -100,7 +100,7 @@ class DetailViewModel @Inject constructor(
                             "unknown"
                         )
                     },
-                    isTooltipVisible = when (getLocaleUseCase.invoke()) {
+                    isCurrencyLastUpdatedCurrencyRateVisible = when (getLocaleUseCase.invoke()) {
                         US -> false
                         FRANCE -> true
                         else -> false
