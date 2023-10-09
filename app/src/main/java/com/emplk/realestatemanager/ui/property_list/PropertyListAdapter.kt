@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.ui.property_list
 
+import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,6 +64,8 @@ class PropertyListAdapter :
                         binding.propertyItemSoldShade.isVisible = true
                         binding.propertyItemSoldBannerImageView.visibility = View.VISIBLE
                         binding.propertyItemSoldTextView.visibility = View.VISIBLE
+                        binding.propertyItemPriceTextView.paintFlags = binding.propertyItemPriceTextView.paintFlags or
+                                Paint.STRIKE_THRU_TEXT_FLAG
                     }
 
                     else -> {

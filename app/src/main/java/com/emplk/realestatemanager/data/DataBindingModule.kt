@@ -4,9 +4,10 @@ import com.emplk.realestatemanager.data.agent.RealEstateAgentRepositoryImpl
 import com.emplk.realestatemanager.data.autocomplete.PredictionRepositoryAutocomplete
 import com.emplk.realestatemanager.data.connectivity.InternetConnectivityRepositoryBroadcastReceiver
 import com.emplk.realestatemanager.data.content_resolver.PictureFileRepositoryContentResolver
+import com.emplk.realestatemanager.data.currency_rate.CurrencyRateRepositoryFixer
 import com.emplk.realestatemanager.data.current_property.CurrentPropertyRepositoryImpl
 import com.emplk.realestatemanager.data.geocoding.GeocodingRepositoryGoogle
-import com.emplk.realestatemanager.data.locale_formatting.LocaleFormattingRepositoryImpl
+import com.emplk.realestatemanager.data.locale_formatting.UnitOfMeasurementRepositoryLocale
 import com.emplk.realestatemanager.data.navigation.NavigationDraftRepositoryImpl
 import com.emplk.realestatemanager.data.navigation.NavigationRepositoryImpl
 import com.emplk.realestatemanager.data.property.PropertyRepositoryRoom
@@ -24,6 +25,7 @@ import com.emplk.realestatemanager.domain.agent.RealEstateAgentRepository
 import com.emplk.realestatemanager.domain.autocomplete.PredictionRepository
 import com.emplk.realestatemanager.domain.connectivity.InternetConnectivityRepository
 import com.emplk.realestatemanager.domain.content_resolver.PictureFileRepository
+import com.emplk.realestatemanager.domain.currency_rate.CurrencyRateRepository
 import com.emplk.realestatemanager.domain.current_property.CurrentPropertyRepository
 import com.emplk.realestatemanager.domain.geocoding.GeocodingRepository
 import com.emplk.realestatemanager.domain.locale_formatting.LocaleFormattingRepository
@@ -64,15 +66,16 @@ abstract class DataBindingModule {
 
     @Singleton
     @Binds
-    abstract fun bindCurrencyRepository(implementation: LocaleFormattingRepositoryImpl): LocaleFormattingRepository
-
-    @Singleton
-    @Binds
     abstract fun bindScreenWidthRepository(implementation: ScreenWidthTypeRepositoryImpl): ScreenWidthTypeRepository
 
     @Singleton
     @Binds
     abstract fun bindNavigationRepository(implementation: NavigationRepositoryImpl): NavigationRepository
+
+
+    @Singleton
+    @Binds
+    abstract fun bindNavigationDraftRepository(implementation: NavigationDraftRepositoryImpl): NavigationDraftRepository
 
     @Singleton
     @Binds
@@ -128,6 +131,10 @@ abstract class DataBindingModule {
 
     @Singleton
     @Binds
-    abstract fun bindNavigationDraftRepository(implementation: NavigationDraftRepositoryImpl): NavigationDraftRepository
+    abstract fun bindCurrencyRepository(implementation: UnitOfMeasurementRepositoryLocale): LocaleFormattingRepository
+
+    @Singleton
+    @Binds
+    abstract fun currencyRateRepository(implementation: CurrencyRateRepositoryFixer): CurrencyRateRepository
 
 }

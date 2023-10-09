@@ -6,6 +6,7 @@ import android.content.res.Resources
 import android.os.Build
 import androidx.work.WorkManager
 import com.emplk.realestatemanager.BuildConfig
+import com.emplk.realestatemanager.data.api.FixerApi
 import com.emplk.realestatemanager.data.api.GoogleApi
 import com.emplk.realestatemanager.data.property.PropertyDao
 import com.emplk.realestatemanager.data.property.amenity.AmenityDao
@@ -27,6 +28,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.time.Clock
 import java.util.Locale
 import java.util.concurrent.TimeUnit
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
@@ -73,12 +75,13 @@ class DataModule {
 
     @Singleton
     @Provides
-    fun provideGoogleApiService(retrofit: Retrofit): GoogleApi =
+    fun provideGoogleApiService(@GoogleApiRetrofit retrofit: Retrofit): GoogleApi =
         retrofit.create(GoogleApi::class.java)
 
     @Singleton
     @Provides
-    fun provideGoogleApiRetrofit(okHttpClient: okhttp3.OkHttpClient, gson: Gson): Retrofit =
+    @GoogleApiRetrofit
+    fun provideGoogleApiRetrofit(@GoogleApiOkHttpClient okHttpClient: okhttp3.OkHttpClient, gson: Gson): Retrofit =
         Retrofit.Builder()
             .baseUrl("https://maps.googleapis.com/maps/api/")
             .client(okHttpClient)
@@ -87,6 +90,7 @@ class DataModule {
 
     @Singleton
     @Provides
+    @GoogleApiOkHttpClient
     fun provideGoogleOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): okhttp3.OkHttpClient =
         okhttp3.OkHttpClient.Builder()
             .addInterceptor(httpLoggingInterceptor)
@@ -109,6 +113,50 @@ class DataModule {
                 }
             )
             .build()
+
+    @Singleton
+    @Provides
+    @FixerApiRetrofit
+    fun provideFixerCurrencyApiRetrofit(
+        @FixerApiOkHttpClient okHttpClient: okhttp3.OkHttpClient,
+        gson: Gson
+    ): Retrofit =
+        Retrofit.Builder()
+            .baseUrl("http://data.fixer.io/api/")
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+
+    @Singleton
+    @Provides
+    @FixerApiOkHttpClient
+    fun provideFixerOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): okhttp3.OkHttpClient =
+        okhttp3.OkHttpClient.Builder()
+            .addInterceptor(httpLoggingInterceptor)
+            .connectTimeout(8, TimeUnit.SECONDS)
+            .readTimeout(8, TimeUnit.SECONDS)
+            .addInterceptor(
+                Interceptor { chain: Interceptor.Chain ->
+                    chain.proceed(
+                        chain.request().let { request ->
+                            request
+                                .newBuilder()
+                                .url(
+                                    request.url.newBuilder()
+                                        .addQueryParameter("access_key", BuildConfig.FIXER_API_KEY)
+                                        .build()
+                                )
+                                .build()
+                        }
+                    )
+                }
+            )
+            .build()
+
+    @Singleton
+    @Provides
+    fun provideCurrencyRateApi(@FixerApiRetrofit retrofit: Retrofit): FixerApi =
+        retrofit.create(FixerApi::class.java)
 
     @Singleton
     @Provides
@@ -150,4 +198,20 @@ class DataModule {
     @Singleton
     @Provides
     fun provideClock(): Clock = Clock.systemDefaultZone()
+
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class GoogleApiRetrofit
+
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class GoogleApiOkHttpClient
+
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class FixerApiRetrofit
+
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class FixerApiOkHttpClient
 }
