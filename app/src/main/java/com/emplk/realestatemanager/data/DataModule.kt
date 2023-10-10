@@ -4,8 +4,6 @@ import android.app.Application
 import android.content.ContentResolver
 import android.content.res.Resources
 import android.os.Build
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import androidx.work.WorkManager
 import com.emplk.realestatemanager.BuildConfig
 import com.emplk.realestatemanager.data.api.FixerApi
@@ -24,6 +22,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
+import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -132,8 +131,8 @@ class DataModule {
     @Singleton
     @Provides
     @FixerApiOkHttpClient
-    fun provideFixerOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): okhttp3.OkHttpClient =
-        okhttp3.OkHttpClient.Builder()
+    fun provideFixerOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient =
+        OkHttpClient.Builder()
             .addInterceptor(httpLoggingInterceptor)
             .connectTimeout(8, TimeUnit.SECONDS)
             .readTimeout(8, TimeUnit.SECONDS)

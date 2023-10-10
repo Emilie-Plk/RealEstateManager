@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.emplk.realestatemanager.R
-import com.emplk.realestatemanager.domain.currency_rate.CurrencyRateWrapper
-import com.emplk.realestatemanager.domain.currency_rate.GetCurrencyRateUseCase
+import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceByLocaleUseCase
+import com.emplk.realestatemanager.domain.currency_rate.GetLastUpdatedCurrencyRateDateUseCase
 import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdFlowUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceUnitByLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceByLocaleUseCase
@@ -34,7 +34,8 @@ class DetailViewModel @Inject constructor(
     private val getPropertyByItsIdUseCase: GetPropertyByItsIdUseCase,
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
     private val formatPriceByLocaleUseCase: FormatPriceByLocaleUseCase,
-    private val getCurrencyRateUseCase: GetCurrencyRateUseCase,
+    private val convertPriceByLocaleUseCase: ConvertPriceByLocaleUseCase,
+    private val getLastUpdatedCurrencyRateDateUseCase: GetLastUpdatedCurrencyRateDateUseCase,
     private val getLocaleUseCase: GetLocaleUseCase,
     private val convertSurfaceUnitByLocaleUseCase: ConvertSurfaceUnitByLocaleUseCase,
     private val getCurrentPropertyIdFlowUseCase: GetCurrentPropertyIdFlowUseCase,
@@ -43,7 +44,7 @@ class DetailViewModel @Inject constructor(
 ) : ViewModel() {
 
     companion object {
-        private val US =  Locale.US
+        private val US = Locale.US
         private val FRANCE = Locale.FRANCE
     }
 
@@ -74,32 +75,17 @@ class DetailViewModel @Inject constructor(
                             property.location.miniatureMapUrl
                         )
                     ),
-                    price = when (val currencyWrapper = getCurrencyRateUseCase.invoke()) {
-                        is CurrencyRateWrapper.Success -> formatPriceByLocaleUseCase.invoke(
-                            property.price,
-                            currencyWrapper.currencyRateEntity.usdToEuroRate
+                    price =
+                    formatPriceByLocaleUseCase.invoke(
+                        convertPriceByLocaleUseCase.invoke(property.price)
+                    ),
+                    lastUpdatedCurrencyRateDate =
+                    getLastUpdatedCurrencyRateDateUseCase.invoke()?.let {
+                        NativeText.Argument(
+                            R.string.currency_rate_last_updated_date_tv,
+                            it
                         )
-
-                        is CurrencyRateWrapper.Error -> formatPriceByLocaleUseCase.invoke(
-                            property.price,
-                            currencyWrapper.fallbackUsToEuroRate
-                        )
-                    },
-                    lastUpdatedCurrencyRateDate = when (val currencyWrapper = getCurrencyRateUseCase.invoke()) {
-                        is CurrencyRateWrapper.Success -> NativeText.Argument(
-                            R.string.currency_rate_tooltip,
-                            currencyWrapper.currencyRateEntity.lastUpdatedDate.format(
-                                DateTimeFormatter.ofLocalizedDate(
-                                    FormatStyle.SHORT
-                                )
-                            )
-                        )
-
-                        is CurrencyRateWrapper.Error -> NativeText.Argument(
-                            R.string.currency_rate_tooltip,
-                            "unknown"
-                        )
-                    },
+                    } ?: NativeText.Resource(R.string.currency_rate_with_no_date_tv),
                     isCurrencyLastUpdatedCurrencyRateVisible = when (getLocaleUseCase.invoke()) {
                         US -> false
                         FRANCE -> true

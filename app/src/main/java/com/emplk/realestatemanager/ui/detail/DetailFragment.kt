@@ -80,7 +80,7 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
 
                     if (viewState.isCurrencyLastUpdatedCurrencyRateVisible) {
                         binding.detailLastUpdatedCurrencyRateTv.text =
-                            viewState.lastUpdatedCurrencyRateDate.toCharSequence(requireContext())
+                            viewState.lastUpdatedCurrencyRateDate?.toCharSequence(requireContext())
                     }
                     binding.detailDescriptionTv.text = viewState.description
                     binding.detailLocationTv.text = viewState.address.toCharSequence(requireContext())

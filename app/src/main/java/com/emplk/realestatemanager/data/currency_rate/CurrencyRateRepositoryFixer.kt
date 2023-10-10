@@ -25,6 +25,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
+
 class CurrencyRateRepositoryFixer @Inject constructor(
     private val fixerApi: FixerApi,
     private val application: Application,
@@ -43,9 +44,9 @@ class CurrencyRateRepositoryFixer @Inject constructor(
     private val Context.currencyRateDatastore: DataStore<Preferences> by preferencesDataStore(name = CURRENCY_RATE)
 
     override suspend fun getCurrentCurrencyRate(): CurrencyRateWrapper = withContext(coroutineDispatcherProvider.io) {
-        try {
-            val cachedCurrencyRate: CurrencyRateEntity? = getCachedCurrencyRateFlow().firstOrNull()
-            if (cachedCurrencyRate == null || cachedCurrencyRate.lastUpdatedDate != LocalDate.now(clock)) {
+        val cachedCurrencyRate = getCachedCurrencyRateFlow().firstOrNull()
+        if (cachedCurrencyRate == null || cachedCurrencyRate.lastUpdatedDate != LocalDate.now(clock)) {
+            try {
                 val response: FixerCurrencyRateResponse = fixerApi.getLatestCurrencyRates()
                 if (response.success == true && response.rateResponse != null) {
                     val currencyRateEntity = mapToCurrencyRateWrapper(response)
@@ -54,12 +55,11 @@ class CurrencyRateRepositoryFixer @Inject constructor(
                         CurrencyRateWrapper.Success(currencyRateEntity)
                     } else CurrencyRateWrapper.Error(USD_TO_EURO_RATE_FALLBACK)
                 } else CurrencyRateWrapper.Error(USD_TO_EURO_RATE_FALLBACK)
-            } else CurrencyRateWrapper.Success(cachedCurrencyRate)
-        } catch (exception: Exception) {
-            coroutineContext.ensureActive()
-            exception.printStackTrace()
-            CurrencyRateWrapper.Error(USD_TO_EURO_RATE_FALLBACK)
-        }
+            } catch (exception: Exception) {
+                coroutineContext.ensureActive()
+                CurrencyRateWrapper.Error(USD_TO_EURO_RATE_FALLBACK)
+            }
+        } else CurrencyRateWrapper.Success(cachedCurrencyRate)
     }
 
 
