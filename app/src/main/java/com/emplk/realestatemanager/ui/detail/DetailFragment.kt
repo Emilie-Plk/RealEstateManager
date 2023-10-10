@@ -84,7 +84,7 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
                     }
                     binding.detailDescriptionTv.text = viewState.description
                     binding.detailLocationTv.text = viewState.address.toCharSequence(requireContext())
-                    binding.detailSurfaceTv.text = viewState.surface.toCharSequence(requireContext())
+                    binding.detailSurfaceTv.text = viewState.surface
                     binding.detailAgentNameTv.text = viewState.agentName.toCharSequence(requireContext())
                     binding.detailEntryDateTv.text = viewState.entryDate.toCharSequence(requireContext())
                     binding.detailRoomTv.text = viewState.rooms.toCharSequence(requireContext())

@@ -10,8 +10,7 @@ import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdF
 import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceUnitByLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceByLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetLocaleUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.SurfaceUnitType
+import com.emplk.realestatemanager.domain.locale_formatting.GetRoundedSurfaceWithSurfaceUnitUseCase
 import com.emplk.realestatemanager.domain.map_picture.GenerateMapUrlWithApiKeyUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
@@ -32,11 +31,11 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailViewModel @Inject constructor(
     private val getPropertyByItsIdUseCase: GetPropertyByItsIdUseCase,
-    private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
     private val formatPriceByLocaleUseCase: FormatPriceByLocaleUseCase,
     private val convertPriceByLocaleUseCase: ConvertPriceByLocaleUseCase,
     private val getLastUpdatedCurrencyRateDateUseCase: GetLastUpdatedCurrencyRateDateUseCase,
     private val getLocaleUseCase: GetLocaleUseCase,
+    private val getRoundedSurfaceWithSurfaceUnitUseCase: GetRoundedSurfaceWithSurfaceUnitUseCase,
     private val convertSurfaceUnitByLocaleUseCase: ConvertSurfaceUnitByLocaleUseCase,
     private val getCurrentPropertyIdFlowUseCase: GetCurrentPropertyIdFlowUseCase,
     private val generateMapUrlWithApiKeyUseCase: GenerateMapUrlWithApiKeyUseCase,
@@ -58,8 +57,6 @@ class DetailViewModel @Inject constructor(
             .flatMapLatest { propertyId ->
                 getPropertyByItsIdUseCase.invoke(propertyId)
             }.collectLatest { property ->
-                val surfaceUnitType = getSurfaceUnitUseCase.invoke()
-
                 emit(DetailViewState.PropertyDetail(
                     id = property.id,
                     propertyType = property.type,
@@ -91,20 +88,11 @@ class DetailViewModel @Inject constructor(
                         FRANCE -> true
                         else -> false
                     },
-                    surface = when (surfaceUnitType) {
-                        SurfaceUnitType.SQUARE_FOOT -> NativeText.Argument(
-                            R.string.surface_in_square_feet,
+                    surface = getRoundedSurfaceWithSurfaceUnitUseCase.invoke(
+                        convertSurfaceUnitByLocaleUseCase.invoke(
                             property.surface
                         )
-
-                        SurfaceUnitType.SQUARE_METER -> NativeText.Argument(
-                            R.string.surface_in_square_meters,
-                            String.format(
-                                "%.0f",
-                                convertSurfaceUnitByLocaleUseCase.invoke(property.surface)
-                            )
-                        )
-                    },
+                    ),
                     rooms = NativeText.Argument(
                         R.string.detail_number_of_room_textview,
                         property.rooms

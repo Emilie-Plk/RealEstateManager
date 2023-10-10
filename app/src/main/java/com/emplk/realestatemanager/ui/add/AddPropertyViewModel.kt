@@ -241,15 +241,16 @@ class AddPropertyViewModel @Inject constructor(
                                         },
                                         onFeaturedEvent = EquatableCallbackWithParam { isFeatured ->
                                             if (picturePreview.isFeatured) return@EquatableCallbackWithParam
-                                            formMutableStateFlow.update {
-                                                it.copy(featuredPictureId = picturePreview.id)
-                                            }
+
                                             viewModelScope.launch {
                                                 updatePicturePreviewUseCase.invoke(
                                                     picturePreview.id,
                                                     isFeatured,
                                                     picturePreview.description
                                                 )
+                                            }
+                                            formMutableStateFlow.update {
+                                                it.copy(featuredPictureId = picturePreview.id)
                                             }
                                         },
                                         onDescriptionChanged = EquatableCallbackWithParam { description ->
