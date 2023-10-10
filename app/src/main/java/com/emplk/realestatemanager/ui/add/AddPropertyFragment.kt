@@ -33,6 +33,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.math.BigDecimal
 
+
 @AndroidEntryPoint
 class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
 
@@ -244,5 +245,6 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
             viewModel.onBathroomsNumberChanged(value)
         }
     }
+
 }
 

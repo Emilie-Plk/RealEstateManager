@@ -55,10 +55,10 @@ class PropertyListAdapter :
                 binding.propertyItemTypeTextView.text = item.propertyType
                 binding.propertyItemLocationTextView.text = item.address
                 binding.propertyItemPriceTextView.text = item.price
-                binding.propertyItemRoomTextView?.text = item.room
-                binding.propertyItemBathroomTextView?.text = item.bathroom
-                binding.propertyItemBedroomTextView?.text = item.bedroom
-                binding.propertyItemSurfaceTextView?.text = item.surface.toCharSequence(itemView.context)
+                binding.propertyItemRoomTextView?.text = item.room.toCharSequence(binding.root.context)
+                binding.propertyItemBathroomTextView?.text = item.bathroom.toCharSequence(binding.root.context)
+                binding.propertyItemBedroomTextView?.text = item.bedroom.toCharSequence(binding.root.context)
+                binding.propertyItemSurfaceTextView?.text = item.surface
                 when (item.isSold) {
                     true -> {
                         binding.propertyItemSoldShade.isVisible = true

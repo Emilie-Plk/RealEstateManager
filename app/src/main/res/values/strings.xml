@@ -59,6 +59,12 @@
     <string name="iv_preview_delete_property_btn">Delete property</string>
     <string name="price_currency_in_n">(in %s)</string>
     <string name="surface_unit_in_n">(in %s)</string>
+    <string name="rooms_nb">%s rooms</string>
+    <string name="rooms_nb_short_version">%s RM</string>
+    <string name="bathrooms_nb">%s bathrooms</string>
+    <string name="bathrooms_nb_short_version">%s BA</string>
+    <string name="bedrooms_nb">%s bedrooms</string>
+    <string name="bedrooms_nb_short_version">%s BR</string>
     <string name="property_type_house">House</string>
     <string name="property_type_flat">Flat</string>
     <string name="property_type_penthouse">Penthouse</string>
