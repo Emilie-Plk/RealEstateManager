@@ -49,6 +49,7 @@
                 android:id="@+id/property_item_type_text_view"
                 style="@style/Theme.RealEstateManager.PropertyTypeTitle"
                 android:layout_width="0dp"
+                app:layout_constraintEnd_toStartOf="@id/property_item_price_text_view"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="4dp"
@@ -77,12 +78,12 @@
                 style="@style/Theme.RealEstateManager.PropertyPrice"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
                 android:layout_marginEnd="12dp"
                 android:gravity="end"
+                app:layout_constraintBottom_toBottomOf="@+id/property_item_type_text_view"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/property_item_type_text_view"
-                app:layout_constraintTop_toBottomOf="@+id/property_item_image_view"
+                app:layout_constraintTop_toTopOf="@+id/property_item_type_text_view"
                 tools:text="$22,255,000" />
 
             <TextView
@@ -123,10 +124,10 @@
                 android:layout_height="wrap_content"
                 android:drawablePadding="4dp"
                 app:drawableStartCompat="@drawable/round_king_bed_24"
-                app:layout_constraintEnd_toEndOf="@+id/property_item_surface_text_view"
+                app:layout_constraintEnd_toStartOf="@+id/guideline2"
                 app:layout_constraintStart_toEndOf="@+id/property_item_bathroom_text_view"
                 app:layout_constraintTop_toTopOf="@+id/property_item_bathroom_text_view"
-                tools:text="3" />
+                tools:text="3 bedrooms" />
 
             <TextView
                 android:id="@+id/property_item_surface_text_view"

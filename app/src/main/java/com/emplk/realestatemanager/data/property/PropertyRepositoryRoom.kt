@@ -11,7 +11,6 @@ import com.emplk.realestatemanager.data.property.picture.PictureMapper
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.property.PropertyEntity
 import com.emplk.realestatemanager.domain.property.PropertyRepository
-import com.emplk.realestatemanager.domain.property.type_price_surface.PropertyTypePriceAndSurfaceEntity
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
@@ -26,7 +25,6 @@ class PropertyRepositoryRoom @Inject constructor(
     private val pictureDao: PictureDao,
     private val amenityDao: AmenityDao,
     private val propertyMapper: PropertyMapper,
-    private val propertyTypePriceAndSurfaceMapper: PropertyTypeSurfacePriceAndPictureDtoMapper,
     private val locationMapper: LocationMapper,
     private val pictureMapper: PictureMapper,
     private val amenityMapper: AmenityMapper,
@@ -45,13 +43,11 @@ class PropertyRepositoryRoom @Inject constructor(
     override suspend fun addPropertyWithDetails(propertyEntity: PropertyEntity): Boolean =
         withContext(coroutineDispatcherProvider.io) {
             val propertyId = add(propertyEntity) ?: return@withContext false
-            Log.d("COUCOU", "addPropertyWithDetails: $propertyId")
 
             val locationAsync = async {
                 val locationDtoEntity = locationMapper.mapToDtoEntity(propertyEntity.location, propertyId)
                 locationDao.insert(locationDtoEntity)
             }
-            Log.d("COUCOU", "addPropertyWithDetails: $locationAsync")
 
             val picturesAsync = propertyEntity.pictures.map {
                 async {
@@ -59,17 +55,14 @@ class PropertyRepositoryRoom @Inject constructor(
                     pictureDao.insert(pictureDtoEntity)
                 }
             }
-            Log.d("COUCOU", "addPropertyWithDetails: $picturesAsync")
 
             val amenitiesAsync = propertyEntity.amenities.map {
                 async {
                     val amenityDtoEntity = amenityMapper.mapToDtoEntity(it, propertyId)
                     amenityDao.insert(amenityDtoEntity)
-                    Log.d("COUCOU", "addPropertyWithDetails: $it")
                 }
             }
 
-            // Wait for all child jobs to complete
             (listOf(locationAsync) + picturesAsync + amenitiesAsync).all { it.await() != null }
         }
 
@@ -99,11 +92,6 @@ class PropertyRepositoryRoom @Inject constructor(
             )
         }
         .flowOn(coroutineDispatcherProvider.io)
-
-    override suspend fun getPropertyTypeSurfaceAndPriceById(propertyId: Long): PropertyTypePriceAndSurfaceEntity =
-        withContext(coroutineDispatcherProvider.io) {
-            propertyTypePriceAndSurfaceMapper.toEntity(propertyDao.getPropertyTypePriceAndSurfaceById(propertyId))
-        }
 
     override suspend fun update(propertyEntity: PropertyEntity): Int =
         withContext(coroutineDispatcherProvider.io) {

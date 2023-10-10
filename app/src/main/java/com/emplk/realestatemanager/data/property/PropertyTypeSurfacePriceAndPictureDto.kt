@@ -10,8 +10,6 @@ data class PropertyTypeSurfacePriceAndPictureDto(
     val surface: Double,
     @ColumnInfo(name = "uri")
     val pictureUri: String,
-    /*   @ColumnInfo(name = "name")
-       val amenities: List<String> = emptyList(),*/
     val rooms: Int,
     val bedrooms: Int,
     val bathrooms: Int,
