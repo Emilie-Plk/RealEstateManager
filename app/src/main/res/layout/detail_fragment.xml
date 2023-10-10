@@ -152,7 +152,7 @@
                     android:drawablePadding="4dp"
                     android:gravity="start"
                     android:textColor="@color/medium_gray"
-                    android:text="@string/currency_rate_tooltip"
+                    android:text="@string/currency_rate_last_updated_date_tv"
                     android:textSize="11sp"
                     app:drawableStartCompat="@drawable/baseline_info_24"
                     app:drawableTint="@color/dull_silver"
