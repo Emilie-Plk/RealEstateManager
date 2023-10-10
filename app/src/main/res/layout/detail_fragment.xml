@@ -33,7 +33,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/detail_edit_fab"
@@ -106,8 +106,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:text="@string/detail_manager_agent_name"
-                    android:layout_marginBottom="12dp"
-
                     android:textAlignment="textEnd"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/detail_entry_date_tv"
@@ -150,9 +148,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:drawablePadding="4dp"
-                    android:gravity="start"
-                    android:textColor="@color/medium_gray"
+                    android:gravity="center_vertical"
                     android:text="@string/currency_rate_last_updated_date_tv"
+                    android:textColor="@color/medium_gray"
                     android:textSize="11sp"
                     app:drawableStartCompat="@drawable/baseline_info_24"
                     app:drawableTint="@color/dull_silver"
@@ -170,103 +168,64 @@
             android:id="@+id/detail_description_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="12dp"
+            app:layout_constraintStart_toEndOf="@id/detail_surface_tv"
             android:ellipsize="end"
-            android:maxLines="6"
+            android:maxLines="10"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/detail_top_info_cardView"
             tools:text="A beautiful villa with a pool and a garden. The house is located in a quiet neighborhood. Lucrative investment." />
-
-        <ImageView
-            android:id="@+id/detail_room_logo"
-            style="@style/Theme.RealEstateManager.PropertyItemLogo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:src="@drawable/round_home_24"
-            app:layout_constraintEnd_toStartOf="@id/detail_room_tv"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/detail_description_tv" />
 
         <TextView
             android:id="@+id/detail_room_tv"
             android:layout_width="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/horizontal_barrier"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            app:layout_constraintBottom_toBottomOf="@id/detail_room_logo"
-            app:layout_constraintEnd_toStartOf="@id/detail_bedroom_logo"
-            app:layout_constraintStart_toEndOf="@id/detail_room_logo"
-            app:layout_constraintTop_toTopOf="@id/detail_room_logo"
-            tools:text="5 rooms" />
-
-        <ImageView
-            android:id="@+id/detail_bedroom_logo"
-            style="@style/Theme.RealEstateManager.PropertyItemLogo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="12dp"
-            android:src="@drawable/round_king_bed_24"
+            android:layout_marginTop="24dp"
+            android:drawablePadding="4dp"
+            android:layout_marginBottom="12dp"
+            app:drawableStartCompat="@drawable/baseline_room_plan_24"
             app:layout_constraintEnd_toStartOf="@id/detail_bedroom_tv"
-            app:layout_constraintStart_toEndOf="@id/detail_room_tv"
-            app:layout_constraintTop_toBottomOf="@id/detail_description_tv" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/detail_description_tv"
+            tools:text="5 rooms" />
 
         <TextView
             android:id="@+id/detail_bedroom_tv"
             android:layout_width="wrap_content"
+            android:drawablePadding="4dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            app:layout_constraintBottom_toBottomOf="@id/detail_bedroom_logo"
-            app:layout_constraintEnd_toStartOf="@id/detail_bathroom_logo"
-            app:layout_constraintStart_toEndOf="@id/detail_bedroom_logo"
-            app:layout_constraintTop_toTopOf="@id/detail_bedroom_logo"
-            tools:text="3 bedrooms" />
-
-        <ImageView
-            android:id="@+id/detail_bathroom_logo"
-            style="@style/Theme.RealEstateManager.PropertyItemLogo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="12dp"
-            android:src="@drawable/round_bathtub_24"
+            app:drawableStartCompat="@drawable/round_king_bed_24"
             app:layout_constraintEnd_toStartOf="@id/detail_bathroom_tv"
-            app:layout_constraintStart_toEndOf="@id/detail_bedroom_tv"
-            app:layout_constraintTop_toBottomOf="@id/detail_description_tv" />
+            app:layout_constraintStart_toEndOf="@id/detail_room_tv"
+            app:layout_constraintTop_toTopOf="@+id/detail_room_tv"
+            tools:text="3 bedrooms" />
 
         <TextView
             android:id="@+id/detail_bathroom_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
+            android:drawablePadding="4dp"
             android:maxLines="2"
-            app:layout_constraintBottom_toBottomOf="@id/detail_bathroom_logo"
+            app:drawableStartCompat="@drawable/round_bathtub_24"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/detail_bathroom_logo"
-            app:layout_constraintTop_toTopOf="@id/detail_bathroom_logo"
+            app:layout_constraintStart_toEndOf="@id/detail_bedroom_tv"
+            app:layout_constraintTop_toTopOf="@+id/detail_bedroom_tv"
             tools:text="2 bathrooms" />
-
-        <ImageView
-            android:id="@+id/detail_surface_logo"
-            style="@style/Theme.RealEstateManager.PropertyItemLogo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="12dp"
-            android:src="@drawable/round_square_foot_24"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/detail_room_logo" />
 
         <TextView
             android:id="@+id/detail_surface_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@id/detail_surface_logo"
-            app:layout_constraintStart_toStartOf="@+id/detail_room_tv"
-            app:layout_constraintTop_toTopOf="@id/detail_surface_logo"
+       app:layout_constraintEnd_toStartOf="@id/detail_description_tv"
+            android:drawablePadding="4dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            app:drawableStartCompat="@drawable/baseline_surface_24"
+            app:layout_constraintBottom_toBottomOf="@+id/detail_description_tv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/detail_description_tv"
             tools:text="1600 sq ft" />
 
         <androidx.constraintlayout.widget.Barrier
@@ -275,8 +234,7 @@
             android:layout_height="wrap_content"
             app:barrierDirection="top"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/detail_surface_logo" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/detail_amenities_tv"
