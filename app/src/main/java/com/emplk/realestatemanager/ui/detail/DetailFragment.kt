@@ -76,7 +76,8 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
                         binding.detailPriceTv.paintFlags = binding.detailPriceTv.paintFlags or
                                 Paint.STRIKE_THRU_TEXT_FLAG
                     }
-                    binding.detailLastUpdatedCurrencyRateTv.isVisible = viewState.isCurrencyLastUpdatedCurrencyRateVisible
+                    binding.detailLastUpdatedCurrencyRateTv.isVisible =
+                        viewState.isCurrencyLastUpdatedCurrencyRateVisible
 
                     if (viewState.isCurrencyLastUpdatedCurrencyRateVisible) {
                         binding.detailLastUpdatedCurrencyRateTv.text =

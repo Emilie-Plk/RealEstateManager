@@ -7,6 +7,7 @@ import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.MapBottomSheetFragmentBinding
+import com.emplk.realestatemanager.ui.add.amenity.AmenityListAdapter
 import com.emplk.realestatemanager.ui.edit.EditPropertyFragment
 import com.emplk.realestatemanager.ui.main.MainActivity
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
@@ -37,19 +38,26 @@ class MapBottomSheetFragment : BottomSheetDialogFragment(R.layout.map_bottom_she
         standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         standardBottomSheetBehavior.peekHeight = 20
 
-
+        val amenitiesAdapter = AmenityListAdapter()
 
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
             binding.mapBottomSheetPropertyTypeTv.text = viewState.type
             binding.mapBottomSheetPropertyPriceTv.text = viewState.price
+
+            binding.mapBottomSheetPropertyDetailAmenitiesFlexbox.adapter = amenitiesAdapter
+            amenitiesAdapter.submitList(viewState.amenities)
 
             viewState.featuredPicture
                 .load(binding.mapBottomSheetPropertyImageView)
                 .centerCrop()
                 .error(R.drawable.baseline_villa_24)
                 .into(binding.mapBottomSheetPropertyImageView)
+
             binding.mapBottomSheetPropertyEditBtn.setOnClickListener {
-                viewState.onEditClick.invoke(viewState.propertyId)
+                viewState.onEditClick.invoke()
+            }
+            binding.mapBottomSheetPropertyDetailBtn.setOnClickListener {
+                viewState.onDetailClick.invoke()
             }
             binding.mapBottomSheetPropertyDescriptionTv.text = viewState.description
             binding.mapBottomSheetPropertySurfaceTv.text = viewState.surface
@@ -64,10 +72,9 @@ class MapBottomSheetFragment : BottomSheetDialogFragment(R.layout.map_bottom_she
             when (viewEvent) {
                 is MapBottomSheetEvent.OnDetailClick -> {
                     MainActivity.navigate(
-                        requireActivity()
-                    ).apply {
-                        putExtra(KEY_PROPERTY_ID, viewEvent.propertyId)
-                    }
+                        requireActivity(),
+                        viewEvent.fragmentTag,
+                    )
                 }
 
                 is MapBottomSheetEvent.OnEditClick ->
@@ -76,7 +83,7 @@ class MapBottomSheetFragment : BottomSheetDialogFragment(R.layout.map_bottom_she
                         replace(
                             R.id.blank_frameLayout_container,
                             EditPropertyFragment.newInstance()
-                        )
+                        ).addToBackStack(viewEvent.fragmentTag)
                     }
             }
         }

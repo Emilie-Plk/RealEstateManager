@@ -4,9 +4,6 @@ import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.NavigationRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 class NavigationRepositoryImpl @Inject constructor() : NavigationRepository {
@@ -14,7 +11,7 @@ class NavigationRepositoryImpl @Inject constructor() : NavigationRepository {
         MutableSharedFlow<NavigationFragmentType>(extraBufferCapacity = 1)
 
     override fun getNavigationFragmentType(): Flow<NavigationFragmentType> =
-        navigationFragmentTypeMutableSharedFlow.asSharedFlow()
+        navigationFragmentTypeMutableSharedFlow
 
     override fun setNavigationFragmentType(navigationFragmentType: NavigationFragmentType) {
         navigationFragmentTypeMutableSharedFlow.tryEmit(navigationFragmentType)

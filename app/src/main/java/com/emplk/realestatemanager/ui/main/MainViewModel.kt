@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
-import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdFlowUseCase
 import com.emplk.realestatemanager.domain.navigation.GetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.navigation.GetToolbarSubtitleUseCase
+import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.ADD_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.DETAIL_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.DRAFT_DIALOG_FRAGMENT
@@ -166,5 +166,10 @@ class MainViewModel @Inject constructor(
     fun onResume(isTablet: Boolean) {
         isTabletMutableStateFlow.value = isTablet
         setScreenWidthTypeUseCase.invoke(isTablet)
+    }
+
+    fun onNavigationChanged(navigationFragmentTypeString: String) {
+        val navigationFragmentType = NavigationFragmentType.valueOf(navigationFragmentTypeString)
+        setNavigationTypeUseCase.invoke(navigationFragmentType)
     }
 }

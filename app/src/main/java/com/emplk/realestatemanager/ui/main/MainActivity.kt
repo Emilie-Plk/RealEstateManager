@@ -3,14 +3,12 @@ package com.emplk.realestatemanager.ui.main
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.MainActivityBinding
@@ -26,12 +24,14 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     companion object {
-        fun navigate(context: Context): Intent {  // TODO maybe add stringExtra for fragment type
+        fun navigate(context: Context, fragmentTag: String): Intent {  // TODO maybe add stringExtra for fragment type
             val intent = Intent(context, MainActivity::class.java)
+            intent.putExtra(KEY_FRAGMENT_TAG, fragmentTag)
             context.startActivity(intent)
             return intent
         }
 
+        private const val KEY_FRAGMENT_TAG = "KEY_FRAGMENT_TAG"
         private const val PROPERTIES_FRAGMENT_TAG = "PROPERTIES_FRAGMENT_TAG"
         private const val DETAIL_FRAGMENT_TAG = "DETAIL_FRAGMENT_TAG"
         private const val FILTER_FRAGMENT_TAG = "FILTER_FRAGMENT_TAG"
@@ -47,8 +47,19 @@ class MainActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
         setSupportActionBar(binding.mainToolbar)
+        val fragmentName = intent.getStringExtra(KEY_FRAGMENT_TAG)
 
-        if (savedInstanceState == null) {
+        if (savedInstanceState == null && fragmentName != null) {
+            // TODO: poor nav logic but hey it works
+            viewModel.onNavigationChanged(fragmentName)
+            supportFragmentManager.commit {
+                add(
+                    binding.mainFrameLayoutContainerProperties.id,
+                    DetailFragment.newInstance(),
+                    fragmentName
+                ).addToBackStack(fragmentName)
+            }
+        } else if (savedInstanceState == null) {
             supportFragmentManager.commit {
                 add(
                     binding.mainFrameLayoutContainerProperties.id,
@@ -141,6 +152,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun getNavigationType(fragmentName: String): NavigationFragmentType =
+        NavigationFragmentType.valueOf(fragmentName)
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)

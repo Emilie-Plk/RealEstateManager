@@ -1,6 +1,5 @@
 package com.emplk.realestatemanager.domain.property
 
-import com.emplk.realestatemanager.domain.property.type_price_surface.PropertyTypePriceAndSurfaceEntity
 import kotlinx.coroutines.flow.Flow
 
 interface PropertyRepository {
@@ -8,6 +7,5 @@ interface PropertyRepository {
     suspend fun addPropertyWithDetails(propertyEntity: PropertyEntity): Boolean
     fun getPropertiesAsFlow(): Flow<List<PropertyEntity>>
     fun getPropertyByIdAsFlow(propertyId: Long): Flow<PropertyEntity>
-    suspend fun getPropertyTypeSurfaceAndPriceById(propertyId: Long): PropertyTypePriceAndSurfaceEntity
     suspend fun update(propertyEntity: PropertyEntity): Int
 }
