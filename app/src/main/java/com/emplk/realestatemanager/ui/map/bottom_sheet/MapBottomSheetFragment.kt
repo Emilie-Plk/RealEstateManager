@@ -52,9 +52,10 @@ class MapBottomSheetFragment : BottomSheetDialogFragment(R.layout.map_bottom_she
                 viewState.onEditClick.invoke(viewState.propertyId)
             }
             binding.mapBottomSheetPropertyDescriptionTv.text = viewState.description
-            binding.mapBottomSheetPropertyRoomsTv.text = viewState.rooms
-            binding.mapBottomSheetPropertyBedroomsTv.text = viewState.bedrooms
-            binding.mapBottomSheetPropertyBathroomsTv.text = viewState.bathrooms
+            binding.mapBottomSheetPropertySurfaceTv.text = viewState.surface
+            binding.mapBottomSheetPropertyRoomsTv.text = viewState.rooms.toCharSequence(requireContext())
+            binding.mapBottomSheetPropertyBedroomsTv.text = viewState.bedrooms.toCharSequence(requireContext())
+            binding.mapBottomSheetPropertyBathroomsTv.text = viewState.bathrooms.toCharSequence(requireContext())
             binding.mapBottomSheetPropertyProgressBar.isVisible = viewState.isProgressBarVisible
             binding.root.isVisible = !viewState.isProgressBarVisible
         }

@@ -7,7 +7,7 @@ data class PropertyTypeSurfacePriceAndPictureDto(
     val id: Long,
     val type: String,
     val price: BigDecimal,
-    val surface: Int,
+    val surface: Double,
     @ColumnInfo(name = "uri")
     val pictureUri: String,
     /*   @ColumnInfo(name = "name")
