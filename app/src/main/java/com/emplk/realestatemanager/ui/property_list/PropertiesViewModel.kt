@@ -40,7 +40,7 @@ class PropertiesViewModel @Inject constructor(
                 return@collect
             }
 
-            val propertiesWithUpdatedPrice = properties.map { property ->
+            val propertiesWithConvertedPriceAndSurface = properties.map { property ->
                 val convertedPrice = convertPriceByLocaleUseCase.invoke(property.price)
                 val convertedSurface = convertSurfaceUnitByLocaleUseCase.invoke(property.surface)
                 property.copy(
@@ -49,7 +49,7 @@ class PropertiesViewModel @Inject constructor(
                 )
             }
 
-            emit(propertiesWithUpdatedPrice.asSequence()
+            emit(propertiesWithConvertedPriceAndSurface.asSequence()
                 .map { property ->
                     val photoUrl = property.pictures.find { it.isFeatured }?.uri
                     val featuredPicture = photoUrl?.let { NativePhoto.Uri(it) }

@@ -6,7 +6,7 @@ data class PropertyTypePriceAndSurfaceEntity(
     val id: Long,
     val type: String,
     val price: BigDecimal,
-    val surface: Int,
+    val surface: Double,
     val featuredPictureUri: String,
     val pictureUri: String,
     //   val amenities: List<AmenityEntity>,

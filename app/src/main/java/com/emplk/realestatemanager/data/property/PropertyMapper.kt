@@ -30,7 +30,6 @@ class PropertyMapper @Inject constructor(
         saleDate = property.saleDate,
     )
 
-
     fun mapToDomainEntity(
         propertyDto: PropertyDto,
         locationDto: LocationDto,

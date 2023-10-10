@@ -3,12 +3,13 @@ package com.emplk.realestatemanager.ui.map.bottom_sheet
 import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParam
 import com.emplk.realestatemanager.ui.utils.NativePhoto
 import com.emplk.realestatemanager.ui.utils.NativeText
+import java.math.BigDecimal
 
 data class PropertyMapBottomSheetViewState(
     val propertyId: Long,
     val type: String,
     val price: String,
-    val surface: NativeText,
+    val surface: String,
     // val amenities: List<String>,
     val rooms: NativeText,
     val bedrooms: NativeText,
