@@ -93,6 +93,6 @@
     <string name="edit_property_btn">Edit Property</string>
     <string name="missing_description_a11y">Missing description</string>
     <string name="currency_rate_last_updated_date_tv">Currency rate as of %s</string>
-    <string name="currency_rate_with_no_date_tv">Currency rate might be incorrect</string>
+    <string name="currency_rate_with_no_date_tv">Currency rate might be inaccurate</string>
 
 </resources>
