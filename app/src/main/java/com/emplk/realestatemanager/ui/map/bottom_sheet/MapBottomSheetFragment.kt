@@ -68,15 +68,8 @@ class MapBottomSheetFragment : BottomSheetDialogFragment(R.layout.map_bottom_she
             binding.root.isVisible = !viewState.isProgressBarVisible
         }
 
-        viewModel.viewEvent.observeEvent(viewLifecycleOwner) { viewEvent ->
+       /* viewModel.viewEvent.observeEvent(viewLifecycleOwner) { viewEvent ->
             when (viewEvent) {
-                is MapBottomSheetEvent.OnDetailClick -> {
-                    MainActivity.navigate(
-                        requireActivity(),
-                        viewEvent.fragmentTag,
-                    )
-                }
-
                 is MapBottomSheetEvent.OnEditClick ->
                     childFragmentManager.commit {
                         dismiss()
@@ -85,8 +78,10 @@ class MapBottomSheetFragment : BottomSheetDialogFragment(R.layout.map_bottom_she
                             EditPropertyFragment.newInstance()
                         ).addToBackStack(viewEvent.fragmentTag)
                     }
+
+                is MapBottomSheetEvent.OnDetailClick -> TODO()
             }
-        }
+        }*/
     }
 }
 

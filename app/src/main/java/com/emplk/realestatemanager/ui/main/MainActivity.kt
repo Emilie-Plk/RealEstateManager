@@ -49,24 +49,16 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.mainToolbar)
         val fragmentName = intent.getStringExtra(KEY_FRAGMENT_TAG)
 
-        if (savedInstanceState == null && fragmentName != null) {
-            // TODO: poor nav logic but hey it works
-            viewModel.onNavigationChanged(fragmentName)
-            supportFragmentManager.commit {
-                add(
-                    binding.mainFrameLayoutContainerProperties.id,
-                    DetailFragment.newInstance(),
-                    fragmentName
-                ).addToBackStack(fragmentName)
-            }
-        } else if (savedInstanceState == null) {
-            supportFragmentManager.commit {
-                add(
-                    binding.mainFrameLayoutContainerProperties.id,
-                    PropertiesFragment.newInstance(),
-                    PROPERTIES_FRAGMENT_TAG
-                ).addToBackStack(PROPERTIES_FRAGMENT_TAG)
-            }
+        if (savedInstanceState == null) {
+            if (fragmentName != null) viewModel.onNavigationChanged(fragmentName)
+            else
+                supportFragmentManager.commit {
+                    add(
+                        binding.mainFrameLayoutContainerProperties.id,
+                        PropertiesFragment.newInstance(),
+                        PROPERTIES_FRAGMENT_TAG
+                    ).addToBackStack(PROPERTIES_FRAGMENT_TAG)
+                }
         }
 
         onBackPress()

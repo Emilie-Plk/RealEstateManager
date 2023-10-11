@@ -10,6 +10,7 @@ import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property_draft.IsPropertyFormInProgressUseCase
 import com.emplk.realestatemanager.ui.utils.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,13 +22,13 @@ class BlankActivityViewModel @Inject constructor(
 ) : ViewModel() {
 
     val viewEventLiveData: LiveData<Event<BlankViewEvent>> = liveData {
-        getNavigationTypeUseCase.invoke().collect { navigationType ->
+        getNavigationTypeUseCase.invoke().collectLatest { navigationType ->
             when (navigationType) {
                 NavigationFragmentType.ADD_FRAGMENT -> Unit
                 NavigationFragmentType.EDIT_FRAGMENT -> Unit
                 NavigationFragmentType.FILTER_FRAGMENT -> Unit
-                NavigationFragmentType.DETAIL_FRAGMENT -> Unit
-                NavigationFragmentType.LIST_FRAGMENT -> emit(Event(BlankViewEvent.NavigateToMain))
+                NavigationFragmentType.DETAIL_FRAGMENT ->  emit(Event(BlankViewEvent.NavigateToMain(NavigationFragmentType.DETAIL_FRAGMENT.name)))
+                NavigationFragmentType.LIST_FRAGMENT -> emit(Event(BlankViewEvent.NavigateToMain(NavigationFragmentType.LIST_FRAGMENT.name)))
                 NavigationFragmentType.DRAFT_DIALOG_FRAGMENT -> emit(Event(BlankViewEvent.DisplayDraftDialog))
                 NavigationFragmentType.MAP_FRAGMENT -> Unit
             }
