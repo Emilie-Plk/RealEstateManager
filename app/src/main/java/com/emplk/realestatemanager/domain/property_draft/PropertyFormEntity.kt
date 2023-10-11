@@ -4,7 +4,7 @@ import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
 import com.emplk.realestatemanager.ui.add.address_predictions.PredictionViewState
 import java.math.BigDecimal
 
-data class AddPropertyFormEntity(
+data class PropertyFormEntity(
     val propertyType: String? = null,
     val address: String? = null,
     val addressPredictions: List<PredictionViewState> = emptyList(),

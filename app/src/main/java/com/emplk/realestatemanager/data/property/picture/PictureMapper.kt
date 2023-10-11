@@ -27,6 +27,7 @@ class PictureMapper @Inject constructor() {
 
     fun mapToDomainEntity(pictureDto: PictureDto): PictureEntity {
         return PictureEntity(
+            id = pictureDto.id,
             uri = pictureDto.uri,
             isFeatured = pictureDto.isFeatured,
             description = pictureDto.description,
@@ -36,6 +37,7 @@ class PictureMapper @Inject constructor() {
     fun mapToDomainEntities(pictureDtoEntities: List<PictureDto>): List<PictureEntity> {
         return pictureDtoEntities.map {
             PictureEntity(
+                id = it.id,
                 uri = it.uri,
                 isFeatured = it.isFeatured,
                 description = it.description,

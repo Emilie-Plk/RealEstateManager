@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.emplk.realestatemanager.R
-import com.emplk.realestatemanager.domain.agent.GetAgentsFlowUseCase
+import com.emplk.realestatemanager.domain.agent.GetAgentsMapUseCase
 import com.emplk.realestatemanager.domain.autocomplete.GetAddressPredictionsUseCase
 import com.emplk.realestatemanager.domain.autocomplete.PredictionWrapper
 import com.emplk.realestatemanager.domain.connectivity.IsInternetEnabledFlowUseCase
@@ -18,7 +18,7 @@ import com.emplk.realestatemanager.domain.property.AddPropertyUseCase
 import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.amenity.type.GetAmenityTypeUseCase
-import com.emplk.realestatemanager.domain.property_draft.AddPropertyFormEntity
+import com.emplk.realestatemanager.domain.property_draft.PropertyFormEntity
 import com.emplk.realestatemanager.domain.property_draft.InitTemporaryPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.PropertyFormDatabaseState
 import com.emplk.realestatemanager.domain.property_draft.SetPropertyFormProgressUseCase
@@ -71,14 +71,14 @@ class AddPropertyViewModel @Inject constructor(
     private val getCurrencyTypeUseCase: GetCurrencyTypeUseCase,
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
     private val getPicturePreviewsAsFlowUseCase: GetPicturePreviewsAsFlowUseCase,
-    private val getAgentsFlowUseCase: GetAgentsFlowUseCase,
+    private val getAgentsMapUseCase: GetAgentsMapUseCase,
     private val setPropertyFormProgressUseCase: SetPropertyFormProgressUseCase,
     private val getAmenityTypeUseCase: GetAmenityTypeUseCase,
     private val getPropertyTypeFlowUseCase: GetPropertyTypeFlowUseCase,
     private val isInternetEnabledFlowUseCase: IsInternetEnabledFlowUseCase,  // à garder I suppose
 ) : ViewModel() {
 
-    private val formMutableStateFlow = MutableStateFlow(AddPropertyFormEntity())
+    private val formMutableStateFlow = MutableStateFlow(PropertyFormEntity())
     private val currentAddressInputMutableStateFlow: MutableStateFlow<String?> = MutableStateFlow(null)
     private val perfectMatchPredictionMutableStateFlow = MutableStateFlow<Boolean?>(null)  // TODO not sure at all!..
     private val hasAddressEditTextFocus = MutableStateFlow(false)
@@ -124,8 +124,8 @@ class AddPropertyViewModel @Inject constructor(
                 )
 
                 is PropertyFormDatabaseState.DraftAlreadyExists -> {
-                    formMutableStateFlow.update { addPropertyForm ->
-                        addPropertyForm.copy(
+                    formMutableStateFlow.update { propertyForm ->
+                        propertyForm.copy(
                             propertyType = initTemporaryPropertyFormUseCase.propertyDraftEntity.type,
                             address = initTemporaryPropertyFormUseCase.propertyDraftEntity.address,
                             price = initTemporaryPropertyFormUseCase.propertyDraftEntity.price,
@@ -151,14 +151,14 @@ class AddPropertyViewModel @Inject constructor(
             launch {
                 combine(
                     formMutableStateFlow,
-                    getAgentsFlowUseCase.invoke(),
                     getPicturePreviewsAsFlowUseCase.invoke(),
                     currentPredictionAddressesFlow,
                     isAddingPropertyInDatabaseMutableStateFlow,
-                ) { form, agents, picturePreviews, currentPredictionAddresses, isAddingPropertyInDatabase ->
+                ) { form, picturePreviews, addressPredictions, isAddingInDatabase ->
                     val currencyType = getCurrencyTypeUseCase.invoke()
                     val amenityTypes = getAmenityTypeUseCase.invoke()
                     val propertyTypes = getPropertyTypeFlowUseCase.invoke()
+                    val agents =    getAgentsMapUseCase.invoke()
 
                     val isFormInProgress = !form.propertyType.isNullOrBlank() ||
                             !form.address.isNullOrBlank() ||
@@ -193,7 +193,7 @@ class AddPropertyViewModel @Inject constructor(
                         PropertyFormViewState(
                             propertyType = form.propertyType,
                             address = form.address,
-                            price = if (form.price == BigDecimal.ZERO) "" else form.price.toString(),  // TODO: amarchpo
+                            price = if (form.price == BigDecimal.ZERO) "" else form.price.toString(),
                             surface = form.surface,
                             description = form.description,
                             nbRooms = form.nbRooms,
@@ -281,7 +281,7 @@ class AddPropertyViewModel @Inject constructor(
                                 getSurfaceUnitUseCase.invoke().symbol,
                             ),
                             isSubmitButtonEnabled = isEveryFieldFilledMutableStateFlow.value,
-                            isProgressBarVisible = isAddingPropertyInDatabase,
+                            isProgressBarVisible = isAddingInDatabase,
                             amenities = mapAmenityTypesToViewStates(amenityTypes),
                             selectedAmenities = form.amenities,
                             propertyTypes = propertyTypes.map { propertyType ->
@@ -296,7 +296,7 @@ class AddPropertyViewModel @Inject constructor(
                                     name = agent.value
                                 )
                             },
-                            addressPredictions = mapPredictionsToViewState(currentPredictionAddresses),
+                            addressPredictions = mapPredictionsToViewState(addressPredictions),
                         )
                     )
                 }.collect()

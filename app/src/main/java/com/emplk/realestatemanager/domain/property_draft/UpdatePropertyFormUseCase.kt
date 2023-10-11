@@ -9,7 +9,7 @@ class UpdatePropertyFormUseCase @Inject constructor(
     private val getCurrentPropertyDraftIdUseCase: GetCurrentPropertyDraftIdUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
 ) {
-    suspend fun invoke(form: AddPropertyFormEntity) { // TODO: ptet return un truc qd update chépo
+    suspend fun invoke(form: PropertyFormEntity) { // TODO: ptet return un truc qd update chépo
         getCurrentPropertyDraftIdUseCase.invoke()?.let { currentPropertyFormId ->
             propertyFormRepository.update(
                 PropertyDraftEntity(

@@ -15,8 +15,5 @@ class RealEstateAgentRepositoryImpl @Inject constructor() : RealEstateAgentRepos
         6L to "Jane Wayne",
     )
 
-    override fun getAgentNameMapFlow(): Flow<Map<Long, String>> =
-        flow {
-            emit(agentNameList)
-        }
+    override fun getAgentNameMap(): Map<Long, String> = agentNameList
 }
