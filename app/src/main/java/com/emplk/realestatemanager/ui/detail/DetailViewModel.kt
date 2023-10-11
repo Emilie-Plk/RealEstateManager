@@ -14,7 +14,7 @@ import com.emplk.realestatemanager.domain.locale_formatting.GetRoundedSurfaceWit
 import com.emplk.realestatemanager.domain.map_picture.GenerateMapUrlWithApiKeyUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
-import com.emplk.realestatemanager.domain.property.GetPropertyByItsIdUseCase
+import com.emplk.realestatemanager.domain.property.GetPropertyByItsIdAsFlowUseCase
 import com.emplk.realestatemanager.ui.add.amenity.AmenityViewState
 import com.emplk.realestatemanager.ui.detail.picture_banner.PictureBannerViewState
 import com.emplk.realestatemanager.ui.utils.NativePhoto
@@ -30,7 +30,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-    private val getPropertyByItsIdUseCase: GetPropertyByItsIdUseCase,
+    private val getPropertyByItsIdAsFlowUseCase: GetPropertyByItsIdAsFlowUseCase,
     private val formatPriceByLocaleUseCase: FormatPriceByLocaleUseCase,
     private val convertPriceByLocaleUseCase: ConvertPriceByLocaleUseCase,
     private val getLastUpdatedCurrencyRateDateUseCase: GetLastUpdatedCurrencyRateDateUseCase,
@@ -55,7 +55,7 @@ class DetailViewModel @Inject constructor(
         getCurrentPropertyIdFlowUseCase.invoke()
             .filterNotNull()
             .flatMapLatest { propertyId ->
-                getPropertyByItsIdUseCase.invoke(propertyId)
+                getPropertyByItsIdAsFlowUseCase.invoke(propertyId)
             }.collectLatest { property ->
                 emit(DetailViewState.PropertyDetail(
                     id = property.id,

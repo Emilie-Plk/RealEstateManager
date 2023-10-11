@@ -115,7 +115,7 @@ class AddPropertyViewModel @Inject constructor(
         }
     }
 
-    val viewStateLiveData: LiveData<AddPropertyViewState> = liveData {
+    val viewStateLiveData: LiveData<PropertyFormViewState> = liveData {
         coroutineScope {
             when (val initTemporaryPropertyFormUseCase = initTemporaryPropertyFormUseCase.invoke()) {
                 is PropertyFormDatabaseState.Empty -> Log.d(
@@ -190,7 +190,7 @@ class AddPropertyViewModel @Inject constructor(
                     )
 
                     emit(
-                        AddPropertyViewState(
+                        PropertyFormViewState(
                             propertyType = form.propertyType,
                             address = form.address,
                             price = if (form.price == BigDecimal.ZERO) "" else form.price.toString(),  // TODO: amarchpo
@@ -280,7 +280,7 @@ class AddPropertyViewModel @Inject constructor(
                                 R.string.surface_unit_in_n,
                                 getSurfaceUnitUseCase.invoke().symbol,
                             ),
-                            isAddButtonEnabled = isEveryFieldFilledMutableStateFlow.value,
+                            isSubmitButtonEnabled = isEveryFieldFilledMutableStateFlow.value,
                             isProgressBarVisible = isAddingPropertyInDatabase,
                             amenities = mapAmenityTypesToViewStates(amenityTypes),
                             selectedAmenities = form.amenities,

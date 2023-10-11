@@ -8,8 +8,7 @@ import com.emplk.realestatemanager.ui.add.picture_preview.PicturePreviewStateIte
 import com.emplk.realestatemanager.ui.add.type.AddPropertyTypeViewStateItem
 import com.emplk.realestatemanager.ui.utils.NativeText
 
-data class AddPropertyViewState(
-    // TODO: generalize to be used for both Add/EditProperty? (PropertyFormViewState?)
+data class PropertyFormViewState(
     val propertyType: String?,
     val addressPredictions: List<PredictionViewState>,
     val address: String?,
@@ -26,7 +25,7 @@ data class AddPropertyViewState(
     val selectedAgent: String?,
     val priceCurrency: NativeText,
     val surfaceUnit: NativeText,
-    val isAddButtonEnabled: Boolean,
+    val isSubmitButtonEnabled: Boolean,
     val isProgressBarVisible: Boolean,
     val propertyTypes: List<AddPropertyTypeViewStateItem>,
 )

@@ -1,16 +1,13 @@
 package com.emplk.realestatemanager.ui.add
 
 import android.app.Activity
-import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -22,11 +19,6 @@ import androidx.fragment.app.viewModels
 import com.emplk.realestatemanager.BuildConfig
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.AddPropertyFragmentBinding
-import com.emplk.realestatemanager.ui.add.address_predictions.PredictionListAdapter
-import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentSpinnerAdapter
-import com.emplk.realestatemanager.ui.add.amenity.AmenityListAdapter
-import com.emplk.realestatemanager.ui.add.picture_preview.PropertyPicturePreviewListAdapter
-import com.emplk.realestatemanager.ui.add.type.AddPropertyTypeSpinnerAdapter
 import com.emplk.realestatemanager.ui.edit.BasePropertyFragment
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.viewBinding
@@ -36,21 +28,15 @@ import java.math.BigDecimal
 
 
 @AndroidEntryPoint
-class AddPropertyFragment(
-    override val typeAdapter: AddPropertyTypeSpinnerAdapter = AddPropertyTypeSpinnerAdapter(),
-    override val agentAdapter: AddPropertyAgentSpinnerAdapter = AddPropertyAgentSpinnerAdapter(),
-    override val picturePreviewAdapter: PropertyPicturePreviewListAdapter = PropertyPicturePreviewListAdapter(),
-    override val amenityAdapter: AmenityListAdapter = AmenityListAdapter(),
-    override val predictionAdapter: PredictionListAdapter = PredictionListAdapter(),
-) : BasePropertyFragment() {
+class AddPropertyFragment : BasePropertyFragment() {
 
     companion object {
         fun newInstance(): Fragment = AddPropertyFragment()
     }
 
-    private val binding by viewBinding { AddPropertyFragmentBinding.bind(it) }
     private val viewModel by viewModels<AddPropertyViewModel>()
-    private var currentPhotoUri: Uri? = null
+    private val binding by viewBinding { AddPropertyFragmentBinding.bind(it) }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -71,7 +57,7 @@ class AddPropertyFragment(
             }
         }
 
-        setNumberPickers()
+        setNumberPickersListeners()
 
         initFormFieldsTextWatchers()
 
@@ -95,7 +81,7 @@ class AddPropertyFragment(
             picturePreviewAdapter.submitList(viewState.pictures)
             amenityAdapter.submitList(viewState.amenities)
             predictionAdapter.submitList(viewState.addressPredictions)
-            binding.addPropertySubmitButton.isEnabled = viewState.isAddButtonEnabled
+            binding.addPropertySubmitButton.isEnabled = viewState.isSubmitButtonEnabled
             binding.addPropertyProgressBar.isVisible = viewState.isProgressBarVisible
 
 
@@ -189,14 +175,6 @@ class AddPropertyFragment(
         }
     }
 
-    private fun hideKeyboard(view: View?) {
-        if (view != null) {
-            val inputMethodManager =
-                requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-            inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
-        }
-    }
-
     private fun initFormFieldsTextWatchers() {
         binding.addPropertyAddressTextInputEditText.doAfterTextChanged {
             viewModel.onAddressChanged(it.toString())
@@ -220,7 +198,7 @@ class AddPropertyFragment(
         }
     }
 
-    private fun setNumberPickers() {
+    private fun setNumberPickersListeners() {
         binding.addPropertyRoomsNumberPicker.setOnValueChangedListener { _, _, value ->
             viewModel.onRoomsNumberChanged(value)
         }
@@ -233,6 +211,5 @@ class AddPropertyFragment(
             viewModel.onBathroomsNumberChanged(value)
         }
     }
-
 }
 
