@@ -1,7 +1,6 @@
 package com.emplk.realestatemanager.data.property
 
 import android.database.sqlite.SQLiteException
-import android.util.Log
 import com.emplk.realestatemanager.data.property.amenity.AmenityDao
 import com.emplk.realestatemanager.data.property.amenity.AmenityMapper
 import com.emplk.realestatemanager.data.property.location.LocationDao

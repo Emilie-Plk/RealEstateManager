@@ -72,7 +72,6 @@ abstract class DataBindingModule {
     @Binds
     abstract fun bindNavigationRepository(implementation: NavigationRepositoryImpl): NavigationRepository
 
-
     @Singleton
     @Binds
     abstract fun bindNavigationDraftRepository(implementation: NavigationDraftRepositoryImpl): NavigationDraftRepository
@@ -135,6 +134,5 @@ abstract class DataBindingModule {
 
     @Singleton
     @Binds
-    abstract fun currencyRateRepository(implementation: CurrencyRateRepositoryFixer): CurrencyRateRepository
-
+    abstract fun bindCurrencyRateRepository(implementation: CurrencyRateRepositoryFixer): CurrencyRateRepository
 }
