@@ -92,8 +92,8 @@ class PropertyRepositoryRoom @Inject constructor(
         }
         .flowOn(coroutineDispatcherProvider.io)
 
-    override suspend fun update(propertyEntity: PropertyEntity): Int =
+    override suspend fun update(propertyEntity: PropertyEntity): Boolean =
         withContext(coroutineDispatcherProvider.io) {
-            propertyDao.update(propertyMapper.mapToDtoEntity(propertyEntity))
+            propertyDao.update(propertyMapper.mapToDtoEntity(propertyEntity)) == 1
         }
 }

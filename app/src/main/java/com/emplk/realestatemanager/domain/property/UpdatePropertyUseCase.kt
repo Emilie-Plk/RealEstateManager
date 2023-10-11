@@ -12,10 +12,11 @@ import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.location.LocationEntity
 import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
-import com.emplk.realestatemanager.domain.property_draft.PropertyFormEntity
 import com.emplk.realestatemanager.domain.property_draft.ClearPropertyFormUseCase
+import com.emplk.realestatemanager.domain.property_draft.PropertyFormEntity
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.GetPicturePreviewsUseCase
 import com.emplk.realestatemanager.ui.add.AddPropertyEvent
+import com.emplk.realestatemanager.ui.edit.EditPropertyEvent
 import com.emplk.realestatemanager.ui.utils.NativeText
 import java.math.BigDecimal
 import java.time.Clock
@@ -23,7 +24,7 @@ import java.time.LocalDateTime
 import java.util.Locale
 import javax.inject.Inject
 
-class AddPropertyUseCase @Inject constructor(
+class UpdatePropertyUseCase @Inject constructor(
     private val propertyRepository: PropertyRepository,
     private val geocodingRepository: GeocodingRepository,
     private val getLocaleUseCase: GetLocaleUseCase,
@@ -35,7 +36,7 @@ class AddPropertyUseCase @Inject constructor(
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val clock: Clock,
 ) {
-    suspend fun invoke(form: PropertyFormEntity): AddPropertyEvent {
+    suspend fun invoke(form: PropertyFormEntity) : EditPropertyEvent {
         if (form.propertyType != null &&
             form.address != null &&
             (form.price > BigDecimal.ZERO) &&
@@ -60,7 +61,7 @@ class AddPropertyUseCase @Inject constructor(
                 is CurrencyRateWrapper.Error -> currencyWrapper.fallbackUsToEuroRate
             }
 
-            val success = propertyRepository.addPropertyWithDetails(
+            val success = propertyRepository.update(
                 PropertyEntity(
                     type = form.propertyType,
                     price = when (getLocaleUseCase.invoke()) {
@@ -117,12 +118,12 @@ class AddPropertyUseCase @Inject constructor(
             return if (success) {
                 clearPropertyFormUseCase.invoke()
                 setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
-                AddPropertyEvent.Toast(NativeText.Resource(R.string.add_property_successfully_created_message))
+                EditPropertyEvent.Toast(NativeText.Resource(R.string.add_property_successfully_updated_message))
             } else {
-                AddPropertyEvent.Toast(NativeText.Resource(R.string.add_property_error_message))
+                EditPropertyEvent.Toast(NativeText.Resource(R.string.add_property_error_message))
             }
         } else {
-            return AddPropertyEvent.Toast(NativeText.Resource(R.string.add_property_error_message))
+            return EditPropertyEvent.Toast(NativeText.Resource(R.string.add_property_error_message))
         }
     }
 }

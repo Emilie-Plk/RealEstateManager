@@ -74,6 +74,7 @@
     <string name="property_type_other">Other</string>
     <string name="add_property_create_button">Create property</string>
     <string name="add_property_successfully_created_message">Property successfully created!</string>
+    <string name="add_property_successfully_updated_message">Property successfully updated!</string>
     <string name="title_activity_blank">BlankActivity</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>

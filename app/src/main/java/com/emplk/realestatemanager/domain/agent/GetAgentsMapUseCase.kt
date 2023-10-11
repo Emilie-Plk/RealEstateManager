@@ -2,8 +2,8 @@ package com.emplk.realestatemanager.domain.agent
 
 import javax.inject.Inject
 
-class GetAgentsFlowUseCase @Inject constructor(
+class GetAgentsMapUseCase @Inject constructor(
     private val realEstateAgentRepository: RealEstateAgentRepository
 ) {
-    fun invoke() = realEstateAgentRepository.getAgentNameMapFlow()
+    fun invoke(): Map<Long, String> = realEstateAgentRepository.getAgentNameMap()
 }
