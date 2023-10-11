@@ -11,13 +11,10 @@ import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceByLocaleU
 import com.emplk.realestatemanager.domain.locale_formatting.GetRoundedSurfaceWithSurfaceUnitUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
-import com.emplk.realestatemanager.domain.property.GetPropertyByItsIdUseCase
+import com.emplk.realestatemanager.domain.property.GetPropertyByItsIdAsFlowUseCase
 import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
 import com.emplk.realestatemanager.ui.add.amenity.AmenityViewState
-import com.emplk.realestatemanager.ui.map.bottom_sheet.MapBottomSheetFragment.Companion.DETAIL_PROPERTY_TAG
-import com.emplk.realestatemanager.ui.map.bottom_sheet.MapBottomSheetFragment.Companion.EDIT_PROPERTY_TAG
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
-import com.emplk.realestatemanager.ui.utils.Event
 import com.emplk.realestatemanager.ui.utils.NativePhoto
 import com.emplk.realestatemanager.ui.utils.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,7 +28,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MapBottomSheetViewModel @Inject constructor(
     private val getCurrentPropertyIdFlowUseCase: GetCurrentPropertyIdFlowUseCase,
-    private val getPropertyByItsIdUseCase: GetPropertyByItsIdUseCase,
+    private val getPropertyByItsIdAsFlowUseCase: GetPropertyByItsIdAsFlowUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val convertSurfaceUnitByLocaleUseCase: ConvertSurfaceUnitByLocaleUseCase,
     private val convertPriceByLocaleUseCase: ConvertPriceByLocaleUseCase,
@@ -47,7 +44,7 @@ class MapBottomSheetViewModel @Inject constructor(
     val viewState: LiveData<PropertyMapBottomSheetViewState> = liveData {
         if (latestValue == null) isProgressBarVisibleMutableLiveData.tryEmit(true)
         getCurrentPropertyIdFlowUseCase.invoke().filterNotNull().flatMapLatest { propertyId ->
-            getPropertyByItsIdUseCase.invoke(propertyId)
+            getPropertyByItsIdAsFlowUseCase.invoke(propertyId)
         }.collectLatest { property ->
             isProgressBarVisibleMutableLiveData.tryEmit(false)
 
