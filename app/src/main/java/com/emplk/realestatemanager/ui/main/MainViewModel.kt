@@ -168,8 +168,6 @@ class MainViewModel @Inject constructor(
         setScreenWidthTypeUseCase.invoke(isTablet)
     }
 
-    fun onNavigationChanged(navigationFragmentTypeString: String) {
-        val navigationFragmentType = NavigationFragmentType.valueOf(navigationFragmentTypeString)
-        setNavigationTypeUseCase.invoke(navigationFragmentType)
-    }
+    fun onNavigationChanged(navigationFragmentTypeString: String) =
+        setNavigationTypeUseCase.invoke(NavigationFragmentType.valueOf(navigationFragmentTypeString))
 }

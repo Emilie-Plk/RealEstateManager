@@ -87,13 +87,20 @@ class BlankActivity : AppCompatActivity() {
 
         viewModel.viewEventLiveData.observeEvent(this) { blankViewEvent ->
             when (blankViewEvent) {
-                is BlankViewEvent.NavigateToMain -> {
-                    MainActivity.navigate(this, NavigationFragmentType.LIST_FRAGMENT.name)
+                BlankViewEvent.NavigateToMain(NavigationFragmentType.LIST_FRAGMENT.name) -> {
+                    startActivity(MainActivity.navigate(this, NavigationFragmentType.LIST_FRAGMENT.name))
+                    finish()
+                }
+
+                BlankViewEvent.NavigateToMain(NavigationFragmentType.DETAIL_FRAGMENT.name) -> {
+                    startActivity(MainActivity.navigate(this, NavigationFragmentType.DETAIL_FRAGMENT.name))
                     finish()
                 }
 
                 BlankViewEvent.DisplayDraftDialog ->
                     PropertyDraftDialogFragment.newInstance().show(supportFragmentManager, null)
+
+                else -> {}
             }
         }
     }

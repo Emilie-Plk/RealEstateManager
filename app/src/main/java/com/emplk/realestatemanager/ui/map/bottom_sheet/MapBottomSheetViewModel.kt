@@ -10,6 +10,7 @@ import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceUnitBy
 import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceByLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetRoundedSurfaceWithSurfaceUnitUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
+import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.GetPropertyByItsIdUseCase
 import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
 import com.emplk.realestatemanager.ui.add.amenity.AmenityViewState
@@ -31,6 +32,7 @@ import javax.inject.Inject
 class MapBottomSheetViewModel @Inject constructor(
     private val getCurrentPropertyIdFlowUseCase: GetCurrentPropertyIdFlowUseCase,
     private val getPropertyByItsIdUseCase: GetPropertyByItsIdUseCase,
+    private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val convertSurfaceUnitByLocaleUseCase: ConvertSurfaceUnitByLocaleUseCase,
     private val convertPriceByLocaleUseCase: ConvertPriceByLocaleUseCase,
     private val getRoundedSurfaceWithSurfaceUnitUseCase: GetRoundedSurfaceWithSurfaceUnitUseCase,
@@ -62,10 +64,10 @@ class MapBottomSheetViewModel @Inject constructor(
                     surface = getRoundedSurfaceWithSurfaceUnitUseCase.invoke(propertyWithConvertedPriceAndSurface.surface),
                     featuredPicture = NativePhoto.Uri(getFeaturedPictureUri(propertyWithConvertedPriceAndSurface.pictures)),
                     onDetailClick = EquatableCallback {
-                        onActionClickedMutableSharedFlow.tryEmit(NavigationFragmentType.DETAIL_FRAGMENT.name)
+                        setNavigationTypeUseCase.invoke(NavigationFragmentType.DETAIL_FRAGMENT)
                     },
                     onEditClick = EquatableCallback {
-                        onActionClickedMutableSharedFlow.tryEmit(NavigationFragmentType.EDIT_FRAGMENT.name)
+                        setNavigationTypeUseCase.invoke(NavigationFragmentType.EDIT_FRAGMENT)
                     },
                     description = propertyWithConvertedPriceAndSurface.description,
                     rooms = NativeText.Argument(
@@ -96,13 +98,13 @@ class MapBottomSheetViewModel @Inject constructor(
     private fun getFeaturedPictureUri(pictures: List<PictureEntity>): String = pictures.first { it.isFeatured }.uri
 
 
-    val viewEvent: LiveData<Event<MapBottomSheetEvent>> = liveData {
+    /*val viewEvent: LiveData<Event<MapBottomSheetEvent>> = liveData {
         onActionClickedMutableSharedFlow.collect {
             when (it) {
                 DETAIL_PROPERTY_TAG -> emit(Event(MapBottomSheetEvent.OnDetailClick(NavigationFragmentType.DETAIL_FRAGMENT.name)))
                 EDIT_PROPERTY_TAG -> emit(Event(MapBottomSheetEvent.OnEditClick(NavigationFragmentType.EDIT_FRAGMENT.name)))
             }
         }
-    }
+    }*/
 }
 

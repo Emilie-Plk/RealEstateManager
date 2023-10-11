@@ -27,6 +27,7 @@ import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentSpinnerAdapter
 import com.emplk.realestatemanager.ui.add.amenity.AmenityListAdapter
 import com.emplk.realestatemanager.ui.add.picture_preview.PropertyPicturePreviewListAdapter
 import com.emplk.realestatemanager.ui.add.type.AddPropertyTypeSpinnerAdapter
+import com.emplk.realestatemanager.ui.edit.BasePropertyFragment
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,7 +36,13 @@ import java.math.BigDecimal
 
 
 @AndroidEntryPoint
-class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
+class AddPropertyFragment(
+    override val typeAdapter: AddPropertyTypeSpinnerAdapter = AddPropertyTypeSpinnerAdapter(),
+    override val agentAdapter: AddPropertyAgentSpinnerAdapter = AddPropertyAgentSpinnerAdapter(),
+    override val picturePreviewAdapter: PropertyPicturePreviewListAdapter = PropertyPicturePreviewListAdapter(),
+    override val amenityAdapter: AmenityListAdapter = AmenityListAdapter(),
+    override val predictionAdapter: PredictionListAdapter = PredictionListAdapter(),
+) : BasePropertyFragment() {
 
     companion object {
         fun newInstance(): Fragment = AddPropertyFragment()
@@ -52,30 +59,17 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
         binding.addPropertySoldStatusSwitch.isVisible = false
         binding.addPropertySubmitButton.text = getString(R.string.add_property_create_button)
 
-        val typeAdapter = AddPropertyTypeSpinnerAdapter()
-        binding.addPropertyTypeActv.setAdapter(typeAdapter)
         binding.addPropertyTypeActv.setOnItemClickListener { _, _, position, _ ->
             typeAdapter.getItem(position)?.let {
                 viewModel.onPropertyTypeSelected(it.name)
             }
         }
 
-        val agentAdapter = AddPropertyAgentSpinnerAdapter()
-        binding.addPropertyAgentActv.setAdapter(agentAdapter)
         binding.addPropertyAgentActv.setOnItemClickListener { _, _, position, _ ->
             agentAdapter.getItem(position)?.let {
                 viewModel.onAgentSelected(it.name)
             }
         }
-
-        val picturePreviewAdapter = PropertyPicturePreviewListAdapter()
-        binding.addPropertyPreviewPicturesRecyclerView.adapter = picturePreviewAdapter
-
-        val amenityAdapter = AmenityListAdapter()
-        binding.addPropertyAmenitiesRv.adapter = amenityAdapter
-
-        val predictionAdapter = PredictionListAdapter()
-        binding.addPropertyAddressPredictionsRecyclerView.adapter = predictionAdapter
 
         setNumberPickers()
 
@@ -227,20 +221,14 @@ class AddPropertyFragment : Fragment(R.layout.add_property_fragment) {
     }
 
     private fun setNumberPickers() {
-        binding.addPropertyRoomsNumberPicker.minValue = 0
-        binding.addPropertyRoomsNumberPicker.maxValue = 30
         binding.addPropertyRoomsNumberPicker.setOnValueChangedListener { _, _, value ->
             viewModel.onRoomsNumberChanged(value)
         }
 
-        binding.addPropertyBedroomsNumberPicker.minValue = 0
-        binding.addPropertyBedroomsNumberPicker.maxValue = 15
         binding.addPropertyBedroomsNumberPicker.setOnValueChangedListener { _, _, value ->
             viewModel.onBedroomsNumberChanged(value)
         }
 
-        binding.addPropertyBathroomsNumberPicker.minValue = 0
-        binding.addPropertyBathroomsNumberPicker.maxValue = 15
         binding.addPropertyBathroomsNumberPicker.setOnValueChangedListener { _, _, value ->
             viewModel.onBathroomsNumberChanged(value)
         }
