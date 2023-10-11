@@ -161,32 +161,32 @@ class AddPropertyViewModel @Inject constructor(
                     val propertyTypes = getPropertyTypeFlowUseCase.invoke()
 
                     val isFormInProgress = !form.propertyType.isNullOrBlank() ||
-                            !form.address.isNullOrBlank() ||
-                            (form.price > BigDecimal.ZERO) ||
-                            !form.surface.isNullOrBlank() ||
-                            !form.description.isNullOrBlank() ||
-                            form.nbRooms > 0 ||
-                            form.nbBathrooms > 0 ||
-                            form.nbBedrooms > 0 ||
-                            !form.agent.isNullOrBlank() ||
-                            form.amenities.isNotEmpty() ||
-                            form.pictureIds.isNotEmpty() ||
-                            form.featuredPictureId != null
+                        !form.address.isNullOrBlank() ||
+                        (form.price > BigDecimal.ZERO) ||
+                        !form.surface.isNullOrBlank() ||
+                        !form.description.isNullOrBlank() ||
+                        form.nbRooms > 0 ||
+                        form.nbBathrooms > 0 ||
+                        form.nbBedrooms > 0 ||
+                        !form.agent.isNullOrBlank() ||
+                        form.amenities.isNotEmpty() ||
+                        form.pictureIds.isNotEmpty() ||
+                        form.featuredPictureId != null
 
                     setPropertyFormProgressUseCase.invoke(isFormInProgress)
                     isEveryFieldFilledMutableStateFlow.tryEmit(
                         form.propertyType != null &&
-                                form.address != null &&
-                                (form.price > BigDecimal.ZERO) &&
-                                form.surface != null &&
-                                form.description != null &&
-                                form.nbRooms > 0 &&
-                                form.nbBathrooms > 0 &&
-                                form.nbBedrooms > 0 &&
-                                form.agent != null &&
-                                form.amenities.isNotEmpty() &&
-                                form.pictureIds.isNotEmpty() &&
-                                form.featuredPictureId != null
+                            form.address != null &&
+                            (form.price > BigDecimal.ZERO) &&
+                            form.surface != null &&
+                            form.description != null &&
+                            form.nbRooms > 0 &&
+                            form.nbBathrooms > 0 &&
+                            form.nbBedrooms > 0 &&
+                            form.agent != null &&
+                            form.amenities.isNotEmpty() &&
+                            form.pictureIds.isNotEmpty() &&
+                            form.featuredPictureId != null
                     )
 
                     emit(
