@@ -13,6 +13,8 @@ import com.emplk.realestatemanager.domain.connectivity.IsInternetEnabledFlowUseC
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
+import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
+import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.GetDraftNavigationUseCase
 import com.emplk.realestatemanager.domain.property.AddPropertyUseCase
 import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
@@ -69,6 +71,7 @@ class AddPropertyViewModel @Inject constructor(
     private val getPicturePreviewsAsFlowUseCase: GetPicturePreviewsAsFlowUseCase,
     private val getAgentsMapUseCase: GetAgentsMapUseCase,
     private val setPropertyFormProgressUseCase: SetPropertyFormProgressUseCase,
+    private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val getAmenityTypeUseCase: GetAmenityTypeUseCase,
     private val getCurrentPredictionAddressesFlowWithDebounceUseCase: GetCurrentPredictionAddressesFlowWithDebounceUseCase,
     private val getPropertyTypeFlowUseCase: GetPropertyTypeFlowUseCase,
@@ -96,6 +99,7 @@ class AddPropertyViewModel @Inject constructor(
                     isAddingPropertyInDatabaseMutableStateFlow.tryEmit(false)
                 } else {
                     updatePropertyFormUseCase.invoke(form)
+                    setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
                     emit(Event(AddPropertyEvent.Toast(NativeText.Resource(R.string.no_internet_connection_draft_saved))))
                 }
             }.collect()

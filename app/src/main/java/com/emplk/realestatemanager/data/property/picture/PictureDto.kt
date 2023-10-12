@@ -11,7 +11,7 @@ data class PictureDto(
     @ColumnInfo(name = "property_id", index = true)
     val propertyId: Long,
     val uri: String,
-    val description: String,
+    val description: String?,
     @ColumnInfo(name = "is_featured")
     val isFeatured: Boolean
 )

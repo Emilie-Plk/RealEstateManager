@@ -1,13 +1,11 @@
 package com.emplk.realestatemanager.domain.property_draft
 
-import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
 import javax.inject.Inject
 
 class UpdatePropertyFormUseCase @Inject constructor(
     private val propertyFormRepository: PropertyFormRepository,
     private val getCurrentPropertyDraftIdUseCase: GetCurrentPropertyDraftIdUseCase,
-    private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
 ) {
     suspend fun invoke(form: PropertyFormStateEntity) {
         getCurrentPropertyDraftIdUseCase.invoke()?.let { currentPropertyFormId ->
