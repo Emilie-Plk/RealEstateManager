@@ -37,7 +37,7 @@ class PictureBannerListAdapter :
                 .error(R.drawable.baseline_villa_24)
                 .into(binding.ivBanner)
 
-            if (item.description.isEmpty()) {
+            if (item.description.isNullOrBlank()) {
                 binding.tvBanner.isVisible = false
             } else {
                 binding.tvBanner.text = item.description
