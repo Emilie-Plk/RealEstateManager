@@ -7,7 +7,7 @@ import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.agent.GetAgentsMapUseCase
-import com.emplk.realestatemanager.domain.autocomplete.GetAddressPredictionsUseCase
+import com.emplk.realestatemanager.domain.autocomplete.GetCurrentPredictionAddressesFlowWithDebounceUseCase
 import com.emplk.realestatemanager.domain.autocomplete.PredictionWrapper
 import com.emplk.realestatemanager.domain.connectivity.IsInternetEnabledFlowUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
@@ -18,9 +18,9 @@ import com.emplk.realestatemanager.domain.property.AddPropertyUseCase
 import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.amenity.type.GetAmenityTypeUseCase
-import com.emplk.realestatemanager.domain.property_draft.PropertyFormEntity
 import com.emplk.realestatemanager.domain.property_draft.InitTemporaryPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.PropertyFormDatabaseState
+import com.emplk.realestatemanager.domain.property_draft.PropertyFormEntity
 import com.emplk.realestatemanager.domain.property_draft.SetPropertyFormProgressUseCase
 import com.emplk.realestatemanager.domain.property_draft.UpdatePropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.DeletePicturePreviewByIdUseCase
@@ -41,7 +41,6 @@ import com.emplk.realestatemanager.ui.utils.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
@@ -49,12 +48,10 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.transform
-import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import javax.inject.Inject
-import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
@@ -66,7 +63,6 @@ class AddPropertyViewModel @Inject constructor(
     private val updatePicturePreviewUseCase: UpdatePicturePreviewUseCase,
     private val savePictureToLocalAppFilesAndToLocalDatabaseUseCase: SavePictureToLocalAppFilesAndToLocalDatabaseUseCase,
     private val updatePropertyFormUseCase: UpdatePropertyFormUseCase, // à refacto si chui une ouf
-    private val getAddressPredictionsUseCase: GetAddressPredictionsUseCase, // à refacto
     private val initTemporaryPropertyFormUseCase: InitTemporaryPropertyFormUseCase,
     private val getCurrencyTypeUseCase: GetCurrencyTypeUseCase,
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
@@ -74,27 +70,18 @@ class AddPropertyViewModel @Inject constructor(
     private val getAgentsMapUseCase: GetAgentsMapUseCase,
     private val setPropertyFormProgressUseCase: SetPropertyFormProgressUseCase,
     private val getAmenityTypeUseCase: GetAmenityTypeUseCase,
+    private val getCurrentPredictionAddressesFlowWithDebounceUseCase: GetCurrentPredictionAddressesFlowWithDebounceUseCase,
     private val getPropertyTypeFlowUseCase: GetPropertyTypeFlowUseCase,
     private val isInternetEnabledFlowUseCase: IsInternetEnabledFlowUseCase,  // à garder I suppose
 ) : ViewModel() {
 
     private val formMutableStateFlow = MutableStateFlow(PropertyFormEntity())
     private val currentAddressInputMutableStateFlow: MutableStateFlow<String?> = MutableStateFlow(null)
-    private val perfectMatchPredictionMutableStateFlow = MutableStateFlow<Boolean?>(null)  // TODO not sure at all!..
-    private val hasAddressEditTextFocus = MutableStateFlow(false)
+    private val isPredictionSelectedByUserMutableStateFlow = MutableStateFlow<Boolean?>(null)
+    private val hasAddressEditTextFocusMutableStateFlow = MutableStateFlow(false)
     private val isEveryFieldFilledMutableStateFlow = MutableStateFlow(false)
     private val isAddingPropertyInDatabaseMutableStateFlow = MutableStateFlow(false)
     private val onCreateButtonClickedMutableSharedFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
-
-    private val currentPredictionAddressesFlow: Flow<PredictionWrapper?> =
-        currentAddressInputMutableStateFlow.transformLatest { input ->
-            if (input.isNullOrBlank() || input.length < 3 || perfectMatchPredictionMutableStateFlow.value == true || hasAddressEditTextFocus.value.not()) {
-                emit(null)
-            } else {
-                delay(400.milliseconds)
-                emit(getAddressPredictionsUseCase.invoke(input))
-            }
-        }
 
     val viewEventLiveData: LiveData<Event<AddPropertyEvent>> = liveData {
         onCreateButtonClickedMutableSharedFlow.collect {
@@ -117,33 +104,33 @@ class AddPropertyViewModel @Inject constructor(
 
     val viewStateLiveData: LiveData<PropertyFormViewState> = liveData {
         coroutineScope {
-            when (val initTemporaryPropertyFormUseCase = initTemporaryPropertyFormUseCase.invoke()) {
+            when (val initTempPropertyForm = initTemporaryPropertyFormUseCase.invoke()) {
                 is PropertyFormDatabaseState.Empty -> Log.d(
                     "AddPropertyViewModel",
-                    "initTemporaryPropertyFormUseCase with new id: ${initTemporaryPropertyFormUseCase.newPropertyFormId}"
+                    "initTemporaryPropertyFormUseCase with new id: ${initTempPropertyForm.newPropertyFormId}"
                 )
 
                 is PropertyFormDatabaseState.DraftAlreadyExists -> {
                     formMutableStateFlow.update { propertyForm ->
                         propertyForm.copy(
-                            propertyType = initTemporaryPropertyFormUseCase.propertyDraftEntity.type,
-                            address = initTemporaryPropertyFormUseCase.propertyDraftEntity.address,
-                            price = initTemporaryPropertyFormUseCase.propertyDraftEntity.price,
-                            surface = initTemporaryPropertyFormUseCase.propertyDraftEntity.surface,
-                            description = initTemporaryPropertyFormUseCase.propertyDraftEntity.description,
-                            nbRooms = initTemporaryPropertyFormUseCase.propertyDraftEntity.rooms ?: 0,
-                            nbBathrooms = initTemporaryPropertyFormUseCase.propertyDraftEntity.bathrooms ?: 0,
-                            nbBedrooms = initTemporaryPropertyFormUseCase.propertyDraftEntity.bedrooms ?: 0,
-                            agent = initTemporaryPropertyFormUseCase.propertyDraftEntity.agentName,
-                            amenities = initTemporaryPropertyFormUseCase.propertyDraftEntity.amenities,
-                            pictureIds = initTemporaryPropertyFormUseCase.propertyDraftEntity.pictures.map { it.id },
-                            featuredPictureId = initTemporaryPropertyFormUseCase.propertyDraftEntity.pictures.find { it.isFeatured }?.id,
+                            propertyType = initTempPropertyForm.propertyDraftEntity.type,
+                            address = initTempPropertyForm.propertyDraftEntity.address,
+                            price = initTempPropertyForm.propertyDraftEntity.price,
+                            surface = initTempPropertyForm.propertyDraftEntity.surface,
+                            description = initTempPropertyForm.propertyDraftEntity.description,
+                            nbRooms = initTempPropertyForm.propertyDraftEntity.rooms ?: 0,
+                            nbBathrooms = initTempPropertyForm.propertyDraftEntity.bathrooms ?: 0,
+                            nbBedrooms = initTempPropertyForm.propertyDraftEntity.bedrooms ?: 0,
+                            agent = initTempPropertyForm.propertyDraftEntity.agentName,
+                            amenities = initTempPropertyForm.propertyDraftEntity.amenities,
+                            pictureIds = initTempPropertyForm.propertyDraftEntity.pictures.map { it.id },
+                            featuredPictureId = initTempPropertyForm.propertyDraftEntity.pictures.find { it.isFeatured }?.id,
                         )
                     }
 
                     Log.d(
                         "AddPropertyViewModel",
-                        "initTemporaryPropertyFormUseCase with existing propertyForm: ${initTemporaryPropertyFormUseCase.propertyDraftEntity}"
+                        "initTemporaryPropertyFormUseCase with existing propertyForm: ${initTempPropertyForm.propertyDraftEntity}"
                     )
                 }
             }
@@ -152,13 +139,17 @@ class AddPropertyViewModel @Inject constructor(
                 combine(
                     formMutableStateFlow,
                     getPicturePreviewsAsFlowUseCase.invoke(),
-                    currentPredictionAddressesFlow,
+                    getCurrentPredictionAddressesFlowWithDebounceUseCase.invoke(
+                        currentAddressInputMutableStateFlow,
+                        hasAddressEditTextFocusMutableStateFlow,
+                        isPredictionSelectedByUserMutableStateFlow,
+                    ),
                     isAddingPropertyInDatabaseMutableStateFlow,
-                ) { form, picturePreviews, addressPredictions, isAddingInDatabase ->
+                ) { form, picturePreviews, predictionWrapper, isAddingInDatabase ->
                     val currencyType = getCurrencyTypeUseCase.invoke()
                     val amenityTypes = getAmenityTypeUseCase.invoke()
                     val propertyTypes = getPropertyTypeFlowUseCase.invoke()
-                    val agents =    getAgentsMapUseCase.invoke()
+                    val agents = getAgentsMapUseCase.invoke()
 
                     val isFormInProgress = !form.propertyType.isNullOrBlank() ||
                             !form.address.isNullOrBlank() ||
@@ -296,7 +287,7 @@ class AddPropertyViewModel @Inject constructor(
                                     name = agent.value
                                 )
                             },
-                            addressPredictions = mapPredictionsToViewState(addressPredictions),
+                            addressPredictions = mapPredictionsToViewState(predictionWrapper),
                         )
                     )
                 }.collect()
@@ -330,7 +321,7 @@ class AddPropertyViewModel @Inject constructor(
                     PredictionViewState.Prediction(
                         address = prediction,
                         onClickEvent = EquatableCallbackWithParam { selectedAddress ->
-                            perfectMatchPredictionMutableStateFlow.tryEmit(true)
+                            isPredictionSelectedByUserMutableStateFlow.tryEmit(true)
                             currentAddressInputMutableStateFlow.tryEmit(null)
                             formMutableStateFlow.update {
                                 it.copy(
@@ -395,7 +386,7 @@ class AddPropertyViewModel @Inject constructor(
 
     fun onAddressChanged(input: String?) {
         if (input.isNullOrBlank()) {
-            perfectMatchPredictionMutableStateFlow.tryEmit(null)
+            isPredictionSelectedByUserMutableStateFlow.tryEmit(null)
             currentAddressInputMutableStateFlow.tryEmit(null)
             formMutableStateFlow.update {
                 it.copy(
@@ -403,7 +394,7 @@ class AddPropertyViewModel @Inject constructor(
                     addressPredictions = emptyList(),
                 )
             }
-        } else if (perfectMatchPredictionMutableStateFlow.value == true) {
+        } else if (isPredictionSelectedByUserMutableStateFlow.value == true) {
             currentAddressInputMutableStateFlow.tryEmit(input)
             formMutableStateFlow.update {
                 it.copy(
@@ -412,7 +403,7 @@ class AddPropertyViewModel @Inject constructor(
                 )
             }
         } else {
-            perfectMatchPredictionMutableStateFlow.tryEmit(false)
+            isPredictionSelectedByUserMutableStateFlow.tryEmit(false)
             currentAddressInputMutableStateFlow.tryEmit(input)
             formMutableStateFlow.update {
                 it.copy(
@@ -484,7 +475,7 @@ class AddPropertyViewModel @Inject constructor(
     }
 
     fun onAddressEditTextFocused(hasFocus: Boolean) {
-        hasAddressEditTextFocus.tryEmit(hasFocus)
+        hasAddressEditTextFocusMutableStateFlow.tryEmit(hasFocus)
     }
 }
 
