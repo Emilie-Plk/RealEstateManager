@@ -209,7 +209,7 @@ class EditPropertyViewModel @Inject constructor(
                             formMutableStateFlow.update {
                                 it.copy(
                                     address = selectedAddress,
-                                    addressPredictions = emptyList(),
+                                   // addressPredictions = emptyList(),
                                 )
                             }
                         }
@@ -294,7 +294,7 @@ class EditPropertyViewModel @Inject constructor(
             formMutableStateFlow.update {
                 it.copy(
                     address = input,
-                    addressPredictions = emptyList(),
+                   // addressPredictions = emptyList(),
                 )
             }
         } else if (perfectMatchPredictionMutableStateFlow.value == true) {
@@ -302,7 +302,7 @@ class EditPropertyViewModel @Inject constructor(
             formMutableStateFlow.update {
                 it.copy(
                     address = input,
-                    addressPredictions = emptyList(),
+              //      addressPredictions = emptyList(),
                 )
             }
         } else {

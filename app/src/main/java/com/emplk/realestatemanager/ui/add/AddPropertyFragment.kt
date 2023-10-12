@@ -105,7 +105,7 @@ class AddPropertyFragment : BasePropertyFragment() {
             }
 
             val currentAddress = binding.addPropertyAddressTextInputEditText.text.toString()
-            if (viewState.address != null && currentAddress != viewState.address) {
+            if (currentAddress != viewState.address) {
                 binding.addPropertyAddressTextInputEditText.setText(viewState.address)
             }
 
@@ -113,22 +113,22 @@ class AddPropertyFragment : BasePropertyFragment() {
                 viewModel.onAddressEditTextFocused(hasFocus)
                 if (!hasFocus) {
                     hideKeyboard(binding.addPropertyAddressTextInputEditText)
-                    binding.addPropertyAddressTextInputEditText.clearFocus()
                 }
             }
 
             binding.addPropertyPriceCurrencyTv.text = viewState.priceCurrency.toCharSequence(requireContext())
             binding.addPropertySurfaceUnitTv.text = viewState.surfaceUnit.toCharSequence(requireContext())
 
-            binding.addPropertyAddressTextInputEditText.setOnEditorActionListener { _, actionId, _ ->
+           /* binding.addPropertyAddressTextInputEditText.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     viewModel.onAddressChanged(null)
+
                     hideKeyboard(binding.addPropertyAddressTextInputEditText)
                     binding.addPropertyAddressTextInputEditText.clearFocus()
                     return@setOnEditorActionListener true
                 }
                 false
-            }
+            }*/
             binding.addPropertyTypeActv.setText(viewState.propertyType, false)
             binding.addPropertyAgentActv.setText(viewState.selectedAgent, false)
         }

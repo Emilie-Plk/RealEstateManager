@@ -15,6 +15,7 @@ import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
 import com.emplk.realestatemanager.domain.property_draft.ClearPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.PropertyFormStateEntity
 import com.emplk.realestatemanager.domain.property_draft.UpdatePropertyFormUseCase
+import com.emplk.realestatemanager.domain.property_draft.address.ResetSelectedAddressStateUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.GetPicturePreviewsUseCase
 import com.emplk.realestatemanager.ui.add.AddPropertyEvent
 import com.emplk.realestatemanager.ui.utils.NativeText
@@ -29,13 +30,14 @@ import javax.inject.Inject
 class AddPropertyUseCase @Inject constructor(
     private val propertyRepository: PropertyRepository,
     private val geocodingRepository: GeocodingRepository,
-    private val getLocaleUseCase: GetLocaleUseCase,
     private val generateMapBaseUrlWithParamsUseCase: GenerateMapBaseUrlWithParamsUseCase,
+    private val getLocaleUseCase: GetLocaleUseCase,
     private val getCurrencyRateUseCase: GetCurrencyRateUseCase,
+    private val getPicturePreviewsUseCase: GetPicturePreviewsUseCase,
     private val convertEuroToDollarUseCase: ConvertEuroToDollarUseCase,
     private val updatePropertyFormUseCase: UpdatePropertyFormUseCase,
     private val clearPropertyFormUseCase: ClearPropertyFormUseCase,
-    private val getPicturePreviewsUseCase: GetPicturePreviewsUseCase,
+    private val resetSelectedAddressState: ResetSelectedAddressStateUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val clock: Clock,
 ) {

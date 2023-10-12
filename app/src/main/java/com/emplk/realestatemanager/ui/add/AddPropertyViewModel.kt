@@ -25,6 +25,10 @@ import com.emplk.realestatemanager.domain.property_draft.PropertyFormDatabaseSta
 import com.emplk.realestatemanager.domain.property_draft.PropertyFormStateEntity
 import com.emplk.realestatemanager.domain.property_draft.SetPropertyFormProgressUseCase
 import com.emplk.realestatemanager.domain.property_draft.UpdatePropertyFormUseCase
+import com.emplk.realestatemanager.domain.property_draft.address.SetCurrentAddressInputUseCase
+import com.emplk.realestatemanager.domain.property_draft.address.SetHasAddressFocusUseCase
+import com.emplk.realestatemanager.domain.property_draft.address.SetIsPredictionSelectedByUserUseCase
+import com.emplk.realestatemanager.domain.property_draft.address.SetSelectedAddressStateUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.DeletePicturePreviewByIdUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.GetPicturePreviewsAsFlowUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.SavePictureToLocalAppFilesAndToLocalDatabaseUseCase
@@ -70,6 +74,10 @@ class AddPropertyViewModel @Inject constructor(
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
     private val getPicturePreviewsAsFlowUseCase: GetPicturePreviewsAsFlowUseCase,
     private val getAgentsMapUseCase: GetAgentsMapUseCase,
+    private val setSelectedAddressStateUseCase: SetSelectedAddressStateUseCase,
+    private val setIsPredictionSelectedByUserUseCase: SetIsPredictionSelectedByUserUseCase,
+    private val setCurrentAddressInputUseCase: SetCurrentAddressInputUseCase,
+    private val setHasAddressFocusUseCase: SetHasAddressFocusUseCase,
     private val setPropertyFormProgressUseCase: SetPropertyFormProgressUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val getAmenityTypeUseCase: GetAmenityTypeUseCase,
@@ -78,10 +86,9 @@ class AddPropertyViewModel @Inject constructor(
     private val isInternetEnabledFlowUseCase: IsInternetEnabledFlowUseCase,  // à garder I suppose
 ) : ViewModel() {
 
-    private val formMutableStateFlow = MutableStateFlow(PropertyFormStateEntity())
-    private val currentAddressInputMutableStateFlow: MutableStateFlow<String?> = MutableStateFlow(null)
-    private val isPredictionSelectedByUserMutableStateFlow = MutableStateFlow<Boolean?>(null)
-    private val hasAddressEditTextFocusMutableStateFlow = MutableStateFlow(false)
+    private val formMutableStateFlow =
+        MutableStateFlow(PropertyFormStateEntity()) // Possiblement mettre dans un repo?..
+
     private val isEveryFieldFilledMutableStateFlow = MutableStateFlow(false)
     private val isAddingPropertyInDatabaseMutableStateFlow = MutableStateFlow(false)
     private val onCreateButtonClickedMutableSharedFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
@@ -142,11 +149,7 @@ class AddPropertyViewModel @Inject constructor(
                 combine(
                     formMutableStateFlow,
                     getPicturePreviewsAsFlowUseCase.invoke(),
-                    getCurrentPredictionAddressesFlowWithDebounceUseCase.invoke(
-                        currentAddressInputMutableStateFlow,
-                        hasAddressEditTextFocusMutableStateFlow,
-                        isPredictionSelectedByUserMutableStateFlow,
-                    ),
+                    getCurrentPredictionAddressesFlowWithDebounceUseCase.invoke(),
                     isAddingPropertyInDatabaseMutableStateFlow,
                 ) { form, picturePreviews, predictionWrapper, isAddingInDatabase ->
                     val currencyType = getCurrencyTypeUseCase.invoke()
@@ -168,6 +171,7 @@ class AddPropertyViewModel @Inject constructor(
                             form.featuredPictureId != null
 
                     setPropertyFormProgressUseCase.invoke(isFormInProgress)
+
                     isEveryFieldFilledMutableStateFlow.tryEmit(
                         form.propertyType != null &&
                                 form.address != null &&
@@ -183,8 +187,7 @@ class AddPropertyViewModel @Inject constructor(
                                 form.featuredPictureId != null
                     )
 
-                    emit(
-                        PropertyFormViewState(
+                    emit(PropertyFormViewState(
                             propertyType = form.propertyType,
                             address = form.address,
                             price = if (form.price == BigDecimal.ZERO) "" else form.price.toString(),
@@ -324,12 +327,11 @@ class AddPropertyViewModel @Inject constructor(
                     PredictionViewState.Prediction(
                         address = prediction,
                         onClickEvent = EquatableCallbackWithParam { selectedAddress ->
-                            isPredictionSelectedByUserMutableStateFlow.tryEmit(true)
-                            currentAddressInputMutableStateFlow.tryEmit(null)
+                            setIsPredictionSelectedByUserUseCase.invoke(true)
+                            setCurrentAddressInputUseCase.invoke(null) // reset
                             formMutableStateFlow.update {
                                 it.copy(
                                     address = selectedAddress,
-                                    addressPredictions = emptyList(),
                                 )
                             }
                         }
@@ -388,31 +390,9 @@ class AddPropertyViewModel @Inject constructor(
     }
 
     fun onAddressChanged(input: String?) {
-        if (input.isNullOrBlank()) {
-            isPredictionSelectedByUserMutableStateFlow.tryEmit(null)
-            currentAddressInputMutableStateFlow.tryEmit(null)
-            formMutableStateFlow.update {
-                it.copy(
-                    address = input,
-                    addressPredictions = emptyList(),
-                )
-            }
-        } else if (isPredictionSelectedByUserMutableStateFlow.value == true) {
-            currentAddressInputMutableStateFlow.tryEmit(input)
-            formMutableStateFlow.update {
-                it.copy(
-                    address = input,
-                    addressPredictions = emptyList(),
-                )
-            }
-        } else {
-            isPredictionSelectedByUserMutableStateFlow.tryEmit(false)
-            currentAddressInputMutableStateFlow.tryEmit(input)
-            formMutableStateFlow.update {
-                it.copy(
-                    address = input,
-                )
-            }
+        setSelectedAddressStateUseCase.invoke(input)
+        formMutableStateFlow.update {
+            it.copy(address = input)
         }
     }
 
@@ -478,7 +458,7 @@ class AddPropertyViewModel @Inject constructor(
     }
 
     fun onAddressEditTextFocused(hasFocus: Boolean) {
-        hasAddressEditTextFocusMutableStateFlow.tryEmit(hasFocus)
+        setHasAddressFocusUseCase.invoke(hasFocus)
     }
 }
 
