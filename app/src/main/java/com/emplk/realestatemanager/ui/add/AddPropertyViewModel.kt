@@ -89,7 +89,7 @@ class AddPropertyViewModel @Inject constructor(
                 formMutableStateFlow,
                 isInternetEnabledFlowUseCase.invoke()
             ) { form, isInternetEnabled ->
-                if (true) { // TODO: change that of course
+                if (isInternetEnabled) { // TODO: change that of course
                     isAddingPropertyInDatabaseMutableStateFlow.tryEmit(true)
                     val resultEvent = addPropertyUseCase.invoke(form)
                     emit(Event(resultEvent))

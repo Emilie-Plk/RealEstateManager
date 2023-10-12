@@ -21,10 +21,6 @@ class MainApplication : Application(), Configuration.Provider, Application.Activ
     @Inject
     lateinit var setScreenWidthTypeFlowUseCase: SetScreenWidthTypeUseCase
 
-    private var activityCount = 0
-
-    private var isInternetConnectivityReceiverRegistered = false
-
     @Inject
     lateinit var internetConnectivityRepositoryBroadcastReceiver: InternetConnectivityRepositoryBroadcastReceiver
 
@@ -36,24 +32,12 @@ class MainApplication : Application(), Configuration.Provider, Application.Activ
     override fun onCreate() {
         super.onCreate()
         registerActivityLifecycleCallbacks(this)
-        registerConnectivityBroadcastReceiver()
-    }
-
-    @Suppress("DEPRECATION")
-    private fun registerConnectivityBroadcastReceiver() {
-        val intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-        registerReceiver(
-            internetConnectivityRepositoryBroadcastReceiver,
-            intentFilter
-        )
-        isInternetConnectivityReceiverRegistered = true
     }
 
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
     }
 
     override fun onActivityStarted(activity: Activity) {
-        activityCount++
     }
 
     override fun onActivityResumed(activity: Activity) {
@@ -64,11 +48,6 @@ class MainApplication : Application(), Configuration.Provider, Application.Activ
     }
 
     override fun onActivityStopped(activity: Activity) {
-        activityCount--
-        if (activityCount == 0 && isInternetConnectivityReceiverRegistered) {
-            unregisterReceiver(internetConnectivityRepositoryBroadcastReceiver)
-            isInternetConnectivityReceiverRegistered = false
-        }
     }
 
 
