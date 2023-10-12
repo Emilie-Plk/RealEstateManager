@@ -96,7 +96,7 @@
     </string>
     <string name="prediction_no_address_found">No address found</string>
     <string name="add_property_error_message">Oops, an error occurred, try again later!</string>
-    <string name="no_internet_connection_draft_saved">Draft saved, please try when you\'ll be connected to the internet</string>
+    <string name="no_internet_connection_draft_saved">Draft saved, please check your connection and try again</string>
     <string name="edit_property_btn">Edit Property</string>
     <string name="missing_description_a11y">Missing description</string>
     <string name="currency_rate_last_updated_date_tv">Currency rate as of %s</string>
