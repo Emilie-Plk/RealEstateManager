@@ -4,7 +4,11 @@ import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
 import com.emplk.realestatemanager.ui.add.address_predictions.PredictionViewState
 import java.math.BigDecimal
 
-data class PropertyFormEntity(
+/**
+ * This class represents the form state of a property.
+ * It's not used outside of the UI/Domain layer.
+ */
+data class PropertyFormStateEntity(
     val propertyType: String? = null,
     val address: String? = null,
     val addressPredictions: List<PredictionViewState> = emptyList(),

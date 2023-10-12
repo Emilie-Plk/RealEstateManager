@@ -20,7 +20,7 @@ import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.amenity.type.GetAmenityTypeUseCase
 import com.emplk.realestatemanager.domain.property_draft.InitTemporaryPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.PropertyFormDatabaseState
-import com.emplk.realestatemanager.domain.property_draft.PropertyFormEntity
+import com.emplk.realestatemanager.domain.property_draft.PropertyFormStateEntity
 import com.emplk.realestatemanager.domain.property_draft.SetPropertyFormProgressUseCase
 import com.emplk.realestatemanager.domain.property_draft.UpdatePropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.DeletePicturePreviewByIdUseCase
@@ -75,7 +75,7 @@ class AddPropertyViewModel @Inject constructor(
     private val isInternetEnabledFlowUseCase: IsInternetEnabledFlowUseCase,  // à garder I suppose
 ) : ViewModel() {
 
-    private val formMutableStateFlow = MutableStateFlow(PropertyFormEntity())
+    private val formMutableStateFlow = MutableStateFlow(PropertyFormStateEntity())
     private val currentAddressInputMutableStateFlow: MutableStateFlow<String?> = MutableStateFlow(null)
     private val isPredictionSelectedByUserMutableStateFlow = MutableStateFlow<Boolean?>(null)
     private val hasAddressEditTextFocusMutableStateFlow = MutableStateFlow(false)
@@ -127,7 +127,6 @@ class AddPropertyViewModel @Inject constructor(
                             featuredPictureId = initTempPropertyForm.propertyDraftEntity.pictures.find { it.isFeatured }?.id,
                         )
                     }
-
                     Log.d(
                         "AddPropertyViewModel",
                         "initTemporaryPropertyFormUseCase with existing propertyForm: ${initTempPropertyForm.propertyDraftEntity}"
