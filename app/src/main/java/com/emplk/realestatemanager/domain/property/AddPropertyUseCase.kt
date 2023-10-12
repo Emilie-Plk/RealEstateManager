@@ -49,16 +49,7 @@ class AddPropertyUseCase @Inject constructor(
             form.pictureIds.isNotEmpty()
         ) {
             val geocodingWrapper = geocodingRepository.getLatLong(form.address)
-            when (geocodingWrapper) {
-                is GeocodingWrapper.Success -> geocodingWrapper.latLng
-                is GeocodingWrapper.Error -> Unit
-                is GeocodingWrapper.NoResult -> Unit
-            }
             val currencyWrapper = getCurrencyRateUseCase.invoke()
-            when (currencyWrapper) {
-                is CurrencyRateWrapper.Success -> currencyWrapper.currencyRateEntity.usdToEuroRate
-                is CurrencyRateWrapper.Error -> currencyWrapper.fallbackUsToEuroRate
-            }
 
             val success = propertyRepository.addPropertyWithDetails(
                 PropertyEntity(
