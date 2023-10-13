@@ -35,7 +35,7 @@ class UpdatePropertyUseCase @Inject constructor(
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val clock: Clock,
 ) {
-    suspend fun invoke(form: PropertyFormStateEntity) : EditPropertyEvent {
+    suspend fun invoke(form: PropertyFormStateEntity): EditPropertyEvent {
         if (form.propertyType != null &&
             form.address != null &&
             (form.price > BigDecimal.ZERO) &&
