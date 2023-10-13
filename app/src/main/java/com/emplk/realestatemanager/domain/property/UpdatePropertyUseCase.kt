@@ -119,10 +119,10 @@ class UpdatePropertyUseCase @Inject constructor(
                 setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
                 EditPropertyEvent.Toast(NativeText.Resource(R.string.add_property_successfully_updated_message))
             } else {
-                EditPropertyEvent.Toast(NativeText.Resource(R.string.add_property_error_message))
+                EditPropertyEvent.Toast(NativeText.Resource(R.string.add_property_generic_error_message))
             }
         } else {
-            return EditPropertyEvent.Toast(NativeText.Resource(R.string.add_property_error_message))
+            return EditPropertyEvent.Toast(NativeText.Resource(R.string.add_property_generic_error_message))
         }
     }
 }

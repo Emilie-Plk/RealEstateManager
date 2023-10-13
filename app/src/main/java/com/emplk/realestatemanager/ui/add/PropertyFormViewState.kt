@@ -11,6 +11,7 @@ import com.emplk.realestatemanager.ui.utils.NativeText
 data class PropertyFormViewState(
     val propertyType: String?,
     val addressPredictions: List<PredictionViewState>,
+    val isAddressValid: Boolean,
     val address: String?,
     val price: String?,
     val surface: String?,

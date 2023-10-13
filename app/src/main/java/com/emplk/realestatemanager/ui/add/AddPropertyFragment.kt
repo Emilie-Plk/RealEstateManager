@@ -7,7 +7,6 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -72,6 +71,12 @@ class AddPropertyFragment : BasePropertyFragment() {
                     event.text.toCharSequence(requireContext()),
                     Toast.LENGTH_SHORT
                 ).show()
+
+                is AddPropertyEvent.Error -> Toast.makeText(
+                    requireContext(),
+                    event.errorMessage,
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
@@ -109,26 +114,27 @@ class AddPropertyFragment : BasePropertyFragment() {
                 binding.addPropertyAddressTextInputEditText.setText(viewState.address)
             }
 
+            binding.addPropertyAddressTextInputEditText.doAfterTextChanged {
+                val newText = it.toString()
+                if (newText != viewState.address) {
+                    viewModel.onAddressChanged(newText)
+                }
+                binding.addPropertyAddressTextInputEditText.setSelection(it.toString().length)
+            }
+
             binding.addPropertyAddressTextInputEditText.setOnFocusChangeListener { _, hasFocus ->
+                Log.d("COUCOU", "Address EditText has focus: $hasFocus")
                 viewModel.onAddressEditTextFocused(hasFocus)
                 if (!hasFocus) {
                     hideKeyboard(binding.addPropertyAddressTextInputEditText)
                 }
             }
 
+            binding.addPropertyAddressIsValidHelperTv.isVisible = viewState.isAddressValid
+
             binding.addPropertyPriceCurrencyTv.text = viewState.priceCurrency.toCharSequence(requireContext())
             binding.addPropertySurfaceUnitTv.text = viewState.surfaceUnit.toCharSequence(requireContext())
 
-           /* binding.addPropertyAddressTextInputEditText.setOnEditorActionListener { _, actionId, _ ->
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    viewModel.onAddressChanged(null)
-
-                    hideKeyboard(binding.addPropertyAddressTextInputEditText)
-                    binding.addPropertyAddressTextInputEditText.clearFocus()
-                    return@setOnEditorActionListener true
-                }
-                false
-            }*/
             binding.addPropertyTypeActv.setText(viewState.propertyType, false)
             binding.addPropertyAgentActv.setText(viewState.selectedAgent, false)
         }
@@ -176,10 +182,7 @@ class AddPropertyFragment : BasePropertyFragment() {
     }
 
     private fun initFormFieldsTextWatchers() {
-        binding.addPropertyAddressTextInputEditText.doAfterTextChanged {
-            viewModel.onAddressChanged(it.toString())
-            binding.addPropertyAddressTextInputEditText.setSelection(it.toString().length)
-        }
+
 
         binding.addPropertyPriceTextInputEditText.doAfterTextChanged {
             if (it.isNullOrBlank()) {

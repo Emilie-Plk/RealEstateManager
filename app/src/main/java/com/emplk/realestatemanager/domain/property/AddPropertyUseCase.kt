@@ -57,7 +57,7 @@ class AddPropertyUseCase @Inject constructor(
         ) {
             "Impossible state: form is not valid => form : $form"
         }
-        val success = coroutineScope {
+        val addPropertyWrapper: AddPropertyWrapper = coroutineScope {
             val geocodingWrapperDeferred = async {
                 geocodingRepository.getLatLong(form.address)
             }
@@ -65,7 +65,7 @@ class AddPropertyUseCase @Inject constructor(
                 getCurrencyRateUseCase.invoke()
             }
 
-            propertyRepository.addPropertyWithDetails(
+            val success = propertyRepository.addPropertyWithDetails(
                 PropertyEntity(
                     type = form.propertyType,
                     price = when (getLocaleUseCase.invoke()) {
@@ -82,14 +82,14 @@ class AddPropertyUseCase @Inject constructor(
                             )
                         }
 
-                        else -> throw Exception("Error while converting price")
+                        else -> return@coroutineScope AddPropertyWrapper.LocaleError(NativeText.Resource(R.string.add_property_generic_error_message))
                     },
                     surface = form.surface.toDouble(),
                     description = form.description,
                     rooms = form.nbRooms,
                     bathrooms = form.nbBathrooms,
                     location = getLocationEntity(form.address, geocodingWrapperDeferred.await())
-                        ?: return@coroutineScope false,
+                        ?: return@coroutineScope AddPropertyWrapper.NoLatLong(NativeText.Resource(R.string.add_property_generic_error_message)),
                     bedrooms = form.nbBedrooms,
                     agentName = form.agent,
                     amenities = form.amenities,
@@ -106,19 +106,38 @@ class AddPropertyUseCase @Inject constructor(
                     saleDate = null,
                 ),
             )
+            if (success) {
+                AddPropertyWrapper.Success(NativeText.Resource(R.string.add_property_successfully_created_message))
+            } else {
+                AddPropertyWrapper.Error(NativeText.Resource(R.string.add_property_generic_error_message))
+            }
         }
-        return if (success) {
-            clearPropertyFormUseCase.invoke()
-            setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
-            AddPropertyEvent.Toast(NativeText.Resource(R.string.add_property_successfully_created_message))
-        } else {
-            updatePropertyFormUseCase.invoke(form)
-            setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
-            AddPropertyEvent.Toast(NativeText.Resource(R.string.add_property_error_message))
+        return when (addPropertyWrapper) {
+            is AddPropertyWrapper.Success -> {
+                clearPropertyFormUseCase.invoke()
+                setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
+                AddPropertyEvent.Toast(addPropertyWrapper.text)
+            }
+
+            is AddPropertyWrapper.Error -> {
+                updatePropertyFormUseCase.invoke(form)
+                setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
+                AddPropertyEvent.Toast(addPropertyWrapper.error)
+            }
+
+            is AddPropertyWrapper.NoLatLong -> {
+                AddPropertyEvent.Toast(addPropertyWrapper.error)
+            }
+
+            is AddPropertyWrapper.LocaleError -> AddPropertyEvent.Toast(addPropertyWrapper.error)
+
         }
     }
 
-    private fun getLocationEntity(formAddress: String, geocodingWrapper: GeocodingWrapper): LocationEntity? {
+    private fun getLocationEntity(
+        formAddress: String,
+        geocodingWrapper: GeocodingWrapper
+    ): LocationEntity? {  // Wrapper for that to throw error
         return LocationEntity(
             address = formAddress,
             latLng = when (geocodingWrapper) {
@@ -128,7 +147,6 @@ class AddPropertyUseCase @Inject constructor(
             },
             miniatureMapUrl = when (geocodingWrapper) {
                 is GeocodingWrapper.Success -> generateMapBaseUrlWithParamsUseCase.invoke(geocodingWrapper.latLng)
-
                 is GeocodingWrapper.Error,
                 is GeocodingWrapper.NoResult -> return null
             },

@@ -4,24 +4,31 @@ import com.emplk.realestatemanager.domain.property_draft.address.GetIsPrediction
 import com.emplk.realestatemanager.domain.property_draft.address.SelectedAddressStateRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.transformLatest
+import kotlinx.coroutines.flow.combineTransform
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 
 class GetCurrentPredictionAddressesFlowWithDebounceUseCase @Inject constructor(
     private val selectedAddressStateRepository: SelectedAddressStateRepository,
     private val getAddressPredictionsUseCase: GetAddressPredictionsUseCase,
-    private val getCurrentAddressInputUseCase: GetCurrentAddressInputUseCase,
-    private val getIsPredictionSelectedByUserUseCase: GetIsPredictionSelectedByUserUseCase,
+    private val getIsPredictionSelectedByUserUseCase: GetIsPredictionSelectedByUserUseCase, // maybe a flag ?
 ) {
 
-    suspend fun invoke(): Flow<PredictionWrapper?> =
-        selectedAddressStateRepository.getCurrentAddressInput().transformLatest { currentInput ->
+    suspend fun invoke(): Flow<PredictionWrapper?> {
+        val currentInputFlow = selectedAddressStateRepository.getCurrentAddressInput()
+        val hasAddressFocusFlow = selectedAddressStateRepository.getHasAddressFocus()
+        val isPredictionSelectedByUserFlow = getIsPredictionSelectedByUserUseCase.invoke()
+
+        return combineTransform(
+            currentInputFlow,
+            hasAddressFocusFlow,
+            isPredictionSelectedByUserFlow
+        ) { currentInput, hasFocus, isPredictionSelected ->
             if (currentInput.isNullOrBlank() ||
                 currentInput.length < 3 ||
-                getIsPredictionSelectedByUserUseCase.invoke().value == true ||
-                selectedAddressStateRepository.getHasAddressFocus().value == null ||
-                selectedAddressStateRepository.getHasAddressFocus().value == false
+                isPredictionSelected == true ||
+                hasFocus == null ||
+                hasFocus == false
             ) {
                 emit(null)
             } else {
@@ -29,4 +36,5 @@ class GetCurrentPredictionAddressesFlowWithDebounceUseCase @Inject constructor(
                 emit(getAddressPredictionsUseCase.invoke(currentInput))
             }
         }
+    }
 }
