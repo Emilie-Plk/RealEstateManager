@@ -115,11 +115,12 @@ class AddPropertyFragment : BasePropertyFragment() {
             }
 
             binding.addPropertyAddressTextInputEditText.doAfterTextChanged {
+                binding.addPropertyAddressTextInputEditText.setSelection(it.toString().length)
                 val newText = it.toString()
                 if (newText != viewState.address) {
                     viewModel.onAddressChanged(newText)
                 }
-                binding.addPropertyAddressTextInputEditText.setSelection(it.toString().length)
+
             }
 
             binding.addPropertyAddressTextInputEditText.setOnFocusChangeListener { _, hasFocus ->

@@ -3,7 +3,6 @@ package com.emplk.realestatemanager.data.property_draft.address
 import com.emplk.realestatemanager.domain.property_draft.address.SelectedAddressStateRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.filterNotNull
 import javax.inject.Inject
 
 class SelectedAddressStateRepositoryImpl @Inject constructor(

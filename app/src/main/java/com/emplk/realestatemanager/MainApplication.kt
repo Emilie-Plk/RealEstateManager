@@ -2,8 +2,6 @@ package com.emplk.realestatemanager
 
 import android.app.Activity
 import android.app.Application
-import android.content.IntentFilter
-import android.net.ConnectivityManager
 import android.os.Bundle
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration

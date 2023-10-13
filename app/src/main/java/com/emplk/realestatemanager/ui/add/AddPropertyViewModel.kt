@@ -25,9 +25,7 @@ import com.emplk.realestatemanager.domain.property_draft.PropertyFormDatabaseSta
 import com.emplk.realestatemanager.domain.property_draft.PropertyFormStateEntity
 import com.emplk.realestatemanager.domain.property_draft.SetPropertyFormProgressUseCase
 import com.emplk.realestatemanager.domain.property_draft.UpdatePropertyFormUseCase
-import com.emplk.realestatemanager.domain.property_draft.address.GetIsPredictionSelectedByUserUseCase
 import com.emplk.realestatemanager.domain.property_draft.address.SetHasAddressFocusUseCase
-import com.emplk.realestatemanager.domain.property_draft.address.SetIsPredictionSelectedByUserUseCase
 import com.emplk.realestatemanager.domain.property_draft.address.SetSelectedAddressStateUseCase
 import com.emplk.realestatemanager.domain.property_draft.address.UpdateOnAddressClickedUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.DeletePicturePreviewUseCase
@@ -74,12 +72,10 @@ class AddPropertyViewModel @Inject constructor(
     private val deletePicturePreviewUseCase: DeletePicturePreviewUseCase,
     private val getAgentsMapUseCase: GetAgentsMapUseCase,
     private val setSelectedAddressStateUseCase: SetSelectedAddressStateUseCase,
-    private val setIsPredictionSelectedByUserUseCase: SetIsPredictionSelectedByUserUseCase,
     private val updateOnAddressClickedUseCase: UpdateOnAddressClickedUseCase,
     private val setHasAddressFocusUseCase: SetHasAddressFocusUseCase,
     private val setPropertyFormProgressUseCase: SetPropertyFormProgressUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
-    private val getIsPredictionSelectedByUserUseCase: GetIsPredictionSelectedByUserUseCase,
     private val getAmenityTypeUseCase: GetAmenityTypeUseCase,
     private val getCurrentPredictionAddressesFlowWithDebounceUseCase: GetCurrentPredictionAddressesFlowWithDebounceUseCase,
     private val getPropertyTypeFlowUseCase: GetPropertyTypeFlowUseCase,
@@ -393,15 +389,15 @@ class AddPropertyViewModel @Inject constructor(
     }
 
     fun onAddressChanged(input: String?) {
-        setSelectedAddressStateUseCase.invoke(input)
-        formMutableStateFlow.update {
-            it.copy(address = input)
-        }
         if (formMutableStateFlow.value.isAddressValid && formMutableStateFlow.value.address != input) { // TODO: NINO working but wtf looping?
             viewModelScope.launch { updateOnAddressClickedUseCase.invoke(false) }
             formMutableStateFlow.update {
                 it.copy(isAddressValid = false)
             }
+        }
+        setSelectedAddressStateUseCase.invoke(input)
+        formMutableStateFlow.update {
+            it.copy(address = input)
         }
     }
 

@@ -3,14 +3,10 @@ package com.emplk.realestatemanager.ui.map.bottom_sheet
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
-import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.MapBottomSheetFragmentBinding
 import com.emplk.realestatemanager.ui.add.amenity.AmenityListAdapter
-import com.emplk.realestatemanager.ui.edit.EditPropertyFragment
-import com.emplk.realestatemanager.ui.main.MainActivity
-import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.NativePhoto.Companion.load
 import com.emplk.realestatemanager.ui.utils.viewBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -68,20 +64,20 @@ class MapBottomSheetFragment : BottomSheetDialogFragment(R.layout.map_bottom_she
             binding.root.isVisible = !viewState.isProgressBarVisible
         }
 
-       /* viewModel.viewEvent.observeEvent(viewLifecycleOwner) { viewEvent ->
-            when (viewEvent) {
-                is MapBottomSheetEvent.OnEditClick ->
-                    childFragmentManager.commit {
-                        dismiss()
-                        replace(
-                            R.id.blank_frameLayout_container,
-                            EditPropertyFragment.newInstance()
-                        ).addToBackStack(viewEvent.fragmentTag)
-                    }
+        /* viewModel.viewEvent.observeEvent(viewLifecycleOwner) { viewEvent ->
+             when (viewEvent) {
+                 is MapBottomSheetEvent.OnEditClick ->
+                     childFragmentManager.commit {
+                         dismiss()
+                         replace(
+                             R.id.blank_frameLayout_container,
+                             EditPropertyFragment.newInstance()
+                         ).addToBackStack(viewEvent.fragmentTag)
+                     }
 
-                is MapBottomSheetEvent.OnDetailClick -> TODO()
-            }
-        }*/
+                 is MapBottomSheetEvent.OnDetailClick -> TODO()
+             }
+         }*/
     }
 }
 

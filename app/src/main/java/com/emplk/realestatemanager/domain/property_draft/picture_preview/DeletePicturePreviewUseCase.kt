@@ -6,7 +6,7 @@ import javax.inject.Inject
 class DeletePicturePreviewUseCase @Inject constructor(
     private val picturePreviewRepository: PicturePreviewRepository,
     private val picturePreviewIdRepository: PicturePreviewIdRepository,
-    ) {
+) {
     suspend fun invoke(picturePreviewId: Long) {
         picturePreviewRepository.delete(picturePreviewId)
         picturePreviewIdRepository.delete(picturePreviewId)
