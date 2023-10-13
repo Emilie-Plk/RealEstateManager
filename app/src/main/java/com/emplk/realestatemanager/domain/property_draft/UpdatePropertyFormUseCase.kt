@@ -18,6 +18,7 @@ class UpdatePropertyFormUseCase @Inject constructor(
                     rooms = form.nbRooms,
                     bathrooms = form.nbBathrooms,
                     address = form.address,
+                    isAddressValid = form.isAddressValid,
                     bedrooms = form.nbBedrooms,
                     agentName = form.agent,
                     amenities = form.amenities.map { amenity ->

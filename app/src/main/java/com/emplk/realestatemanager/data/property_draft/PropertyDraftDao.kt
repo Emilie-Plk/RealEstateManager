@@ -49,6 +49,9 @@ interface PropertyDraftDao {
         propertyFormId: Long
     ): Int
 
+    @Query("UPDATE property_drafts SET is_address_valid = :isAddressValid WHERE id = :propertyFormId")
+    suspend fun updateIsAddressValid(propertyFormId: Long, isAddressValid: Boolean)
+
     @Query("DELETE FROM property_drafts WHERE id = :propertyFormId")
     suspend fun delete(propertyFormId: Long): Int?
 }

@@ -9,6 +9,7 @@ data class PropertyDraftEntity(
     val price: BigDecimal,
     val surface: String?,
     val address: String?,
+    val isAddressValid: Boolean,
     val rooms: Int?,
     val bedrooms: Int?,
     val bathrooms: Int?,

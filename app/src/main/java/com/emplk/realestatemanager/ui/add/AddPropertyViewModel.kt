@@ -29,6 +29,7 @@ import com.emplk.realestatemanager.domain.property_draft.address.GetIsPrediction
 import com.emplk.realestatemanager.domain.property_draft.address.SetHasAddressFocusUseCase
 import com.emplk.realestatemanager.domain.property_draft.address.SetIsPredictionSelectedByUserUseCase
 import com.emplk.realestatemanager.domain.property_draft.address.SetSelectedAddressStateUseCase
+import com.emplk.realestatemanager.domain.property_draft.address.UpdateOnAddressClickedUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.DeletePicturePreviewUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.GetPicturePreviewsAsFlowUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.SavePictureToLocalAppFilesAndToLocalDatabaseUseCase
@@ -74,6 +75,7 @@ class AddPropertyViewModel @Inject constructor(
     private val getAgentsMapUseCase: GetAgentsMapUseCase,
     private val setSelectedAddressStateUseCase: SetSelectedAddressStateUseCase,
     private val setIsPredictionSelectedByUserUseCase: SetIsPredictionSelectedByUserUseCase,
+    private val updateOnAddressClickedUseCase: UpdateOnAddressClickedUseCase,
     private val setHasAddressFocusUseCase: SetHasAddressFocusUseCase,
     private val setPropertyFormProgressUseCase: SetPropertyFormProgressUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
@@ -124,6 +126,7 @@ class AddPropertyViewModel @Inject constructor(
                         propertyForm.copy(
                             propertyType = initTempPropertyForm.propertyDraftEntity.type,
                             address = initTempPropertyForm.propertyDraftEntity.address,
+                            isAddressValid = initTempPropertyForm.propertyDraftEntity.isAddressValid,
                             price = initTempPropertyForm.propertyDraftEntity.price,
                             surface = initTempPropertyForm.propertyDraftEntity.surface,
                             description = initTempPropertyForm.propertyDraftEntity.description,
@@ -149,8 +152,7 @@ class AddPropertyViewModel @Inject constructor(
                     getPicturePreviewsAsFlowUseCase.invoke(),
                     getCurrentPredictionAddressesFlowWithDebounceUseCase.invoke(),
                     isAddingPropertyInDatabaseMutableStateFlow,
-                    getIsPredictionSelectedByUserUseCase.invoke(),
-                ) { form, picturePreviews, predictionWrapper, isAddingInDatabase, isPredictionSelected ->
+                ) { form, picturePreviews, predictionWrapper, isAddingInDatabase ->
                     val currencyType = getCurrencyTypeUseCase.invoke()
                     val amenityTypes = getAmenityTypeUseCase.invoke()
                     val propertyTypes = getPropertyTypeFlowUseCase.invoke()
@@ -174,6 +176,7 @@ class AddPropertyViewModel @Inject constructor(
                     isEveryFieldFilledMutableStateFlow.tryEmit(
                         form.propertyType != null &&
                                 form.address != null &&
+                                form.isAddressValid &&
                                 (form.price > BigDecimal.ZERO) &&
                                 form.surface != null &&
                                 form.description != null &&
@@ -293,7 +296,7 @@ class AddPropertyViewModel @Inject constructor(
                                 )
                             },
                             addressPredictions = mapPredictionsToViewState(predictionWrapper),
-                            isAddressValid = isPredictionSelected == true,
+                            isAddressValid = form.isAddressValid,
                         )
                     )
                 }.collect()
@@ -327,13 +330,13 @@ class AddPropertyViewModel @Inject constructor(
                     PredictionViewState.Prediction(
                         address = prediction,
                         onClickEvent = EquatableCallbackWithParam { selectedAddress ->
-                            setIsPredictionSelectedByUserUseCase.invoke(true)
-                            // setCurrentAddressInputUseCase.invoke(null) // reset
                             formMutableStateFlow.update {
                                 it.copy(
                                     address = selectedAddress,
+                                    isAddressValid = true
                                 )
                             }
+                            viewModelScope.launch { updateOnAddressClickedUseCase.invoke(true) } // TODO: wtf why if I put it above formMutableStateFlow.update it doesn't work
                         }
                     )
                 }
@@ -393,6 +396,12 @@ class AddPropertyViewModel @Inject constructor(
         setSelectedAddressStateUseCase.invoke(input)
         formMutableStateFlow.update {
             it.copy(address = input)
+        }
+        if (formMutableStateFlow.value.isAddressValid && formMutableStateFlow.value.address != input) { // TODO: NINO working but wtf looping?
+            viewModelScope.launch { updateOnAddressClickedUseCase.invoke(false) }
+            formMutableStateFlow.update {
+                it.copy(isAddressValid = false)
+            }
         }
     }
 

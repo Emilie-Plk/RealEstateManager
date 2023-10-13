@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.data.property_draft
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.math.BigDecimal
@@ -12,6 +13,8 @@ data class PropertyDraftDto(
     val price: BigDecimal,
     val surface: String?,
     val address: String?,
+    @ColumnInfo(name = "is_address_valid")
+    val isAddressValid: Boolean,
     val rooms: Int?,
     val bedrooms: Int?,
     val bathrooms: Int?,

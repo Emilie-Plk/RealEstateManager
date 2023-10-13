@@ -137,6 +137,11 @@ class PropertyDraftRepositoryRoom @Inject constructor(
             }
         }
 
+    override suspend fun updateIsAddressValid(propertyFormId: Long, isAddressValid: Boolean) =
+        withContext(coroutineDispatcherProvider.io) {
+            propertyDraftDao.updateIsAddressValid(propertyFormId, isAddressValid)
+        }
+
     override suspend fun delete(propertyFormId: Long): Boolean = withContext(coroutineDispatcherProvider.io) {
         try {
             val amenityDeletionAsync = async { amenityDraftDao.deleteAll(propertyFormId) }
@@ -148,7 +153,6 @@ class PropertyDraftRepositoryRoom @Inject constructor(
             (listOf(propertyDeletionAsync) + amenityDeletionAsync + picturePreviewDeletionAsync)
                 .all { it.await() != null }
         } catch (e: SQLiteException) {
-            Log.d("COUCOU", "delete: ${e.message}")
             e.printStackTrace()
             false
         }
