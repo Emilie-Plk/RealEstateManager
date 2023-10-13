@@ -16,6 +16,7 @@ class AddTemporaryPropertyFormUseCase @Inject constructor(
             bathrooms = 0,
             description = "",
             address = "",
+            isAddressValid = false,
             agentName = "",
         )
     )

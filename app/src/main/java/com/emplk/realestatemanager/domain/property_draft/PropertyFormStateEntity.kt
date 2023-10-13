@@ -1,7 +1,6 @@
 package com.emplk.realestatemanager.domain.property_draft
 
 import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
-import com.emplk.realestatemanager.ui.add.address_predictions.PredictionViewState
 import java.math.BigDecimal
 
 /**
@@ -11,6 +10,7 @@ import java.math.BigDecimal
 data class PropertyFormStateEntity(
     val propertyType: String? = null,
     val address: String? = null,
+    val isAddressValid: Boolean = false,
     val price: BigDecimal = BigDecimal.ZERO,
     val surface: String? = null,
     val description: String? = null,

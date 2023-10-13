@@ -15,5 +15,7 @@ interface PropertyFormRepository {
 
     suspend fun update(propertyDraftEntity: PropertyDraftEntity, propertyFormId: Long)
 
+    suspend fun updateIsAddressValid(propertyFormId: Long, isAddressValid: Boolean)
+
     suspend fun delete(propertyFormId: Long): Boolean
 }
