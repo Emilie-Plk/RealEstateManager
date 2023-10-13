@@ -148,6 +148,7 @@ class EditPropertyViewModel @Inject constructor(
                                     propertyType = form.propertyType,
                                     addressPredictions = mapPredictionsToViewState(addressPredictions),
                                     address = form.address,
+                                    isAddressValid = true, // TODO: change that of course
                                     price = if (form.price == BigDecimal.ZERO) "" else form.price.toString(),
                                     surface = form.surface,
                                     description = form.description,

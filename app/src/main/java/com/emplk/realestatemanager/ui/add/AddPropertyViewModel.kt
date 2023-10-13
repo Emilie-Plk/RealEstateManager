@@ -25,15 +25,14 @@ import com.emplk.realestatemanager.domain.property_draft.PropertyFormDatabaseSta
 import com.emplk.realestatemanager.domain.property_draft.PropertyFormStateEntity
 import com.emplk.realestatemanager.domain.property_draft.SetPropertyFormProgressUseCase
 import com.emplk.realestatemanager.domain.property_draft.UpdatePropertyFormUseCase
-import com.emplk.realestatemanager.domain.property_draft.address.SetCurrentAddressInputUseCase
+import com.emplk.realestatemanager.domain.property_draft.address.GetIsPredictionSelectedByUserUseCase
 import com.emplk.realestatemanager.domain.property_draft.address.SetHasAddressFocusUseCase
 import com.emplk.realestatemanager.domain.property_draft.address.SetIsPredictionSelectedByUserUseCase
 import com.emplk.realestatemanager.domain.property_draft.address.SetSelectedAddressStateUseCase
-import com.emplk.realestatemanager.domain.property_draft.picture_preview.DeletePicturePreviewByIdUseCase
+import com.emplk.realestatemanager.domain.property_draft.picture_preview.DeletePicturePreviewUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.GetPicturePreviewsAsFlowUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.SavePictureToLocalAppFilesAndToLocalDatabaseUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.UpdatePicturePreviewUseCase
-import com.emplk.realestatemanager.domain.property_draft.picture_preview.id.DeletePicturePreviewIdUseCase
 import com.emplk.realestatemanager.domain.property_type.GetPropertyTypeFlowUseCase
 import com.emplk.realestatemanager.ui.add.address_predictions.PredictionViewState
 import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem
@@ -64,8 +63,6 @@ import kotlin.time.Duration.Companion.seconds
 class AddPropertyViewModel @Inject constructor(
     private val addPropertyUseCase: AddPropertyUseCase,
     private val getDraftNavigationUseCase: GetDraftNavigationUseCase,
-    private val deletePicturePreviewIdUseCase: DeletePicturePreviewIdUseCase, // à refacto
-    private val deletePicturePreviewByIdUseCase: DeletePicturePreviewByIdUseCase, // à refacto
     private val updatePicturePreviewUseCase: UpdatePicturePreviewUseCase,
     private val savePictureToLocalAppFilesAndToLocalDatabaseUseCase: SavePictureToLocalAppFilesAndToLocalDatabaseUseCase,
     private val updatePropertyFormUseCase: UpdatePropertyFormUseCase, // à refacto si chui une ouf
@@ -73,17 +70,18 @@ class AddPropertyViewModel @Inject constructor(
     private val getCurrencyTypeUseCase: GetCurrencyTypeUseCase,
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
     private val getPicturePreviewsAsFlowUseCase: GetPicturePreviewsAsFlowUseCase,
+    private val deletePicturePreviewUseCase: DeletePicturePreviewUseCase,
     private val getAgentsMapUseCase: GetAgentsMapUseCase,
     private val setSelectedAddressStateUseCase: SetSelectedAddressStateUseCase,
     private val setIsPredictionSelectedByUserUseCase: SetIsPredictionSelectedByUserUseCase,
-    private val setCurrentAddressInputUseCase: SetCurrentAddressInputUseCase,
     private val setHasAddressFocusUseCase: SetHasAddressFocusUseCase,
     private val setPropertyFormProgressUseCase: SetPropertyFormProgressUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
+    private val getIsPredictionSelectedByUserUseCase: GetIsPredictionSelectedByUserUseCase,
     private val getAmenityTypeUseCase: GetAmenityTypeUseCase,
     private val getCurrentPredictionAddressesFlowWithDebounceUseCase: GetCurrentPredictionAddressesFlowWithDebounceUseCase,
     private val getPropertyTypeFlowUseCase: GetPropertyTypeFlowUseCase,
-    private val isInternetEnabledFlowUseCase: IsInternetEnabledFlowUseCase,  // à garder I suppose
+    private val isInternetEnabledFlowUseCase: IsInternetEnabledFlowUseCase,
 ) : ViewModel() {
 
     private val formMutableStateFlow =
@@ -99,7 +97,7 @@ class AddPropertyViewModel @Inject constructor(
                 formMutableStateFlow,
                 isInternetEnabledFlowUseCase.invoke()
             ) { form, isInternetEnabled ->
-                if (isInternetEnabled) { // TODO: change that of course
+                if (isInternetEnabled) {
                     isAddingPropertyInDatabaseMutableStateFlow.tryEmit(true)
                     val resultEvent = addPropertyUseCase.invoke(form)
                     emit(Event(resultEvent))
@@ -151,7 +149,8 @@ class AddPropertyViewModel @Inject constructor(
                     getPicturePreviewsAsFlowUseCase.invoke(),
                     getCurrentPredictionAddressesFlowWithDebounceUseCase.invoke(),
                     isAddingPropertyInDatabaseMutableStateFlow,
-                ) { form, picturePreviews, predictionWrapper, isAddingInDatabase ->
+                    getIsPredictionSelectedByUserUseCase.invoke(),
+                ) { form, picturePreviews, predictionWrapper, isAddingInDatabase, isPredictionSelected ->
                     val currencyType = getCurrencyTypeUseCase.invoke()
                     val amenityTypes = getAmenityTypeUseCase.invoke()
                     val propertyTypes = getPropertyTypeFlowUseCase.invoke()
@@ -187,7 +186,8 @@ class AddPropertyViewModel @Inject constructor(
                                 form.featuredPictureId != null
                     )
 
-                    emit(PropertyFormViewState(
+                    emit(
+                        PropertyFormViewState(
                             propertyType = form.propertyType,
                             address = form.address,
                             price = if (form.price == BigDecimal.ZERO) "" else form.price.toString(),
@@ -232,9 +232,8 @@ class AddPropertyViewModel @Inject constructor(
                                             }
 
                                             viewModelScope.launch {
-                                                deletePicturePreviewByIdUseCase.invoke(picturePreview.id)
+                                                deletePicturePreviewUseCase.invoke(picturePreview.id)
                                             }
-                                            deletePicturePreviewIdUseCase.invoke(picturePreview.id)
                                         },
                                         onFeaturedEvent = EquatableCallbackWithParam { isFeatured ->
                                             if (picturePreview.isFeatured) return@EquatableCallbackWithParam
@@ -294,6 +293,7 @@ class AddPropertyViewModel @Inject constructor(
                                 )
                             },
                             addressPredictions = mapPredictionsToViewState(predictionWrapper),
+                            isAddressValid = isPredictionSelected == true,
                         )
                     )
                 }.collect()
@@ -328,7 +328,7 @@ class AddPropertyViewModel @Inject constructor(
                         address = prediction,
                         onClickEvent = EquatableCallbackWithParam { selectedAddress ->
                             setIsPredictionSelectedByUserUseCase.invoke(true)
-                            setCurrentAddressInputUseCase.invoke(null) // reset
+                            // setCurrentAddressInputUseCase.invoke(null) // reset
                             formMutableStateFlow.update {
                                 it.copy(
                                     address = selectedAddress,

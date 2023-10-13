@@ -94,6 +94,19 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
+            android:id="@+id/add_property_address_is_valid_helper_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:drawablePadding="4dp"
+            android:gravity="center"
+            android:text="Address is valid"
+            app:drawableStartCompat="@drawable/baseline_check_circle_24"
+            app:drawableTint="@color/secondary"
+            app:layout_constraintBottom_toTopOf="@+id/add_property_address_textInputLayout"
+            app:layout_constraintEnd_toEndOf="@id/add_property_address_textInputLayout" />
+
+        <TextView
             android:id="@+id/add_property_price_tv"
             style="@style/Theme.RealEstateManager.AddPropertySubtitle"
             android:layout_width="wrap_content"
@@ -368,14 +381,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="12dp"
-            tools:text="@string/add_property_create_button"
-            tools:enabled="true"
             app:icon="@drawable/baseline_add_home_24"
             app:iconTint="@color/secondary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/add_property_preview_pictures_recyclerView" />
+            app:layout_constraintTop_toBottomOf="@id/add_property_preview_pictures_recyclerView"
+            tools:enabled="true"
+            tools:text="@string/add_property_create_button" />
 
         <ProgressBar
             android:id="@+id/add_property_progressBar"
@@ -395,7 +408,8 @@
             app:layout_constraintStart_toStartOf="@id/add_property_address_textInputLayout"
             app:layout_constraintTop_toBottomOf="@id/add_property_address_textInputLayout"
             tools:itemCount="6"
-            tools:listitem="@layout/property_address_prediction_item" />
+            tools:listitem="@layout/property_address_prediction_item"
+            tools:visibility="gone" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
