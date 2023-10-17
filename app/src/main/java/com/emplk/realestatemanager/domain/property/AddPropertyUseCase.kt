@@ -13,7 +13,7 @@ import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.location.LocationEntity
 import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
 import com.emplk.realestatemanager.domain.property_draft.ClearPropertyFormUseCase
-import com.emplk.realestatemanager.domain.property_draft.PropertyFormStateEntity
+import com.emplk.realestatemanager.domain.property_draft.FormDraftStateEntity
 import com.emplk.realestatemanager.domain.property_draft.UpdatePropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.address.ResetSelectedAddressStateUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.GetPicturePreviewsUseCase
@@ -41,7 +41,7 @@ class AddPropertyUseCase @Inject constructor(
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val clock: Clock,
 ) {
-    suspend fun invoke(form: PropertyFormStateEntity): AddPropertyEvent {
+    suspend fun invoke(form: FormDraftStateEntity): AddPropertyEvent {
         require(
             form.propertyType != null &&
                     form.address != null &&

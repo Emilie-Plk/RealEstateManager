@@ -4,10 +4,10 @@ import java.math.BigDecimal
 import javax.inject.Inject
 
 class AddTemporaryPropertyFormUseCase @Inject constructor(
-    private val propertyFormRepository: PropertyFormRepository
+    private val formDraftRepository: FormDraftRepository
 ) {
-    suspend fun invoke(): Long = propertyFormRepository.addPropertyFormWithDetails(
-        PropertyDraftEntity(
+    suspend fun invoke(): Long = formDraftRepository.addPropertyFormWithDetails(
+        FormDraftEntity(
             type = "",
             price = BigDecimal.ZERO,
             surface = "",

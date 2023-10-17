@@ -15,7 +15,7 @@ import com.emplk.realestatemanager.data.property.amenity.AmenityRepositoryRoom
 import com.emplk.realestatemanager.data.property.amenity.type.AmenityTypeRepositoryImpl
 import com.emplk.realestatemanager.data.property.location.LocationRepositoryRoom
 import com.emplk.realestatemanager.data.property.picture.PictureRepositoryRoom
-import com.emplk.realestatemanager.data.property_draft.PropertyDraftRepositoryRoom
+import com.emplk.realestatemanager.data.property_draft.FormDraftDraftRepositoryRoom
 import com.emplk.realestatemanager.data.property_draft.address.SelectedAddressStateRepositoryImpl
 import com.emplk.realestatemanager.data.property_draft.amenity.AmenityDaftRepositoryRoom
 import com.emplk.realestatemanager.data.property_draft.picture_preview.PicturePreviewRepositoryRoom
@@ -37,7 +37,7 @@ import com.emplk.realestatemanager.domain.property.amenity.AmenityRepository
 import com.emplk.realestatemanager.domain.property.amenity.type.AmenityTypeRepository
 import com.emplk.realestatemanager.domain.property.location.LocationRepository
 import com.emplk.realestatemanager.domain.property.pictures.PictureRepository
-import com.emplk.realestatemanager.domain.property_draft.PropertyFormRepository
+import com.emplk.realestatemanager.domain.property_draft.FormDraftRepository
 import com.emplk.realestatemanager.domain.property_draft.address.SelectedAddressStateRepository
 import com.emplk.realestatemanager.domain.property_draft.amenity.AmenityFormRepository
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.PicturePreviewRepository
@@ -100,7 +100,7 @@ abstract class DataBindingModule {
 
     @Singleton
     @Binds
-    abstract fun bindPropertyFormRepository(implementation: PropertyDraftRepositoryRoom): PropertyFormRepository
+    abstract fun bindPropertyFormRepository(implementation: FormDraftDraftRepositoryRoom): FormDraftRepository
 
     @Singleton
     @Binds

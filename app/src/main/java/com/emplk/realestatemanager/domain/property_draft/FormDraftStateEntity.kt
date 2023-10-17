@@ -7,7 +7,7 @@ import java.math.BigDecimal
  * This class represents the form state of a property.
  * It's not used outside of the UI/Domain layer.
  */
-data class PropertyFormStateEntity(
+data class FormDraftStateEntity(
     val propertyType: String? = null,
     val address: String? = null,
     val isAddressValid: Boolean = false,

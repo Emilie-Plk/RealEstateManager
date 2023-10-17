@@ -17,8 +17,8 @@ import com.emplk.realestatemanager.data.property.location.LocationDao
 import com.emplk.realestatemanager.data.property.location.LocationDto
 import com.emplk.realestatemanager.data.property.picture.PictureDao
 import com.emplk.realestatemanager.data.property.picture.PictureDto
-import com.emplk.realestatemanager.data.property_draft.PropertyDraftDao
-import com.emplk.realestatemanager.data.property_draft.PropertyDraftDto
+import com.emplk.realestatemanager.data.property_draft.FormDraftDao
+import com.emplk.realestatemanager.data.property_draft.BaseFormDraftDto
 import com.emplk.realestatemanager.data.property_draft.amenity.AmenityDraftDao
 import com.emplk.realestatemanager.data.property_draft.amenity.AmenityDraftDto
 import com.emplk.realestatemanager.data.property_draft.picture_preview.PicturePreviewDao
@@ -36,7 +36,7 @@ import java.time.LocalDateTime
         PictureDto::class,
         LocationDto::class,
         AmenityDto::class,
-        PropertyDraftDto::class,
+        BaseFormDraftDto::class,
         PicturePreviewDto::class,
         AmenityDraftDto::class,
     ],
@@ -53,7 +53,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun getLocationDao(): LocationDao
     abstract fun getPictureDao(): PictureDao
     abstract fun getAmenityDao(): AmenityDao
-    abstract fun getPropertyFormDao(): PropertyDraftDao
+    abstract fun getPropertyFormDao(): FormDraftDao
     abstract fun getPicturePreviewDao(): PicturePreviewDao
     abstract fun getAmenityFormDao(): AmenityDraftDao
 

@@ -1,14 +1,14 @@
 package com.emplk.realestatemanager.domain.property_draft.picture_preview
 
-import com.emplk.realestatemanager.domain.property_draft.GetCurrentPropertyDraftIdUseCase
+import com.emplk.realestatemanager.domain.property_draft.GetCurrentDraftIdUseCase
 import javax.inject.Inject
 
 class AddPicturePreviewUseCase @Inject constructor(
     private val picturePreviewRepository: PicturePreviewRepository,
-    private val getCurrentPropertyDraftIdUseCase: GetCurrentPropertyDraftIdUseCase
+    private val getCurrentDraftIdUseCase: GetCurrentDraftIdUseCase
 ) {
     suspend fun invoke(uriToString: String, isFeatured: Boolean): Long =
-        getCurrentPropertyDraftIdUseCase.invoke()?.let {
+        getCurrentDraftIdUseCase.invoke()?.let {
             picturePreviewRepository.add(
                 PicturePreviewEntity(
                     id = 0,

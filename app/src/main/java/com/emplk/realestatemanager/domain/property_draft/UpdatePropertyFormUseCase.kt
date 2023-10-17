@@ -4,13 +4,13 @@ import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
 import javax.inject.Inject
 
 class UpdatePropertyFormUseCase @Inject constructor(
-    private val propertyFormRepository: PropertyFormRepository,
-    private val getCurrentPropertyDraftIdUseCase: GetCurrentPropertyDraftIdUseCase,
+    private val formDraftRepository: FormDraftRepository,
+    private val getCurrentDraftIdUseCase: GetCurrentDraftIdUseCase,
 ) {
-    suspend fun invoke(form: PropertyFormStateEntity) {
-        getCurrentPropertyDraftIdUseCase.invoke()?.let { currentPropertyFormId ->
-            propertyFormRepository.update(
-                PropertyDraftEntity(
+    suspend fun invoke(form: FormDraftStateEntity) {
+        getCurrentDraftIdUseCase.invoke()?.let { currentPropertyFormId ->
+            formDraftRepository.update(
+                FormDraftEntity(
                     type = form.propertyType,
                     price = form.price,
                     surface = form.surface,

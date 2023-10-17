@@ -5,41 +5,41 @@ import com.emplk.realestatemanager.data.property_draft.amenity.AmenityDraftDao
 import com.emplk.realestatemanager.data.property_draft.amenity.AmenityDraftMapper
 import com.emplk.realestatemanager.data.property_draft.picture_preview.PicturePreviewDao
 import com.emplk.realestatemanager.data.property_draft.picture_preview.PicturePreviewMapper
-import com.emplk.realestatemanager.data.property_draft.picture_preview.PropertyDraftMapper
+import com.emplk.realestatemanager.data.property_draft.picture_preview.FormDraftMapper
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
-import com.emplk.realestatemanager.domain.property_draft.PropertyDraftEntity
-import com.emplk.realestatemanager.domain.property_draft.PropertyFormRepository
+import com.emplk.realestatemanager.domain.property_draft.FormDraftEntity
+import com.emplk.realestatemanager.domain.property_draft.FormDraftRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class PropertyDraftRepositoryRoom @Inject constructor(
-    private val propertyDraftDao: PropertyDraftDao,
+class FormDraftDraftRepositoryRoom @Inject constructor(
+    private val formDraftDao: FormDraftDao,
     private val picturePreviewDao: PicturePreviewDao,
     private val amenityDraftDao: AmenityDraftDao,
-    private val propertyDraftMapper: PropertyDraftMapper,
+    private val formDraftMapper: FormDraftMapper,
     private val amenityDraftMapper: AmenityDraftMapper,
     private val picturePreviewMapper: PicturePreviewMapper,
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
-) : PropertyFormRepository {
+) : FormDraftRepository {
 
-    override suspend fun add(propertyDraftEntity: PropertyDraftEntity): Long? =
+    override suspend fun add(formDraftEntity: FormDraftEntity): Long? =
         withContext(coroutineDispatcherProvider.io) {
             try {
-                propertyDraftDao.insert(propertyDraftMapper.mapToPropertyDraftDto(propertyDraftEntity))
+                formDraftDao.insert(formDraftMapper.mapToPropertyDraftDto(formDraftEntity))
             } catch (e: SQLiteException) {
                 e.printStackTrace()
                 null
             }
         }
 
-    override suspend fun addPropertyFormWithDetails(propertyDraftEntity: PropertyDraftEntity): Long =
+    override suspend fun addPropertyFormWithDetails(formDraftEntity: FormDraftEntity): Long =
         withContext(coroutineDispatcherProvider.io) {
             try {
                 val propertyFormId =
-                    add(propertyDraftEntity) ?: return@withContext -1L // TODO: revoir ça et mettre du null
+                    add(formDraftEntity) ?: return@withContext -1L // TODO: revoir ça et mettre du null
 
-                val picturePreviewsFormAsync = propertyDraftEntity.pictures.map { picturePreviewEntity ->
+                val picturePreviewsFormAsync = formDraftEntity.pictures.map { picturePreviewEntity ->
                     async {
                         val picturePreviewFormDto =
                             picturePreviewMapper.mapToPicturePreviewDto(picturePreviewEntity, propertyFormId)
@@ -47,7 +47,7 @@ class PropertyDraftRepositoryRoom @Inject constructor(
                     }
                 }
 
-                val amenitiesFormAsync = propertyDraftEntity.amenities.map {
+                val amenitiesFormAsync = formDraftEntity.amenities.map {
                     async {
                         val amenityFormDto = amenityDraftMapper.mapToAmenityDto(it, propertyFormId)
                         amenityDraftDao.insert(amenityFormDto)
@@ -64,7 +64,7 @@ class PropertyDraftRepositoryRoom @Inject constructor(
 
     override suspend fun getExistingPropertyFormId(): Long? = withContext(coroutineDispatcherProvider.io) {
         try {
-            propertyDraftDao.getExistingPropertyFormId()
+            formDraftDao.getExistingPropertyFormId()
         } catch (e: SQLiteException) {
             e.printStackTrace()
             null
@@ -73,7 +73,7 @@ class PropertyDraftRepositoryRoom @Inject constructor(
 
     override suspend fun getAddFormId(): Long? = withContext(coroutineDispatcherProvider.io) {
         try {
-            propertyDraftDao.getAddFormId()
+            formDraftDao.getAddFormId()
         } catch (e: SQLiteException) {
             e.printStackTrace()
             null
@@ -83,7 +83,7 @@ class PropertyDraftRepositoryRoom @Inject constructor(
     override suspend fun doesPropertyDraftExist(propertyFormId: Long): Boolean =
         withContext(coroutineDispatcherProvider.io) {
             try {
-                propertyDraftDao.doesPropertyDraftExist(propertyFormId)
+                formDraftDao.doesPropertyDraftExist(propertyFormId)
             } catch (e: SQLiteException) {
                 e.printStackTrace()
                 false
@@ -93,17 +93,17 @@ class PropertyDraftRepositoryRoom @Inject constructor(
     override suspend fun doesPropertyExistInBothTables(propertyFormId: Long): Boolean =
         withContext(coroutineDispatcherProvider.io) {
             try {
-                propertyDraftDao.doesPropertyExistInBothTables(propertyFormId)
+                formDraftDao.doesPropertyExistInBothTables(propertyFormId)
             } catch (e: SQLiteException) {
                 e.printStackTrace()
                 false
             }
         }
 
-    override suspend fun getExistingPropertyForm(): PropertyDraftEntity? = withContext(coroutineDispatcherProvider.io) {
+    override suspend fun getExistingPropertyForm(): FormDraftEntity? = withContext(coroutineDispatcherProvider.io) {
         try {
-            propertyDraftDao.getExistingPropertyForm()?.let { propertyFormWithDetails ->
-                propertyDraftMapper.mapToPropertyDraftEntity(
+            formDraftDao.getExistingPropertyForm()?.let { propertyFormWithDetails ->
+                formDraftMapper.mapToPropertyDraftEntity(
                     propertyFormWithDetails.propertyForm,
                     propertyFormWithDetails.picturePreviews,
                     propertyFormWithDetails.amenities,
@@ -115,10 +115,10 @@ class PropertyDraftRepositoryRoom @Inject constructor(
         }
     }
 
-    override suspend fun getPropertyFormById(propertyFormId: Long): PropertyDraftEntity =
+    override suspend fun getPropertyFormById(propertyFormId: Long): FormDraftEntity =
         withContext(coroutineDispatcherProvider.io) {
-            propertyDraftDao.getPropertyFormById(propertyFormId).let { propertyFormWithDetails ->
-                propertyDraftMapper.mapToPropertyDraftEntity(
+            formDraftDao.getPropertyFormById(propertyFormId).let { propertyFormWithDetails ->
+                formDraftMapper.mapToPropertyDraftEntity(
                     propertyFormWithDetails.propertyForm,
                     propertyFormWithDetails.picturePreviews,
                     propertyFormWithDetails.amenities,
@@ -126,12 +126,12 @@ class PropertyDraftRepositoryRoom @Inject constructor(
             }
         }
 
-    override suspend fun update(propertyDraftEntity: PropertyDraftEntity, propertyFormId: Long) =
+    override suspend fun update(formDraftEntity: FormDraftEntity, propertyFormId: Long) =
         withContext(coroutineDispatcherProvider.io) {
 
-            val propertyFormDto = propertyDraftMapper.mapToPropertyDraftDto(propertyDraftEntity)
+            val propertyFormDto = formDraftMapper.mapToPropertyDraftDto(formDraftEntity)
 
-            propertyDraftDao.update(
+            formDraftDao.update(
                 propertyFormDto.type,
                 propertyFormDto.price,
                 propertyFormDto.surface,
@@ -147,7 +147,7 @@ class PropertyDraftRepositoryRoom @Inject constructor(
 
             val amenityIdsStoredInDb = amenityDraftDao.getAllIds(propertyFormId)
 
-            propertyDraftEntity.amenities.forEach {
+            formDraftEntity.amenities.forEach {
                 val amenityFormDto = amenityDraftMapper.mapToAmenityDto(it, propertyFormId)
                 if (!amenityIdsStoredInDb.contains(amenityFormDto.id)) {
                     amenityDraftDao.insert(amenityFormDto)
@@ -155,7 +155,7 @@ class PropertyDraftRepositoryRoom @Inject constructor(
             }
 
             amenityIdsStoredInDb.forEach { amenityIdStoredInDatabase ->
-                if (propertyDraftEntity.amenities.none { it.id == amenityIdStoredInDatabase }) {
+                if (formDraftEntity.amenities.none { it.id == amenityIdStoredInDatabase }) {
                     amenityDraftDao.delete(amenityIdStoredInDatabase)
                 }
             }
@@ -163,7 +163,7 @@ class PropertyDraftRepositoryRoom @Inject constructor(
 
     override suspend fun updateIsAddressValid(propertyFormId: Long, isAddressValid: Boolean) =
         withContext(coroutineDispatcherProvider.io) {
-            propertyDraftDao.updateIsAddressValid(propertyFormId, isAddressValid)
+            formDraftDao.updateIsAddressValid(propertyFormId, isAddressValid)
         }
 
     override suspend fun delete(propertyFormId: Long): Boolean = withContext(coroutineDispatcherProvider.io) {
@@ -172,7 +172,7 @@ class PropertyDraftRepositoryRoom @Inject constructor(
 
             val picturePreviewDeletionAsync = async { picturePreviewDao.deleteAll(propertyFormId) }
 
-            val propertyDeletionAsync = async { propertyDraftDao.delete(propertyFormId) }
+            val propertyDeletionAsync = async { formDraftDao.delete(propertyFormId) }
 
             (listOf(propertyDeletionAsync) + amenityDeletionAsync + picturePreviewDeletionAsync)
                 .all { it.await() != null }

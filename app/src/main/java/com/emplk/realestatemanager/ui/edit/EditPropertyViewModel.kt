@@ -17,7 +17,7 @@ import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.amenity.type.GetAmenityTypeUseCase
 import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
-import com.emplk.realestatemanager.domain.property_draft.PropertyFormStateEntity
+import com.emplk.realestatemanager.domain.property_draft.FormDraftStateEntity
 import com.emplk.realestatemanager.domain.property_type.GetPropertyTypeFlowUseCase
 import com.emplk.realestatemanager.ui.add.PropertyFormViewState
 import com.emplk.realestatemanager.ui.add.address_predictions.PredictionViewState
@@ -60,7 +60,7 @@ class EditPropertyViewModel @Inject constructor(
     private val getPropertyTypeFlowUseCase: GetPropertyTypeFlowUseCase,
 ) : ViewModel() {
 
-    private val formMutableStateFlow = MutableStateFlow(PropertyFormStateEntity())
+    private val formMutableStateFlow = MutableStateFlow(FormDraftStateEntity())
     private val isUpdatingPropertyInDatabaseMutableStateFlow = MutableStateFlow(false)
     private val isEveryFieldFilledMutableStateFlow = MutableStateFlow(false)
     private val onUpdateButtonClickedMutableSharedFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)

@@ -12,7 +12,7 @@ import com.emplk.realestatemanager.data.property.PropertyDao
 import com.emplk.realestatemanager.data.property.amenity.AmenityDao
 import com.emplk.realestatemanager.data.property.location.LocationDao
 import com.emplk.realestatemanager.data.property.picture.PictureDao
-import com.emplk.realestatemanager.data.property_draft.PropertyDraftDao
+import com.emplk.realestatemanager.data.property_draft.FormDraftDao
 import com.emplk.realestatemanager.data.property_draft.amenity.AmenityDraftDao
 import com.emplk.realestatemanager.data.property_draft.picture_preview.PicturePreviewDao
 import com.google.gson.Gson
@@ -184,7 +184,7 @@ class DataModule {
 
     @Singleton
     @Provides
-    fun providePropertyFormDao(appDatabase: AppDatabase): PropertyDraftDao = appDatabase.getPropertyFormDao()
+    fun providePropertyFormDao(appDatabase: AppDatabase): FormDraftDao = appDatabase.getPropertyFormDao()
 
     @Singleton
     @Provides

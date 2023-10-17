@@ -1,18 +1,18 @@
 package com.emplk.realestatemanager.data.property_draft.picture_preview
 
-import com.emplk.realestatemanager.data.property_draft.PropertyDraftDto
+import com.emplk.realestatemanager.data.property_draft.BaseFormDraftDto
 import com.emplk.realestatemanager.data.property_draft.amenity.AmenityDraftDto
 import com.emplk.realestatemanager.data.property_draft.amenity.AmenityDraftMapper
-import com.emplk.realestatemanager.domain.property_draft.PropertyDraftEntity
+import com.emplk.realestatemanager.domain.property_draft.FormDraftEntity
 import javax.inject.Inject
 
-class PropertyDraftMapper @Inject constructor(
+class FormDraftMapper @Inject constructor(
     private val picturePreviewMapper: PicturePreviewMapper,
     private val amenityDraftMapper: AmenityDraftMapper,
 ) {
 
-    fun mapToPropertyDraftDto(propertyForm: PropertyDraftEntity): PropertyDraftDto =
-        PropertyDraftDto(
+    fun mapToPropertyDraftDto(propertyForm: FormDraftEntity): BaseFormDraftDto =
+        BaseFormDraftDto(
             type = propertyForm.type,
             price = propertyForm.price,
             surface = propertyForm.surface,
@@ -26,21 +26,21 @@ class PropertyDraftMapper @Inject constructor(
         )
 
     fun mapToPropertyDraftEntity(
-        propertyDraftDto: PropertyDraftDto,
+        baseFormDraftDto: BaseFormDraftDto,
         picturePreviewDtos: List<PicturePreviewDto>,
         amenityDraftDtos: List<AmenityDraftDto>,
-    ): PropertyDraftEntity =
-        PropertyDraftEntity(
-            type = propertyDraftDto.type,
-            price = propertyDraftDto.price,
-            surface = propertyDraftDto.surface,
-            address = propertyDraftDto.address,
-            isAddressValid = propertyDraftDto.isAddressValid,
-            rooms = propertyDraftDto.rooms,
-            bedrooms = propertyDraftDto.bedrooms,
-            bathrooms = propertyDraftDto.bathrooms,
-            description = propertyDraftDto.description,
-            agentName = propertyDraftDto.agentName,
+    ): FormDraftEntity =
+        FormDraftEntity(
+            type = baseFormDraftDto.type,
+            price = baseFormDraftDto.price,
+            surface = baseFormDraftDto.surface,
+            address = baseFormDraftDto.address,
+            isAddressValid = baseFormDraftDto.isAddressValid,
+            rooms = baseFormDraftDto.rooms,
+            bedrooms = baseFormDraftDto.bedrooms,
+            bathrooms = baseFormDraftDto.bathrooms,
+            description = baseFormDraftDto.description,
+            agentName = baseFormDraftDto.agentName,
             pictures = picturePreviewMapper.mapToPicturePreviewEntities(picturePreviewDtos),
             amenities = amenityDraftMapper.mapToAmenityFormEntities(amenityDraftDtos),
         )
