@@ -37,13 +37,13 @@ class AddPropertyUseCase @Inject constructor(
     private val convertEuroToDollarUseCase: ConvertEuroToDollarUseCase,
     private val updatePropertyFormUseCase: UpdatePropertyFormUseCase,
     private val clearPropertyFormUseCase: ClearPropertyFormUseCase,
-    private val resetSelectedAddressState: ResetSelectedAddressStateUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val clock: Clock,
 ) {
     suspend fun invoke(form: FormDraftStateEntity): AddPropertyEvent {
         require(
-            form.propertyType != null &&
+            form.id != null &&
+                    form.propertyType != null &&
                     form.address != null &&
                     form.price > BigDecimal.ZERO &&
                     form.surface != null &&
@@ -67,6 +67,7 @@ class AddPropertyUseCase @Inject constructor(
 
             val success = propertyRepository.addPropertyWithDetails(
                 PropertyEntity(
+                    id = form.id,
                     type = form.propertyType,
                     price = when (getLocaleUseCase.invoke()) {
                         Locale.US -> form.price
@@ -93,14 +94,15 @@ class AddPropertyUseCase @Inject constructor(
                     bedrooms = form.nbBedrooms,
                     agentName = form.agent,
                     amenities = form.amenities,
-                    pictures = getPicturePreviewsUseCase.invoke().map {
-                        PictureEntity(
-                            id = it.id,
-                            uri = it.uri,
-                            description = it.description,
-                            isFeatured = it.id == form.featuredPictureId,
-                        )
-                    },
+                    pictures =
+                        getPicturePreviewsUseCase.invoke(form.id).map {
+                            PictureEntity(
+                                id = it.id,
+                                uri = it.uri,
+                                description = it.description,
+                                isFeatured = it.id == form.featuredPictureId,
+                            )
+                        },
                     entryDate = LocalDateTime.now(clock),
                     isSold = false,
                     saleDate = null,
@@ -114,7 +116,7 @@ class AddPropertyUseCase @Inject constructor(
         }
         return when (addPropertyWrapper) {
             is AddPropertyWrapper.Success -> {
-                clearPropertyFormUseCase.invoke()
+                clearPropertyFormUseCase.invoke(form.id)
                 setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
                 AddPropertyEvent.Toast(addPropertyWrapper.text)
             }
@@ -130,7 +132,6 @@ class AddPropertyUseCase @Inject constructor(
             }
 
             is AddPropertyWrapper.LocaleError -> AddPropertyEvent.Toast(addPropertyWrapper.error)
-
         }
     }
 

@@ -13,6 +13,7 @@ class FormDraftMapper @Inject constructor(
 
     fun mapToPropertyDraftDto(propertyForm: FormDraftEntity): BaseFormDraftDto =
         BaseFormDraftDto(
+            id = propertyForm.id,
             type = propertyForm.type,
             price = propertyForm.price,
             surface = propertyForm.surface,
@@ -31,6 +32,7 @@ class FormDraftMapper @Inject constructor(
         amenityDraftDtos: List<AmenityDraftDto>,
     ): FormDraftEntity =
         FormDraftEntity(
+            id = baseFormDraftDto.id,
             type = baseFormDraftDto.type,
             price = baseFormDraftDto.price,
             surface = baseFormDraftDto.surface,

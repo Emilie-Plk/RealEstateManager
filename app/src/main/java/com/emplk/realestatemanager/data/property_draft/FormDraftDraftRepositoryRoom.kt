@@ -3,9 +3,9 @@ package com.emplk.realestatemanager.data.property_draft
 import android.database.sqlite.SQLiteException
 import com.emplk.realestatemanager.data.property_draft.amenity.AmenityDraftDao
 import com.emplk.realestatemanager.data.property_draft.amenity.AmenityDraftMapper
+import com.emplk.realestatemanager.data.property_draft.picture_preview.FormDraftMapper
 import com.emplk.realestatemanager.data.property_draft.picture_preview.PicturePreviewDao
 import com.emplk.realestatemanager.data.property_draft.picture_preview.PicturePreviewMapper
-import com.emplk.realestatemanager.data.property_draft.picture_preview.FormDraftMapper
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.property_draft.FormDraftEntity
 import com.emplk.realestatemanager.domain.property_draft.FormDraftRepository
@@ -33,11 +33,11 @@ class FormDraftDraftRepositoryRoom @Inject constructor(
             }
         }
 
-    override suspend fun addPropertyFormWithDetails(formDraftEntity: FormDraftEntity): Long =
+    override suspend fun addPropertyFormWithDetails(formDraftEntity: FormDraftEntity): Long? =
         withContext(coroutineDispatcherProvider.io) {
             try {
                 val propertyFormId =
-                    add(formDraftEntity) ?: return@withContext -1L // TODO: revoir ça et mettre du null
+                    add(formDraftEntity) ?: return@withContext null // TODO: revoir ça et mettre du null
 
                 val picturePreviewsFormAsync = formDraftEntity.pictures.map { picturePreviewEntity ->
                     async {
@@ -58,7 +58,7 @@ class FormDraftDraftRepositoryRoom @Inject constructor(
                 propertyFormId
             } catch (e: SQLiteException) {
                 e.printStackTrace()
-                -1L
+                null
             }
         }
 
@@ -80,8 +80,9 @@ class FormDraftDraftRepositoryRoom @Inject constructor(
         }
     }
 
-    override suspend fun doesPropertyDraftExist(propertyFormId: Long): Boolean =
+    override suspend fun doesPropertyDraftExist(propertyFormId: Long?): Boolean =
         withContext(coroutineDispatcherProvider.io) {
+            if (propertyFormId == null) return@withContext false
             try {
                 formDraftDao.doesPropertyDraftExist(propertyFormId)
             } catch (e: SQLiteException) {
@@ -90,8 +91,9 @@ class FormDraftDraftRepositoryRoom @Inject constructor(
             }
         }
 
-    override suspend fun doesPropertyExistInBothTables(propertyFormId: Long): Boolean =
+    override suspend fun doesPropertyExistInBothTables(propertyFormId: Long?): Boolean =
         withContext(coroutineDispatcherProvider.io) {
+            if (propertyFormId == null) return@withContext false
             try {
                 formDraftDao.doesPropertyExistInBothTables(propertyFormId)
             } catch (e: SQLiteException) {
@@ -126,11 +128,10 @@ class FormDraftDraftRepositoryRoom @Inject constructor(
             }
         }
 
-    override suspend fun update(formDraftEntity: FormDraftEntity, propertyFormId: Long) =
+    override suspend fun update(formDraftEntity: FormDraftEntity) =
         withContext(coroutineDispatcherProvider.io) {
 
             val propertyFormDto = formDraftMapper.mapToPropertyDraftDto(formDraftEntity)
-
             formDraftDao.update(
                 propertyFormDto.type,
                 propertyFormDto.price,
@@ -141,14 +142,14 @@ class FormDraftDraftRepositoryRoom @Inject constructor(
                 propertyFormDto.bathrooms,
                 propertyFormDto.description,
                 propertyFormDto.agentName,
-                propertyFormId
+                propertyFormDto.id
             )
 
 
-            val amenityIdsStoredInDb = amenityDraftDao.getAllIds(propertyFormId)
+            val amenityIdsStoredInDb = amenityDraftDao.getAllIds(propertyFormDto.id)
 
             formDraftEntity.amenities.forEach {
-                val amenityFormDto = amenityDraftMapper.mapToAmenityDto(it, propertyFormId)
+                val amenityFormDto = amenityDraftMapper.mapToAmenityDto(it, propertyFormDto.id)
                 if (!amenityIdsStoredInDb.contains(amenityFormDto.id)) {
                     amenityDraftDao.insert(amenityFormDto)
                 }

@@ -15,14 +15,16 @@ import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCa
 import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
+import com.emplk.realestatemanager.domain.navigation.draft.GetClearPropertyFormNavigationEventUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.GetDraftNavigationUseCase
 import com.emplk.realestatemanager.domain.property.AddPropertyUseCase
 import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.amenity.type.GetAmenityTypeUseCase
+import com.emplk.realestatemanager.domain.property_draft.ClearPropertyFormUseCase
+import com.emplk.realestatemanager.domain.property_draft.FormDraftStateEntity
 import com.emplk.realestatemanager.domain.property_draft.InitAddOrEditPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.PropertyFormDatabaseState
-import com.emplk.realestatemanager.domain.property_draft.FormDraftStateEntity
 import com.emplk.realestatemanager.domain.property_draft.SetPropertyFormProgressUseCase
 import com.emplk.realestatemanager.domain.property_draft.UpdatePropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.address.SetHasAddressFocusUseCase
@@ -48,7 +50,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.transform
@@ -62,6 +63,8 @@ import kotlin.time.Duration.Companion.seconds
 class AddPropertyViewModel @Inject constructor(
     private val addPropertyUseCase: AddPropertyUseCase,
     private val getDraftNavigationUseCase: GetDraftNavigationUseCase,
+    private val getClearPropertyFormNavigationEventUseCase: GetClearPropertyFormNavigationEventUseCase,
+    private val clearPropertyFormUseCase: ClearPropertyFormUseCase,
     private val updatePicturePreviewUseCase: UpdatePicturePreviewUseCase,
     private val savePictureToLocalAppFilesAndToLocalDatabaseUseCase: SavePictureToLocalAppFilesAndToLocalDatabaseUseCase,
     private val updatePropertyFormUseCase: UpdatePropertyFormUseCase, // à refacto si chui une ouf
@@ -85,9 +88,11 @@ class AddPropertyViewModel @Inject constructor(
     private val formMutableStateFlow =
         MutableStateFlow(FormDraftStateEntity()) // Possiblement mettre dans un repo?..
 
-    private val isEveryFieldFilledMutableStateFlow = MutableStateFlow(false)
+    private val isFormValidMutableStateFlow = MutableStateFlow(false)
     private val isAddingPropertyInDatabaseMutableStateFlow = MutableStateFlow(false)
     private val onCreateButtonClickedMutableSharedFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+
+    private val formIdMutableStateFlow = MutableStateFlow(0L)
 
     val viewEventLiveData: LiveData<Event<AddPropertyEvent>> = liveData {
         onCreateButtonClickedMutableSharedFlow.collect {
@@ -111,15 +116,16 @@ class AddPropertyViewModel @Inject constructor(
 
     val viewStateLiveData: LiveData<PropertyFormViewState> = liveData {
         coroutineScope {
-            when (val initTempPropertyForm = initAddOrEditPropertyFormUseCase.invoke()) {
-                is PropertyFormDatabaseState.Empty -> Log.d(
-                    "AddPropertyViewModel",
-                    "initTemporaryPropertyFormUseCase with new id: ${initTempPropertyForm.newPropertyFormId}"
-                )
+            when (val initTempPropertyForm = initAddOrEditPropertyFormUseCase.invoke(null)) {
+                is PropertyFormDatabaseState.EmptyForm -> formMutableStateFlow.update {
+                    it.copy(id = initTempPropertyForm.newPropertyFormId)
+                }
 
-                is PropertyFormDatabaseState.DraftAlreadyExists -> {
+                is PropertyFormDatabaseState.Draft -> {
                     formMutableStateFlow.update { propertyForm ->
+                        formIdMutableStateFlow.tryEmit(initTempPropertyForm.formDraftEntity.id)
                         propertyForm.copy(
+                            id = initTempPropertyForm.formDraftEntity.id,
                             propertyType = initTempPropertyForm.formDraftEntity.type,
                             address = initTempPropertyForm.formDraftEntity.address,
                             isAddressValid = initTempPropertyForm.formDraftEntity.isAddressValid,
@@ -145,7 +151,7 @@ class AddPropertyViewModel @Inject constructor(
             launch {
                 combine(
                     formMutableStateFlow,
-                    getPicturePreviewsAsFlowUseCase.invoke(),
+                    getPicturePreviewsAsFlowUseCase.invoke(formIdMutableStateFlow.value),
                     getCurrentPredictionAddressesFlowWithDebounceUseCase.invoke(),
                     isAddingPropertyInDatabaseMutableStateFlow,
                 ) { form, picturePreviews, predictionWrapper, isAddingInDatabase ->
@@ -169,8 +175,9 @@ class AddPropertyViewModel @Inject constructor(
 
                     setPropertyFormProgressUseCase.invoke(isFormInProgress)
 
-                    isEveryFieldFilledMutableStateFlow.tryEmit(
-                        form.propertyType != null &&
+                    isFormValidMutableStateFlow.tryEmit(
+                        form.id != null &&
+                                form.propertyType != null &&
                                 form.address != null &&
                                 form.isAddressValid &&
                                 (form.price > BigDecimal.ZERO) &&
@@ -275,7 +282,7 @@ class AddPropertyViewModel @Inject constructor(
                                 R.string.surface_unit_in_n,
                                 getSurfaceUnitUseCase.invoke().symbol,
                             ),
-                            isSubmitButtonEnabled = isEveryFieldFilledMutableStateFlow.value,
+                            isSubmitButtonEnabled = isFormValidMutableStateFlow.value,
                             isProgressBarVisible = isAddingInDatabase,
                             amenities = mapAmenityTypesToViewStates(amenityTypes),
                             selectedAmenities = form.amenities,
@@ -310,9 +317,18 @@ class AddPropertyViewModel @Inject constructor(
 
             // Save draft when navigating away
             launch {
-                getDraftNavigationUseCase.invoke().collectLatest {
+                getDraftNavigationUseCase.invoke().collect {
                     formMutableStateFlow.map { form ->
                         updatePropertyFormUseCase.invoke(form)
+                    }.collect()
+                }
+            }
+
+            // Clear draft when navigating away
+            launch {
+                getClearPropertyFormNavigationEventUseCase.invoke().collect {
+                    formMutableStateFlow.map { form ->
+                        clearPropertyFormUseCase.invoke(form.id)
                     }.collect()
                 }
             }
@@ -332,7 +348,12 @@ class AddPropertyViewModel @Inject constructor(
                                     isAddressValid = true
                                 )
                             }
-                            viewModelScope.launch { updateOnAddressClickedUseCase.invoke(true) } // TODO: wtf why if I put it above formMutableStateFlow.update it doesn't work
+                            viewModelScope.launch {
+                                updateOnAddressClickedUseCase.invoke(
+                                    true,
+                                    formIdMutableStateFlow.value
+                                )
+                            } // TODO: why tf if I put it above formMutableStateFlow.update it doesn't work
                         }
                     )
                 }
@@ -390,7 +411,7 @@ class AddPropertyViewModel @Inject constructor(
 
     fun onAddressChanged(input: String?) {
         if (formMutableStateFlow.value.isAddressValid && formMutableStateFlow.value.address != input) { // TODO: NINO working but wtf looping?
-            viewModelScope.launch { updateOnAddressClickedUseCase.invoke(false) }
+            viewModelScope.launch { updateOnAddressClickedUseCase.invoke(false, formIdMutableStateFlow.value) }
             formMutableStateFlow.update {
                 it.copy(isAddressValid = false)
             }
@@ -419,7 +440,8 @@ class AddPropertyViewModel @Inject constructor(
         viewModelScope.launch {
             val addedPicturePreviewId = savePictureToLocalAppFilesAndToLocalDatabaseUseCase.invoke(
                 stringUri = stringUri,
-                isFormPictureIdEmpty = formMutableStateFlow.value.pictureIds.isEmpty()
+                isFormPictureIdEmpty = formMutableStateFlow.value.pictureIds.isEmpty(),
+                formIdMutableStateFlow.value
             )
             formMutableStateFlow.update {
                 if (it.pictureIds.isEmpty()) {

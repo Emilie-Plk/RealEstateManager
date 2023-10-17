@@ -12,7 +12,7 @@ import java.time.LocalDateTime
     indices = [Index(value = ["id"], unique = true)]
 )
 data class PropertyDto(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey(autoGenerate = false)
     val id: Long = 0,
     val type: String,
     val price: BigDecimal,

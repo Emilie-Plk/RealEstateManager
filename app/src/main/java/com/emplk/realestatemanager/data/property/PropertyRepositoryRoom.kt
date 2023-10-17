@@ -92,6 +92,16 @@ class PropertyRepositoryRoom @Inject constructor(
         }
         .flowOn(coroutineDispatcherProvider.io)
 
+    override suspend fun getPropertyById(propertyId: Long): PropertyEntity = withContext(coroutineDispatcherProvider.io) {
+        val propertyWithDetailsEntity = propertyDao.getPropertyById(propertyId)
+        propertyMapper.mapToDomainEntity(
+            propertyWithDetailsEntity.property,
+            propertyWithDetailsEntity.location ?: return@withContext null,
+            propertyWithDetailsEntity.pictures,
+            propertyWithDetailsEntity.amenities,
+        )
+    } ?: throw IllegalStateException("Property with id $propertyId not found")
+
     override suspend fun update(propertyEntity: PropertyEntity): Boolean =
         withContext(coroutineDispatcherProvider.io) {
             propertyDao.update(propertyMapper.mapToDtoEntity(propertyEntity)) == 1

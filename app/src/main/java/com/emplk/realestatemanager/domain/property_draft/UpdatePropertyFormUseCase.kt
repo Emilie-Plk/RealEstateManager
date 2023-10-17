@@ -5,12 +5,12 @@ import javax.inject.Inject
 
 class UpdatePropertyFormUseCase @Inject constructor(
     private val formDraftRepository: FormDraftRepository,
-    private val getCurrentDraftIdUseCase: GetCurrentDraftIdUseCase,
 ) {
     suspend fun invoke(form: FormDraftStateEntity) {
-        getCurrentDraftIdUseCase.invoke()?.let { currentPropertyFormId ->
-            formDraftRepository.update(
+        formDraftRepository.update(
+            form.id?.let {
                 FormDraftEntity(
+                    id = it,
                     type = form.propertyType,
                     price = form.price,
                     surface = form.surface,
@@ -27,8 +27,8 @@ class UpdatePropertyFormUseCase @Inject constructor(
                             type = amenity.type,
                         )
                     },
-                ), currentPropertyFormId
-            )
-        }
+                )
+            } ?: throw IllegalStateException("Form id is null")
+        )
     }
 }

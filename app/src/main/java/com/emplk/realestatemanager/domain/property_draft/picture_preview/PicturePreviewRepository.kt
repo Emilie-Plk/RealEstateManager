@@ -3,7 +3,7 @@ package com.emplk.realestatemanager.domain.property_draft.picture_preview
 import kotlinx.coroutines.flow.Flow
 
 interface PicturePreviewRepository {
-    suspend fun add(picturePreviewEntity: PicturePreviewEntity, propertyFormId: Long): Long?
+    suspend fun add(picturePreviewEntity: PicturePreviewEntity, propertyFormId: Long): Long
 
     suspend fun addAll(picturePreviewEntities: List<PicturePreviewEntity>, propertyFormId: Long): List<Long?>
 

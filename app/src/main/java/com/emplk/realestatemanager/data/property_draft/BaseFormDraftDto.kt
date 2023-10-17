@@ -2,10 +2,11 @@ package com.emplk.realestatemanager.data.property_draft
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import java.math.BigDecimal
 
-@Entity(tableName = "property_drafts")
+@Entity(tableName = "base_form_drafts", indices = [Index(value = ["id"], unique = false)])
 data class BaseFormDraftDto(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,

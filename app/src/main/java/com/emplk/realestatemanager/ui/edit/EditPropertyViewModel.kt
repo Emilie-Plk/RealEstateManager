@@ -60,7 +60,7 @@ class EditPropertyViewModel @Inject constructor(
     private val getPropertyTypeFlowUseCase: GetPropertyTypeFlowUseCase,
 ) : ViewModel() {
 
-    private val formMutableStateFlow = MutableStateFlow(FormDraftStateEntity())
+    private val formMutableStateFlow = MutableStateFlow(FormDraftStateEntity()) // TODO: valeur magique blabla
     private val isUpdatingPropertyInDatabaseMutableStateFlow = MutableStateFlow(false)
     private val isEveryFieldFilledMutableStateFlow = MutableStateFlow(false)
     private val onUpdateButtonClickedMutableSharedFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)

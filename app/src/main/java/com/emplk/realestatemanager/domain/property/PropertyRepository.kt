@@ -7,5 +7,6 @@ interface PropertyRepository {
     suspend fun addPropertyWithDetails(propertyEntity: PropertyEntity): Boolean
     fun getPropertiesAsFlow(): Flow<List<PropertyEntity>>
     fun getPropertyByIdAsFlow(propertyId: Long): Flow<PropertyEntity>
+    suspend fun getPropertyById(propertyId: Long): PropertyEntity
     suspend fun update(propertyEntity: PropertyEntity): Boolean
 }

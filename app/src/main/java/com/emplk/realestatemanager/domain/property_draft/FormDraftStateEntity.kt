@@ -8,6 +8,7 @@ import java.math.BigDecimal
  * It's not used outside of the UI/Domain layer.
  */
 data class FormDraftStateEntity(
+    val id: Long? = null,
     val propertyType: String? = null,
     val address: String? = null,
     val isAddressValid: Boolean = false,
