@@ -22,7 +22,7 @@ import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.amenity.type.GetAmenityTypeUseCase
 import com.emplk.realestatemanager.domain.property_draft.InitTemporaryPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.PropertyFormDatabaseState
-import com.emplk.realestatemanager.domain.property_draft.PropertyFormStateEntity
+import com.emplk.realestatemanager.domain.property_draft.FormDraftStateEntity
 import com.emplk.realestatemanager.domain.property_draft.SetPropertyFormProgressUseCase
 import com.emplk.realestatemanager.domain.property_draft.UpdatePropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.address.SetHasAddressFocusUseCase
@@ -83,7 +83,7 @@ class AddPropertyViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val formMutableStateFlow =
-        MutableStateFlow(PropertyFormStateEntity()) // Possiblement mettre dans un repo?..
+        MutableStateFlow(FormDraftStateEntity()) // Possiblement mettre dans un repo?..
 
     private val isEveryFieldFilledMutableStateFlow = MutableStateFlow(false)
     private val isAddingPropertyInDatabaseMutableStateFlow = MutableStateFlow(false)
@@ -120,24 +120,24 @@ class AddPropertyViewModel @Inject constructor(
                 is PropertyFormDatabaseState.DraftAlreadyExists -> {
                     formMutableStateFlow.update { propertyForm ->
                         propertyForm.copy(
-                            propertyType = initTempPropertyForm.propertyDraftEntity.type,
-                            address = initTempPropertyForm.propertyDraftEntity.address,
-                            isAddressValid = initTempPropertyForm.propertyDraftEntity.isAddressValid,
-                            price = initTempPropertyForm.propertyDraftEntity.price,
-                            surface = initTempPropertyForm.propertyDraftEntity.surface,
-                            description = initTempPropertyForm.propertyDraftEntity.description,
-                            nbRooms = initTempPropertyForm.propertyDraftEntity.rooms ?: 0,
-                            nbBathrooms = initTempPropertyForm.propertyDraftEntity.bathrooms ?: 0,
-                            nbBedrooms = initTempPropertyForm.propertyDraftEntity.bedrooms ?: 0,
-                            agent = initTempPropertyForm.propertyDraftEntity.agentName,
-                            amenities = initTempPropertyForm.propertyDraftEntity.amenities,
-                            pictureIds = initTempPropertyForm.propertyDraftEntity.pictures.map { it.id },
-                            featuredPictureId = initTempPropertyForm.propertyDraftEntity.pictures.find { it.isFeatured }?.id,
+                            propertyType = initTempPropertyForm.formDraftEntity.type,
+                            address = initTempPropertyForm.formDraftEntity.address,
+                            isAddressValid = initTempPropertyForm.formDraftEntity.isAddressValid,
+                            price = initTempPropertyForm.formDraftEntity.price,
+                            surface = initTempPropertyForm.formDraftEntity.surface,
+                            description = initTempPropertyForm.formDraftEntity.description,
+                            nbRooms = initTempPropertyForm.formDraftEntity.rooms ?: 0,
+                            nbBathrooms = initTempPropertyForm.formDraftEntity.bathrooms ?: 0,
+                            nbBedrooms = initTempPropertyForm.formDraftEntity.bedrooms ?: 0,
+                            agent = initTempPropertyForm.formDraftEntity.agentName,
+                            amenities = initTempPropertyForm.formDraftEntity.amenities,
+                            pictureIds = initTempPropertyForm.formDraftEntity.pictures.map { it.id },
+                            featuredPictureId = initTempPropertyForm.formDraftEntity.pictures.find { it.isFeatured }?.id,
                         )
                     }
                     Log.d(
                         "AddPropertyViewModel",
-                        "initTemporaryPropertyFormUseCase with existing propertyForm: ${initTempPropertyForm.propertyDraftEntity}"
+                        "initTemporaryPropertyFormUseCase with existing propertyForm: ${initTempPropertyForm.formDraftEntity}"
                     )
                 }
             }

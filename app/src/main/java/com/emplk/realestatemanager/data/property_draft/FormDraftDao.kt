@@ -7,17 +7,17 @@ import androidx.room.Transaction
 import java.math.BigDecimal
 
 @Dao
-interface PropertyDraftDao {
+interface FormDraftDao {
     @Insert
-    suspend fun insert(propertyDraftDto: PropertyDraftDto): Long
+    suspend fun insert(baseFormDraftDto: BaseFormDraftDto): Long
 
     @Transaction
     @Query("SELECT * FROM property_drafts WHERE id = :propertyFormId LIMIT 1")
-    suspend fun getPropertyFormById(propertyFormId: Long): PropertyDraftWithDetails
+    suspend fun getPropertyFormById(propertyFormId: Long): FormDraftWithDetails
 
     @Transaction
     @Query("SELECT * FROM property_drafts LIMIT 1")
-    suspend fun getExistingPropertyForm(): PropertyDraftWithDetails?
+    suspend fun getExistingPropertyForm(): FormDraftWithDetails?
 
     @Query("SELECT id FROM property_drafts LIMIT 1")
     suspend fun getExistingPropertyFormId(): Long?

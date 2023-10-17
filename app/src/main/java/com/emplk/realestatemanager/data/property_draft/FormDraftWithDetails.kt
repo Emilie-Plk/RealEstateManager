@@ -5,9 +5,9 @@ import androidx.room.Relation
 import com.emplk.realestatemanager.data.property_draft.amenity.AmenityDraftDto
 import com.emplk.realestatemanager.data.property_draft.picture_preview.PicturePreviewDto
 
-data class PropertyDraftWithDetails(
+data class FormDraftWithDetails(
     @Embedded
-    val propertyForm: PropertyDraftDto,
+    val propertyForm: BaseFormDraftDto,
     @Relation(
         entity = PicturePreviewDto::class,
         parentColumn = "id",

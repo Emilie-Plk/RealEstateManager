@@ -4,7 +4,7 @@ import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.PicturePreviewEntity
 import java.math.BigDecimal
 
-data class PropertyDraftEntity(
+data class FormDraftEntity(
     val type: String?,
     val price: BigDecimal,
     val surface: String?,

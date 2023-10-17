@@ -13,7 +13,7 @@ import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.location.LocationEntity
 import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
 import com.emplk.realestatemanager.domain.property_draft.ClearPropertyFormUseCase
-import com.emplk.realestatemanager.domain.property_draft.PropertyFormStateEntity
+import com.emplk.realestatemanager.domain.property_draft.FormDraftStateEntity
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.GetPicturePreviewsUseCase
 import com.emplk.realestatemanager.ui.edit.EditPropertyEvent
 import com.emplk.realestatemanager.ui.utils.NativeText
@@ -35,7 +35,7 @@ class UpdatePropertyUseCase @Inject constructor(
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val clock: Clock,
 ) {
-    suspend fun invoke(form: PropertyFormStateEntity): EditPropertyEvent {
+    suspend fun invoke(form: FormDraftStateEntity): EditPropertyEvent {
         if (form.propertyType != null &&
             form.address != null &&
             (form.price > BigDecimal.ZERO) &&

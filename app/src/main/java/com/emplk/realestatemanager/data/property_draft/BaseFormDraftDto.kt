@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 import java.math.BigDecimal
 
 @Entity(tableName = "property_drafts")
-data class PropertyDraftDto(
+data class BaseFormDraftDto(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val type: String?,
