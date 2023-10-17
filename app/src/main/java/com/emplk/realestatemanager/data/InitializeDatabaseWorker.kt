@@ -42,7 +42,7 @@ class InitializeDatabaseWorker @AssistedInject constructor(
     }
 
     override suspend fun doWork(): Result = withContext(coroutineDispatcherProvider.io) {
-        val propertiesAsJson = inputData.getString(KEY_INPUT_DATA_PROPERTIES)
+     /*   val propertiesAsJson = inputData.getString(KEY_INPUT_DATA_PROPERTIES)
         val locationsAsJson = inputData.getString(KEY_INPUT_DATA_LOCATIONS)
         val picturesAsJson = inputData.getString(KEY_INPUT_DATA_PICTURES)
         val amenitiesAsJson = inputData.getString(KEY_INPUT_DATA_AMENITIES)
@@ -65,9 +65,9 @@ class InitializeDatabaseWorker @AssistedInject constructor(
                         async { amenityDao.insert(amenityDto) }
                     }
 
-                allJobs.awaitAll()
+                allJobs.awaitAll()*/
                 Result.success()
-            } else {
+          /*  } else {
                 Log.e("InitDatabaseWorker", "Gson can't parse properties : $propertiesAsJson")
                 Result.failure()
             }
@@ -77,6 +77,6 @@ class InitializeDatabaseWorker @AssistedInject constructor(
                 "Failed to get data with key $KEY_INPUT_DATA_PROPERTIES from data: $inputData"
             )
             Result.failure()
-        }
+        }*/
     }
 }

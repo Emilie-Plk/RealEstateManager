@@ -15,7 +15,7 @@ class PicturePreviewRepositoryRoom @Inject constructor(
     private val picturePreviewMapper: PicturePreviewMapper,
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : PicturePreviewRepository {
-    override suspend fun add(picturePreviewEntity: PicturePreviewEntity, propertyFormId: Long): Long? =
+    override suspend fun add(picturePreviewEntity: PicturePreviewEntity, propertyFormId: Long): Long =
         withContext(coroutineDispatcherProvider.io) {
             try {
                 picturePreviewDao.insert(
@@ -23,7 +23,7 @@ class PicturePreviewRepositoryRoom @Inject constructor(
                 )
             } catch (e: SQLiteException) {
                 e.printStackTrace()
-                null
+                -1L  // TODO: not ok
             }
         }
 

@@ -5,7 +5,7 @@ import com.emplk.realestatemanager.domain.property_draft.picture_preview.Picture
 import java.math.BigDecimal
 
 data class FormDraftEntity(
-    val id: Long?,
+    val id: Long,
     val type: String?,
     val price: BigDecimal,
     val surface: String?,

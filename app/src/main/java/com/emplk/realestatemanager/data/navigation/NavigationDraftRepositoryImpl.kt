@@ -9,7 +9,8 @@ import javax.inject.Inject
 
 class NavigationDraftRepositoryImpl @Inject constructor() : NavigationDraftRepository {
     private val savePropertyDraftMutableSharedFlow: MutableSharedFlow<Unit> = MutableSharedFlow(extraBufferCapacity = 1)
-
+    private val clearPropertyDraftMutableSharedFlow: MutableSharedFlow<Unit> =
+        MutableSharedFlow(extraBufferCapacity = 1)
     private val isPropertyFormInProgressMutableStateFlow = MutableStateFlow(false)
 
     override fun savePropertyDraftEvent() {
@@ -17,6 +18,13 @@ class NavigationDraftRepositoryImpl @Inject constructor() : NavigationDraftRepos
     }
 
     override fun getSavedPropertyDraftEvent(): Flow<Unit> = savePropertyDraftMutableSharedFlow
+
+    override fun clearPropertyDraftEvent() {
+        clearPropertyDraftMutableSharedFlow.tryEmit(Unit)
+    }
+
+    override fun getClearedPropertyDraftEvent(): Flow<Unit> = clearPropertyDraftMutableSharedFlow
+
     override fun setPropertyFormProgress(isPropertyFormInProgress: Boolean) {
         isPropertyFormInProgressMutableStateFlow.tryEmit(isPropertyFormInProgress)
     }

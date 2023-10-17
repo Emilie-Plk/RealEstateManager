@@ -9,9 +9,9 @@ class ClearPropertyFormUseCase @Inject constructor(
     private val picturePreviewIdRepository: PicturePreviewIdRepository,
     private val resetSelectedAddressStateUseCase: ResetSelectedAddressStateUseCase,
 ) {
-    suspend fun invoke() {
-        deleteTemporaryPropertyFormUseCase.invoke()
-        resetSelectedAddressStateUseCase
+    suspend fun invoke(id: Long?) {
+        id?.let { deleteTemporaryPropertyFormUseCase.invoke(it) }
+        resetSelectedAddressStateUseCase.invoke()
         picturePreviewIdRepository.deleteAll()
     }
 }

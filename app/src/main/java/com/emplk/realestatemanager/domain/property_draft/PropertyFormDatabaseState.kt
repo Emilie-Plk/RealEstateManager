@@ -1,6 +1,7 @@
 package com.emplk.realestatemanager.domain.property_draft
 
 sealed class PropertyFormDatabaseState {
-    data class Empty(val newPropertyFormId: Long?) : PropertyFormDatabaseState()
-    data class DraftAlreadyExists(val formDraftEntity: FormDraftEntity) : PropertyFormDatabaseState()
+    data class EmptyForm(val newPropertyFormId: Long) : PropertyFormDatabaseState()
+    data class Draft(val formDraftEntity: FormDraftEntity) : PropertyFormDatabaseState()
 }
+    

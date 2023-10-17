@@ -36,7 +36,8 @@ class UpdatePropertyUseCase @Inject constructor(
     private val clock: Clock,
 ) {
     suspend fun invoke(form: FormDraftStateEntity): EditPropertyEvent {
-        if (form.propertyType != null &&
+        if (form.id != null &&
+            form.propertyType != null &&
             form.address != null &&
             (form.price > BigDecimal.ZERO) &&
             form.surface != null &&
@@ -101,13 +102,14 @@ class UpdatePropertyUseCase @Inject constructor(
                     bedrooms = form.nbBedrooms,
                     agentName = form.agent,
                     amenities = form.amenities,
-                    pictures = getPicturePreviewsUseCase.invoke().map {
-                        PictureEntity(
-                            id = it.id,
-                            uri = it.uri,
-                            description = it.description ?: "",
-                            isFeatured = it.id == form.featuredPictureId,
-                        )
+                    pictures =
+                        getPicturePreviewsUseCase.invoke(form.id).map {
+                            PictureEntity(
+                                id = it.id,
+                                uri = it.uri,
+                                description = it.description ?: "",
+                                isFeatured = it.id == form.featuredPictureId,
+                            )
                     },
                     entryDate = LocalDateTime.now(clock),
                     isSold = false,
@@ -115,7 +117,7 @@ class UpdatePropertyUseCase @Inject constructor(
                 ),
             )
             return if (success) {
-                clearPropertyFormUseCase.invoke()
+                clearPropertyFormUseCase.invoke(form.id)
                 setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
                 EditPropertyEvent.Toast(NativeText.Resource(R.string.add_property_successfully_updated_message))
             } else {

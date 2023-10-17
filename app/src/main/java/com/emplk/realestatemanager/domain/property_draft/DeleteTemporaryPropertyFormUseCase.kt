@@ -4,14 +4,7 @@ import javax.inject.Inject
 
 class DeleteTemporaryPropertyFormUseCase @Inject constructor(
     private val formDraftRepository: FormDraftRepository,
-    private val getCurrentDraftIdUseCase: GetCurrentDraftIdUseCase,
 ) {
-    suspend fun invoke(): Boolean {
-        val currentPropertyFormId = getCurrentDraftIdUseCase.invoke()
-        return if (currentPropertyFormId != null) {
-            formDraftRepository.delete(currentPropertyFormId)
-        } else {
-            false
-        }
-    }
+    suspend fun invoke(id: Long): Boolean =
+        formDraftRepository.delete(id)
 }
