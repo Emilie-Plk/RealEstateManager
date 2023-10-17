@@ -71,6 +71,35 @@ class PropertyDraftRepositoryRoom @Inject constructor(
         }
     }
 
+    override suspend fun getAddFormId(): Long? = withContext(coroutineDispatcherProvider.io) {
+        try {
+            propertyDraftDao.getAddFormId()
+        } catch (e: SQLiteException) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    override suspend fun doesPropertyDraftExist(propertyFormId: Long): Boolean =
+        withContext(coroutineDispatcherProvider.io) {
+            try {
+                propertyDraftDao.doesPropertyDraftExist(propertyFormId)
+            } catch (e: SQLiteException) {
+                e.printStackTrace()
+                false
+            }
+        }
+
+    override suspend fun doesPropertyExistInBothTables(propertyFormId: Long): Boolean =
+        withContext(coroutineDispatcherProvider.io) {
+            try {
+                propertyDraftDao.doesPropertyExistInBothTables(propertyFormId)
+            } catch (e: SQLiteException) {
+                e.printStackTrace()
+                false
+            }
+        }
+
     override suspend fun getExistingPropertyForm(): PropertyDraftEntity? = withContext(coroutineDispatcherProvider.io) {
         try {
             propertyDraftDao.getExistingPropertyForm()?.let { propertyFormWithDetails ->
@@ -96,10 +125,6 @@ class PropertyDraftRepositoryRoom @Inject constructor(
                 )
             }
         }
-
-    override suspend fun exists(): Boolean = withContext(coroutineDispatcherProvider.io) {
-        propertyDraftDao.exists()
-    }
 
     override suspend fun update(propertyDraftEntity: PropertyDraftEntity, propertyFormId: Long) =
         withContext(coroutineDispatcherProvider.io) {

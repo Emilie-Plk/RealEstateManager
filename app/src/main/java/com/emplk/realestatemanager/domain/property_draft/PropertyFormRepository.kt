@@ -7,11 +7,15 @@ interface PropertyFormRepository {
 
     suspend fun getExistingPropertyFormId(): Long?
 
+    suspend fun getAddFormId(): Long?
+
+    suspend fun doesPropertyDraftExist(propertyFormId: Long): Boolean
+
+    suspend fun doesPropertyExistInBothTables(propertyFormId: Long): Boolean
+
     suspend fun getExistingPropertyForm(): PropertyDraftEntity?
 
     suspend fun getPropertyFormById(propertyFormId: Long): PropertyDraftEntity
-
-    suspend fun exists(): Boolean
 
     suspend fun update(propertyDraftEntity: PropertyDraftEntity, propertyFormId: Long)
 

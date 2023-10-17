@@ -19,11 +19,17 @@ interface PropertyDraftDao {
     @Query("SELECT * FROM property_drafts LIMIT 1")
     suspend fun getExistingPropertyForm(): PropertyDraftWithDetails?
 
-    @Query("SELECT EXISTS(SELECT 1 FROM property_drafts)")
-    suspend fun exists(): Boolean
-
     @Query("SELECT id FROM property_drafts LIMIT 1")
     suspend fun getExistingPropertyFormId(): Long?
+
+    @Query("SELECT id FROM property_drafts WHERE id NOT IN (SELECT id FROM properties) LIMIT 1")
+    suspend fun getAddFormId(): Long?
+
+    @Query("SELECT EXISTS(SELECT * FROM property_drafts WHERE id = :propertyFormId)")
+    suspend fun doesPropertyDraftExist(propertyFormId: Long): Boolean
+
+    @Query("SELECT EXISTS(SELECT * FROM property_drafts WHERE id = :propertyFormId AND id = :propertyFormId IN (SELECT id FROM properties))")
+    suspend fun doesPropertyExistInBothTables(propertyFormId: Long): Boolean
 
     @Query(
         "UPDATE property_drafts SET type = :newType," +
