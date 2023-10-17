@@ -6,8 +6,9 @@ import javax.inject.Inject
 class AddTemporaryPropertyFormUseCase @Inject constructor(
     private val formDraftRepository: FormDraftRepository
 ) {
-    suspend fun invoke(): Long = formDraftRepository.addPropertyFormWithDetails(
+    suspend fun invoke(id: Long?): Long = formDraftRepository.addPropertyFormWithDetails(
         FormDraftEntity(
+            id = id,
             type = "",
             price = BigDecimal.ZERO,
             surface = "",
