@@ -14,9 +14,12 @@ import com.emplk.realestatemanager.domain.property.location.LocationEntity
 import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
 import com.emplk.realestatemanager.domain.property_draft.ClearPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.FormDraftStateEntity
+import com.emplk.realestatemanager.domain.property_draft.UpdatePropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.GetPicturePreviewsUseCase
 import com.emplk.realestatemanager.ui.edit.EditPropertyEvent
 import com.emplk.realestatemanager.ui.utils.NativeText
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import java.math.BigDecimal
 import java.time.Clock
 import java.time.LocalDateTime
@@ -25,6 +28,7 @@ import javax.inject.Inject
 
 class UpdatePropertyUseCase @Inject constructor(
     private val propertyRepository: PropertyRepository,
+    private val updatePropertyFormUseCase: UpdatePropertyFormUseCase,
     private val geocodingRepository: GeocodingRepository,
     private val getLocaleUseCase: GetLocaleUseCase,
     private val generateMapBaseUrlWithParamsUseCase: GenerateMapBaseUrlWithParamsUseCase,
@@ -36,95 +40,117 @@ class UpdatePropertyUseCase @Inject constructor(
     private val clock: Clock,
 ) {
     suspend fun invoke(form: FormDraftStateEntity): EditPropertyEvent {
-        if (form.id != null &&
+        require(
             form.propertyType != null &&
-            form.address != null &&
-            (form.price > BigDecimal.ZERO) &&
-            form.surface != null &&
-            form.description != null &&
-            form.nbRooms > 0 &&
-            form.nbBathrooms > 0 &&
-            form.nbBedrooms > 0 &&
-            form.agent != null &&
-            form.amenities.isNotEmpty() &&
-            form.pictureIds.isNotEmpty()
+                    form.address != null &&
+                    (form.price > BigDecimal.ZERO) &&
+                    form.surface != null &&
+                    form.description != null &&
+                    form.nbRooms > 0 &&
+                    form.nbBathrooms > 0 &&
+                    form.nbBedrooms > 0 &&
+                    form.agent != null &&
+                    form.amenities.isNotEmpty() &&
+                    form.pictureIds.isNotEmpty()
         ) {
-            val geocodingWrapper = geocodingRepository.getLatLong(form.address)
-            when (geocodingWrapper) {
-                is GeocodingWrapper.Success -> geocodingWrapper.latLng
-                is GeocodingWrapper.Error -> Unit
-                is GeocodingWrapper.NoResult -> Unit
+            "Impossible state: form is not valid => form : $form"
+        }
+        val editPropertyWrapper: AddOrEditPropertyWrapper = coroutineScope {
+            val geocodingWrapperDeferred = async {
+                geocodingRepository.getLatLong(form.address)
             }
-            val currencyWrapper = getCurrencyRateUseCase.invoke()
-            when (currencyWrapper) {
-                is CurrencyRateWrapper.Success -> currencyWrapper.currencyRateEntity.usdToEuroRate
-                is CurrencyRateWrapper.Error -> currencyWrapper.fallbackUsToEuroRate
+            val currencyWrapperDeferred = async {
+                getCurrencyRateUseCase.invoke()
             }
+
 
             val success = propertyRepository.update(
                 PropertyEntity(
+                    id = form.id,
                     type = form.propertyType,
                     price = when (getLocaleUseCase.invoke()) {
                         Locale.US -> form.price
-                        Locale.FRANCE -> when (currencyWrapper) {
+                        Locale.FRANCE -> when (val currencyRateEntity = currencyWrapperDeferred.await()) {
                             is CurrencyRateWrapper.Success -> convertEuroToDollarUseCase.invoke(
                                 form.price,
-                                currencyWrapper.currencyRateEntity.usdToEuroRate
+                                currencyRateEntity.currencyRateEntity.usdToEuroRate
                             )
 
                             is CurrencyRateWrapper.Error -> convertEuroToDollarUseCase.invoke(
                                 form.price,
-                                currencyWrapper.fallbackUsToEuroRate
+                                currencyRateEntity.fallbackUsToEuroRate
                             )
                         }
 
-                        else -> throw Exception("Error while converting price")
+                        else -> return@coroutineScope AddOrEditPropertyWrapper.LocaleError(NativeText.Resource(R.string.form_generic_error_message))
                     },
                     surface = form.surface.toDouble(),
                     description = form.description,
                     rooms = form.nbRooms,
                     bathrooms = form.nbBathrooms,
-                    location = LocationEntity(
-                        address = form.address,
-                        latLng = when (geocodingWrapper) {
-                            is GeocodingWrapper.Success -> geocodingWrapper.latLng
-                            is GeocodingWrapper.Error -> null
-                            is GeocodingWrapper.NoResult -> null
-                        },
-                        miniatureMapUrl = when (geocodingWrapper) {
-                            is GeocodingWrapper.Success ->
-                                generateMapBaseUrlWithParamsUseCase.invoke(geocodingWrapper.latLng)
-
-                            is GeocodingWrapper.Error -> ""
-                            is GeocodingWrapper.NoResult -> ""
-                        },
-                    ),
+                    location = getLocationEntity(form.address, geocodingWrapperDeferred.await())
+                        ?: return@coroutineScope AddOrEditPropertyWrapper.NoLatLong(NativeText.Resource(R.string.form_generic_error_message)),
                     bedrooms = form.nbBedrooms,
                     agentName = form.agent,
                     amenities = form.amenities,
                     pictures =
-                        getPicturePreviewsUseCase.invoke(form.id).map {
-                            PictureEntity(
-                                id = it.id,
-                                uri = it.uri,
-                                description = it.description ?: "",
-                                isFeatured = it.id == form.featuredPictureId,
-                            )
+                    getPicturePreviewsUseCase.invoke(form.id).map {
+                        PictureEntity(
+                            id = it.id,
+                            uri = it.uri,
+                            description = it.description,
+                            isFeatured = it.id == form.featuredPictureId,
+                        )
                     },
                     entryDate = LocalDateTime.now(clock),
                     isSold = false,
                     saleDate = null,
+                    // TODO: ajouter isSold et saleDate
                 ),
             )
-            return if (success) {
+            if (success) {
+                AddOrEditPropertyWrapper.Success(NativeText.Resource(R.string.form_successfully_created_message))
+            } else {
+                AddOrEditPropertyWrapper.Error(NativeText.Resource(R.string.form_generic_error_message))
+            }
+        }
+        return when (editPropertyWrapper) {
+            is AddOrEditPropertyWrapper.Success -> {
                 clearPropertyFormUseCase.invoke(form.id)
                 setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
-                EditPropertyEvent.Toast(NativeText.Resource(R.string.add_property_successfully_updated_message))
-            } else {
-                EditPropertyEvent.Toast(NativeText.Resource(R.string.add_property_generic_error_message))
+                EditPropertyEvent.Toast(NativeText.Resource(R.string.form_successfully_updated_message))
             }
-        } else {
-            return EditPropertyEvent.Toast(NativeText.Resource(R.string.add_property_generic_error_message))
+
+            is AddOrEditPropertyWrapper.Error -> {
+                updatePropertyFormUseCase.invoke(form)
+                setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
+                EditPropertyEvent.Toast(editPropertyWrapper.error)
+            }
+
+            is AddOrEditPropertyWrapper.NoLatLong -> {
+                EditPropertyEvent.Toast(editPropertyWrapper.error)
+            }
+
+            is AddOrEditPropertyWrapper.LocaleError -> EditPropertyEvent.Toast(editPropertyWrapper.error)
         }
+    }
+
+    private fun getLocationEntity(
+        formAddress: String,
+        geocodingWrapper: GeocodingWrapper
+    ): LocationEntity? {
+        return LocationEntity(
+            address = formAddress,
+            latLng = when (geocodingWrapper) {
+                is GeocodingWrapper.Success -> geocodingWrapper.latLng
+                is GeocodingWrapper.Error,
+                is GeocodingWrapper.NoResult -> null
+            },
+            miniatureMapUrl = when (geocodingWrapper) {
+                is GeocodingWrapper.Success -> generateMapBaseUrlWithParamsUseCase.invoke(geocodingWrapper.latLng)
+                is GeocodingWrapper.Error,
+                is GeocodingWrapper.NoResult -> return null
+            },
+        )
     }
 }

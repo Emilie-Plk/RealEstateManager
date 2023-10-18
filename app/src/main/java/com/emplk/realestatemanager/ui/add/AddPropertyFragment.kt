@@ -17,7 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.emplk.realestatemanager.BuildConfig
 import com.emplk.realestatemanager.R
-import com.emplk.realestatemanager.databinding.AddPropertyFragmentBinding
+import com.emplk.realestatemanager.databinding.FormFragmentBinding
 import com.emplk.realestatemanager.ui.edit.BasePropertyFragment
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.viewBinding
@@ -34,23 +34,23 @@ class AddPropertyFragment : BasePropertyFragment() {
     }
 
     private val viewModel by viewModels<AddPropertyViewModel>()
-    private val binding by viewBinding { AddPropertyFragmentBinding.bind(it) }
+    private val binding by viewBinding { FormFragmentBinding.bind(it) }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.addPropertySoldStatusTv.isVisible = false
-        binding.addPropertySoldStatusSwitch.isVisible = false
-        binding.addPropertySubmitButton.text = getString(R.string.add_property_create_button)
+        binding.formSoldStatusTv.isVisible = false
+        binding.formSoldStatusSwitch.isVisible = false
+        binding.formSubmitButton.text = getString(R.string.form_create_button)
 
-        binding.addPropertyTypeActv.setOnItemClickListener { _, _, position, _ ->
+        binding.formTypeActv.setOnItemClickListener { _, _, position, _ ->
             typeAdapter.getItem(position)?.let {
                 viewModel.onPropertyTypeSelected(it.name)
             }
         }
 
-        binding.addPropertyAgentActv.setOnItemClickListener { _, _, position, _ ->
+        binding.formAgentActv.setOnItemClickListener { _, _, position, _ ->
             agentAdapter.getItem(position)?.let {
                 viewModel.onAgentSelected(it.name)
             }
@@ -60,7 +60,7 @@ class AddPropertyFragment : BasePropertyFragment() {
 
         initFormFieldsTextWatchers()
 
-        binding.addPropertySubmitButton.setOnClickListener {
+        binding.formSubmitButton.setOnClickListener {
             viewModel.onAddPropertyClicked()
         }
 
@@ -86,36 +86,36 @@ class AddPropertyFragment : BasePropertyFragment() {
             picturePreviewAdapter.submitList(viewState.pictures)
             amenityAdapter.submitList(viewState.amenities)
             predictionAdapter.submitList(viewState.addressPredictions)
-            binding.addPropertySubmitButton.isEnabled = viewState.isSubmitButtonEnabled
-            binding.addPropertyProgressBar.isVisible = viewState.isProgressBarVisible
+            binding.formSubmitButton.isEnabled = viewState.isSubmitButtonEnabled
+            binding.formProgressBar.isVisible = viewState.isProgressBarVisible
 
 
-            binding.addPropertyRoomsNumberPicker.value = viewState.nbRooms
-            binding.addPropertyBedroomsNumberPicker.value = viewState.nbBedrooms
-            binding.addPropertyBathroomsNumberPicker.value = viewState.nbBathrooms
+            binding.formRoomsNumberPicker.value = viewState.nbRooms
+            binding.formBedroomsNumberPicker.value = viewState.nbBedrooms
+            binding.formBathroomsNumberPicker.value = viewState.nbBathrooms
 
-            val currentDescription = binding.addPropertyDescriptionTextInputEditText.text.toString()
+            val currentDescription = binding.formDescriptionTextInputEditText.text.toString()
             if (currentDescription != viewState.description) {
-                binding.addPropertyDescriptionTextInputEditText.setText(viewState.description)
+                binding.formDescriptionTextInputEditText.setText(viewState.description)
             }
 
-            val currentSurface = binding.addPropertySurfaceTextInputEditText.text.toString()
+            val currentSurface = binding.formSurfaceTextInputEditText.text.toString()
             if (currentSurface != viewState.surface) {
-                binding.addPropertySurfaceTextInputEditText.setText(viewState.surface)
+                binding.formSurfaceTextInputEditText.setText(viewState.surface)
             }
 
-            val currentPrice = binding.addPropertyPriceTextInputEditText.text.toString()
+            val currentPrice = binding.formPriceTextInputEditText.text.toString()
             if (currentPrice != viewState.price) {
-                binding.addPropertyPriceTextInputEditText.setText(viewState.price)
+                binding.formPriceTextInputEditText.setText(viewState.price)
             }
 
-            val currentAddress = binding.addPropertyAddressTextInputEditText.text.toString()
+            val currentAddress = binding.formAddressTextInputEditText.text.toString()
             if (currentAddress != viewState.address) {
-                binding.addPropertyAddressTextInputEditText.setText(viewState.address)
+                binding.formAddressTextInputEditText.setText(viewState.address)
             }
 
-            binding.addPropertyAddressTextInputEditText.doAfterTextChanged {
-                binding.addPropertyAddressTextInputEditText.setSelection(it.toString().length)
+            binding.formAddressTextInputEditText.doAfterTextChanged {
+                binding.formAddressTextInputEditText.setSelection(it.toString().length)
                 val newText = it.toString()
                 if (newText != viewState.address) {
                     viewModel.onAddressChanged(newText)
@@ -123,21 +123,21 @@ class AddPropertyFragment : BasePropertyFragment() {
 
             }
 
-            binding.addPropertyAddressTextInputEditText.setOnFocusChangeListener { _, hasFocus ->
+            binding.formAddressTextInputEditText.setOnFocusChangeListener { _, hasFocus ->
                 Log.d("COUCOU", "Address EditText has focus: $hasFocus")
                 viewModel.onAddressEditTextFocused(hasFocus)
                 if (!hasFocus) {
-                    hideKeyboard(binding.addPropertyAddressTextInputEditText)
+                    hideKeyboard(binding.formAddressTextInputEditText)
                 }
             }
 
-            binding.addPropertyAddressIsValidHelperTv.isVisible = viewState.isAddressValid
+            binding.formAddressIsValidHelperTv.isVisible = viewState.isAddressValid
 
-            binding.addPropertyPriceCurrencyTv.text = viewState.priceCurrency.toCharSequence(requireContext())
-            binding.addPropertySurfaceUnitTv.text = viewState.surfaceUnit.toCharSequence(requireContext())
+            binding.formPriceCurrencyTv.text = viewState.priceCurrency.toCharSequence(requireContext())
+            binding.formSurfaceUnitTv.text = viewState.surfaceUnit.toCharSequence(requireContext())
 
-            binding.addPropertyTypeActv.setText(viewState.propertyType, false)
-            binding.addPropertyAgentActv.setText(viewState.selectedAgent, false)
+            binding.formTypeActv.setText(viewState.propertyType, false)
+            binding.formAgentActv.setText(viewState.selectedAgent, false)
         }
 
         // region Import pictures
@@ -150,11 +150,11 @@ class AddPropertyFragment : BasePropertyFragment() {
             }
         }
 
-        binding.addPropertyPicturesFromStorageButton.setOnClickListener {
+        binding.formPicturesFromStorageButton.setOnClickListener {
             importPictureCallback.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
-        binding.addPropertyFromCameraButton.setOnClickListener {
+        binding.formFromCameraButton.setOnClickListener {
             currentPhotoUri = FileProvider.getUriForFile(
                 requireContext(),
                 BuildConfig.APPLICATION_ID + ".provider",
@@ -185,7 +185,7 @@ class AddPropertyFragment : BasePropertyFragment() {
     private fun initFormFieldsTextWatchers() {
 
 
-        binding.addPropertyPriceTextInputEditText.doAfterTextChanged {
+        binding.formPriceTextInputEditText.doAfterTextChanged {
             if (it.isNullOrBlank()) {
                 viewModel.onPriceChanged(BigDecimal.ZERO)
                 return@doAfterTextChanged
@@ -193,25 +193,25 @@ class AddPropertyFragment : BasePropertyFragment() {
             viewModel.onPriceChanged(BigDecimal(it.toString()))
         }
 
-        binding.addPropertySurfaceTextInputEditText.doAfterTextChanged {
+        binding.formSurfaceTextInputEditText.doAfterTextChanged {
             viewModel.onSurfaceChanged(it.toString())
         }
 
-        binding.addPropertyDescriptionTextInputEditText.doAfterTextChanged {
+        binding.formDescriptionTextInputEditText.doAfterTextChanged {
             viewModel.onDescriptionChanged(it.toString())
         }
     }
 
     private fun setNumberPickersListeners() {
-        binding.addPropertyRoomsNumberPicker.setOnValueChangedListener { _, _, value ->
+        binding.formRoomsNumberPicker.setOnValueChangedListener { _, _, value ->
             viewModel.onRoomsNumberChanged(value)
         }
 
-        binding.addPropertyBedroomsNumberPicker.setOnValueChangedListener { _, _, value ->
+        binding.formBedroomsNumberPicker.setOnValueChangedListener { _, _, value ->
             viewModel.onBedroomsNumberChanged(value)
         }
 
-        binding.addPropertyBathroomsNumberPicker.setOnValueChangedListener { _, _, value ->
+        binding.formBathroomsNumberPicker.setOnValueChangedListener { _, _, value ->
             viewModel.onBathroomsNumberChanged(value)
         }
     }

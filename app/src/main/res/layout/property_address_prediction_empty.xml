@@ -6,7 +6,7 @@
     android:background="@color/almost_white">
 
     <TextView
-        android:id="@+id/add_property_suggestion_TextView"
+        android:id="@+id/form_suggestion_TextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ellipsize="end"

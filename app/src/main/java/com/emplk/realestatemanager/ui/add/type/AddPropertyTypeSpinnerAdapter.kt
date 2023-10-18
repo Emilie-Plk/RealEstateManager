@@ -38,7 +38,7 @@ class AddPropertyTypeSpinnerAdapter : ListAdapter, Filterable {
             AddPropertySpinnerItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         }
         getItem(position)?.let { item ->
-            binding.addPropertySpinnerItemTvName.text = item.name
+            binding.formSpinnerItemTvName.text = item.name
         }
         return binding.root
     }

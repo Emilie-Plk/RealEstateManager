@@ -7,7 +7,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import com.emplk.realestatemanager.R
-import com.emplk.realestatemanager.databinding.AddPropertyFragmentBinding
+import com.emplk.realestatemanager.databinding.FormFragmentBinding
 import com.emplk.realestatemanager.ui.add.address_predictions.PredictionListAdapter
 import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentSpinnerAdapter
 import com.emplk.realestatemanager.ui.add.amenity.AmenityListAdapter
@@ -17,9 +17,9 @@ import com.emplk.realestatemanager.ui.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-open class BasePropertyFragment : Fragment(R.layout.add_property_fragment) {
+open class BasePropertyFragment : Fragment(R.layout.form_fragment) {
 
-    private val binding by viewBinding { AddPropertyFragmentBinding.bind(it) }
+    private val binding by viewBinding { FormFragmentBinding.bind(it) }
 
     open val typeAdapter: AddPropertyTypeSpinnerAdapter = AddPropertyTypeSpinnerAdapter()
     open val agentAdapter: AddPropertyAgentSpinnerAdapter = AddPropertyAgentSpinnerAdapter()
@@ -36,22 +36,22 @@ open class BasePropertyFragment : Fragment(R.layout.add_property_fragment) {
     }
 
     private fun setNumberPickers() {
-        binding.addPropertyRoomsNumberPicker.minValue = 0
-        binding.addPropertyRoomsNumberPicker.maxValue = 30
+        binding.formRoomsNumberPicker.minValue = 0
+        binding.formRoomsNumberPicker.maxValue = 30
 
-        binding.addPropertyBedroomsNumberPicker.minValue = 0
-        binding.addPropertyBedroomsNumberPicker.maxValue = 15
+        binding.formBedroomsNumberPicker.minValue = 0
+        binding.formBedroomsNumberPicker.maxValue = 15
 
-        binding.addPropertyBathroomsNumberPicker.minValue = 0
-        binding.addPropertyBathroomsNumberPicker.maxValue = 15
+        binding.formBathroomsNumberPicker.minValue = 0
+        binding.formBathroomsNumberPicker.maxValue = 15
     }
 
     private fun setAdapters() {
-        binding.addPropertyTypeActv.setAdapter(typeAdapter)
-        binding.addPropertyAgentActv.setAdapter(agentAdapter)
-        binding.addPropertyPreviewPicturesRecyclerView.adapter = picturePreviewAdapter
-        binding.addPropertyAmenitiesRv.adapter = amenityAdapter
-        binding.addPropertyAddressPredictionsRecyclerView.adapter = predictionAdapter
+        binding.formTypeActv.setAdapter(typeAdapter)
+        binding.formAgentActv.setAdapter(agentAdapter)
+        binding.formPreviewPicturesRecyclerView.adapter = picturePreviewAdapter
+        binding.formAmenitiesRecyclerView.adapter = amenityAdapter
+        binding.formAddressPredictionsRecyclerView.adapter = predictionAdapter
     }
 
     open fun hideKeyboard(view: View?) {

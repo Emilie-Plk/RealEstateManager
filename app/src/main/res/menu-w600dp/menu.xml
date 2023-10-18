@@ -15,7 +15,7 @@
         android:title="@string/menu_map_view"
         app:showAsAction="always" />
     <item
-        android:id="@+id/main_menu_add_property"
+        android:id="@+id/main_menu_form"
         android:icon="@drawable/baseline_add_home_24"
         android:orderInCategory="3"
         android:title="@string/main_fab_add_new_property_a11y"

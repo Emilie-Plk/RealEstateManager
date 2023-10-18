@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.domain.property
 
+import com.emplk.realestatemanager.data.property.PropertyWithDetails
 import kotlinx.coroutines.flow.Flow
 
 interface PropertyRepository {

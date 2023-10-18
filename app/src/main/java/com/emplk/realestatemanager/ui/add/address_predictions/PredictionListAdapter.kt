@@ -44,9 +44,9 @@ class PredictionListAdapter :
             fun bind(item: PredictionViewState.Prediction) {
                 binding.root.setOnClickListener {
                     item.onClickEvent.invoke(item.address)
-                    binding.addPropertySuggestionTextView.isCursorVisible = false
+                    binding.formSuggestionTextView.isCursorVisible = false
                 }
-                binding.addPropertySuggestionTextView.text = item.address
+                binding.formSuggestionTextView.text = item.address
             }
         }
 
