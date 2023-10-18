@@ -89,9 +89,7 @@ class DetailViewModel @Inject constructor(
                         else -> false
                     },
                     surface = getRoundedSurfaceWithSurfaceUnitUseCase.invoke(
-                        convertSurfaceUnitByLocaleUseCase.invoke(
-                            property.surface
-                        )
+                        convertSurfaceUnitByLocaleUseCase.invoke(property.surface)
                     ),
                     rooms = NativeText.Argument(
                         R.string.detail_number_of_room_textview,

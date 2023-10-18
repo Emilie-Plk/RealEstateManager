@@ -29,4 +29,6 @@ data class PropertyFormViewState(
     val isSubmitButtonEnabled: Boolean,
     val isProgressBarVisible: Boolean,
     val propertyTypes: List<AddPropertyTypeViewStateItem>,
+    val isSold: Boolean? = false,
+    val soldDate: String? = null,
 )

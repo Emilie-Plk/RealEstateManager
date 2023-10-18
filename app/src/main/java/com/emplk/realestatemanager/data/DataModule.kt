@@ -49,9 +49,7 @@ class DataModule {
     @Provides
     fun provideAppDatabase(
         application: Application,
-        workManager: WorkManager,
-        gson: Gson,
-    ): AppDatabase = AppDatabase.create(application, workManager, gson)
+    ): AppDatabase = AppDatabase.create(application)
 
     @Singleton
     @Provides
@@ -93,7 +91,7 @@ class DataModule {
     @Provides
     @GoogleApiOkHttpClient
     fun provideGoogleOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): okhttp3.OkHttpClient =
-        okhttp3.OkHttpClient.Builder()
+        OkHttpClient.Builder()
             .addInterceptor(httpLoggingInterceptor)
             .connectTimeout(8, TimeUnit.SECONDS)
             .readTimeout(8, TimeUnit.SECONDS)

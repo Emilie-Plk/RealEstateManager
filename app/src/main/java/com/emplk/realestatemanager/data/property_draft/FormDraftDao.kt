@@ -9,7 +9,7 @@ import java.math.BigDecimal
 @Dao
 interface FormDraftDao {
     @Insert
-    suspend fun insert(baseFormDraftDto: BaseFormDraftDto): Long
+    suspend fun insert(formDraftDto: FormDraftDto): Long
 
     @Transaction
     @Query("SELECT * FROM base_form_drafts WHERE id = :propertyFormId LIMIT 1")
@@ -45,7 +45,7 @@ interface FormDraftDao {
     suspend fun update(
         newType: String?,
         newPrice: BigDecimal,
-        newSurface: String?,
+        newSurface: Double?,
         newAddress: String?,
         newRooms: Int?,
         newBedrooms: Int?,

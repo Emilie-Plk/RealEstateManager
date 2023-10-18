@@ -3,7 +3,7 @@ package com.emplk.realestatemanager.domain.property_draft
 import java.math.BigDecimal
 import javax.inject.Inject
 
-class AddTemporaryPropertyFormUseCase @Inject constructor(
+class AddPropertyFormWithDetailsUseCase @Inject constructor(
     private val formDraftRepository: FormDraftRepository,
     private val mapPropertyToDraftUseCase: MapPropertyToDraftUseCase,
 ) {
@@ -14,7 +14,7 @@ class AddTemporaryPropertyFormUseCase @Inject constructor(
                     id = 0L,
                     type = "",
                     price = BigDecimal.ZERO,
-                    surface = "",
+                    surface = 0.0,
                     rooms = 0,
                     bedrooms = 0,
                     bathrooms = 0,
@@ -27,5 +27,5 @@ class AddTemporaryPropertyFormUseCase @Inject constructor(
         } else {
             formDraftRepository.addPropertyFormWithDetails(mapPropertyToDraftUseCase.invoke(id))
         }
-            ?: throw IllegalStateException("Form id is null")
+            ?: throw IllegalStateException("Error while adding temporary property form")
 }

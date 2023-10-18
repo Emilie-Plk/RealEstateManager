@@ -6,6 +6,7 @@ import com.emplk.realestatemanager.domain.currency_rate.CurrencyRateWrapper
 import com.emplk.realestatemanager.domain.currency_rate.GetCurrencyRateUseCase
 import com.emplk.realestatemanager.domain.geocoding.GeocodingRepository
 import com.emplk.realestatemanager.domain.geocoding.GeocodingWrapper
+import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceUnitByLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetLocaleUseCase
 import com.emplk.realestatemanager.domain.map_picture.GenerateMapBaseUrlWithParamsUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
@@ -34,6 +35,7 @@ class AddPropertyUseCase @Inject constructor(
     private val getCurrencyRateUseCase: GetCurrencyRateUseCase,
     private val getPicturePreviewsUseCase: GetPicturePreviewsUseCase,
     private val convertEuroToDollarUseCase: ConvertEuroToDollarUseCase,
+    private val convertSurfaceUnitByLocaleUseCase: ConvertSurfaceUnitByLocaleUseCase,
     private val updatePropertyFormUseCase: UpdatePropertyFormUseCase,
     private val clearPropertyFormUseCase: ClearPropertyFormUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
@@ -81,9 +83,9 @@ class AddPropertyUseCase @Inject constructor(
                             )
                         }
 
-                        else -> return@coroutineScope AddOrEditPropertyWrapper.LocaleError(NativeText.Resource(R.string.form_generic_error_message))
+                        else -> return@coroutineScope AddOrEditPropertyWrapper.LocaleError(NativeText.Resource(R.string.form_locale_error_message))
                     },
-                    surface = form.surface.toDouble(),
+                    surface = convertSurfaceUnitByLocaleUseCase.invoke(form.surface.toDouble()),
                     description = form.description,
                     rooms = form.nbRooms,
                     bathrooms = form.nbBathrooms,

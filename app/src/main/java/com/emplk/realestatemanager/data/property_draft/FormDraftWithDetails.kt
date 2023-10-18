@@ -7,7 +7,7 @@ import com.emplk.realestatemanager.data.property_draft.picture_preview.PicturePr
 
 data class FormDraftWithDetails(
     @Embedded
-    val propertyForm: BaseFormDraftDto,
+    val propertyForm: FormDraftDto,
     @Relation(
         entity = PicturePreviewDto::class,
         parentColumn = "id",

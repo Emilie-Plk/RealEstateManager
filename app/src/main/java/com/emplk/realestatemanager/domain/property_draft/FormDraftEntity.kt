@@ -8,7 +8,7 @@ data class FormDraftEntity(
     val id: Long,
     val type: String?,
     val price: BigDecimal,
-    val surface: String?,
+    val surface: Double?,
     val address: String?,
     val isAddressValid: Boolean,
     val rooms: Int?,
