@@ -38,7 +38,7 @@ class AddPropertyAgentSpinnerAdapter : ListAdapter, Filterable {
             AddPropertySpinnerItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         }
         getItem(position)?.let { item ->  // let function ensures that you only perform the operations inside the block if getItem(position) returns a non-null item.
-            binding.addPropertySpinnerItemTvName.text = item.name
+            binding.formSpinnerItemTvName.text = item.name
         }
         return binding.root
     }

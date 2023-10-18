@@ -41,10 +41,10 @@ class AmenityListAdapter :
             }
 
             fun bind(item: AmenityViewState.AmenityCheckbox) {
-                binding.addPropertyAmenitiesCheckbox.setText(item.stringRes)
-                binding.addPropertyAmenitiesCheckbox.isChecked = item.isChecked
-                binding.addPropertyAmenitiesCheckbox.setCompoundDrawablesWithIntrinsicBounds(item.iconDrawable, 0, 0, 0)
-                binding.addPropertyAmenitiesCheckbox.setOnCheckedChangeListener { _, isChecked ->
+                binding.formAmenitiesCheckbox.setText(item.stringRes)
+                binding.formAmenitiesCheckbox.isChecked = item.isChecked
+                binding.formAmenitiesCheckbox.setCompoundDrawablesWithIntrinsicBounds(item.iconDrawable, 0, 0, 0)
+                binding.formAmenitiesCheckbox.setOnCheckedChangeListener { _, isChecked ->
                     item.onCheckBoxClicked.invoke(isChecked)
                 }
             }

@@ -92,18 +92,32 @@ class PropertyRepositoryRoom @Inject constructor(
         }
         .flowOn(coroutineDispatcherProvider.io)
 
-    override suspend fun getPropertyById(propertyId: Long): PropertyEntity = withContext(coroutineDispatcherProvider.io) {
-        val propertyWithDetailsEntity = propertyDao.getPropertyById(propertyId)
-        propertyMapper.mapToDomainEntity(
-            propertyWithDetailsEntity.property,
-            propertyWithDetailsEntity.location ?: return@withContext null,
-            propertyWithDetailsEntity.pictures,
-            propertyWithDetailsEntity.amenities,
-        )
-    } ?: throw IllegalStateException("Property with id $propertyId not found")
+    override suspend fun getPropertyById(propertyId: Long): PropertyEntity =
+        withContext(coroutineDispatcherProvider.io) {
+            val propertyWithDetailsEntity = propertyDao.getPropertyById(propertyId)
+            propertyMapper.mapToDomainEntity(
+                propertyWithDetailsEntity.property,
+                propertyWithDetailsEntity.location ?: return@withContext null,
+                propertyWithDetailsEntity.pictures,
+                propertyWithDetailsEntity.amenities,
+            )
+        } ?: throw IllegalStateException("Property with id $propertyId not found")
 
     override suspend fun update(propertyEntity: PropertyEntity): Boolean =
         withContext(coroutineDispatcherProvider.io) {
-            propertyDao.update(propertyMapper.mapToDtoEntity(propertyEntity)) == 1
+            try {
+                propertyDao.update(propertyMapper.mapToDtoEntity(propertyEntity))
+                locationDao.update(locationMapper.mapToDtoEntity(propertyEntity.location, propertyEntity.id))
+                propertyEntity.pictures.map {
+                    pictureDao.update(pictureMapper.mapToDtoEntity(it, propertyEntity.id))
+                }
+                propertyEntity.amenities.map {
+                    amenityDao.update(amenityMapper.mapToDtoEntity(it, propertyEntity.id))
+                }
+                true
+            } catch (e: SQLiteException) {
+                e.printStackTrace()
+                false
+            }
         }
 }

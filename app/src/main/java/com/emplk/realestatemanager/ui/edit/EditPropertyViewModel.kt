@@ -7,10 +7,13 @@ import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.agent.GetAgentsMapUseCase
 import com.emplk.realestatemanager.domain.autocomplete.GetAddressPredictionsUseCase
 import com.emplk.realestatemanager.domain.autocomplete.PredictionWrapper
+import com.emplk.realestatemanager.domain.connectivity.IsInternetEnabledFlowUseCase
 import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdFlowUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
+import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
+import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.GetPropertyByItsIdAsFlowUseCase
 import com.emplk.realestatemanager.domain.property.UpdatePropertyUseCase
 import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
@@ -18,6 +21,9 @@ import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.amenity.type.GetAmenityTypeUseCase
 import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
 import com.emplk.realestatemanager.domain.property_draft.FormDraftStateEntity
+import com.emplk.realestatemanager.domain.property_draft.InitAddOrEditPropertyFormUseCase
+import com.emplk.realestatemanager.domain.property_draft.PropertyFormDatabaseState
+import com.emplk.realestatemanager.domain.property_draft.UpdatePropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_type.GetPropertyTypeFlowUseCase
 import com.emplk.realestatemanager.ui.add.PropertyFormViewState
 import com.emplk.realestatemanager.ui.add.address_predictions.PredictionViewState
@@ -50,6 +56,7 @@ import kotlin.time.Duration.Companion.milliseconds
 @HiltViewModel
 class EditPropertyViewModel @Inject constructor(
     private val updatePropertyUseCase: UpdatePropertyUseCase,
+    private val initAddOrEditPropertyFormUseCase: InitAddOrEditPropertyFormUseCase,
     private val getPropertyByItsIdAsFlowUseCase: GetPropertyByItsIdAsFlowUseCase,
     private val getCurrentPropertyIdFlowUseCase: GetCurrentPropertyIdFlowUseCase,
     private val getCurrencyTypeUseCase: GetCurrencyTypeUseCase,
@@ -58,6 +65,9 @@ class EditPropertyViewModel @Inject constructor(
     private val getAddressPredictionsUseCase: GetAddressPredictionsUseCase,
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
     private val getPropertyTypeFlowUseCase: GetPropertyTypeFlowUseCase,
+    private val updatePropertyFormUseCase: UpdatePropertyFormUseCase,
+    private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
+    private val isInternetEnabledFlowUseCase: IsInternetEnabledFlowUseCase,
 ) : ViewModel() {
 
     private val formMutableStateFlow = MutableStateFlow(FormDraftStateEntity()) // TODO: valeur magique blabla
@@ -82,12 +92,21 @@ class EditPropertyViewModel @Inject constructor(
 
     val viewEventLiveData: LiveData<Event<EditPropertyEvent>> = liveData {
         onUpdateButtonClickedMutableSharedFlow.collect {
-            formMutableStateFlow.collect { form ->
-                isUpdatingPropertyInDatabaseMutableStateFlow.tryEmit(true)
-                val resultEvent = updatePropertyUseCase.invoke(form)
-                emit(Event(resultEvent))
-                isUpdatingPropertyInDatabaseMutableStateFlow.tryEmit(false)
-            }
+            combine(
+                formMutableStateFlow,
+                isInternetEnabledFlowUseCase.invoke(),
+            ) { form, isInternetEnabled ->
+                if (isInternetEnabled) {
+                    isUpdatingPropertyInDatabaseMutableStateFlow.tryEmit(true)
+                    val resultEvent = updatePropertyUseCase.invoke(form)
+                    emit(Event(resultEvent))
+                    isUpdatingPropertyInDatabaseMutableStateFlow.tryEmit(false)
+                } else {
+                    updatePropertyFormUseCase.invoke(form)
+                    setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
+                    emit(Event(EditPropertyEvent.Toast(NativeText.Resource(R.string.no_internet_connection_draft_saved))))
+                }
+            }.collect()
         }
     }
 
@@ -98,28 +117,34 @@ class EditPropertyViewModel @Inject constructor(
                 .flatMapLatest { propertyId ->
                     getPropertyByItsIdAsFlowUseCase.invoke(propertyId)
                 }.collectLatest { property ->
+                    when (val initPropertyForm = initAddOrEditPropertyFormUseCase.invoke(property.id)) {
+                        is PropertyFormDatabaseState.EmptyForm -> {
+                            formMutableStateFlow.update {
+                                it.copy(id = initPropertyForm.newPropertyFormId)
+                            }
+                        }
 
-                    formMutableStateFlow.update { propertyForm ->
-                        propertyForm.copy(
-                            propertyType = property.type,
-                            address = property.location.address,
-                            price = property.price,
-                            surface = property.surface.toString(),
-                            description = property.description,
-                            nbRooms = property.rooms,
-                            nbBathrooms = property.bathrooms,
-                            nbBedrooms = property.bedrooms,
-                            amenities = property.amenities,
-                            pictureIds = property.pictures.map { picture -> picture.id },
-                            featuredPictureId = property.pictures.find { picture -> picture.isFeatured }?.id,
-                            agent = property.agentName,
-                        )
+                        is PropertyFormDatabaseState.Draft -> {
+                            formMutableStateFlow.update { propertyForm ->
+                                propertyForm.copy(
+                                    id = initPropertyForm.formDraftEntity.id,
+                                    propertyType = property.type,
+                                    address = property.location.address,
+                                    price = property.price,
+                                    surface = property.surface.toString(),
+                                    description = property.description,
+                                    nbRooms = property.rooms,
+                                    nbBathrooms = property.bathrooms,
+                                    nbBedrooms = property.bedrooms,
+                                    amenities = property.amenities,
+                                    pictureIds = property.pictures.map { picture -> picture.id },
+                                    featuredPictureId = property.pictures.find { picture -> picture.isFeatured }?.id,
+                                    agent = property.agentName,
+                                )
+                            }
+                        }
                     }
 
-                    val currencyType = getCurrencyTypeUseCase.invoke()
-                    val amenityTypes = getAmenityTypeUseCase.invoke()
-                    val propertyTypes = getPropertyTypeFlowUseCase.invoke()
-                    val agents = getAgentsMapUseCase.invoke()
 
                     launch {
                         combine(
@@ -127,7 +152,10 @@ class EditPropertyViewModel @Inject constructor(
                             currentPredictionAddressesFlow,
                             isUpdatingPropertyInDatabaseMutableStateFlow,
                         ) { form, addressPredictions, isUpdating ->
-
+                            val currencyType = getCurrencyTypeUseCase.invoke()
+                            val amenityTypes = getAmenityTypeUseCase.invoke()
+                            val propertyTypes = getPropertyTypeFlowUseCase.invoke()
+                            val agents = getAgentsMapUseCase.invoke()
                             isEveryFieldFilledMutableStateFlow.tryEmit(
                                 form.propertyType != null &&
                                         form.address != null &&
@@ -196,6 +224,7 @@ class EditPropertyViewModel @Inject constructor(
                     }
                 }
         }
+
     }
 
     private fun mapPredictionsToViewState(currentPredictionAddresses: PredictionWrapper?): List<PredictionViewState> {
@@ -381,4 +410,5 @@ class EditPropertyViewModel @Inject constructor(
     fun onAddressEditTextFocused(hasFocus: Boolean) {
         hasAddressEditTextFocus.tryEmit(hasFocus)
     }
+
 }

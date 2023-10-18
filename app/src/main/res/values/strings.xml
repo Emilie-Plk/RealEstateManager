@@ -44,8 +44,8 @@
     <string name="menu_edit_property">Edit property</string>
     <string name="logo_slogan_tv">Where dreams\nfind their address</string>
     <string name="realestatemanager_logo_a11y">RealEstateManager logo</string>
-    <string name="add_property_type_tv">Property type</string>
-    <string name="add_property_title_tv">Add new property</string>
+    <string name="form_type_tv">Property type</string>
+    <string name="form_title_tv">Add new property</string>
     <string name="checkbox_amenity_restaurant">Restaurant</string>
     <string name="checkbox_amenity_mall">Mall</string>
     <string name="checkbox_amenity_park">Park</string>
@@ -55,7 +55,7 @@
     <string name="checkbox_amenity_public_transp">Public transp.</string>
     <string name="checkbox_amenity_hospital">Hospital</string>
     <string name="checkbox_amenity_library">Library</string>
-    <string name="add_property_unit_surface_tv">(in %s)</string>
+    <string name="form_unit_surface_tv">(in %s)</string>
     <string name="iv_preview_delete_property_btn">Delete property</string>
     <string name="price_currency_in_n">(in %s)</string>
     <string name="surface_unit_in_n">(in %s)</string>
@@ -72,9 +72,9 @@
     <string name="property_type_villa">Villa</string>
     <string name="property_type_manor">Manor</string>
     <string name="property_type_other">Other</string>
-    <string name="add_property_create_button">Create property</string>
-    <string name="add_property_successfully_created_message">Property successfully created!</string>
-    <string name="add_property_successfully_updated_message">Property successfully updated!</string>
+    <string name="form_create_button">Create property</string>
+    <string name="form_successfully_created_message">Property successfully created!</string>
+    <string name="form_successfully_updated_message">Property successfully updated!</string>
     <string name="title_activity_blank">BlankActivity</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
@@ -95,9 +95,9 @@
         nec dolor bibendum, vel congue leo egestas.
     </string>
     <string name="prediction_no_address_found">No address found</string>
-    <string name="add_property_generic_error_message">Oops, an error occurred, try again later!</string>
-    <string name="add_property_location_error_message">Please chose an address from suggestions or try again!</string>
-    <string name="add_property_locale_error_message">Sorry, app is only supported in France and US so far!</string>
+    <string name="form_generic_error_message">Oops, an error occurred, try again later!</string>
+    <string name="form_location_error_message">Please chose an address from suggestions or try again!</string>
+    <string name="form_locale_error_message">Sorry, app is only supported in France and US so far!</string>
     <string name="no_internet_connection_draft_saved">Draft saved, please check your connection and try again</string>
     <string name="edit_property_btn">Edit Property</string>
     <string name="missing_description_a11y">Missing description</string>

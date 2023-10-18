@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
             binding.mainToolbar.menu.findItem(R.id.main_menu_property_filter)?.let {
                 it.isVisible = mainViewState.isFilterAppBarButtonVisible
             }
-            binding.mainToolbar.menu.findItem(R.id.main_menu_add_property)?.let {
+            binding.mainToolbar.menu.findItem(R.id.main_menu_form)?.let {
                 it.isVisible = mainViewState.isAddAppBarButtonVisible
             }
         }
@@ -165,7 +165,7 @@ class MainActivity : AppCompatActivity() {
                 true
             }
 
-            R.id.main_menu_add_property -> {
+            R.id.main_menu_form -> {
                 viewModel.onAddPropertyClicked()
                 true
             }
