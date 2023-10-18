@@ -45,7 +45,7 @@ interface FormDraftDao {
     suspend fun update(
         newType: String?,
         newPrice: BigDecimal,
-        newSurface: Double?,
+        newSurface: BigDecimal,
         newAddress: String?,
         newRooms: Int?,
         newBedrooms: Int?,

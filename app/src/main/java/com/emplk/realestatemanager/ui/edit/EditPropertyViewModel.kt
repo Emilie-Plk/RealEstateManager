@@ -22,7 +22,7 @@ import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.amenity.type.GetAmenityTypeUseCase
 import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
-import com.emplk.realestatemanager.domain.property_draft.FormDraftStateEntity
+import com.emplk.realestatemanager.domain.property_draft.FormDraftParams
 import com.emplk.realestatemanager.domain.property_draft.InitAddOrEditPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.PropertyFormDatabaseState
 import com.emplk.realestatemanager.domain.property_draft.UpdatePropertyFormUseCase
@@ -77,7 +77,7 @@ class EditPropertyViewModel @Inject constructor(
     private val clock: Clock,
 ) : ViewModel() {
 
-    private val formMutableStateFlow = MutableStateFlow(FormDraftStateEntity())
+    private val formMutableStateFlow = MutableStateFlow(FormDraftParams())
     private val isUpdatingPropertyInDatabaseMutableStateFlow = MutableStateFlow(false)
     private val isEveryFieldFilledMutableStateFlow = MutableStateFlow(false)
     private val onUpdateButtonClickedMutableSharedFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
@@ -164,7 +164,7 @@ class EditPropertyViewModel @Inject constructor(
                                 form.propertyType != null &&
                                         form.address != null &&
                                         (form.price > BigDecimal.ZERO) &&
-                                        form.surface != null &&
+                                        (form.surface > BigDecimal.ZERO) &&
                                         form.description != null &&
                                         form.nbRooms > 0 &&
                                         form.nbBathrooms > 0 &&
@@ -362,7 +362,7 @@ class EditPropertyViewModel @Inject constructor(
     fun onSurfaceChanged(surface: String?) {
         if (surface.isNullOrBlank()) return
         formMutableStateFlow.update {
-            it.copy(surface = surface.toDouble())
+            it.copy(surface = BigDecimal(surface))
         }
     }
 

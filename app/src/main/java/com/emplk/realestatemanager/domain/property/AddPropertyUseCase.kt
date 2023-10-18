@@ -14,7 +14,7 @@ import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.location.LocationEntity
 import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
 import com.emplk.realestatemanager.domain.property_draft.ClearPropertyFormUseCase
-import com.emplk.realestatemanager.domain.property_draft.FormDraftStateEntity
+import com.emplk.realestatemanager.domain.property_draft.FormDraftParams
 import com.emplk.realestatemanager.domain.property_draft.UpdatePropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.GetPicturePreviewsUseCase
 import com.emplk.realestatemanager.ui.add.AddPropertyEvent
@@ -41,12 +41,12 @@ class AddPropertyUseCase @Inject constructor(
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val clock: Clock,
 ) {
-    suspend fun invoke(form: FormDraftStateEntity): AddPropertyEvent {
+    suspend fun invoke(form: FormDraftParams): AddPropertyEvent {
         require(
             form.propertyType != null &&
                     form.address != null &&
                     form.price > BigDecimal.ZERO &&
-                    form.surface != null &&
+                    form.surface > BigDecimal.ZERO &&
                     form.description != null &&
                     form.nbRooms > 0 &&
                     form.nbBathrooms > 0 &&
@@ -85,7 +85,7 @@ class AddPropertyUseCase @Inject constructor(
 
                         else -> return@coroutineScope AddOrEditPropertyWrapper.LocaleError(NativeText.Resource(R.string.form_locale_error_message))
                     },
-                    surface = convertSurfaceUnitByLocaleUseCase.invoke(form.surface.toDouble()),
+                    surface = convertSurfaceUnitByLocaleUseCase.invoke(form.surface),
                     description = form.description,
                     rooms = form.nbRooms,
                     bathrooms = form.nbBathrooms,

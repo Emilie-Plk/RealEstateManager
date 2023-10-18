@@ -18,11 +18,11 @@ class UnitOfMeasurementRepositoryLocale @Inject constructor(
         private const val SQUARE_FEET_TO_SQUARE_METERS = 10.764
     }
 
-    override fun convertSquareFeetToSquareMeters(squareFeet: Double): Double =
-        squareFeet / SQUARE_FEET_TO_SQUARE_METERS
+    override fun convertSquareFeetToSquareMeters(squareFeet: BigDecimal): BigDecimal =
+        squareFeet.divide(BigDecimal(SQUARE_FEET_TO_SQUARE_METERS),0, RoundingMode.HALF_UP)
 
-    override fun convertSquareMetersToSquareFeet(squareMeters: Double): Double =
-        squareMeters * SQUARE_FEET_TO_SQUARE_METERS
+    override fun convertSquareMetersToSquareFeet(squareMeters: BigDecimal): BigDecimal =
+        squareMeters.multiply(BigDecimal(SQUARE_FEET_TO_SQUARE_METERS)).setScale(0, RoundingMode.HALF_UP)
 
     override fun convertDollarToEuro(dollar: BigDecimal, currencyRate: Double): BigDecimal =
         dollar.multiply(BigDecimal(currencyRate)).setScale(0, RoundingMode.HALF_UP)
@@ -33,7 +33,7 @@ class UnitOfMeasurementRepositoryLocale @Inject constructor(
     override fun getLocale(): Locale = locale
 
     override fun formatPrice(price: BigDecimal): String {
-        val roundedPrice = price.setScale(2, RoundingMode.HALF_UP)
+        val roundedPrice = price.setScale(0, RoundingMode.HALF_UP)
 
         val numberFormat = NumberFormat.getCurrencyInstance(locale)
         numberFormat.maximumFractionDigits = 0

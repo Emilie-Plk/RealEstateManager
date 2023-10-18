@@ -14,7 +14,7 @@ class AddPropertyFormWithDetailsUseCase @Inject constructor(
                     id = 0L,
                     type = "",
                     price = BigDecimal.ZERO,
-                    surface = 0.0,
+                    surface = BigDecimal.ZERO,
                     rooms = 0,
                     bedrooms = 0,
                     bathrooms = 0,
