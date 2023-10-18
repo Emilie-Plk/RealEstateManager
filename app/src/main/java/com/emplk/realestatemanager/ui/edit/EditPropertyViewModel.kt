@@ -23,8 +23,7 @@ import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.amenity.type.GetAmenityTypeUseCase
 import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
 import com.emplk.realestatemanager.domain.property_draft.FormDraftStateEntity
-import com.emplk.realestatemanager.domain.property_draft.InitAddOrEditPropertyFormUseCase
-import com.emplk.realestatemanager.domain.property_draft.PropertyFormDatabaseState
+import com.emplk.realestatemanager.domain.property_draft.InitPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.UpdatePropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_type.GetPropertyTypeFlowUseCase
 import com.emplk.realestatemanager.ui.add.PropertyFormViewState
@@ -60,7 +59,7 @@ import kotlin.time.Duration.Companion.milliseconds
 @HiltViewModel
 class EditPropertyViewModel @Inject constructor(
     private val updatePropertyUseCase: UpdatePropertyUseCase,
-    private val initAddOrEditPropertyFormUseCase: InitAddOrEditPropertyFormUseCase,
+    private val initPropertyFormUseCase: InitPropertyFormUseCase,
     private val getPropertyByItsIdAsFlowUseCase: GetPropertyByItsIdAsFlowUseCase,
     private val getCurrentPropertyIdFlowUseCase: GetCurrentPropertyIdFlowUseCase,
     private val getCurrencyTypeUseCase: GetCurrencyTypeUseCase,
@@ -77,7 +76,7 @@ class EditPropertyViewModel @Inject constructor(
     private val clock: Clock,
 ) : ViewModel() {
 
-    private val formMutableStateFlow = MutableStateFlow(FormDraftStateEntity())
+    private val formMutableStateFlow = MutableStateFlow(FormDraftState())
     private val isUpdatingPropertyInDatabaseMutableStateFlow = MutableStateFlow(false)
     private val isEveryFieldFilledMutableStateFlow = MutableStateFlow(false)
     private val onUpdateButtonClickedMutableSharedFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
@@ -124,29 +123,25 @@ class EditPropertyViewModel @Inject constructor(
                 .flatMapLatest { propertyId ->
                     getPropertyByItsIdAsFlowUseCase.invoke(propertyId)
                 }.collect { property ->
-                    when (val initPropertyForm = initAddOrEditPropertyFormUseCase.invoke(property.id)) {
-                        is PropertyFormDatabaseState.EmptyForm -> Unit
-
-                        is PropertyFormDatabaseState.Draft ->
-                            formMutableStateFlow.update { propertyForm ->
-                                propertyForm.copy(
-                                    id = initPropertyForm.formDraftEntity.id,
-                                    propertyType = property.type,
-                                    address = property.location.address,
-                                    price = property.price,
-                                    surface = property.surface,
-                                    description = property.description,
-                                    nbRooms = property.rooms,
-                                    nbBathrooms = property.bathrooms,
-                                    nbBedrooms = property.bedrooms,
-                                    amenities = property.amenities,
-                                    pictureIds = property.pictures.map { picture -> picture.id },
-                                    featuredPictureId = property.pictures.find { picture -> picture.isFeatured }?.id,
-                                    agent = property.agentName,
-                                    isSold = property.isSold,
-                                    soldDate = property.saleDate,
-                                )
-                            }
+                    val initPropertyForm = initPropertyFormUseCase.invoke(property.id)
+                    formMutableStateFlow.update { propertyForm ->
+                        propertyForm.copy(
+                            id = initPropertyForm.formDraftEntity.id,
+                            propertyType = property.type,
+                            address = property.location.address,
+                            price = property.price,
+                            surface = property.surface,
+                            description = property.description,
+                            nbRooms = property.rooms,
+                            nbBathrooms = property.bathrooms,
+                            nbBedrooms = property.bedrooms,
+                            amenities = property.amenities,
+                            pictureIds = property.pictures.map { picture -> picture.id },
+                            featuredPictureId = property.pictures.find { picture -> picture.isFeatured }?.id,
+                            agent = property.agentName,
+                            isSold = property.isSold,
+                            soldDate = property.saleDate,
+                        )
                     }
 
                     launch {
@@ -162,17 +157,17 @@ class EditPropertyViewModel @Inject constructor(
 
                             isEveryFieldFilledMutableStateFlow.tryEmit(   // TODO: maybe another to check if changes made
                                 form.propertyType != null &&
-                                        form.address != null &&
-                                        (form.price > BigDecimal.ZERO) &&
-                                        form.surface != null &&
-                                        form.description != null &&
-                                        form.nbRooms > 0 &&
-                                        form.nbBathrooms > 0 &&
-                                        form.nbBedrooms > 0 &&
-                                        form.agent != null &&
-                                        form.amenities.isNotEmpty() &&
-                                        form.pictureIds.isNotEmpty() &&
-                                        form.featuredPictureId != null
+                                    form.address != null &&
+                                    (form.price > BigDecimal.ZERO) &&
+                                    form.surface != null &&
+                                    form.description != null &&
+                                    form.nbRooms > 0 &&
+                                    form.nbBathrooms > 0 &&
+                                    form.nbBedrooms > 0 &&
+                                    form.agent != null &&
+                                    form.amenities.isNotEmpty() &&
+                                    form.pictureIds.isNotEmpty() &&
+                                    form.featuredPictureId != null
                             )
 
                             emit(

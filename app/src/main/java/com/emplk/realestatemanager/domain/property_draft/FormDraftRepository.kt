@@ -3,7 +3,7 @@ package com.emplk.realestatemanager.domain.property_draft
 interface FormDraftRepository {
     suspend fun add(formDraftEntity: FormDraftEntity): Long?
 
-    suspend fun addPropertyFormWithDetails(formDraftEntity: FormDraftEntity): Long?
+    suspend fun addPropertyFormWithDetails(formDraftEntity: FormDraftEntity): Long
 
     suspend fun getExistingPropertyFormId(): Long?
 
@@ -11,7 +11,7 @@ interface FormDraftRepository {
 
     suspend fun doesPropertyDraftExist(propertyFormId: Long?): Boolean
 
-    suspend fun doesPropertyExistInBothTables(propertyFormId: Long?): Boolean
+    suspend fun doesPropertyExist(propertyFormId: Long?): Boolean
 
     suspend fun getExistingPropertyForm(): FormDraftEntity?
 

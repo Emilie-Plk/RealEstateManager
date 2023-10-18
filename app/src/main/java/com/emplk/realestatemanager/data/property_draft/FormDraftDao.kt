@@ -28,8 +28,8 @@ interface FormDraftDao {
     @Query("SELECT EXISTS(SELECT * FROM base_form_drafts WHERE id = :propertyFormId)")
     suspend fun doesPropertyDraftExist(propertyFormId: Long): Boolean
 
-    @Query("SELECT EXISTS(SELECT * FROM base_form_drafts WHERE id = :propertyFormId AND id = :propertyFormId IN (SELECT id FROM properties))")
-    suspend fun doesPropertyExistInBothTables(propertyFormId: Long): Boolean
+    @Query("SELECT EXISTS(SELECT * FROM properties WHERE id = :propertyFormId)")
+    suspend fun doesPropertyExist(propertyFormId: Long): Boolean
 
     @Query(
         "UPDATE base_form_drafts SET type = :newType," +

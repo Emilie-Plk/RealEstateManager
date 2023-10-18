@@ -23,7 +23,7 @@ import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.amenity.type.GetAmenityTypeUseCase
 import com.emplk.realestatemanager.domain.property_draft.ClearPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.FormDraftStateEntity
-import com.emplk.realestatemanager.domain.property_draft.InitAddOrEditPropertyFormUseCase
+import com.emplk.realestatemanager.domain.property_draft.InitPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.PropertyFormDatabaseState
 import com.emplk.realestatemanager.domain.property_draft.SetPropertyFormProgressUseCase
 import com.emplk.realestatemanager.domain.property_draft.UpdatePropertyFormUseCase
@@ -68,7 +68,7 @@ class AddPropertyViewModel @Inject constructor(
     private val updatePicturePreviewUseCase: UpdatePicturePreviewUseCase,
     private val savePictureToLocalAppFilesAndToLocalDatabaseUseCase: SavePictureToLocalAppFilesAndToLocalDatabaseUseCase,
     private val updatePropertyFormUseCase: UpdatePropertyFormUseCase, // à refacto si chui une ouf
-    private val initAddOrEditPropertyFormUseCase: InitAddOrEditPropertyFormUseCase,
+    private val initPropertyFormUseCase: InitPropertyFormUseCase,
     private val getCurrencyTypeUseCase: GetCurrencyTypeUseCase,
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
     private val getPicturePreviewsAsFlowUseCase: GetPicturePreviewsAsFlowUseCase,
@@ -114,7 +114,7 @@ class AddPropertyViewModel @Inject constructor(
 
     val viewStateLiveData: LiveData<PropertyFormViewState> = liveData {
         coroutineScope {
-            when (val initTempPropertyForm = initAddOrEditPropertyFormUseCase.invoke(null)) {
+            when (val initTempPropertyForm = initPropertyFormUseCase.invoke(null)) {
                 is PropertyFormDatabaseState.EmptyForm -> {
                     formMutableStateFlow.update {
                         it.copy(id = initTempPropertyForm.newPropertyFormId)

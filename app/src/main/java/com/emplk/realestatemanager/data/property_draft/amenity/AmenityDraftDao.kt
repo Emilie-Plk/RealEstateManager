@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface AmenityDraftDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(amenityDraftDto: AmenityDraftDto): Long?
+    suspend fun insert(amenityDraftDto: AmenityDraftDto): Long
 
     @Insert
     suspend fun insertAll(amenityDraftDtos: List<AmenityDraftDto>): List<Long?>

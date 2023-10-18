@@ -27,5 +27,4 @@ class AddPropertyFormWithDetailsUseCase @Inject constructor(
         } else {
             formDraftRepository.addPropertyFormWithDetails(mapPropertyToDraftUseCase.invoke(id))
         }
-            ?: throw IllegalStateException("Error while adding temporary property form")
 }
