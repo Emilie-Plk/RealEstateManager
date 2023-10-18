@@ -103,9 +103,8 @@ class UpdatePropertyUseCase @Inject constructor(
                         )
                     },
                     entryDate = LocalDateTime.now(clock),
-                    isSold = false,
-                    saleDate = null,
-                    // TODO: ajouter isSold et saleDate
+                    isSold = form.isSold,
+                    saleDate = form.soldDate,
                 ),
             )
             if (success) {

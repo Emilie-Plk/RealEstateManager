@@ -7,12 +7,12 @@ import androidx.room.PrimaryKey
 import java.math.BigDecimal
 
 @Entity(tableName = "base_form_drafts", indices = [Index(value = ["id"], unique = false)])
-data class BaseFormDraftDto(
+data class FormDraftDto(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val type: String?,
     val price: BigDecimal,
-    val surface: String?,
+    val surface: Double?,
     val address: String?,
     @ColumnInfo(name = "is_address_valid")
     val isAddressValid: Boolean,

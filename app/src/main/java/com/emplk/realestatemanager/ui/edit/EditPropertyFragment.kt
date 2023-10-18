@@ -40,7 +40,7 @@ class EditPropertyFragment : BasePropertyFragment() {
 
         binding.formAgentActv.setOnItemClickListener { _, _, position, _ ->
             agentAdapter.getItem(position)?.let {
-                //  viewModel.onAgentChanged(it.name)
+                viewModel.onAgentChanged(it.name)
             }
         }
 
@@ -109,6 +109,8 @@ class EditPropertyFragment : BasePropertyFragment() {
             }
             binding.formTypeActv.setText(viewState.propertyType, false)
             binding.formAgentActv.setText(viewState.selectedAgent, false)
+
+            viewModel.onIsSoldStateChanged(binding.formSoldStatusSwitch.isChecked)
         }
     }
 }

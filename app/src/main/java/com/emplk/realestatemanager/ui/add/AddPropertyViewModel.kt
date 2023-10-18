@@ -51,8 +51,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.update
@@ -164,7 +162,7 @@ class AddPropertyViewModel @Inject constructor(
                     val isFormInProgress = !form.propertyType.isNullOrBlank() ||
                             !form.address.isNullOrBlank() ||
                             (form.price > BigDecimal.ZERO) ||
-                            !form.surface.isNullOrBlank() ||
+                            form.surface != null ||
                             !form.description.isNullOrBlank() ||
                             form.nbRooms > 0 ||
                             form.nbBathrooms > 0 ||
@@ -177,7 +175,6 @@ class AddPropertyViewModel @Inject constructor(
                     setPropertyFormProgressUseCase.invoke(isFormInProgress)
 
                     isFormValidMutableStateFlow.tryEmit(
-                        form.id != null &&
                                 form.propertyType != null &&
                                 form.address != null &&
                                 form.isAddressValid &&
@@ -193,12 +190,11 @@ class AddPropertyViewModel @Inject constructor(
                                 form.featuredPictureId != null
                     )
 
-                    emit(
-                        PropertyFormViewState(
+                    emit(PropertyFormViewState(
                             propertyType = form.propertyType,
                             address = form.address,
                             price = if (form.price == BigDecimal.ZERO) "" else form.price.toString(),
-                            surface = form.surface,
+                            surface = form.surface?.toString(),
                             description = form.description,
                             nbRooms = form.nbRooms,
                             nbBathrooms = form.nbBathrooms,
@@ -432,8 +428,9 @@ class AddPropertyViewModel @Inject constructor(
     }
 
     fun onSurfaceChanged(surface: String?) {
+        if (surface.isNullOrBlank()) return
         formMutableStateFlow.update {
-            it.copy(surface = surface)
+            it.copy(surface = surface.toDouble())
         }
     }
 

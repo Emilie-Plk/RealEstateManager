@@ -14,7 +14,7 @@ class MapPropertyToDraftUseCase @Inject constructor(
             id = propertyId,
             type = propertyEntity.type,
             price = propertyEntity.price,
-            surface = propertyEntity.surface.toString(),
+            surface = propertyEntity.surface,
             address = propertyEntity.location.address,
             isAddressValid = true,
             rooms = propertyEntity.rooms,

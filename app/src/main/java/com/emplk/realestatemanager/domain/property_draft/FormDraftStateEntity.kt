@@ -2,6 +2,8 @@ package com.emplk.realestatemanager.domain.property_draft
 
 import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
 import java.math.BigDecimal
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 /**
  * This class represents the form state of a property.
@@ -13,7 +15,7 @@ data class FormDraftStateEntity(
     val address: String? = null,
     val isAddressValid: Boolean = false,
     val price: BigDecimal = BigDecimal.ZERO,
-    val surface: String? = null,
+    val surface: Double? = null,
     val description: String? = null,
     val nbRooms: Int = 0,
     val nbBathrooms: Int = 0,
@@ -22,4 +24,6 @@ data class FormDraftStateEntity(
     val amenities: List<AmenityEntity> = emptyList(),
     val pictureIds: List<Long> = emptyList(),
     val featuredPictureId: Long? = null,
+    val isSold: Boolean = false,
+    val soldDate: LocalDateTime? = null,
 )

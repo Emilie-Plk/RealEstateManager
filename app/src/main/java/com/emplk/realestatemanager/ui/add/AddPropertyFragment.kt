@@ -124,7 +124,6 @@ class AddPropertyFragment : BasePropertyFragment() {
             }
 
             binding.formAddressTextInputEditText.setOnFocusChangeListener { _, hasFocus ->
-                Log.d("COUCOU", "Address EditText has focus: $hasFocus")
                 viewModel.onAddressEditTextFocused(hasFocus)
                 if (!hasFocus) {
                     hideKeyboard(binding.formAddressTextInputEditText)

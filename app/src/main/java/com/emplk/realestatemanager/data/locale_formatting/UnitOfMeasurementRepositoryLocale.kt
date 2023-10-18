@@ -11,7 +11,6 @@ import java.util.Locale
 import javax.inject.Inject
 
 class UnitOfMeasurementRepositoryLocale @Inject constructor(
-    private val resources: Resources,
     private val locale: Locale,
 ) : LocaleFormattingRepository {
 
@@ -26,10 +25,10 @@ class UnitOfMeasurementRepositoryLocale @Inject constructor(
         squareMeters * SQUARE_FEET_TO_SQUARE_METERS
 
     override fun convertDollarToEuro(dollar: BigDecimal, currencyRate: Double): BigDecimal =
-        dollar.multiply(BigDecimal(currencyRate)).setScale(2, RoundingMode.HALF_UP)
+        dollar.multiply(BigDecimal(currencyRate)).setScale(0, RoundingMode.HALF_UP)
 
     override fun convertEuroToDollar(euro: BigDecimal, currencyRate: Double): BigDecimal =
-        euro.divide(BigDecimal(currencyRate), 2, RoundingMode.HALF_UP)
+        euro.divide(BigDecimal(currencyRate), 0, RoundingMode.HALF_UP)
 
     override fun getLocale(): Locale = locale
 

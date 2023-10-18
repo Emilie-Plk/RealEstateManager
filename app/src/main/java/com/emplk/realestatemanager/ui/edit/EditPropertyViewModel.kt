@@ -8,8 +8,10 @@ import com.emplk.realestatemanager.domain.agent.GetAgentsMapUseCase
 import com.emplk.realestatemanager.domain.autocomplete.GetAddressPredictionsUseCase
 import com.emplk.realestatemanager.domain.autocomplete.PredictionWrapper
 import com.emplk.realestatemanager.domain.connectivity.IsInternetEnabledFlowUseCase
+import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceByLocaleUseCase
 import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdFlowUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
+import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceByLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
@@ -42,7 +44,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
@@ -50,6 +51,9 @@ import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
+import java.math.RoundingMode
+import java.time.Clock
+import java.time.LocalDateTime
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -65,12 +69,15 @@ class EditPropertyViewModel @Inject constructor(
     private val getAddressPredictionsUseCase: GetAddressPredictionsUseCase,
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
     private val getPropertyTypeFlowUseCase: GetPropertyTypeFlowUseCase,
+    private val formatPriceByLocaleUseCase: FormatPriceByLocaleUseCase,
+    private val convertPriceByLocaleUseCase: ConvertPriceByLocaleUseCase,
     private val updatePropertyFormUseCase: UpdatePropertyFormUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val isInternetEnabledFlowUseCase: IsInternetEnabledFlowUseCase,
+    private val clock: Clock,
 ) : ViewModel() {
 
-    private val formMutableStateFlow = MutableStateFlow(FormDraftStateEntity()) // TODO: valeur magique blabla
+    private val formMutableStateFlow = MutableStateFlow(FormDraftStateEntity())
     private val isUpdatingPropertyInDatabaseMutableStateFlow = MutableStateFlow(false)
     private val isEveryFieldFilledMutableStateFlow = MutableStateFlow(false)
     private val onUpdateButtonClickedMutableSharedFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
@@ -116,22 +123,18 @@ class EditPropertyViewModel @Inject constructor(
                 .filterNotNull()
                 .flatMapLatest { propertyId ->
                     getPropertyByItsIdAsFlowUseCase.invoke(propertyId)
-                }.collectLatest { property ->
+                }.collect { property ->
                     when (val initPropertyForm = initAddOrEditPropertyFormUseCase.invoke(property.id)) {
-                        is PropertyFormDatabaseState.EmptyForm -> {
-                            formMutableStateFlow.update {
-                                it.copy(id = initPropertyForm.newPropertyFormId)
-                            }
-                        }
+                        is PropertyFormDatabaseState.EmptyForm -> Unit
 
-                        is PropertyFormDatabaseState.Draft -> {
+                        is PropertyFormDatabaseState.Draft ->
                             formMutableStateFlow.update { propertyForm ->
                                 propertyForm.copy(
                                     id = initPropertyForm.formDraftEntity.id,
                                     propertyType = property.type,
                                     address = property.location.address,
                                     price = property.price,
-                                    surface = property.surface.toString(),
+                                    surface = property.surface,
                                     description = property.description,
                                     nbRooms = property.rooms,
                                     nbBathrooms = property.bathrooms,
@@ -140,11 +143,11 @@ class EditPropertyViewModel @Inject constructor(
                                     pictureIds = property.pictures.map { picture -> picture.id },
                                     featuredPictureId = property.pictures.find { picture -> picture.isFeatured }?.id,
                                     agent = property.agentName,
+                                    isSold = property.isSold,
+                                    soldDate = property.saleDate,
                                 )
                             }
-                        }
                     }
-
 
                     launch {
                         combine(
@@ -156,7 +159,8 @@ class EditPropertyViewModel @Inject constructor(
                             val amenityTypes = getAmenityTypeUseCase.invoke()
                             val propertyTypes = getPropertyTypeFlowUseCase.invoke()
                             val agents = getAgentsMapUseCase.invoke()
-                            isEveryFieldFilledMutableStateFlow.tryEmit(
+
+                            isEveryFieldFilledMutableStateFlow.tryEmit(   // TODO: maybe another to check if changes made
                                 form.propertyType != null &&
                                         form.address != null &&
                                         (form.price > BigDecimal.ZERO) &&
@@ -177,8 +181,9 @@ class EditPropertyViewModel @Inject constructor(
                                     addressPredictions = mapPredictionsToViewState(addressPredictions),
                                     address = form.address,
                                     isAddressValid = true, // TODO: change that of course
-                                    price = if (form.price == BigDecimal.ZERO) "" else form.price.toString(),
-                                    surface = form.surface,
+                                    price = convertPriceByLocaleUseCase.invoke(form.price)
+                                        .setScale(0, RoundingMode.HALF_UP).toString(),
+                                    surface = form.surface.toString(),
                                     description = form.description,
                                     nbRooms = form.nbRooms,
                                     nbBathrooms = form.nbBathrooms,
@@ -355,8 +360,9 @@ class EditPropertyViewModel @Inject constructor(
     }
 
     fun onSurfaceChanged(surface: String?) {
+        if (surface.isNullOrBlank()) return
         formMutableStateFlow.update {
-            it.copy(surface = surface)
+            it.copy(surface = surface.toDouble())
         }
     }
 
@@ -403,6 +409,21 @@ class EditPropertyViewModel @Inject constructor(
         }
     }
 
+    fun onAgentChanged(agentName: String) {
+        formMutableStateFlow.update {
+            it.copy(agent = agentName)
+        }
+    }
+
+    fun onIsSoldStateChanged(isSold: Boolean) {
+        formMutableStateFlow.update {
+            it.copy(
+                isSold = isSold,
+                soldDate = if (isSold) LocalDateTime.now(clock) else null
+            )
+        }
+    }
+
     fun onUpdatePropertyClicked() {
         onUpdateButtonClickedMutableSharedFlow.tryEmit(Unit)
     }
@@ -410,5 +431,4 @@ class EditPropertyViewModel @Inject constructor(
     fun onAddressEditTextFocused(hasFocus: Boolean) {
         hasAddressEditTextFocus.tryEmit(hasFocus)
     }
-
 }
