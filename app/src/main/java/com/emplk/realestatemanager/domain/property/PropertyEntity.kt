@@ -10,7 +10,7 @@ data class PropertyEntity(
     val id: Long = 0,
     val type: String,
     val price: BigDecimal,
-    val surface: Double,
+    val surface: BigDecimal,
     val location: LocationEntity,
     val rooms: Int,
     val bedrooms: Int,

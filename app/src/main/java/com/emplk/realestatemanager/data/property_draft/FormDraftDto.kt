@@ -12,7 +12,7 @@ data class FormDraftDto(
     val id: Long = 0,
     val type: String?,
     val price: BigDecimal,
-    val surface: Double?,
+    val surface: BigDecimal,
     val address: String?,
     @ColumnInfo(name = "is_address_valid")
     val isAddressValid: Boolean,

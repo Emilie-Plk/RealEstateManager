@@ -4,8 +4,8 @@ import java.math.BigDecimal
 import java.util.Locale
 
 interface LocaleFormattingRepository {
-    fun convertSquareFeetToSquareMeters(squareFeet: Double): Double
-    fun convertSquareMetersToSquareFeet(squareMeters: Double): Double
+    fun convertSquareFeetToSquareMeters(squareFeet: BigDecimal): BigDecimal
+    fun convertSquareMetersToSquareFeet(squareMeters: BigDecimal): BigDecimal
     fun getLocale(): Locale
     fun getLocaleSurfaceUnitFormatting(): SurfaceUnitType
     fun convertDollarToEuro(dollar: BigDecimal, currencyRate: Double): BigDecimal

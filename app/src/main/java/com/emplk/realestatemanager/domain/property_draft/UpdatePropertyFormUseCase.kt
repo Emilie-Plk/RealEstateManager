@@ -21,7 +21,7 @@ class UpdatePropertyFormUseCase @Inject constructor(
     private val getLocaleUseCase: GetLocaleUseCase,
     private val getCurrencyRateUseCase: GetCurrencyRateUseCase,
 ) {
-    suspend fun invoke(form: FormDraftStateEntity) {
+    suspend fun invoke(form: FormDraftParams) {
         coroutineScope {
             val currencyWrapperDeferred = async {
                 getCurrencyRateUseCase.invoke()
@@ -50,10 +50,10 @@ class UpdatePropertyFormUseCase @Inject constructor(
                     } else {
                         form.price
                     },
-                    surface = if (form.surface != null && form.surface.toDouble() > 0.0) {
-                        convertSurfaceUnitByLocaleUseCase.invoke(form.surface.toDouble())
+                    surface = if (form.surface > BigDecimal.ZERO) {
+                        convertSurfaceUnitByLocaleUseCase.invoke(form.surface)
                     } else {
-                        null
+                        form.surface
                     },
                     description = form.description,
                     rooms = form.nbRooms,

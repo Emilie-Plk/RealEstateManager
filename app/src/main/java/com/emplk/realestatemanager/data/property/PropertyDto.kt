@@ -16,7 +16,7 @@ data class PropertyDto(
     val id: Long = 0,
     val type: String,
     val price: BigDecimal,
-    val surface: Double,
+    val surface: BigDecimal,
     val rooms: Int,
     val bedrooms: Int,
     val bathrooms: Int,
