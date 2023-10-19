@@ -12,7 +12,6 @@ import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceByLocaleUseC
 import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdFlowUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
-import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceByLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
@@ -24,8 +23,8 @@ import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.amenity.type.GetAmenityTypeUseCase
 import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
 import com.emplk.realestatemanager.domain.property_draft.FormDraftParams
-import com.emplk.realestatemanager.domain.property_draft.InitAddOrEditPropertyFormUseCase
-import com.emplk.realestatemanager.domain.property_draft.PropertyFormDatabaseState
+import com.emplk.realestatemanager.domain.property_draft.InitPropertyFormUseCase
+import com.emplk.realestatemanager.domain.property_draft.PropertyFormState
 import com.emplk.realestatemanager.domain.property_draft.UpdatePropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_type.GetPropertyTypeFlowUseCase
 import com.emplk.realestatemanager.ui.add.PropertyFormViewState
@@ -52,7 +51,6 @@ import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
-import java.math.RoundingMode
 import java.time.Clock
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -61,7 +59,7 @@ import kotlin.time.Duration.Companion.milliseconds
 @HiltViewModel
 class EditPropertyViewModel @Inject constructor(
     private val updatePropertyUseCase: UpdatePropertyUseCase,
-    private val initAddOrEditPropertyFormUseCase: InitAddOrEditPropertyFormUseCase,
+    private val initPropertyFormUseCase: InitPropertyFormUseCase,
     private val getPropertyByItsIdAsFlowUseCase: GetPropertyByItsIdAsFlowUseCase,
     private val getCurrentPropertyIdFlowUseCase: GetCurrentPropertyIdFlowUseCase,
     private val getCurrencyTypeUseCase: GetCurrencyTypeUseCase,
@@ -125,10 +123,10 @@ class EditPropertyViewModel @Inject constructor(
                 .flatMapLatest { propertyId ->
                     getPropertyByItsIdAsFlowUseCase.invoke(propertyId)
                 }.collect { property ->
-                    when (val initPropertyForm = initAddOrEditPropertyFormUseCase.invoke(property.id)) {
-                        is PropertyFormDatabaseState.EmptyForm -> Unit
+                    when (val initPropertyForm = initPropertyFormUseCase.invoke(property.id)) {
+                        is PropertyFormState.EmptyForm -> Unit
 
-                        is PropertyFormDatabaseState.Draft ->
+                        is PropertyFormState.Draft ->
                             formMutableStateFlow.update { propertyForm ->
                                 propertyForm.copy(
                                     id = initPropertyForm.formDraftEntity.id,

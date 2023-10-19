@@ -1,9 +1,9 @@
 package com.emplk.realestatemanager.domain.property_draft
 
 interface FormDraftRepository {
-    suspend fun add(formDraftEntity: FormDraftEntity): Long?
+    suspend fun add(formDraftEntity: FormDraftEntity): Long
 
-    suspend fun addPropertyFormWithDetails(formDraftEntity: FormDraftEntity): Long?
+    suspend fun addPropertyFormWithDetails(formDraftEntity: FormDraftEntity): Long
 
     suspend fun getExistingPropertyFormId(): Long?
 

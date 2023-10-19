@@ -10,6 +10,7 @@ import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.property_draft.FormDraftEntity
 import com.emplk.realestatemanager.domain.property_draft.FormDraftRepository
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -23,42 +24,34 @@ class FormDraftDraftRepositoryRoom @Inject constructor(
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : FormDraftRepository {
 
-    override suspend fun add(formDraftEntity: FormDraftEntity): Long? =
+    override suspend fun add(formDraftEntity: FormDraftEntity): Long =
         withContext(coroutineDispatcherProvider.io) {
-            try {
-                formDraftDao.insert(formDraftMapper.mapToPropertyDraftDto(formDraftEntity))
-            } catch (e: SQLiteException) {
-                e.printStackTrace()
-                null
-            }
+            formDraftDao.insert(formDraftMapper.mapToPropertyDraftDto(formDraftEntity))
         }
 
-    override suspend fun addPropertyFormWithDetails(formDraftEntity: FormDraftEntity): Long? =
+    override suspend fun addPropertyFormWithDetails(formDraftEntity: FormDraftEntity): Long =
         withContext(coroutineDispatcherProvider.io) {
-            try {
-                val propertyFormId =
-                    add(formDraftEntity) ?: return@withContext null // TODO: revoir ça et mettre du null
-
-                val picturePreviewsFormAsync = formDraftEntity.pictures.map { picturePreviewEntity ->
-                    async {
-                        val picturePreviewFormDto =
-                            picturePreviewMapper.mapToPicturePreviewDto(picturePreviewEntity, propertyFormId)
-                        picturePreviewDao.insert(picturePreviewFormDto)
+            add(formDraftEntity).also { propertyFormId ->
+                buildList {
+                    formDraftEntity.pictures.onEach {
+                        add(
+                            async {
+                                val picturePreviewFormDto =
+                                    picturePreviewMapper.mapToPicturePreviewDto(it, propertyFormId)
+                                picturePreviewDao.insert(picturePreviewFormDto)
+                            }
+                        )
                     }
-                }
 
-                val amenitiesFormAsync = formDraftEntity.amenities.map {
-                    async {
-                        val amenityFormDto = amenityDraftMapper.mapToAmenityDto(it, propertyFormId)
-                        amenityDraftDao.insert(amenityFormDto)
+                    formDraftEntity.amenities.onEach {
+                        add(
+                            async {
+                                val amenityFormDto = amenityDraftMapper.mapToAmenityDto(it, propertyFormId)
+                                amenityDraftDao.insert(amenityFormDto)
+                            }
+                        )
                     }
-                }
-
-                (picturePreviewsFormAsync + amenitiesFormAsync).all { it.await() != null }
-                propertyFormId
-            } catch (e: SQLiteException) {
-                e.printStackTrace()
-                null
+                }.awaitAll()
             }
         }
 
@@ -119,13 +112,12 @@ class FormDraftDraftRepositoryRoom @Inject constructor(
 
     override suspend fun getPropertyFormById(propertyFormId: Long): FormDraftEntity =
         withContext(coroutineDispatcherProvider.io) {
-            formDraftDao.getPropertyFormById(propertyFormId).let { propertyFormWithDetails ->
+            val propertyFormWithDetails = formDraftDao.getPropertyFormById(propertyFormId)
                 formDraftMapper.mapToPropertyDraftEntity(
                     propertyFormWithDetails.propertyForm,
                     propertyFormWithDetails.picturePreviews,
                     propertyFormWithDetails.amenities,
                 )
-            }
         }
 
     override suspend fun update(formDraftEntity: FormDraftEntity) =
@@ -169,14 +161,13 @@ class FormDraftDraftRepositoryRoom @Inject constructor(
 
     override suspend fun delete(propertyFormId: Long): Boolean = withContext(coroutineDispatcherProvider.io) {
         try {
-            val amenityDeletionAsync = async { amenityDraftDao.deleteAll(propertyFormId) }
+            buildList {
+                add(async { amenityDraftDao.deleteAll(propertyFormId) })
 
-            val picturePreviewDeletionAsync = async { picturePreviewDao.deleteAll(propertyFormId) }
+                add(async { picturePreviewDao.deleteAll(propertyFormId) })
 
-            val propertyDeletionAsync = async { formDraftDao.delete(propertyFormId) }
-
-            (listOf(propertyDeletionAsync) + amenityDeletionAsync + picturePreviewDeletionAsync)
-                .all { it.await() != null }
+                add(async { formDraftDao.delete(propertyFormId) })
+            }.awaitAll().all { it != null }
         } catch (e: SQLiteException) {
             e.printStackTrace()
             false
