@@ -1,6 +1,6 @@
 package com.emplk.realestatemanager.data.locale_formatting
 
-import android.content.res.Resources
+import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.LocaleFormattingRepository
 import com.emplk.realestatemanager.domain.locale_formatting.SurfaceUnitType
@@ -19,7 +19,7 @@ class UnitOfMeasurementRepositoryLocale @Inject constructor(
     }
 
     override fun convertSquareFeetToSquareMeters(squareFeet: BigDecimal): BigDecimal =
-        squareFeet.divide(BigDecimal(SQUARE_FEET_TO_SQUARE_METERS),0, RoundingMode.HALF_UP)
+        squareFeet.divide(BigDecimal(SQUARE_FEET_TO_SQUARE_METERS), 0, RoundingMode.HALF_UP)
 
     override fun convertSquareMetersToSquareFeet(squareMeters: BigDecimal): BigDecimal =
         squareMeters.multiply(BigDecimal(SQUARE_FEET_TO_SQUARE_METERS)).setScale(0, RoundingMode.HALF_UP)
@@ -36,6 +36,9 @@ class UnitOfMeasurementRepositoryLocale @Inject constructor(
         val roundedPrice = price.setScale(0, RoundingMode.HALF_UP)
 
         val numberFormat = NumberFormat.getCurrencyInstance(locale)
+        if (numberFormat.currency?.symbol != "€" && numberFormat.currency?.symbol != "$") {
+            return "$$roundedPrice"
+        }
         numberFormat.maximumFractionDigits = 0
         return numberFormat.format(roundedPrice)
     }
