@@ -80,22 +80,22 @@ class FormDraftDraftRepositoryRoom @Inject constructor(
         }
     }
 
-    override suspend fun doesPropertyDraftExist(propertyFormId: Long?): Boolean =
+    override suspend fun doesDraftExist(propertyFormId: Long?): Boolean =
         withContext(coroutineDispatcherProvider.io) {
             if (propertyFormId == null) return@withContext false
             try {
-                formDraftDao.doesPropertyDraftExist(propertyFormId)
+                formDraftDao.doesDraftExist(propertyFormId)
             } catch (e: SQLiteException) {
                 e.printStackTrace()
                 false
             }
         }
 
-    override suspend fun doesPropertyExistInBothTables(propertyFormId: Long?): Boolean =
+    override suspend fun doesPropertyExist(propertyFormId: Long?): Boolean =
         withContext(coroutineDispatcherProvider.io) {
             if (propertyFormId == null) return@withContext false
             try {
-                formDraftDao.doesPropertyExistInBothTables(propertyFormId)
+                formDraftDao.doesPropertyExist(propertyFormId)
             } catch (e: SQLiteException) {
                 e.printStackTrace()
                 false

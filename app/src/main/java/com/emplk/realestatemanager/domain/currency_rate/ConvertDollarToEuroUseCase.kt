@@ -5,6 +5,6 @@ import java.math.RoundingMode
 import javax.inject.Inject
 
 class ConvertDollarToEuroUseCase @Inject constructor() {
-    fun invoke(priceInUsd: BigDecimal, usdToEuroRate: Double): BigDecimal =
-        priceInUsd.multiply(BigDecimal(usdToEuroRate)).setScale(0, RoundingMode.HALF_UP)
+    fun invoke(priceInUsd: BigDecimal, usdToEuroRate: BigDecimal): BigDecimal =
+        priceInUsd.multiply(usdToEuroRate).setScale(0, RoundingMode.HALF_UP)
 }

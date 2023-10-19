@@ -24,30 +24,13 @@ class InternetConnectivityRepositoryBroadcastReceiver @Inject constructor(
 
     private val connectivityManager = application.getSystemService<ConnectivityManager>()
 
-    override fun isInternetEnabledAsFlow(): Flow<Boolean> = callbackFlow { // callbackFlow is a cold flow
+    override fun isInternetEnabledAsFlow(): Flow<Boolean> = callbackFlow {
+        trySend(hasInternetConnection())
 
         @Suppress("DEPRECATION") val intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
         val receiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
-                trySend(
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        if (connectivityManager?.activeNetwork == null) {
-                            false
-                        } else {
-                            val networkCapabilities =
-                                connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-                            if (networkCapabilities != null) {
-                                networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
-                                        networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
-                            } else {
-                                false
-                            }
-                        }
-                    } else {
-                        @Suppress("DEPRECATION")
-                        connectivityManager?.activeNetworkInfo?.isConnected == true
-                    }
-                )
+                trySend(hasInternetConnection())
             }
         }
 
@@ -57,4 +40,24 @@ class InternetConnectivityRepositoryBroadcastReceiver @Inject constructor(
             application.unregisterReceiver(receiver)
         }
     }.distinctUntilChanged()
+
+    private fun hasInternetConnection(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (connectivityManager?.activeNetwork == null) {
+                false
+            } else {
+                val networkCapabilities =
+                    connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+                if (networkCapabilities != null) {
+                    networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                            networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
+                } else {
+                    false
+                }
+            }
+        } else {
+            @Suppress("DEPRECATION")
+            connectivityManager?.activeNetworkInfo?.isConnected == true
+        }
+    }
 }
