@@ -12,7 +12,6 @@ import com.emplk.realestatemanager.domain.autocomplete.PredictionWrapper
 import com.emplk.realestatemanager.domain.connectivity.IsInternetEnabledFlowUseCase
 import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceByLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceDependingOnLocaleUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceToSquareFeetDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
@@ -26,8 +25,8 @@ import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.amenity.type.GetAmenityTypeUseCase
 import com.emplk.realestatemanager.domain.property_draft.ClearPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.FormDraftParams
-import com.emplk.realestatemanager.domain.property_draft.InitAddOrEditPropertyFormUseCase
-import com.emplk.realestatemanager.domain.property_draft.PropertyFormDatabaseState
+import com.emplk.realestatemanager.domain.property_draft.InitPropertyFormUseCase
+import com.emplk.realestatemanager.domain.property_draft.PropertyFormState
 import com.emplk.realestatemanager.domain.property_draft.SetPropertyFormProgressUseCase
 import com.emplk.realestatemanager.domain.property_draft.UpdatePropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.address.SetHasAddressFocusUseCase
@@ -71,7 +70,7 @@ class AddPropertyViewModel @Inject constructor(
     private val updatePicturePreviewUseCase: UpdatePicturePreviewUseCase,
     private val savePictureToLocalAppFilesAndToLocalDatabaseUseCase: SavePictureToLocalAppFilesAndToLocalDatabaseUseCase,
     private val updatePropertyFormUseCase: UpdatePropertyFormUseCase, // à refacto si chui une ouf
-    private val initAddOrEditPropertyFormUseCase: InitAddOrEditPropertyFormUseCase,
+    private val initPropertyFormUseCase: InitPropertyFormUseCase,
     private val getCurrencyTypeUseCase: GetCurrencyTypeUseCase,
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
     private val getPicturePreviewsAsFlowUseCase: GetPicturePreviewsAsFlowUseCase,
@@ -118,14 +117,14 @@ class AddPropertyViewModel @Inject constructor(
 
     val viewStateLiveData: LiveData<PropertyFormViewState> = liveData {
         coroutineScope {
-            when (val initTempPropertyForm = initAddOrEditPropertyFormUseCase.invoke(null)) {
-                is PropertyFormDatabaseState.EmptyForm -> {
+            when (val initTempPropertyForm = initPropertyFormUseCase.invoke(null)) {
+                is PropertyFormState.EmptyForm -> {
                     formMutableStateFlow.update {
                         it.copy(id = initTempPropertyForm.newPropertyFormId)
                     }
                 }
 
-                is PropertyFormDatabaseState.Draft -> {
+                is PropertyFormState.Draft -> {
                     formMutableStateFlow.update { formState ->
                         formState.copy(
                             id = initTempPropertyForm.formDraftEntity.id,
