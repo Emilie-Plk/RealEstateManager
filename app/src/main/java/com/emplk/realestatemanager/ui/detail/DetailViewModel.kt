@@ -7,7 +7,8 @@ import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceByLocaleUseCase
 import com.emplk.realestatemanager.domain.currency_rate.GetLastUpdatedCurrencyRateDateUseCase
 import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdFlowUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceUnitByLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceDependingOnLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceToSquareFeetDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceByLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetRoundedSurfaceWithSurfaceUnitUseCase
@@ -36,7 +37,7 @@ class DetailViewModel @Inject constructor(
     private val getLastUpdatedCurrencyRateDateUseCase: GetLastUpdatedCurrencyRateDateUseCase,
     private val getLocaleUseCase: GetLocaleUseCase,
     private val getRoundedSurfaceWithSurfaceUnitUseCase: GetRoundedSurfaceWithSurfaceUnitUseCase,
-    private val convertSurfaceUnitByLocaleUseCase: ConvertSurfaceUnitByLocaleUseCase,
+    private val convertSurfaceDependingOnLocaleUseCase: ConvertSurfaceDependingOnLocaleUseCase,
     private val getCurrentPropertyIdFlowUseCase: GetCurrentPropertyIdFlowUseCase,
     private val generateMapUrlWithApiKeyUseCase: GenerateMapUrlWithApiKeyUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
@@ -89,7 +90,7 @@ class DetailViewModel @Inject constructor(
                         else -> false
                     },
                     surface = getRoundedSurfaceWithSurfaceUnitUseCase.invoke(
-                        convertSurfaceUnitByLocaleUseCase.invoke(property.surface)
+                        convertSurfaceDependingOnLocaleUseCase.invoke(property.surface)
                     ),
                     rooms = NativeText.Argument(
                         R.string.detail_number_of_room_textview,

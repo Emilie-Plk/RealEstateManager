@@ -1,4 +1,4 @@
-package com.emplk.realestatemanager.ui.property_list
+package com.emplk.realestatemanager.ui.list
 
 import android.os.Bundle
 import android.view.View

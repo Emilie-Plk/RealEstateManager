@@ -10,6 +10,9 @@ import com.emplk.realestatemanager.domain.agent.GetAgentsMapUseCase
 import com.emplk.realestatemanager.domain.autocomplete.GetCurrentPredictionAddressesFlowWithDebounceUseCase
 import com.emplk.realestatemanager.domain.autocomplete.PredictionWrapper
 import com.emplk.realestatemanager.domain.connectivity.IsInternetEnabledFlowUseCase
+import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceByLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceDependingOnLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceToSquareFeetDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
@@ -74,6 +77,8 @@ class AddPropertyViewModel @Inject constructor(
     private val getPicturePreviewsAsFlowUseCase: GetPicturePreviewsAsFlowUseCase,
     private val deletePicturePreviewUseCase: DeletePicturePreviewUseCase,
     private val getAgentsMapUseCase: GetAgentsMapUseCase,
+    private val convertPriceByLocaleUseCase: ConvertPriceByLocaleUseCase,
+    private val convertSurfaceDependingOnLocaleUseCase: ConvertSurfaceDependingOnLocaleUseCase,
     private val setSelectedAddressStateUseCase: SetSelectedAddressStateUseCase,
     private val updateOnAddressClickedUseCase: UpdateOnAddressClickedUseCase,
     private val setHasAddressFocusUseCase: SetHasAddressFocusUseCase,
@@ -127,8 +132,8 @@ class AddPropertyViewModel @Inject constructor(
                             propertyType = initTempPropertyForm.formDraftEntity.type,
                             address = initTempPropertyForm.formDraftEntity.address,
                             isAddressValid = initTempPropertyForm.formDraftEntity.isAddressValid,
-                            price = initTempPropertyForm.formDraftEntity.price,
-                            surface = initTempPropertyForm.formDraftEntity.surface,
+                            price = convertPriceByLocaleUseCase.invoke(initTempPropertyForm.formDraftEntity.price),
+                            surface = convertSurfaceDependingOnLocaleUseCase.invoke(initTempPropertyForm.formDraftEntity.surface),
                             description = initTempPropertyForm.formDraftEntity.description,
                             nbRooms = initTempPropertyForm.formDraftEntity.rooms ?: 0,
                             nbBathrooms = initTempPropertyForm.formDraftEntity.bathrooms ?: 0,

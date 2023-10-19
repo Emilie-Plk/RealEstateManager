@@ -5,6 +5,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.FormFragmentBinding
@@ -75,6 +76,10 @@ class EditPropertyFragment : BasePropertyFragment() {
             val currentSurface = binding.formSurfaceTextInputEditText.text.toString()
             if (currentSurface != viewState.surface) {
                 binding.formSurfaceTextInputEditText.setText(viewState.surface)
+            }
+
+            binding.formSurfaceTextInputEditText.doAfterTextChanged {
+                viewModel.onSurfaceChanged(it.toString())
             }
 
             val currentPrice = binding.formPriceTextInputEditText.text.toString()

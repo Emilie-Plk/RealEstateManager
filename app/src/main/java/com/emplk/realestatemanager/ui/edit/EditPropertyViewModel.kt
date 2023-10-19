@@ -10,6 +10,7 @@ import com.emplk.realestatemanager.domain.autocomplete.PredictionWrapper
 import com.emplk.realestatemanager.domain.connectivity.IsInternetEnabledFlowUseCase
 import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceByLocaleUseCase
 import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdFlowUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceByLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
@@ -69,7 +70,7 @@ class EditPropertyViewModel @Inject constructor(
     private val getAddressPredictionsUseCase: GetAddressPredictionsUseCase,
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
     private val getPropertyTypeFlowUseCase: GetPropertyTypeFlowUseCase,
-    private val formatPriceByLocaleUseCase: FormatPriceByLocaleUseCase,
+    private val convertSurfaceDependingOnLocaleUseCase: ConvertSurfaceDependingOnLocaleUseCase,
     private val convertPriceByLocaleUseCase: ConvertPriceByLocaleUseCase,
     private val updatePropertyFormUseCase: UpdatePropertyFormUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
@@ -133,8 +134,8 @@ class EditPropertyViewModel @Inject constructor(
                                     id = initPropertyForm.formDraftEntity.id,
                                     propertyType = property.type,
                                     address = property.location.address,
-                                    price = property.price,
-                                    surface = property.surface,
+                                    price = convertPriceByLocaleUseCase.invoke(property.price),
+                                    surface = convertSurfaceDependingOnLocaleUseCase.invoke(property.surface),
                                     description = property.description,
                                     nbRooms = property.rooms,
                                     nbBathrooms = property.bathrooms,
@@ -181,8 +182,7 @@ class EditPropertyViewModel @Inject constructor(
                                     addressPredictions = mapPredictionsToViewState(addressPredictions),
                                     address = form.address,
                                     isAddressValid = true, // TODO: change that of course
-                                    price = convertPriceByLocaleUseCase.invoke(form.price)
-                                        .setScale(0, RoundingMode.HALF_UP).toString(),
+                                    price = form.price.toString(),
                                     surface = form.surface.toString(),
                                     description = form.description,
                                     nbRooms = form.nbRooms,
