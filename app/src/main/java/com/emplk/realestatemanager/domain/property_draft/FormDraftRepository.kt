@@ -9,9 +9,9 @@ interface FormDraftRepository {
 
     suspend fun getAddFormId(): Long?
 
-    suspend fun doesPropertyDraftExist(propertyFormId: Long?): Boolean
+    suspend fun doesDraftExist(propertyFormId: Long?): Boolean
 
-    suspend fun doesPropertyExistInBothTables(propertyFormId: Long?): Boolean
+    suspend fun doesPropertyExist(propertyFormId: Long?): Boolean
 
     suspend fun getExistingPropertyForm(): FormDraftEntity?
 

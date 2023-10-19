@@ -7,8 +7,6 @@ class InitAddOrEditPropertyFormUseCase @Inject constructor(
     private val addPropertyFormWithDetailsUseCase: AddPropertyFormWithDetailsUseCase,
 ) {
     suspend fun invoke(id: Long?): PropertyFormDatabaseState {
-        val doesPropertyDraftExist = formDraftRepository.doesPropertyDraftExist(id)
-        val doesPropertyExistInBothTables = formDraftRepository.doesPropertyExistInBothTables(id)
         if (id == null) {
             val existingAddDraftId = formDraftRepository.getAddFormId()
             return if (existingAddDraftId == null) {
@@ -23,14 +21,16 @@ class InitAddOrEditPropertyFormUseCase @Inject constructor(
                 )
             }
         } else {
-            return if (doesPropertyExistInBothTables) { //  s'il existe un draft + une property
+            val doesDraftExist = formDraftRepository.doesDraftExist(id)
+            val doesPropertyExist = formDraftRepository.doesPropertyExist(id)
+            return if (doesPropertyExist && doesDraftExist) { //  s'il existe un draft + une property
                 // case edit draft existant
                 PropertyFormDatabaseState.Draft(formDraftRepository.getPropertyFormById(id))
-            } else if (!doesPropertyDraftExist) { // s'il n'existe pas de draft
+            } else if (!doesDraftExist) { // s'il n'existe pas de draft
                 // case new edit draft
                 addPropertyFormWithDetailsUseCase.invoke(id)
                 PropertyFormDatabaseState.Draft(formDraftRepository.getPropertyFormById(id))
-            } else throw IllegalStateException("Property draft exist but not in both tables")
+            } else throw IllegalStateException("Property draft with id $id exist but not in properties table")
         }
     }
 }

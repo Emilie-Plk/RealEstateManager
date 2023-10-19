@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import java.math.BigDecimal
 import java.time.Clock
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -53,11 +54,11 @@ class CurrencyRateRepositoryFixer @Inject constructor(
                     if (currencyRateEntity != null) {
                         updateCachedCurrencyRate(currencyRateEntity)
                         CurrencyRateWrapper.Success(currencyRateEntity)
-                    } else CurrencyRateWrapper.Error(USD_TO_EURO_RATE_FALLBACK)
-                } else CurrencyRateWrapper.Error(USD_TO_EURO_RATE_FALLBACK)
+                    } else CurrencyRateWrapper.Error(BigDecimal(USD_TO_EURO_RATE_FALLBACK))
+                } else CurrencyRateWrapper.Error(BigDecimal(USD_TO_EURO_RATE_FALLBACK))
             } catch (exception: Exception) {
                 coroutineContext.ensureActive()
-                CurrencyRateWrapper.Error(USD_TO_EURO_RATE_FALLBACK)
+                CurrencyRateWrapper.Error(BigDecimal(USD_TO_EURO_RATE_FALLBACK))
             }
         } else CurrencyRateWrapper.Success(cachedCurrencyRate)
     }
@@ -85,7 +86,7 @@ class CurrencyRateRepositoryFixer @Inject constructor(
                 val lastRateDate = preferences[LAST_RATE_DATE_KEY]
                 if (usdToEuroRate != null && lastRateDate != null) {
                     CurrencyRateEntity(
-                        usdToEuroRate = usdToEuroRate.toDouble(),
+                        usdToEuroRate = BigDecimal(usdToEuroRate),
                         lastUpdatedDate = LocalDate.parse(lastRateDate)
                     )
                 } else null
@@ -96,7 +97,7 @@ class CurrencyRateRepositoryFixer @Inject constructor(
             response.date != null
         ) {
             CurrencyRateEntity(
-                usdToEuroRate = (1.0 / response.rateResponse.usd.toDouble()),
+                usdToEuroRate = BigDecimal(response.rateResponse.usd),
                 lastUpdatedDate = LocalDate.parse(response.date, DateTimeFormatter.ISO_DATE)
             )
         } else null
