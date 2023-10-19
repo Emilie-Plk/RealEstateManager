@@ -1,4 +1,4 @@
-package com.emplk.realestatemanager.ui.property_list
+package com.emplk.realestatemanager.ui.list
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -6,7 +6,8 @@ import androidx.lifecycle.liveData
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceByLocaleUseCase
 import com.emplk.realestatemanager.domain.current_property.SetCurrentPropertyIdUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceUnitByLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceDependingOnLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceToSquareFeetDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceByLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetRoundedSurfaceWithSurfaceUnitUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
@@ -22,7 +23,7 @@ import javax.inject.Inject
 class PropertiesViewModel @Inject constructor(
     private val getPropertiesAsFlowUseCase: GetPropertiesAsFlowUseCase,
     private val setCurrentPropertyIdUseCase: SetCurrentPropertyIdUseCase,
-    private val convertSurfaceUnitByLocaleUseCase: ConvertSurfaceUnitByLocaleUseCase,
+    private val convertSurfaceDependingOnLocaleUseCase: ConvertSurfaceDependingOnLocaleUseCase,
     private val convertPriceByLocaleUseCase: ConvertPriceByLocaleUseCase,
     private val getRoundedSurfaceWithSurfaceUnitUseCase: GetRoundedSurfaceWithSurfaceUnitUseCase,
     private val formatPriceByLocaleUseCase: FormatPriceByLocaleUseCase,
@@ -42,7 +43,7 @@ class PropertiesViewModel @Inject constructor(
 
             val propertiesWithConvertedPriceAndSurface = properties.map { property ->
                 val convertedPrice = convertPriceByLocaleUseCase.invoke(property.price)
-                val convertedSurface = convertSurfaceUnitByLocaleUseCase.invoke(property.surface)
+                val convertedSurface = convertSurfaceDependingOnLocaleUseCase.invoke(property.surface)
                 property.copy(
                     price = convertedPrice,
                     surface = convertedSurface

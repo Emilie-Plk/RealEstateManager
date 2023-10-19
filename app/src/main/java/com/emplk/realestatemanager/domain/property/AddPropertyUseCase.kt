@@ -2,11 +2,11 @@ package com.emplk.realestatemanager.domain.property
 
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.currency_rate.ConvertEuroToDollarUseCase
-import com.emplk.realestatemanager.domain.currency_rate.CurrencyRateWrapper
 import com.emplk.realestatemanager.domain.currency_rate.GetCurrencyRateUseCase
 import com.emplk.realestatemanager.domain.geocoding.GeocodingRepository
 import com.emplk.realestatemanager.domain.geocoding.GeocodingWrapper
-import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceUnitByLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceToSquareFeetDependingOnLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.ConvertToUsdDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetLocaleUseCase
 import com.emplk.realestatemanager.domain.map_picture.GenerateMapBaseUrlWithParamsUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
@@ -24,7 +24,6 @@ import kotlinx.coroutines.coroutineScope
 import java.math.BigDecimal
 import java.time.Clock
 import java.time.LocalDateTime
-import java.util.Locale
 import javax.inject.Inject
 
 class AddPropertyUseCase @Inject constructor(
@@ -32,10 +31,11 @@ class AddPropertyUseCase @Inject constructor(
     private val geocodingRepository: GeocodingRepository,
     private val generateMapBaseUrlWithParamsUseCase: GenerateMapBaseUrlWithParamsUseCase,
     private val getLocaleUseCase: GetLocaleUseCase,
+    private val convertToUsdDependingOnLocaleUseCase: ConvertToUsdDependingOnLocaleUseCase,
     private val getCurrencyRateUseCase: GetCurrencyRateUseCase,
     private val getPicturePreviewsUseCase: GetPicturePreviewsUseCase,
     private val convertEuroToDollarUseCase: ConvertEuroToDollarUseCase,
-    private val convertSurfaceUnitByLocaleUseCase: ConvertSurfaceUnitByLocaleUseCase,
+    private val convertSurfaceToSquareFeetDependingOnLocaleUseCase: ConvertSurfaceToSquareFeetDependingOnLocaleUseCase,
     private val updatePropertyFormUseCase: UpdatePropertyFormUseCase,
     private val clearPropertyFormUseCase: ClearPropertyFormUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
@@ -61,31 +61,13 @@ class AddPropertyUseCase @Inject constructor(
             val geocodingWrapperDeferred = async {
                 geocodingRepository.getLatLong(form.address)
             }
-            val currencyWrapperDeferred = async {
-                getCurrencyRateUseCase.invoke()
-            }
 
             val success = propertyRepository.addPropertyWithDetails(
                 PropertyEntity(
                     id = form.id,
                     type = form.propertyType,
-                    price = when (getLocaleUseCase.invoke()) {
-                        Locale.US -> form.price
-                        Locale.FRANCE -> when (val currencyRateEntity = currencyWrapperDeferred.await()) {
-                            is CurrencyRateWrapper.Success -> convertEuroToDollarUseCase.invoke(
-                                form.price,
-                                currencyRateEntity.currencyRateEntity.usdToEuroRate
-                            )
-
-                            is CurrencyRateWrapper.Error -> convertEuroToDollarUseCase.invoke(
-                                form.price,
-                                currencyRateEntity.fallbackUsToEuroRate
-                            )
-                        }
-
-                        else -> return@coroutineScope AddOrEditPropertyWrapper.LocaleError(NativeText.Resource(R.string.form_locale_error_message))
-                    },
-                    surface = convertSurfaceUnitByLocaleUseCase.invoke(form.surface),
+                    price = convertToUsdDependingOnLocaleUseCase.invoke(form.price),
+                    surface = convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(form.surface),
                     description = form.description,
                     rooms = form.nbRooms,
                     bathrooms = form.nbBathrooms,

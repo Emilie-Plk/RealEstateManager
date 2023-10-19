@@ -6,6 +6,8 @@ import com.emplk.realestatemanager.domain.currency_rate.CurrencyRateWrapper
 import com.emplk.realestatemanager.domain.currency_rate.GetCurrencyRateUseCase
 import com.emplk.realestatemanager.domain.geocoding.GeocodingRepository
 import com.emplk.realestatemanager.domain.geocoding.GeocodingWrapper
+import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceToSquareFeetDependingOnLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.ConvertToUsdDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetLocaleUseCase
 import com.emplk.realestatemanager.domain.map_picture.GenerateMapBaseUrlWithParamsUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
@@ -31,6 +33,8 @@ class UpdatePropertyUseCase @Inject constructor(
     private val updatePropertyFormUseCase: UpdatePropertyFormUseCase,
     private val geocodingRepository: GeocodingRepository,
     private val getLocaleUseCase: GetLocaleUseCase,
+    private val convertToUsdDependingOnLocaleUseCase: ConvertToUsdDependingOnLocaleUseCase,
+    private val convertSurfaceToSquareFeetDependingOnLocaleUseCase: ConvertSurfaceToSquareFeetDependingOnLocaleUseCase,
     private val generateMapBaseUrlWithParamsUseCase: GenerateMapBaseUrlWithParamsUseCase,
     private val getCurrencyRateUseCase: GetCurrencyRateUseCase,
     private val convertEuroToDollarUseCase: ConvertEuroToDollarUseCase,
@@ -59,32 +63,13 @@ class UpdatePropertyUseCase @Inject constructor(
             val geocodingWrapperDeferred = async {
                 geocodingRepository.getLatLong(form.address)
             }
-            val currencyWrapperDeferred = async {
-                getCurrencyRateUseCase.invoke()
-            }
-
 
             val success = propertyRepository.update(
                 PropertyEntity(
                     id = form.id,
                     type = form.propertyType,
-                    price = when (getLocaleUseCase.invoke()) {
-                        Locale.US -> form.price
-                        Locale.FRANCE -> when (val currencyRateEntity = currencyWrapperDeferred.await()) {
-                            is CurrencyRateWrapper.Success -> convertEuroToDollarUseCase.invoke(
-                                form.price,
-                                currencyRateEntity.currencyRateEntity.usdToEuroRate
-                            )
-
-                            is CurrencyRateWrapper.Error -> convertEuroToDollarUseCase.invoke(
-                                form.price,
-                                currencyRateEntity.fallbackUsToEuroRate
-                            )
-                        }
-
-                        else -> return@coroutineScope AddOrEditPropertyWrapper.LocaleError(NativeText.Resource(R.string.form_generic_error_message))
-                    },
-                    surface = form.surface,
+                    price =  convertToUsdDependingOnLocaleUseCase.invoke(form.price),
+                    surface = convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(form.surface),
                     description = form.description,
                     rooms = form.nbRooms,
                     bathrooms = form.nbBathrooms,

@@ -22,9 +22,6 @@ interface PropertyDao {
     @Query("SELECT * FROM properties WHERE id = :propertyId")
     suspend fun getPropertyById(propertyId: Long): PropertyWithDetails
 
-    @Query("SELECT * FROM properties")
-    fun getPropertiesAsFlow(): Flow<List<PropertyDto>>
-
     @Transaction
     @Query("SELECT * FROM properties")
     fun getPropertiesWithDetailsAsFlow(): Flow<List<PropertyWithDetails>>

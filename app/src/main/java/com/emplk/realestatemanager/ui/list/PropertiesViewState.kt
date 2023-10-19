@@ -1,4 +1,4 @@
-package com.emplk.realestatemanager.ui.property_list
+package com.emplk.realestatemanager.ui.list
 
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.NativePhoto

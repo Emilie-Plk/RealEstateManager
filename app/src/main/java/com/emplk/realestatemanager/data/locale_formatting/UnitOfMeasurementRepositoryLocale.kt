@@ -24,11 +24,11 @@ class UnitOfMeasurementRepositoryLocale @Inject constructor(
     override fun convertSquareMetersToSquareFeet(squareMeters: BigDecimal): BigDecimal =
         squareMeters.multiply(BigDecimal(SQUARE_FEET_TO_SQUARE_METERS)).setScale(0, RoundingMode.HALF_UP)
 
-    override fun convertDollarToEuro(dollar: BigDecimal, currencyRate: Double): BigDecimal =
-        dollar.multiply(BigDecimal(currencyRate)).setScale(0, RoundingMode.HALF_UP)
+    override fun convertDollarToEuro(dollar: BigDecimal, currencyRate: BigDecimal): BigDecimal =
+        dollar.multiply(currencyRate).setScale(0, RoundingMode.HALF_UP)
 
-    override fun convertEuroToDollar(euro: BigDecimal, currencyRate: Double): BigDecimal =
-        euro.divide(BigDecimal(currencyRate), 0, RoundingMode.HALF_UP)
+    override fun convertEuroToDollar(euro: BigDecimal, currencyRate: BigDecimal): BigDecimal =
+        euro.divide(currencyRate, 0, RoundingMode.HALF_UP)
 
     override fun getLocale(): Locale = locale
 

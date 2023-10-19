@@ -15,6 +15,10 @@ class ConvertPriceByLocaleUseCase @Inject constructor(
         private val FRANCE = Locale.FRANCE
     }
 
+    /**
+     * @return BigDecimal of the price converted to USD depending on locale
+     * (used to convert price in € if Locale is France)
+     */
     suspend fun invoke(price: BigDecimal): BigDecimal {
         when (getLocaleUseCase.invoke()) {
             FRANCE -> {
