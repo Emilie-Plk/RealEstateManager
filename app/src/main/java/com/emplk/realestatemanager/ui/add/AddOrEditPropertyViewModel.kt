@@ -1,7 +1,7 @@
 package com.emplk.realestatemanager.ui.add
 
-import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
@@ -19,7 +19,7 @@ import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.GetClearPropertyFormNavigationEventUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.GetDraftNavigationUseCase
-import com.emplk.realestatemanager.domain.property.AddPropertyUseCase
+import com.emplk.realestatemanager.domain.property.AddOrEditPropertyUseCase
 import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.amenity.type.GetAmenityTypeUseCase
@@ -62,8 +62,8 @@ import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
-class AddPropertyViewModel @Inject constructor(
-    private val addPropertyUseCase: AddPropertyUseCase,
+class AddOrEditPropertyViewModel @Inject constructor(
+    private val addOrEditPropertyUseCase: AddOrEditPropertyUseCase,
     private val getDraftNavigationUseCase: GetDraftNavigationUseCase,
     private val getClearPropertyFormNavigationEventUseCase: GetClearPropertyFormNavigationEventUseCase,
     private val clearPropertyFormUseCase: ClearPropertyFormUseCase,
@@ -87,7 +87,10 @@ class AddPropertyViewModel @Inject constructor(
     private val getCurrentPredictionAddressesFlowWithDebounceUseCase: GetCurrentPredictionAddressesFlowWithDebounceUseCase,
     private val getPropertyTypeFlowUseCase: GetPropertyTypeFlowUseCase,
     private val isInternetEnabledFlowUseCase: IsInternetEnabledFlowUseCase,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
+
+    private val propertyId: Long? = savedStateHandle.get<Long>(AddOrEditPropertyFragment.PROPERTY_ID_KEY)
 
     private val formMutableStateFlow = MutableStateFlow(FormDraftParams())
 
@@ -95,7 +98,7 @@ class AddPropertyViewModel @Inject constructor(
     private val isAddingPropertyInDatabaseMutableStateFlow = MutableStateFlow(false)
     private val onCreateButtonClickedMutableSharedFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
 
-    val viewEventLiveData: LiveData<Event<AddPropertyEvent>> = liveData {
+    val viewEventLiveData: LiveData<Event<FormEvent>> = liveData {
         onCreateButtonClickedMutableSharedFlow.collect {
             combine(
                 formMutableStateFlow,
@@ -103,13 +106,13 @@ class AddPropertyViewModel @Inject constructor(
             ) { form, isInternetEnabled ->
                 if (isInternetEnabled) {
                     isAddingPropertyInDatabaseMutableStateFlow.tryEmit(true)
-                    val resultEvent = addPropertyUseCase.invoke(form)
+                    val resultEvent = addOrEditPropertyUseCase.invoke(form)
                     emit(Event(resultEvent))
                     isAddingPropertyInDatabaseMutableStateFlow.tryEmit(false)
                 } else {
                     updatePropertyFormUseCase.invoke(form)
                     setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
-                    emit(Event(AddPropertyEvent.Toast(NativeText.Resource(R.string.no_internet_connection_draft_saved))))
+                    emit(Event(FormEvent.Toast(NativeText.Resource(R.string.no_internet_connection_draft_saved))))
                 }
             }.collect()
         }
@@ -117,37 +120,34 @@ class AddPropertyViewModel @Inject constructor(
 
     val viewStateLiveData: LiveData<PropertyFormViewState> = liveData {
         coroutineScope {
-            when (val initTempPropertyForm = initPropertyFormUseCase.invoke(null)) {
-                is PropertyFormState.EmptyForm -> {
-                    formMutableStateFlow.update {
-                        it.copy(id = initTempPropertyForm.newPropertyFormId)
-                    }
-                }
 
-                is PropertyFormState.Draft -> {
+            when (val initPropertyFormState = initPropertyFormUseCase.invoke(propertyId)) {
+                is PropertyFormState.EmptyForm ->
+                    formMutableStateFlow.update {
+                        it.copy(id = initPropertyFormState.newPropertyFormId)
+                    }
+
+                is PropertyFormState.Draft ->
                     formMutableStateFlow.update { formState ->
                         formState.copy(
-                            id = initTempPropertyForm.formDraftEntity.id,
-                            propertyType = initTempPropertyForm.formDraftEntity.type,
-                            address = initTempPropertyForm.formDraftEntity.address,
-                            isAddressValid = initTempPropertyForm.formDraftEntity.isAddressValid,
-                            price = convertPriceByLocaleUseCase.invoke(initTempPropertyForm.formDraftEntity.price),
-                            surface = convertSurfaceDependingOnLocaleUseCase.invoke(initTempPropertyForm.formDraftEntity.surface),
-                            description = initTempPropertyForm.formDraftEntity.description,
-                            nbRooms = initTempPropertyForm.formDraftEntity.rooms ?: 0,
-                            nbBathrooms = initTempPropertyForm.formDraftEntity.bathrooms ?: 0,
-                            nbBedrooms = initTempPropertyForm.formDraftEntity.bedrooms ?: 0,
-                            agent = initTempPropertyForm.formDraftEntity.agentName,
-                            amenities = initTempPropertyForm.formDraftEntity.amenities,
-                            pictureIds = initTempPropertyForm.formDraftEntity.pictures.map { it.id },
-                            featuredPictureId = initTempPropertyForm.formDraftEntity.pictures.find { it.isFeatured }?.id,
+                            id = initPropertyFormState.formDraftEntity.id,
+                            propertyType = initPropertyFormState.formDraftEntity.type,
+                            address = initPropertyFormState.formDraftEntity.address,
+                            isAddressValid = initPropertyFormState.formDraftEntity.isAddressValid,
+                            price = convertPriceByLocaleUseCase.invoke(initPropertyFormState.formDraftEntity.price),
+                            surface = convertSurfaceDependingOnLocaleUseCase.invoke(initPropertyFormState.formDraftEntity.surface),
+                            description = initPropertyFormState.formDraftEntity.description,
+                            nbRooms = initPropertyFormState.formDraftEntity.rooms ?: 0,
+                            nbBathrooms = initPropertyFormState.formDraftEntity.bathrooms ?: 0,
+                            nbBedrooms = initPropertyFormState.formDraftEntity.bedrooms ?: 0,
+                            agent = initPropertyFormState.formDraftEntity.agentName,
+                            amenities = initPropertyFormState.formDraftEntity.amenities,
+                            pictureIds = initPropertyFormState.formDraftEntity.pictures.map { it.id },
+                            featuredPictureId = initPropertyFormState.formDraftEntity.pictures.find { it.isFeatured }?.id,
+                            isSold = initPropertyFormState.formDraftEntity.isSold,
+                            soldDate = initPropertyFormState.formDraftEntity.saleDate,
                         )
                     }
-                    Log.d(
-                        "AddPropertyViewModel",
-                        "initTemporaryPropertyFormUseCase with existing propertyForm: ${initTempPropertyForm.formDraftEntity}"
-                    )
-                }
             }
 
             launch {
@@ -361,7 +361,7 @@ class AddPropertyViewModel @Inject constructor(
             }
 
             is PredictionWrapper.NoResult -> listOf(PredictionViewState.EmptyState)
-            is PredictionWrapper.Error -> emptyList()
+            is PredictionWrapper.Error,
             is PredictionWrapper.Failure -> emptyList()
 
             null -> emptyList()

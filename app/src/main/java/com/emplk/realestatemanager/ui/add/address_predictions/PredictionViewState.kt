@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.ui.add.address_predictions
 
+import androidx.annotation.ColorInt
 import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParam
 
 sealed class PredictionViewState(val type: Type) {

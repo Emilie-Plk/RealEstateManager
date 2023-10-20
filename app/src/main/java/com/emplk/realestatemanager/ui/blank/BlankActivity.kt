@@ -15,9 +15,8 @@ import androidx.fragment.app.commitNow
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.BlankActivityBinding
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
-import com.emplk.realestatemanager.ui.add.AddPropertyFragment
+import com.emplk.realestatemanager.ui.add.AddOrEditPropertyFragment
 import com.emplk.realestatemanager.ui.add.draft_dialog.PropertyDraftDialogFragment
-import com.emplk.realestatemanager.ui.edit.EditPropertyFragment
 import com.emplk.realestatemanager.ui.main.MainActivity
 import com.emplk.realestatemanager.ui.map.MapsFragment
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
@@ -29,13 +28,15 @@ import dagger.hilt.android.AndroidEntryPoint
 class BlankActivity : AppCompatActivity() {
 
     companion object {
-        fun navigate(context: Context, fragmentTag: String): Intent {
+        fun navigate(context: Context, fragmentTag: String, propertyId: Long?): Intent {
             val intent = Intent(context, BlankActivity::class.java)
             intent.putExtra(KEY_FRAGMENT_TAG, fragmentTag)
+            intent.putExtra(PROPERTY_ID_KEY, propertyId)
             return intent
         }
 
         private const val KEY_FRAGMENT_TAG = "KEY_FRAGMENT_TAG"
+        private const val PROPERTY_ID_KEY = "PROPERTY_ID_KEY"
         private const val ADD_FRAGMENT_TAG = "ADD_FRAGMENT_TAG"
     }
 
@@ -52,6 +53,7 @@ class BlankActivity : AppCompatActivity() {
         onBackPress()
 
         val fragmentTag = intent.getStringExtra(KEY_FRAGMENT_TAG)
+        val propertyId = intent.getLongExtra(PROPERTY_ID_KEY, 0L)
 
         if (savedInstanceState == null) {
             when (fragmentTag) {
@@ -59,7 +61,7 @@ class BlankActivity : AppCompatActivity() {
                     supportFragmentManager.commitNow {
                         add(
                             binding.blankFrameLayoutContainer.id,
-                            EditPropertyFragment.newInstance()
+                            AddOrEditPropertyFragment.newInstance(propertyId)
                         )
                     }
                 }
@@ -77,7 +79,7 @@ class BlankActivity : AppCompatActivity() {
                     supportFragmentManager.commitNow {
                         add(
                             binding.blankFrameLayoutContainer.id,
-                            AddPropertyFragment.newInstance(),
+                            AddOrEditPropertyFragment.newInstance(propertyId), // or null?
                             ADD_FRAGMENT_TAG
                         )
                     }

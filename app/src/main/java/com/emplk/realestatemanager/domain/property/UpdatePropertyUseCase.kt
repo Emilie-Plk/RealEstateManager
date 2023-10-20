@@ -2,7 +2,6 @@ package com.emplk.realestatemanager.domain.property
 
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.currency_rate.ConvertEuroToDollarUseCase
-import com.emplk.realestatemanager.domain.currency_rate.CurrencyRateWrapper
 import com.emplk.realestatemanager.domain.currency_rate.GetCurrencyRateUseCase
 import com.emplk.realestatemanager.domain.geocoding.GeocodingRepository
 import com.emplk.realestatemanager.domain.geocoding.GeocodingWrapper
@@ -18,14 +17,13 @@ import com.emplk.realestatemanager.domain.property_draft.ClearPropertyFormUseCas
 import com.emplk.realestatemanager.domain.property_draft.FormDraftParams
 import com.emplk.realestatemanager.domain.property_draft.UpdatePropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.GetPicturePreviewsUseCase
-import com.emplk.realestatemanager.ui.edit.EditPropertyEvent
+import com.emplk.realestatemanager.ui.add.FormEvent
 import com.emplk.realestatemanager.ui.utils.NativeText
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import java.math.BigDecimal
 import java.time.Clock
 import java.time.LocalDateTime
-import java.util.Locale
 import javax.inject.Inject
 
 class UpdatePropertyUseCase @Inject constructor(
@@ -43,7 +41,7 @@ class UpdatePropertyUseCase @Inject constructor(
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val clock: Clock,
 ) {
-    suspend fun invoke(form: FormDraftParams): EditPropertyEvent {
+    suspend fun invoke(form: FormDraftParams): FormEvent {
         require(
             form.propertyType != null &&
                     form.address != null &&
@@ -102,20 +100,20 @@ class UpdatePropertyUseCase @Inject constructor(
             is AddOrEditPropertyWrapper.Success -> {
                 clearPropertyFormUseCase.invoke(form.id)
                 setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
-                EditPropertyEvent.Toast(NativeText.Resource(R.string.form_successfully_updated_message))
+                FormEvent.Toast(NativeText.Resource(R.string.form_successfully_updated_message))
             }
 
             is AddOrEditPropertyWrapper.Error -> {
                 updatePropertyFormUseCase.invoke(form)
                 setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
-                EditPropertyEvent.Toast(editPropertyWrapper.error)
+                FormEvent.Toast(editPropertyWrapper.error)
             }
 
             is AddOrEditPropertyWrapper.NoLatLong -> {
-                EditPropertyEvent.Toast(editPropertyWrapper.error)
+                FormEvent.Toast(editPropertyWrapper.error)
             }
 
-            is AddOrEditPropertyWrapper.LocaleError -> EditPropertyEvent.Toast(editPropertyWrapper.error)
+            is AddOrEditPropertyWrapper.LocaleError -> FormEvent.Toast(editPropertyWrapper.error)
         }
     }
 

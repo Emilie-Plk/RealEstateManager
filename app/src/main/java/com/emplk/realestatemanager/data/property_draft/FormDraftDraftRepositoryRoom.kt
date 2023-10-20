@@ -134,6 +134,8 @@ class FormDraftDraftRepositoryRoom @Inject constructor(
                 propertyFormDto.bathrooms,
                 propertyFormDto.description,
                 propertyFormDto.agentName,
+                propertyFormDto.isSold,
+                propertyFormDto.saleDate,
                 propertyFormDto.id
             )
 

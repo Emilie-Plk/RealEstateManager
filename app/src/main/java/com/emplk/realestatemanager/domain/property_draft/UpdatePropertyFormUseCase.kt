@@ -37,6 +37,8 @@ class UpdatePropertyFormUseCase @Inject constructor(
                             type = amenity.type,
                         )
                     },
+                    isSold = form.isSold,
+                    saleDate = form.soldDate,
                 )
             )
         }
