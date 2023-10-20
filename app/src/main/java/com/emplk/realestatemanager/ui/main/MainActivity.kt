@@ -90,17 +90,17 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-                MainViewEvent.DisplayDetailFragmentOnPhone -> {
+                is MainViewEvent.DisplayDetailFragmentOnPhone -> {
                     supportFragmentManager.commit {
                         replace(
                             binding.mainFrameLayoutContainerProperties.id,
-                            DetailFragment.newInstance(),
+                            DetailFragment.newInstance(event.propertyId),
                             DETAIL_FRAGMENT_TAG
                         ).addToBackStack(DETAIL_FRAGMENT_TAG)
                     }
                 }
 
-                MainViewEvent.DisplayDetailFragmentOnTablet -> {
+                is MainViewEvent.DisplayDetailFragmentOnTablet -> {
                     supportFragmentManager.commit {
                         replace(
                             binding.mainFrameLayoutContainerProperties.id,
@@ -113,7 +113,7 @@ class MainActivity : AppCompatActivity() {
                         binding.mainFrameLayoutContainerDetail?.id?.let {
                             replace(
                                 it,
-                                DetailFragment.newInstance(),
+                                DetailFragment.newInstance(event.propertyId),
                                 DETAIL_FRAGMENT_TAG
                             )
                         }
@@ -128,25 +128,12 @@ class MainActivity : AppCompatActivity() {
                     TODO()
                 }
 
-                MainViewEvent.NavigateToBlank(NavigationFragmentType.ADD_FRAGMENT.name) -> {
-                    startActivity(BlankActivity.navigate(this, NavigationFragmentType.ADD_FRAGMENT.name))
+                is MainViewEvent.NavigateToBlank -> {
+                    startActivity(BlankActivity.navigate(this, event.fragmentTag, event.propertyId))
                 }
-
-                MainViewEvent.NavigateToBlank(NavigationFragmentType.EDIT_FRAGMENT.name) -> {
-                    startActivity(BlankActivity.navigate(this, NavigationFragmentType.EDIT_FRAGMENT.name))
-                }
-
-                MainViewEvent.NavigateToBlank(NavigationFragmentType.MAP_FRAGMENT.name) -> {
-                    startActivity(BlankActivity.navigate(this, NavigationFragmentType.MAP_FRAGMENT.name))
-                }
-
-                is MainViewEvent.NavigateToBlank -> TODO()
             }
         }
     }
-
-    private fun getNavigationType(fragmentName: String): NavigationFragmentType =
-        NavigationFragmentType.valueOf(fragmentName)
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)

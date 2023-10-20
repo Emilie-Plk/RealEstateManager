@@ -24,6 +24,8 @@ class FormDraftMapper @Inject constructor(
             bathrooms = propertyForm.bathrooms,
             description = propertyForm.description,
             agentName = propertyForm.agentName,
+            isSold = propertyForm.isSold,
+            saleDate = propertyForm.saleDate,
         )
 
     fun mapToPropertyDraftEntity(
@@ -45,5 +47,7 @@ class FormDraftMapper @Inject constructor(
             agentName = formDraftDto.agentName,
             pictures = picturePreviewMapper.mapToPicturePreviewEntities(picturePreviewDtos),
             amenities = amenityDraftMapper.mapToAmenityFormEntities(amenityDraftDtos),
+            isSold = formDraftDto.isSold,
+            saleDate = formDraftDto.saleDate,
         )
 }

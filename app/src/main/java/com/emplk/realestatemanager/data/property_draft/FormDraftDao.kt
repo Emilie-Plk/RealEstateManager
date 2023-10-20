@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import java.math.BigDecimal
+import java.time.LocalDateTime
 
 @Dao
 interface FormDraftDao {
@@ -40,7 +41,9 @@ interface FormDraftDao {
                 " bedrooms = :newBedrooms," +
                 " bathrooms = :newBathrooms," +
                 " description = :newDescription," +
-                " agentName = :newAgentName WHERE id = :propertyFormId"
+                " agent_name = :newAgentName," +
+                " is_sold = :isSold," +
+                " sale_date = :saleDate  WHERE id = :propertyFormId"
     )
     suspend fun update(
         newType: String?,
@@ -52,7 +55,9 @@ interface FormDraftDao {
         newBathrooms: Int?,
         newDescription: String?,
         newAgentName: String?,
-        propertyFormId: Long
+        isSold: Boolean,
+        saleDate: LocalDateTime?,
+        propertyFormId: Long,
     ): Int
 
     @Query("UPDATE base_form_drafts SET is_address_valid = :isAddressValid WHERE id = :propertyFormId")

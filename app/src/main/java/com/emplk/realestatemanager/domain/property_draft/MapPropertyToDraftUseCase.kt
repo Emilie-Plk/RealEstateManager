@@ -36,6 +36,8 @@ class MapPropertyToDraftUseCase @Inject constructor(
                     type = amenity.type,
                 )
             },
+            isSold = propertyEntity.isSold,
+            saleDate = propertyEntity.saleDate,
         )
     }
 }

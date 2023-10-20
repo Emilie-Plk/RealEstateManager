@@ -1,13 +1,10 @@
 package com.emplk.realestatemanager.domain.property
 
 import com.emplk.realestatemanager.R
-import com.emplk.realestatemanager.domain.currency_rate.ConvertEuroToDollarUseCase
-import com.emplk.realestatemanager.domain.currency_rate.GetCurrencyRateUseCase
 import com.emplk.realestatemanager.domain.geocoding.GeocodingRepository
 import com.emplk.realestatemanager.domain.geocoding.GeocodingWrapper
 import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceToSquareFeetDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.ConvertToUsdDependingOnLocaleUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.GetLocaleUseCase
 import com.emplk.realestatemanager.domain.map_picture.GenerateMapBaseUrlWithParamsUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
@@ -17,7 +14,7 @@ import com.emplk.realestatemanager.domain.property_draft.ClearPropertyFormUseCas
 import com.emplk.realestatemanager.domain.property_draft.FormDraftParams
 import com.emplk.realestatemanager.domain.property_draft.UpdatePropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.GetPicturePreviewsUseCase
-import com.emplk.realestatemanager.ui.add.AddPropertyEvent
+import com.emplk.realestatemanager.ui.add.FormEvent
 import com.emplk.realestatemanager.ui.utils.NativeText
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -26,7 +23,7 @@ import java.time.Clock
 import java.time.LocalDateTime
 import javax.inject.Inject
 
-class AddPropertyUseCase @Inject constructor(
+class AddOrEditPropertyUseCase @Inject constructor(
     private val propertyRepository: PropertyRepository,
     private val geocodingRepository: GeocodingRepository,
     private val generateMapBaseUrlWithParamsUseCase: GenerateMapBaseUrlWithParamsUseCase,
@@ -38,7 +35,7 @@ class AddPropertyUseCase @Inject constructor(
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val clock: Clock,
 ) {
-    suspend fun invoke(form: FormDraftParams): AddPropertyEvent {
+    suspend fun invoke(form: FormDraftParams): FormEvent {
         require(
             form.propertyType != null &&
                     form.address != null &&
@@ -97,20 +94,20 @@ class AddPropertyUseCase @Inject constructor(
             is AddOrEditPropertyWrapper.Success -> {
                 clearPropertyFormUseCase.invoke(form.id)
                 setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
-                AddPropertyEvent.Toast(addPropertyWrapper.text)
+                FormEvent.Toast(addPropertyWrapper.text)
             }
 
             is AddOrEditPropertyWrapper.Error -> {
                 updatePropertyFormUseCase.invoke(form)
                 setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
-                AddPropertyEvent.Toast(addPropertyWrapper.error)
+                FormEvent.Toast(addPropertyWrapper.error)
             }
 
             is AddOrEditPropertyWrapper.NoLatLong -> {
-                AddPropertyEvent.Toast(addPropertyWrapper.error)
+                FormEvent.Toast(addPropertyWrapper.error)
             }
 
-            is AddOrEditPropertyWrapper.LocaleError -> AddPropertyEvent.Toast(addPropertyWrapper.error)
+            is AddOrEditPropertyWrapper.LocaleError -> FormEvent.Toast(addPropertyWrapper.error)
         }
     }
 

@@ -8,7 +8,7 @@ class AddPropertyFormWithDetailsUseCase @Inject constructor(
     private val mapPropertyToDraftUseCase: MapPropertyToDraftUseCase,
 ) {
     suspend fun invoke(id: Long?): Long =
-        if (id == null) {
+        if (id == null || id == 0L) {
             formDraftRepository.addPropertyFormWithDetails(
                 FormDraftEntity(
                     id = 0L,
@@ -22,6 +22,8 @@ class AddPropertyFormWithDetailsUseCase @Inject constructor(
                     address = "",
                     isAddressValid = false,
                     agentName = "",
+                    isSold = false,
+                    saleDate = null,
                 )
             )
         } else {

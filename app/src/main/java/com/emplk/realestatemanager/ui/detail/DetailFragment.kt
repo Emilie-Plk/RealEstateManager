@@ -22,7 +22,15 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
     private val viewModel by viewModels<DetailViewModel>()
 
     companion object {
-        fun newInstance() = DetailFragment()
+        const val KEY_PROPERTY_ID = "KEY_PROPERTY_ID"
+        fun newInstance(id: Long? = null): Fragment {
+            val bundle = Bundle().apply {
+                id?.let { putLong(KEY_PROPERTY_ID, it) }
+            }
+            val fragment = DetailFragment()
+            fragment.arguments = bundle
+            return fragment
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,6 +103,8 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
                         .error(R.drawable.baseline_villa_24)
                         .into(binding.detailMapIv)
                 }
+
+                else -> Unit
             }
         }
     }

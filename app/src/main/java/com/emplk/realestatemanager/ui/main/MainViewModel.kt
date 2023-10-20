@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
+import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdFlowUseCase
 import com.emplk.realestatemanager.domain.navigation.GetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.navigation.GetToolbarSubtitleUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
@@ -30,6 +31,7 @@ class MainViewModel @Inject constructor(
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val getNavigationTypeUseCase: GetNavigationTypeUseCase,
     private val getToolbarSubtitleUseCase: GetToolbarSubtitleUseCase,
+    private val getCurrentPropertyIdFlowUseCase: GetCurrentPropertyIdFlowUseCase,
     coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : ViewModel() {
 
@@ -116,19 +118,20 @@ class MainViewModel @Inject constructor(
         combine(
             isTabletMutableStateFlow,
             getNavigationTypeUseCase.invoke(),
-        ) { isTablet, navigationType ->
+            getCurrentPropertyIdFlowUseCase.invoke(),
+        ) { isTablet, navigationType, propertyId ->
             when (navigationType) {
                 LIST_FRAGMENT -> emit(Event(MainViewEvent.DisplayPropertyList))
 
-                ADD_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(ADD_FRAGMENT.name)))
+                ADD_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(ADD_FRAGMENT.name, null)))
 
-                EDIT_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(EDIT_FRAGMENT.name)))
+                EDIT_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(EDIT_FRAGMENT.name, propertyId)))
 
                 DETAIL_FRAGMENT ->
                     if (!isTablet) {
-                        emit(Event(MainViewEvent.DisplayDetailFragmentOnPhone))
+                        emit(Event(MainViewEvent.DisplayDetailFragmentOnPhone(propertyId)))
                     } else {
-                        emit(Event(MainViewEvent.DisplayDetailFragmentOnTablet))
+                        emit(Event(MainViewEvent.DisplayDetailFragmentOnTablet(propertyId)))
                     }
 
                 FILTER_FRAGMENT ->
@@ -140,7 +143,7 @@ class MainViewModel @Inject constructor(
 
                 DRAFT_DIALOG_FRAGMENT -> Unit
 
-                MAP_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(MAP_FRAGMENT.name)))
+                MAP_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(MAP_FRAGMENT.name, null)))
             }
         }.collect()
     }

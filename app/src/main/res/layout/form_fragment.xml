@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:fillViewport="true"
     android:focusableInTouchMode="true"
-    tools:context=".ui.add.AddPropertyFragment">
+    tools:context=".ui.add.AddOrEditPropertyFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
