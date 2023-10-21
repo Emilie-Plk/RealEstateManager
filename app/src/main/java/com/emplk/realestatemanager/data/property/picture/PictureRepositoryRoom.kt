@@ -29,4 +29,10 @@ class PictureRepositoryRoom @Inject constructor(
             val pictureDtoEntity = pictureMapper.mapToDtoEntity(pictureEntity, propertyId)
             pictureDao.update(pictureDtoEntity) == 1
         }
+
+    override suspend fun upsert(pictureEntity: PictureEntity, propertyId: Long): Long =
+        withContext(coroutineDispatcherProvider.io) {
+            val pictureDtoEntity = pictureMapper.mapToDtoEntity(pictureEntity, propertyId)
+            pictureDao.upsert(pictureDtoEntity)
+        }
 }

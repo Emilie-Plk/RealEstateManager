@@ -9,10 +9,8 @@ class SavePictureToLocalAppFilesAndToLocalDatabaseUseCase @Inject constructor(
     private val picturePreviewIdRepository: PicturePreviewIdRepository,
     private val saveFileToLocalAppFilesUseCase: SaveFileToLocalAppFilesUseCase,
 ) {
-    suspend fun invoke(stringUri: String, isFormPictureIdEmpty: Boolean, id: Long): Long {
+    suspend fun invoke(stringUri: String, isFormPictureIdEmpty: Boolean, propertyId: Long): Long {
         val absolutePath = saveFileToLocalAppFilesUseCase.invoke(stringUri)
-        val addedPicturePreviewId = addPicturePreviewUseCase.invoke(absolutePath, isFormPictureIdEmpty, id)
-        addedPicturePreviewId?.let { picturePreviewIdRepository.add(it) }
-        return addedPicturePreviewId
+        return addPicturePreviewUseCase.invoke(absolutePath, isFormPictureIdEmpty, propertyId).also { picturePreviewIdRepository.add(it) }
     }
 }

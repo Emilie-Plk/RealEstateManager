@@ -36,6 +36,7 @@ import com.emplk.realestatemanager.domain.property_draft.picture_preview.DeleteP
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.GetPicturePreviewsAsFlowUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.SavePictureToLocalAppFilesAndToLocalDatabaseUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.UpdatePicturePreviewUseCase
+import com.emplk.realestatemanager.domain.property_draft.picture_preview.id.PicturePreviewIdRepository
 import com.emplk.realestatemanager.domain.property_type.GetPropertyTypeFlowUseCase
 import com.emplk.realestatemanager.ui.add.address_predictions.PredictionViewState
 import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem
@@ -68,6 +69,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
     private val getClearPropertyFormNavigationEventUseCase: GetClearPropertyFormNavigationEventUseCase,
     private val clearPropertyFormUseCase: ClearPropertyFormUseCase,
     private val updatePicturePreviewUseCase: UpdatePicturePreviewUseCase,
+    private val picturePreviewIdRepository: PicturePreviewIdRepository,
     private val savePictureToLocalAppFilesAndToLocalDatabaseUseCase: SavePictureToLocalAppFilesAndToLocalDatabaseUseCase,
     private val updatePropertyFormUseCase: UpdatePropertyFormUseCase, // à refacto si chui une ouf
     private val initPropertyFormUseCase: InitPropertyFormUseCase,
@@ -127,7 +129,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                         it.copy(id = initPropertyFormState.newPropertyFormId)
                     }
 
-                is PropertyFormState.Draft ->
+                is PropertyFormState.Draft -> {
                     formMutableStateFlow.update { formState ->
                         formState.copy(
                             id = initPropertyFormState.formDraftEntity.id,
@@ -148,6 +150,8 @@ class AddOrEditPropertyViewModel @Inject constructor(
                             soldDate = initPropertyFormState.formDraftEntity.saleDate,
                         )
                     }
+                    picturePreviewIdRepository.addAll(formMutableStateFlow.value.pictureIds)
+                }
             }
 
             launch {

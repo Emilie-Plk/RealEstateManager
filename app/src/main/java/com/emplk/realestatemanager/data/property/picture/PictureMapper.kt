@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.data.property.picture
 
+import androidx.work.impl.utils.isDefaultProcess
 import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
 import javax.inject.Inject
 
@@ -7,6 +8,7 @@ class PictureMapper @Inject constructor() {
 
     fun mapToDtoEntity(picture: PictureEntity, propertyId: Long): PictureDto {
         return PictureDto(
+            id = picture.id,
             propertyId = propertyId,
             uri = picture.uri,
             isFeatured = picture.isFeatured,
@@ -17,6 +19,7 @@ class PictureMapper @Inject constructor() {
     fun mapToDtoEntities(pictures: List<PictureEntity>, propertyId: Long): List<PictureDto> {
         return pictures.map {
             PictureDto(
+                id = it.id,
                 propertyId = propertyId,
                 uri = it.uri,
                 isFeatured = it.isFeatured,

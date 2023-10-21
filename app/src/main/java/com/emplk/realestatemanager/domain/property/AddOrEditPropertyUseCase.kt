@@ -12,8 +12,10 @@ import com.emplk.realestatemanager.domain.property.location.LocationEntity
 import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
 import com.emplk.realestatemanager.domain.property_draft.ClearPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.FormDraftParams
+import com.emplk.realestatemanager.domain.property_draft.FormDraftRepository
 import com.emplk.realestatemanager.domain.property_draft.UpdatePropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.GetPicturePreviewsUseCase
+import com.emplk.realestatemanager.domain.property_draft.picture_preview.UpsertPicturePreviewUseCase
 import com.emplk.realestatemanager.ui.add.FormEvent
 import com.emplk.realestatemanager.ui.utils.NativeText
 import kotlinx.coroutines.async
@@ -25,6 +27,7 @@ import javax.inject.Inject
 
 class AddOrEditPropertyUseCase @Inject constructor(
     private val propertyRepository: PropertyRepository,
+    private val formDraftRepository: FormDraftRepository,
     private val geocodingRepository: GeocodingRepository,
     private val generateMapBaseUrlWithParamsUseCase: GenerateMapBaseUrlWithParamsUseCase,
     private val convertToUsdDependingOnLocaleUseCase: ConvertToUsdDependingOnLocaleUseCase,
@@ -37,7 +40,8 @@ class AddOrEditPropertyUseCase @Inject constructor(
 ) {
     suspend fun invoke(form: FormDraftParams): FormEvent {
         require(
-            form.propertyType != null &&
+            form.id > 0 &&
+                    form.propertyType != null &&
                     form.address != null &&
                     form.price > BigDecimal.ZERO &&
                     form.surface > BigDecimal.ZERO &&
@@ -51,63 +55,103 @@ class AddOrEditPropertyUseCase @Inject constructor(
         ) {
             "Impossible state: form is not valid => form : $form"
         }
-        val addPropertyWrapper: AddOrEditPropertyWrapper = coroutineScope {
+        val addOrEditPropertyWrapper: AddOrEditPropertyWrapper = coroutineScope {
             val geocodingWrapperDeferred = async {
                 geocodingRepository.getLatLong(form.address)
             }
-
-            val success = propertyRepository.addPropertyWithDetails(
-                PropertyEntity(
-                    id = form.id,
-                    type = form.propertyType,
-                    price = convertToUsdDependingOnLocaleUseCase.invoke(form.price),
-                    surface = convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(form.surface),
-                    description = form.description,
-                    rooms = form.nbRooms,
-                    bathrooms = form.nbBathrooms,
-                    location = getLocationEntity(form.address, geocodingWrapperDeferred.await())
-                        ?: return@coroutineScope AddOrEditPropertyWrapper.NoLatLong(NativeText.Resource(R.string.form_generic_error_message)),
-                    bedrooms = form.nbBedrooms,
-                    agentName = form.agent,
-                    amenities = form.amenities,
-                    pictures =
-                    getPicturePreviewsUseCase.invoke(form.id).map {
-                        PictureEntity(
-                            id = it.id,
-                            uri = it.uri,
-                            description = it.description,
-                            isFeatured = it.id == form.featuredPictureId,
-                        )
-                    },
-                    entryDate = LocalDateTime.now(clock),
-                    isSold = false,
-                    saleDate = null,
-                ),
-            )
-            if (success) {
-                AddOrEditPropertyWrapper.Success(NativeText.Resource(R.string.form_successfully_created_message))
+            val doesPropertyExist = formDraftRepository.doesPropertyExist(form.id)
+            if (doesPropertyExist) {
+                // region edit existing property
+                val updateSuccess = propertyRepository.update(
+                    PropertyEntity(
+                        id = form.id,
+                        type = form.propertyType,
+                        price = convertToUsdDependingOnLocaleUseCase.invoke(form.price),
+                        surface = convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(form.surface),
+                        description = form.description,
+                        rooms = form.nbRooms,
+                        bathrooms = form.nbBathrooms,
+                        location = getLocationEntity(form.address, geocodingWrapperDeferred.await())
+                            ?: return@coroutineScope AddOrEditPropertyWrapper.NoLatLong(NativeText.Resource(R.string.form_generic_error_message)),
+                        bedrooms = form.nbBedrooms,
+                        agentName = form.agent,
+                        amenities = form.amenities,
+                        pictures =
+                        getPicturePreviewsUseCase.invoke(form.id).map {
+                            PictureEntity(
+                                id = it.id,
+                                uri = it.uri,
+                                description = it.description,
+                                isFeatured = it.id == form.featuredPictureId,
+                            )
+                        },
+                        entryDate = LocalDateTime.now(clock),
+                        isSold = form.isSold,
+                        saleDate = form.soldDate,
+                    ),
+                )
+                if (updateSuccess) {
+                    AddOrEditPropertyWrapper.Success(NativeText.Resource(R.string.form_successfully_updated_message))
+                } else {
+                    AddOrEditPropertyWrapper.Error(NativeText.Resource(R.string.form_generic_error_message))
+                }
+                // endregion
             } else {
-                AddOrEditPropertyWrapper.Error(NativeText.Resource(R.string.form_generic_error_message))
+                // region add new property
+                val addSuccess = propertyRepository.addPropertyWithDetails(
+                    PropertyEntity(
+                        id = form.id,
+                        type = form.propertyType,
+                        price = convertToUsdDependingOnLocaleUseCase.invoke(form.price),
+                        surface = convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(form.surface),
+                        description = form.description,
+                        rooms = form.nbRooms,
+                        bathrooms = form.nbBathrooms,
+                        location = getLocationEntity(form.address, geocodingWrapperDeferred.await())
+                            ?: return@coroutineScope AddOrEditPropertyWrapper.NoLatLong(NativeText.Resource(R.string.form_generic_error_message)),
+                        bedrooms = form.nbBedrooms,
+                        agentName = form.agent,
+                        amenities = form.amenities,
+                        pictures =
+                        getPicturePreviewsUseCase.invoke(form.id).map {
+                            PictureEntity(
+                                id = it.id,
+                                uri = it.uri,
+                                description = it.description,
+                                isFeatured = it.id == form.featuredPictureId,
+                            )
+                        },
+                        entryDate = LocalDateTime.now(clock),
+                        isSold = false,
+                        saleDate = null,
+                    ),
+                )
+                if (addSuccess) {
+                    AddOrEditPropertyWrapper.Success(NativeText.Resource(R.string.form_successfully_created_message))
+                } else {
+                    AddOrEditPropertyWrapper.Error(NativeText.Resource(R.string.form_generic_error_message))
+                }
             }
         }
-        return when (addPropertyWrapper) {
+        // endregion edit existing property
+        return when (addOrEditPropertyWrapper) {
             is AddOrEditPropertyWrapper.Success -> {
                 clearPropertyFormUseCase.invoke(form.id)
                 setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
-                FormEvent.Toast(addPropertyWrapper.text)
+                FormEvent.Toast(addOrEditPropertyWrapper.text)
             }
 
             is AddOrEditPropertyWrapper.Error -> {
                 updatePropertyFormUseCase.invoke(form)
                 setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
-                FormEvent.Toast(addPropertyWrapper.error)
+                FormEvent.Toast(addOrEditPropertyWrapper.error)
             }
 
             is AddOrEditPropertyWrapper.NoLatLong -> {
-                FormEvent.Toast(addPropertyWrapper.error)
+                FormEvent.Toast(addOrEditPropertyWrapper.error)
             }
 
-            is AddOrEditPropertyWrapper.LocaleError -> FormEvent.Toast(addPropertyWrapper.error)
+            is AddOrEditPropertyWrapper.LocaleError -> FormEvent.Toast(addOrEditPropertyWrapper.error)
         }
     }
 
