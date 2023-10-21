@@ -15,7 +15,6 @@ import com.emplk.realestatemanager.domain.property_draft.FormDraftParams
 import com.emplk.realestatemanager.domain.property_draft.FormDraftRepository
 import com.emplk.realestatemanager.domain.property_draft.UpdatePropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.GetPicturePreviewsUseCase
-import com.emplk.realestatemanager.domain.property_draft.picture_preview.UpsertPicturePreviewUseCase
 import com.emplk.realestatemanager.ui.add.FormEvent
 import com.emplk.realestatemanager.ui.utils.NativeText
 import kotlinx.coroutines.async

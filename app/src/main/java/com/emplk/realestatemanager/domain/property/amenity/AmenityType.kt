@@ -19,11 +19,3 @@ enum class AmenityType(
     HOSPITAL(8, R.string.amenity_hospital, R.drawable.baseline_local_hospital_24),
     LIBRARY(9, R.string.amenity_library, R.drawable.baseline_local_library_24),
 }
-
-enum class Animal {
-    CAT,
-    DOG,
-    BIRD,
-    FISH,
-    OTHER
-}

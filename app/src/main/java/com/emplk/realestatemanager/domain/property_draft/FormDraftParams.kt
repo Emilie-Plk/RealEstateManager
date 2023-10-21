@@ -1,6 +1,6 @@
 package com.emplk.realestatemanager.domain.property_draft
 
-import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
+import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
@@ -20,7 +20,7 @@ data class FormDraftParams(
     val nbBathrooms: Int = 0,
     val nbBedrooms: Int = 0,
     val agent: String? = null,
-    val amenities: List<AmenityEntity> = emptyList(),
+    val amenities: List<AmenityType> = emptyList(),
     val pictureIds: List<Long> = emptyList(),
     val featuredPictureId: Long? = null,
     val isSold: Boolean = false,

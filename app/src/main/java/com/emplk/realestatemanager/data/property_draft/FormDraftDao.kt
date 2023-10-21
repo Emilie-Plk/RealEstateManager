@@ -41,6 +41,15 @@ interface FormDraftDao {
                 " bedrooms = :newBedrooms," +
                 " bathrooms = :newBathrooms," +
                 " description = :newDescription," +
+                " amenity_school = :newAmenitySchool," +
+                " amenity_park = :newAmenityPark," +
+                " amenity_mall = :newAmenityMall," +
+                " amenity_restaurant = :newAmenityRestaurant," +
+                " amenity_concierge = :newAmenityConcierge," +
+                " amenity_gym = :newAmenityGym," +
+                " amenity_transportation = :newAmenityTransportation," +
+                " amenity_hospital = :newAmenityHospital," +
+                " amenity_library = :newAmenityLibrary," +
                 " agent_name = :newAgentName," +
                 " is_sold = :isSold," +
                 " sale_date = :saleDate  WHERE id = :propertyFormId"
@@ -54,11 +63,20 @@ interface FormDraftDao {
         newBedrooms: Int?,
         newBathrooms: Int?,
         newDescription: String?,
+        newAmenitySchool: Boolean,
+        newAmenityPark: Boolean,
+        newAmenityMall: Boolean,
+        newAmenityRestaurant: Boolean,
+        newAmenityConcierge: Boolean,
+        newAmenityGym: Boolean,
+        newAmenityTransportation: Boolean,
+        newAmenityHospital: Boolean,
+        newAmenityLibrary: Boolean,
         newAgentName: String?,
         isSold: Boolean,
         saleDate: LocalDateTime?,
         propertyFormId: Long,
-    ): Int
+    )
 
     @Query("UPDATE base_form_drafts SET is_address_valid = :isAddressValid WHERE id = :propertyFormId")
     suspend fun updateIsAddressValid(propertyFormId: Long, isAddressValid: Boolean)

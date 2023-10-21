@@ -82,12 +82,12 @@ class MapBottomSheetViewModel @Inject constructor(
                     ),
                     isProgressBarVisible = isProgressBarVisibleMutableLiveData.value,
 
-                    amenities = propertyWithConvertedPriceAndSurface.amenities.map {
+                    amenities = propertyWithConvertedPriceAndSurface.amenities.map { amenity ->
                         AmenityViewState.AmenityItem(
-                            stringRes = it.type.stringRes,
-                            iconDrawable = it.type.iconDrawable,
+                            stringRes = amenity.stringRes,
+                            iconDrawable = amenity.iconDrawable,
                         )
-                    }
+                    },
                 )
             )
         }

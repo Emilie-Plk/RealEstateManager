@@ -1,18 +1,16 @@
 package com.emplk.realestatemanager.data.property
 
-import com.emplk.realestatemanager.data.property.amenity.AmenityDto
-import com.emplk.realestatemanager.data.property.amenity.AmenityMapper
 import com.emplk.realestatemanager.data.property.location.LocationDto
 import com.emplk.realestatemanager.data.property.location.LocationMapper
 import com.emplk.realestatemanager.data.property.picture.PictureDto
 import com.emplk.realestatemanager.data.property.picture.PictureMapper
 import com.emplk.realestatemanager.domain.property.PropertyEntity
+import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import javax.inject.Inject
 
 class PropertyMapper @Inject constructor(
     private val locationMapper: LocationMapper,
     private val pictureMapper: PictureMapper,
-    private val amenityMapper: AmenityMapper,
 ) {
 
     fun mapToDtoEntity(property: PropertyEntity) = PropertyDto(
@@ -24,6 +22,15 @@ class PropertyMapper @Inject constructor(
         bedrooms = property.bedrooms,
         bathrooms = property.bathrooms,
         description = property.description,
+        amenitySchool = property.amenities.contains(AmenityType.SCHOOL),
+        amenityPark = property.amenities.contains(AmenityType.PARK),
+        amenityMall = property.amenities.contains(AmenityType.SHOPPING_MALL),
+        amenityRestaurant = property.amenities.contains(AmenityType.RESTAURANT),
+        amenityConcierge = property.amenities.contains(AmenityType.CONCIERGE),
+        amenityGym = property.amenities.contains(AmenityType.GYM),
+        amenityTransportation = property.amenities.contains(AmenityType.PUBLIC_TRANSPORTATION),
+        amenityHospital = property.amenities.contains(AmenityType.HOSPITAL),
+        amenityLibrary = property.amenities.contains(AmenityType.LIBRARY),
         agentName = property.agentName,
         isSold = property.isSold,
         entryDate = property.entryDate,
@@ -34,7 +41,6 @@ class PropertyMapper @Inject constructor(
         propertyDto: PropertyDto,
         locationDto: LocationDto,
         pictureDtos: List<PictureDto>,
-        amenityDtos: List<AmenityDto>,
     ) = PropertyEntity(
         id = propertyDto.id,
         type = propertyDto.type,
@@ -42,7 +48,7 @@ class PropertyMapper @Inject constructor(
         surface = propertyDto.surface,
         location = locationMapper.mapToDomainEntity(locationDto),
         pictures = pictureMapper.mapToDomainEntities(pictureDtos),
-        amenities = amenityMapper.mapToDomainEntities(amenityDtos),
+        amenities = mapAmenities(propertyDto),
         rooms = propertyDto.rooms,
         bedrooms = propertyDto.bedrooms,
         bathrooms = propertyDto.bathrooms,
@@ -52,4 +58,16 @@ class PropertyMapper @Inject constructor(
         entryDate = propertyDto.entryDate,
         saleDate = propertyDto.saleDate,
     )
+
+    private fun mapAmenities(propertyDto: PropertyDto): List<AmenityType> = buildList {
+        if (propertyDto.amenitySchool) add(AmenityType.SCHOOL)
+        if (propertyDto.amenityPark) add(AmenityType.PARK)
+        if (propertyDto.amenityMall) add(AmenityType.SHOPPING_MALL)
+        if (propertyDto.amenityRestaurant) add(AmenityType.RESTAURANT)
+        if (propertyDto.amenityConcierge) add(AmenityType.CONCIERGE)
+        if (propertyDto.amenityGym) add(AmenityType.GYM)
+        if (propertyDto.amenityTransportation) add(AmenityType.PUBLIC_TRANSPORTATION)
+        if (propertyDto.amenityHospital) add(AmenityType.HOSPITAL)
+        if (propertyDto.amenityLibrary) add(AmenityType.LIBRARY)
+    }
 }

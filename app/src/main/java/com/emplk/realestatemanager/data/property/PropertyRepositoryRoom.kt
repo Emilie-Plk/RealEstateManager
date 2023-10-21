@@ -1,8 +1,6 @@
 package com.emplk.realestatemanager.data.property
 
 import android.database.sqlite.SQLiteException
-import com.emplk.realestatemanager.data.property.amenity.AmenityDao
-import com.emplk.realestatemanager.data.property.amenity.AmenityMapper
 import com.emplk.realestatemanager.data.property.location.LocationDao
 import com.emplk.realestatemanager.data.property.location.LocationMapper
 import com.emplk.realestatemanager.data.property.picture.PictureDao
@@ -22,11 +20,9 @@ class PropertyRepositoryRoom @Inject constructor(
     private val propertyDao: PropertyDao,
     private val locationDao: LocationDao,
     private val pictureDao: PictureDao,
-    private val amenityDao: AmenityDao,
     private val propertyMapper: PropertyMapper,
     private val locationMapper: LocationMapper,
     private val pictureMapper: PictureMapper,
-    private val amenityMapper: AmenityMapper,
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : PropertyRepository {
 
@@ -55,14 +51,7 @@ class PropertyRepositoryRoom @Inject constructor(
                 }
             }
 
-            val amenitiesAsync = propertyEntity.amenities.map {
-                async {
-                    val amenityDtoEntity = amenityMapper.mapToDtoEntity(it, propertyId)
-                    amenityDao.insert(amenityDtoEntity)
-                }
-            }
-
-            (listOf(locationAsync) + picturesAsync + amenitiesAsync).all { it.await() != null }
+            (listOf(locationAsync) + picturesAsync).all { it.await() != null }
         }
 
 
@@ -74,7 +63,6 @@ class PropertyRepositoryRoom @Inject constructor(
                     propertyWithDetailsEntity.property,
                     propertyWithDetailsEntity.location ?: return@mapNotNull null,
                     propertyWithDetailsEntity.pictures,
-                    propertyWithDetailsEntity.amenities,
                 )
             }
         }
@@ -87,7 +75,6 @@ class PropertyRepositoryRoom @Inject constructor(
                 it.property,
                 it.location ?: return@mapNotNull null,
                 it.pictures,
-                it.amenities,
             )
         }
         .flowOn(coroutineDispatcherProvider.io)
@@ -99,7 +86,6 @@ class PropertyRepositoryRoom @Inject constructor(
                 propertyWithDetailsEntity.property,
                 propertyWithDetailsEntity.location ?: return@withContext null,
                 propertyWithDetailsEntity.pictures,
-                propertyWithDetailsEntity.amenities,
             )
         } ?: throw IllegalStateException("Property with id $propertyId not found")
 
@@ -110,9 +96,6 @@ class PropertyRepositoryRoom @Inject constructor(
                 locationDao.update(locationMapper.mapToDtoEntity(propertyEntity.location, propertyEntity.id))
                 propertyEntity.pictures.map {
                     pictureDao.upsert(pictureMapper.mapToDtoEntity(it, propertyEntity.id))
-                }
-                propertyEntity.amenities.map {
-                    amenityDao.upsert(amenityMapper.mapToDtoEntity(it, propertyEntity.id))
                 }
                 true
             } catch (e: SQLiteException) {

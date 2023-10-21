@@ -11,13 +11,11 @@ import com.emplk.realestatemanager.data.locale_formatting.UnitOfMeasurementRepos
 import com.emplk.realestatemanager.data.navigation.NavigationDraftRepositoryImpl
 import com.emplk.realestatemanager.data.navigation.NavigationRepositoryImpl
 import com.emplk.realestatemanager.data.property.PropertyRepositoryRoom
-import com.emplk.realestatemanager.data.property.amenity.AmenityRepositoryRoom
-import com.emplk.realestatemanager.data.property.amenity.type.AmenityTypeRepositoryImpl
+import com.emplk.realestatemanager.data.property.amenity.AmenityTypeRepositoryImpl
 import com.emplk.realestatemanager.data.property.location.LocationRepositoryRoom
 import com.emplk.realestatemanager.data.property.picture.PictureRepositoryRoom
 import com.emplk.realestatemanager.data.property_draft.FormDraftDraftRepositoryRoom
 import com.emplk.realestatemanager.data.property_draft.address.SelectedAddressStateRepositoryImpl
-import com.emplk.realestatemanager.data.property_draft.amenity.AmenityDaftRepositoryRoom
 import com.emplk.realestatemanager.data.property_draft.picture_preview.PicturePreviewRepositoryRoom
 import com.emplk.realestatemanager.data.property_draft.picture_preview.id.PicturePreviewIdRepositoryImpl
 import com.emplk.realestatemanager.data.property_type.PropertyTypeRepositoryImpl
@@ -33,13 +31,11 @@ import com.emplk.realestatemanager.domain.locale_formatting.LocaleFormattingRepo
 import com.emplk.realestatemanager.domain.navigation.NavigationRepository
 import com.emplk.realestatemanager.domain.navigation.draft.NavigationDraftRepository
 import com.emplk.realestatemanager.domain.property.PropertyRepository
-import com.emplk.realestatemanager.domain.property.amenity.AmenityRepository
 import com.emplk.realestatemanager.domain.property.amenity.type.AmenityTypeRepository
 import com.emplk.realestatemanager.domain.property.location.LocationRepository
 import com.emplk.realestatemanager.domain.property.pictures.PictureRepository
 import com.emplk.realestatemanager.domain.property_draft.FormDraftRepository
 import com.emplk.realestatemanager.domain.property_draft.address.SelectedAddressStateRepository
-import com.emplk.realestatemanager.domain.property_draft.amenity.AmenityFormRepository
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.PicturePreviewRepository
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.id.PicturePreviewIdRepository
 import com.emplk.realestatemanager.domain.property_type.PropertyTypeRepository
@@ -82,17 +78,10 @@ abstract class DataBindingModule {
     @Binds
     abstract fun bindCurrentPropertyRepository(implementation: CurrentPropertyRepositoryImpl): CurrentPropertyRepository
 
-    @Singleton
-    @Binds
-    abstract fun bindAmenityRepository(implementation: AmenityRepositoryRoom): AmenityRepository
 
     @Singleton
     @Binds
     abstract fun bindAgentRepository(implementation: RealEstateAgentRepositoryImpl): RealEstateAgentRepository
-
-    @Singleton
-    @Binds
-    abstract fun bindAmenityTypeRepository(implementation: AmenityTypeRepositoryImpl): AmenityTypeRepository
 
     @Singleton
     @Binds
@@ -108,7 +97,8 @@ abstract class DataBindingModule {
 
     @Singleton
     @Binds
-    abstract fun bindAmenityFormRepository(implementation: AmenityDaftRepositoryRoom): AmenityFormRepository
+    abstract fun bindAmenityTypeRepository(implementation: AmenityTypeRepositoryImpl): AmenityTypeRepository
+
 
     @Singleton
     @Binds

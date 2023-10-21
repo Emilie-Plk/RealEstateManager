@@ -1,14 +1,12 @@
 package com.emplk.realestatemanager.data.property_draft.picture_preview
 
 import com.emplk.realestatemanager.data.property_draft.FormDraftDto
-import com.emplk.realestatemanager.data.property_draft.amenity.AmenityDraftDto
-import com.emplk.realestatemanager.data.property_draft.amenity.AmenityDraftMapper
+import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property_draft.FormDraftEntity
 import javax.inject.Inject
 
 class FormDraftMapper @Inject constructor(
     private val picturePreviewMapper: PicturePreviewMapper,
-    private val amenityDraftMapper: AmenityDraftMapper,
 ) {
 
     fun mapToPropertyDraftDto(propertyForm: FormDraftEntity): FormDraftDto =
@@ -23,6 +21,15 @@ class FormDraftMapper @Inject constructor(
             bedrooms = propertyForm.bedrooms,
             bathrooms = propertyForm.bathrooms,
             description = propertyForm.description,
+            amenitySchool = propertyForm.amenities.contains(AmenityType.SCHOOL),
+            amenityPark = propertyForm.amenities.contains(AmenityType.PARK),
+            amenityMall = propertyForm.amenities.contains(AmenityType.SHOPPING_MALL),
+            amenityRestaurant = propertyForm.amenities.contains(AmenityType.RESTAURANT),
+            amenityConcierge = propertyForm.amenities.contains(AmenityType.CONCIERGE),
+            amenityGym = propertyForm.amenities.contains(AmenityType.GYM),
+            amenityTransportation = propertyForm.amenities.contains(AmenityType.PUBLIC_TRANSPORTATION),
+            amenityHospital = propertyForm.amenities.contains(AmenityType.HOSPITAL),
+            amenityLibrary = propertyForm.amenities.contains(AmenityType.LIBRARY),
             agentName = propertyForm.agentName,
             isSold = propertyForm.isSold,
             saleDate = propertyForm.saleDate,
@@ -31,7 +38,6 @@ class FormDraftMapper @Inject constructor(
     fun mapToPropertyDraftEntity(
         formDraftDto: FormDraftDto,
         picturePreviewDtos: List<PicturePreviewDto>,
-        amenityDraftDtos: List<AmenityDraftDto>,
     ): FormDraftEntity =
         FormDraftEntity(
             id = formDraftDto.id,
@@ -46,8 +52,20 @@ class FormDraftMapper @Inject constructor(
             description = formDraftDto.description,
             agentName = formDraftDto.agentName,
             pictures = picturePreviewMapper.mapToPicturePreviewEntities(picturePreviewDtos),
-            amenities = amenityDraftMapper.mapToAmenityFormEntities(amenityDraftDtos),
+            amenities = mapAmenities(formDraftDto),
             isSold = formDraftDto.isSold,
             saleDate = formDraftDto.saleDate,
         )
+
+    private fun mapAmenities(formDraftDto: FormDraftDto): List<AmenityType> = buildList {
+        if (formDraftDto.amenitySchool) add(AmenityType.SCHOOL)
+        if (formDraftDto.amenityPark) add(AmenityType.PARK)
+        if (formDraftDto.amenityMall) add(AmenityType.SHOPPING_MALL)
+        if (formDraftDto.amenityRestaurant) add(AmenityType.RESTAURANT)
+        if (formDraftDto.amenityConcierge) add(AmenityType.CONCIERGE)
+        if (formDraftDto.amenityGym) add(AmenityType.GYM)
+        if (formDraftDto.amenityTransportation) add(AmenityType.PUBLIC_TRANSPORTATION)
+        if (formDraftDto.amenityHospital) add(AmenityType.HOSPITAL)
+        if (formDraftDto.amenityLibrary) add(AmenityType.LIBRARY)
+    }
 }

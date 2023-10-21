@@ -8,7 +8,6 @@ import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceByLocaleUseC
 import com.emplk.realestatemanager.domain.currency_rate.GetLastUpdatedCurrencyRateDateUseCase
 import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdFlowUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceDependingOnLocaleUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceToSquareFeetDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceByLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetRoundedSurfaceWithSurfaceUnitUseCase
@@ -109,10 +108,10 @@ class DetailViewModel @Inject constructor(
                         R.string.detail_location_tv,
                         property.location.address
                     ),
-                    amenities = property.amenities.map {
+                    amenities = property.amenities.map { amenity ->
                         AmenityViewState.AmenityItem(
-                            stringRes = it.type.stringRes,
-                            iconDrawable = it.type.iconDrawable,
+                            stringRes = amenity.stringRes,
+                            iconDrawable = amenity.iconDrawable,
                         )
                     },
                     entryDate = NativeText.Argument(

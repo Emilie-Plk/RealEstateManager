@@ -20,7 +20,6 @@ import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.GetClearPropertyFormNavigationEventUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.GetDraftNavigationUseCase
 import com.emplk.realestatemanager.domain.property.AddOrEditPropertyUseCase
-import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.amenity.type.GetAmenityTypeUseCase
 import com.emplk.realestatemanager.domain.property_draft.ClearPropertyFormUseCase
@@ -290,7 +289,6 @@ class AddOrEditPropertyViewModel @Inject constructor(
                             isSubmitButtonEnabled = isFormValidMutableStateFlow.value,
                             isProgressBarVisible = isAddingInDatabase,
                             amenities = mapAmenityTypesToViewStates(amenityTypes),
-                            selectedAmenities = form.amenities,
                             propertyTypes = propertyTypes.map { propertyType ->
                                 AddPropertyTypeViewStateItem(
                                     id = propertyType.key,
@@ -378,23 +376,20 @@ class AddOrEditPropertyViewModel @Inject constructor(
             AmenityViewState.AmenityCheckbox(
                 id = amenityType.id,
                 name = amenityType.name,
-                isChecked = formMutableStateFlow.value.amenities.any { amenity -> amenity.type.name == amenityType.name },
+                isChecked = formMutableStateFlow.value.amenities.contains(amenityType),   // TODO: something wrong/not "sync" here
                 iconDrawable = amenityType.iconDrawable,
                 stringRes = amenityType.stringRes,
                 onCheckBoxClicked = EquatableCallbackWithParam { isChecked ->
                     if (isChecked) {
                         formMutableStateFlow.update {
                             it.copy(
-                                amenities = it.amenities + AmenityEntity(
-                                    id = amenityType.id,
-                                    type = amenityType,
-                                )
+                                amenities = it.amenities + AmenityType.valueOf(amenityType.name)
                             )
                         }
                     } else {
                         formMutableStateFlow.update {
                             it.copy(
-                                amenities = it.amenities.filter { amenity -> amenity.id != amenityType.id }
+                                amenities = it.amenities.filter { amenity -> amenity.name != amenityType.name }
                             )
                         }
                     }
