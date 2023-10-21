@@ -21,6 +21,24 @@ data class FormDraftDto(
     val bedrooms: Int?,
     val bathrooms: Int?,
     val description: String?,
+    @ColumnInfo(name = "amenity_school")
+    val amenitySchool: Boolean,
+    @ColumnInfo(name = "amenity_park")
+    val amenityPark: Boolean,
+    @ColumnInfo(name = "amenity_mall")
+    val amenityMall: Boolean,
+    @ColumnInfo(name = "amenity_restaurant")
+    val amenityRestaurant: Boolean,
+    @ColumnInfo(name = "amenity_concierge")
+    val amenityConcierge: Boolean,
+    @ColumnInfo(name = "amenity_gym")
+    val amenityGym: Boolean,
+    @ColumnInfo(name = "amenity_transportation")
+    val amenityTransportation: Boolean,
+    @ColumnInfo(name = "amenity_hospital")
+    val amenityHospital: Boolean,
+    @ColumnInfo(name = "amenity_library")
+    val amenityLibrary: Boolean,
     @ColumnInfo(name = "agent_name")
     val agentName: String?,
     @ColumnInfo(name = "is_sold")

@@ -2,7 +2,6 @@ package com.emplk.realestatemanager.domain.property_draft
 
 import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceToSquareFeetDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.ConvertToUsdDependingOnLocaleUseCase
-import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
 import kotlinx.coroutines.coroutineScope
 import java.math.BigDecimal
 import javax.inject.Inject
@@ -31,12 +30,7 @@ class UpdatePropertyFormUseCase @Inject constructor(
                     isAddressValid = form.isAddressValid,
                     bedrooms = form.nbBedrooms,
                     agentName = form.agent,
-                    amenities = form.amenities.map { amenity ->
-                        AmenityEntity(
-                            id = amenity.id,
-                            type = amenity.type,
-                        )
-                    },
+                    amenities = form.amenities,
                     isSold = form.isSold,
                     saleDate = form.soldDate,
                 )

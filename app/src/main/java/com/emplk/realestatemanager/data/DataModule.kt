@@ -9,11 +9,9 @@ import com.emplk.realestatemanager.BuildConfig
 import com.emplk.realestatemanager.data.api.FixerApi
 import com.emplk.realestatemanager.data.api.GoogleApi
 import com.emplk.realestatemanager.data.property.PropertyDao
-import com.emplk.realestatemanager.data.property.amenity.AmenityDao
 import com.emplk.realestatemanager.data.property.location.LocationDao
 import com.emplk.realestatemanager.data.property.picture.PictureDao
 import com.emplk.realestatemanager.data.property_draft.FormDraftDao
-import com.emplk.realestatemanager.data.property_draft.amenity.AmenityDraftDao
 import com.emplk.realestatemanager.data.property_draft.picture_preview.PicturePreviewDao
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -176,9 +174,6 @@ class DataModule {
     @Provides
     fun providePictureDao(appDatabase: AppDatabase): PictureDao = appDatabase.getPictureDao()
 
-    @Singleton
-    @Provides
-    fun provideAmenityDao(appDatabase: AppDatabase): AmenityDao = appDatabase.getAmenityDao()
 
     @Singleton
     @Provides
@@ -187,10 +182,6 @@ class DataModule {
     @Singleton
     @Provides
     fun providePicturePreviewDao(appDatabase: AppDatabase): PicturePreviewDao = appDatabase.getPicturePreviewDao()
-
-    @Singleton
-    @Provides
-    fun provideAmenityFormDao(appDatabase: AppDatabase): AmenityDraftDao = appDatabase.getAmenityFormDao()
 
     // endregion DAOs
 

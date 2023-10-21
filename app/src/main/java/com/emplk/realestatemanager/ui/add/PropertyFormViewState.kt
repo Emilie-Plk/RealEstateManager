@@ -1,6 +1,5 @@
 package com.emplk.realestatemanager.ui.add
 
-import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
 import com.emplk.realestatemanager.ui.add.address_predictions.PredictionViewState
 import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem
 import com.emplk.realestatemanager.ui.add.amenity.AmenityViewState
@@ -19,7 +18,6 @@ data class PropertyFormViewState(
     val nbRooms: Int,
     val nbBathrooms: Int,
     val nbBedrooms: Int,
-    val selectedAmenities: List<AmenityEntity>,
     val amenities: List<AmenityViewState>,
     val pictures: List<PicturePreviewStateItem>,
     val agents: List<AddPropertyAgentViewStateItem>,

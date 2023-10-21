@@ -1,6 +1,6 @@
 package com.emplk.realestatemanager.domain.property
 
-import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
+import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.location.LocationEntity
 import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
 import java.math.BigDecimal
@@ -16,7 +16,7 @@ data class PropertyEntity(
     val bedrooms: Int,
     val bathrooms: Int,
     val pictures: List<PictureEntity>,
-    val amenities: List<AmenityEntity>,
+    val amenities: List<AmenityType>,
     val description: String,
     val agentName: String,
     val isSold: Boolean,

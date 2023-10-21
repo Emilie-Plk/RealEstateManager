@@ -1,7 +1,6 @@
 package com.emplk.realestatemanager.domain.property_draft
 
 import com.emplk.realestatemanager.domain.property.PropertyRepository
-import com.emplk.realestatemanager.domain.property.amenity.AmenityEntity
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.PicturePreviewEntity
 import javax.inject.Inject
 
@@ -30,12 +29,7 @@ class MapPropertyToDraftUseCase @Inject constructor(
                     isFeatured = picture.isFeatured,
                 )
             },
-            amenities = propertyEntity.amenities.map { amenity ->
-                AmenityEntity(
-                    id = amenity.id,
-                    type = amenity.type,
-                )
-            },
+            amenities = propertyEntity.amenities.map { it },
             isSold = propertyEntity.isSold,
             saleDate = propertyEntity.saleDate,
         )

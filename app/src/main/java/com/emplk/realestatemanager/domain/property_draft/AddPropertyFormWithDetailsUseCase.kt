@@ -19,6 +19,7 @@ class AddPropertyFormWithDetailsUseCase @Inject constructor(
                     bedrooms = 0,
                     bathrooms = 0,
                     description = "",
+                   amenities = emptyList(),
                     address = "",
                     isAddressValid = false,
                     agentName = "",
