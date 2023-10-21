@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -26,6 +27,9 @@ interface PicturePreviewDao {
 
     @Query("SELECT * FROM picture_previews WHERE id = :picturePreviewId LIMIT 1")
     suspend fun getPictureById(picturePreviewId: Long): PicturePreviewDto?
+
+    @Upsert
+    suspend fun upsert(picturePreviewDto: PicturePreviewDto): Long
 
     @Query("UPDATE picture_previews SET is_featured = :newIsFeatured, description = :newDescription WHERE id = :picturePreviewId")
     suspend fun update(picturePreviewId: Long, newIsFeatured: Boolean?, newDescription: String?): Int

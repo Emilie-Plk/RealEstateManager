@@ -9,16 +9,20 @@ class PicturePreviewIdRepositoryImpl @Inject constructor() : PicturePreviewIdRep
     private val picturePreviewIdListMutableStateFlow: MutableStateFlow<List<Long>> = MutableStateFlow(emptyList())
 
     override fun add(picturePreviewId: Long) {
-        picturePreviewIdListMutableStateFlow.value = picturePreviewIdListMutableStateFlow.value + picturePreviewId
+        picturePreviewIdListMutableStateFlow.tryEmit(picturePreviewIdListMutableStateFlow.value + picturePreviewId)
+    }
+
+    override fun addAll(picturePreviewIds: List<Long>) {
+        picturePreviewIdListMutableStateFlow.tryEmit(picturePreviewIdListMutableStateFlow.value + picturePreviewIds)
     }
 
     override fun getAllAsFlow(): Flow<List<Long>> = picturePreviewIdListMutableStateFlow
 
     override fun delete(picturePreviewId: Long) {
-        picturePreviewIdListMutableStateFlow.value = picturePreviewIdListMutableStateFlow.value - picturePreviewId
+        picturePreviewIdListMutableStateFlow.tryEmit(picturePreviewIdListMutableStateFlow.value - picturePreviewId)
     }
 
     override fun deleteAll() {
-        picturePreviewIdListMutableStateFlow.value = emptyList()
+        picturePreviewIdListMutableStateFlow.tryEmit(emptyList())
     }
 }

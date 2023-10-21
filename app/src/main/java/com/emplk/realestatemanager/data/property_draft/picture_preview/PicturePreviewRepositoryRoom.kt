@@ -17,14 +17,9 @@ class PicturePreviewRepositoryRoom @Inject constructor(
 ) : PicturePreviewRepository {
     override suspend fun add(picturePreviewEntity: PicturePreviewEntity, propertyFormId: Long): Long =
         withContext(coroutineDispatcherProvider.io) {
-            try {
-                picturePreviewDao.insert(
-                    picturePreviewMapper.mapToPicturePreviewDto(picturePreviewEntity, propertyFormId)
-                )
-            } catch (e: SQLiteException) {
-                e.printStackTrace()
-                -1L  // TODO: not ok
-            }
+            picturePreviewDao.insert(
+                picturePreviewMapper.mapToPicturePreviewDto(picturePreviewEntity, propertyFormId)
+            )
         }
 
     override suspend fun addAll(picturePreviewEntities: List<PicturePreviewEntity>, propertyFormId: Long): List<Long?> =
@@ -71,6 +66,18 @@ class PicturePreviewRepositoryRoom @Inject constructor(
                 isFeatured,
                 description
             ) == 1
+        }
+
+    override suspend fun upsert(picturePreviewEntity: PicturePreviewEntity, propertyFormId: Long): Long =
+        withContext(coroutineDispatcherProvider.io) {
+            try {
+                picturePreviewDao.upsert(
+                    picturePreviewMapper.mapToPicturePreviewDto(picturePreviewEntity, propertyFormId)
+                )
+            } catch (e: SQLiteException) {
+                e.printStackTrace()
+                -1
+            }
         }
 
 

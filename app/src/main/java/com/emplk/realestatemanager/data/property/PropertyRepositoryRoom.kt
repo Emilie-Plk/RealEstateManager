@@ -109,10 +109,10 @@ class PropertyRepositoryRoom @Inject constructor(
                 propertyDao.update(propertyMapper.mapToDtoEntity(propertyEntity))
                 locationDao.update(locationMapper.mapToDtoEntity(propertyEntity.location, propertyEntity.id))
                 propertyEntity.pictures.map {
-                    pictureDao.update(pictureMapper.mapToDtoEntity(it, propertyEntity.id))
+                    pictureDao.upsert(pictureMapper.mapToDtoEntity(it, propertyEntity.id))
                 }
                 propertyEntity.amenities.map {
-                    amenityDao.update(amenityMapper.mapToDtoEntity(it, propertyEntity.id))
+                    amenityDao.upsert(amenityMapper.mapToDtoEntity(it, propertyEntity.id))
                 }
                 true
             } catch (e: SQLiteException) {

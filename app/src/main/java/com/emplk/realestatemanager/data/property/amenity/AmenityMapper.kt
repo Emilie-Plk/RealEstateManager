@@ -8,6 +8,7 @@ class AmenityMapper @Inject constructor() {
 
     fun mapToDtoEntity(amenity: AmenityEntity, propertyId: Long) =
         AmenityDto(
+            id = amenity.id,
             name = amenity.type.name,
             propertyId = propertyId,
         )
@@ -20,7 +21,7 @@ class AmenityMapper @Inject constructor() {
 
     private fun mapToDomainEntity(amenityDto: AmenityDto) =
         AmenityEntity(
-            id = AmenityType.valueOf(amenityDto.name).id,
+            id = amenityDto.id,
             type = AmenityType.valueOf(amenityDto.name),
         )
 }

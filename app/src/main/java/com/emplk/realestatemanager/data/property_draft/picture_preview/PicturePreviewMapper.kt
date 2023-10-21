@@ -18,6 +18,7 @@ class PicturePreviewMapper @Inject constructor() {
         propertyFormId: Long
     ): PicturePreviewDto =
         PicturePreviewDto(
+            id = picturePreviewEntity.id,
             propertyFormId = propertyFormId,
             uri = picturePreviewEntity.uri,
             description = picturePreviewEntity.description,

@@ -13,7 +13,6 @@ class AmenityDraftMapper @Inject constructor() {
 
     fun mapToAmenityDto(amenityEntity: AmenityEntity, propertyFormId: Long) =
         AmenityDraftDto(
-            id = amenityEntity.id,
             propertyFormId = propertyFormId,
             name = amenityEntity.type.name,
         )
