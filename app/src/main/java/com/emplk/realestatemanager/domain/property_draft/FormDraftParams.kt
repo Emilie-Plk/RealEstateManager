@@ -20,7 +20,7 @@ data class FormDraftParams(
     val nbBathrooms: Int = 0,
     val nbBedrooms: Int = 0,
     val agent: String? = null,
-    val amenities: List<AmenityType> = emptyList(),
+    val selectedAmenities: List<AmenityType> = emptyList(),
     val pictureIds: List<Long> = emptyList(),
     val featuredPictureId: Long? = null,
     val isSold: Boolean = false,

@@ -142,7 +142,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                             nbBathrooms = initPropertyFormState.formDraftEntity.bathrooms ?: 0,
                             nbBedrooms = initPropertyFormState.formDraftEntity.bedrooms ?: 0,
                             agent = initPropertyFormState.formDraftEntity.agentName,
-                            amenities = initPropertyFormState.formDraftEntity.amenities,
+                            selectedAmenities = initPropertyFormState.formDraftEntity.amenities,
                             pictureIds = initPropertyFormState.formDraftEntity.pictures.map { it.id },
                             featuredPictureId = initPropertyFormState.formDraftEntity.pictures.find { it.isFeatured }?.id,
                             isSold = initPropertyFormState.formDraftEntity.isSold,
@@ -174,7 +174,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                             form.nbBathrooms > 0 ||
                             form.nbBedrooms > 0 ||
                             !form.agent.isNullOrBlank() ||
-                            form.amenities.isNotEmpty() ||
+                            form.selectedAmenities.isNotEmpty() ||
                             form.pictureIds.isNotEmpty() ||
                             form.featuredPictureId != null
 
@@ -191,7 +191,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                                 form.nbBathrooms > 0 &&
                                 form.nbBedrooms > 0 &&
                                 form.agent != null &&
-                                form.amenities.isNotEmpty() &&
+                                form.selectedAmenities.isNotEmpty() &&
                                 form.pictureIds.isNotEmpty() &&
                                 form.featuredPictureId != null
                     )
@@ -376,21 +376,17 @@ class AddOrEditPropertyViewModel @Inject constructor(
             AmenityViewState.AmenityCheckbox(
                 id = amenityType.id,
                 name = amenityType.name,
-                isChecked = formMutableStateFlow.value.amenities.contains(amenityType),   // TODO: something wrong/not "sync" here
                 iconDrawable = amenityType.iconDrawable,
                 stringRes = amenityType.stringRes,
+                isChecked = formMutableStateFlow.value.selectedAmenities.contains(amenityType),
                 onCheckBoxClicked = EquatableCallbackWithParam { isChecked ->
-                    if (isChecked) {
+                    if (formMutableStateFlow.value.selectedAmenities.contains(amenityType) && !isChecked) {
                         formMutableStateFlow.update {
-                            it.copy(
-                                amenities = it.amenities + AmenityType.valueOf(amenityType.name)
-                            )
+                            it.copy(selectedAmenities = it.selectedAmenities - amenityType)
                         }
-                    } else {
+                    } else if (!formMutableStateFlow.value.selectedAmenities.contains(amenityType) && isChecked) {
                         formMutableStateFlow.update {
-                            it.copy(
-                                amenities = it.amenities.filter { amenity -> amenity.name != amenityType.name }
-                            )
+                            it.copy(selectedAmenities = it.selectedAmenities + amenityType)
                         }
                     }
                 },

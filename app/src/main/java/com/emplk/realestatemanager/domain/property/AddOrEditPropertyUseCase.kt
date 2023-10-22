@@ -49,7 +49,7 @@ class AddOrEditPropertyUseCase @Inject constructor(
                     form.nbBathrooms > 0 &&
                     form.nbBedrooms > 0 &&
                     form.agent != null &&
-                    form.amenities.isNotEmpty() &&
+                    form.selectedAmenities.isNotEmpty() &&
                     form.pictureIds.isNotEmpty()
         ) {
             "Impossible state: form is not valid => form : $form"
@@ -74,7 +74,7 @@ class AddOrEditPropertyUseCase @Inject constructor(
                             ?: return@coroutineScope AddOrEditPropertyWrapper.NoLatLong(NativeText.Resource(R.string.form_generic_error_message)),
                         bedrooms = form.nbBedrooms,
                         agentName = form.agent,
-                        amenities = form.amenities,
+                        amenities = form.selectedAmenities,
                         pictures =
                         getPicturePreviewsUseCase.invoke(form.id).map {
                             PictureEntity(
@@ -110,7 +110,7 @@ class AddOrEditPropertyUseCase @Inject constructor(
                             ?: return@coroutineScope AddOrEditPropertyWrapper.NoLatLong(NativeText.Resource(R.string.form_generic_error_message)),
                         bedrooms = form.nbBedrooms,
                         agentName = form.agent,
-                        amenities = form.amenities,
+                        amenities = form.selectedAmenities,
                         pictures =
                         getPicturePreviewsUseCase.invoke(form.id).map {
                             PictureEntity(
