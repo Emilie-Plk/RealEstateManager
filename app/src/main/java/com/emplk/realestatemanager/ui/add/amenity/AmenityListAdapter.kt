@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.ui.add.amenity
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,12 +42,14 @@ class AmenityListAdapter :
             }
 
             fun bind(item: AmenityViewState.AmenityCheckbox) {
+                Log.d("COUCOU", "AmenityCheckbox bind: ${item.name} is checked: ${item.isChecked} with id ${item.id}")
                 binding.formAmenitiesCheckbox.setText(item.stringRes)
-                binding.formAmenitiesCheckbox.isChecked = item.isChecked
                 binding.formAmenitiesCheckbox.setCompoundDrawablesWithIntrinsicBounds(item.iconDrawable, 0, 0, 0)
                 binding.formAmenitiesCheckbox.setOnCheckedChangeListener { _, isChecked ->
+                  Log.d("COUCOU", "AmenityCheckbox clicked: ${item.name} is checked: $isChecked")
                     item.onCheckBoxClicked.invoke(isChecked)
                 }
+               binding.formAmenitiesCheckbox.isChecked = item.isChecked
             }
         }
 
