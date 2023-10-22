@@ -33,6 +33,7 @@ import com.emplk.realestatemanager.domain.property_draft.address.SetSelectedAddr
 import com.emplk.realestatemanager.domain.property_draft.address.UpdateOnAddressClickedUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.DeletePicturePreviewUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.GetPicturePreviewsAsFlowUseCase
+import com.emplk.realestatemanager.domain.property_draft.picture_preview.PicturePreviewEntity
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.SavePictureToLocalAppFilesAndToLocalDatabaseUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.UpdatePicturePreviewUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.id.PicturePreviewIdRepository
@@ -206,70 +207,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                             nbRooms = form.nbRooms,
                             nbBathrooms = form.nbBathrooms,
                             nbBedrooms = form.nbBedrooms,
-                            pictures = picturePreviews
-                                .map { picturePreview ->
-                                    PicturePreviewStateItem.AddPropertyPicturePreview(
-                                        id = picturePreview.id,
-                                        uri = picturePreview.uri,
-                                        isFeatured = picturePreview.isFeatured,
-                                        description = picturePreview.description,
-                                        onDeleteEvent = EquatableCallback {
-                                            if (form.featuredPictureId == picturePreview.id) {
-                                                val newFeaturedId = form.pictureIds.find { it != picturePreview.id }
-
-                                                formMutableStateFlow.update {
-                                                    it.copy(
-                                                        pictureIds = it.pictureIds.filter { id -> id != picturePreview.id },
-                                                        featuredPictureId = newFeaturedId
-                                                    )
-                                                }
-
-                                                viewModelScope.launch {
-                                                    if (newFeaturedId != null) {
-                                                        updatePicturePreviewUseCase.invoke(
-                                                            newFeaturedId,
-                                                            true,
-                                                            picturePreviews.find { it.id == newFeaturedId }?.description
-                                                        )
-                                                    }
-                                                }
-                                            }
-
-                                            formMutableStateFlow.update {
-                                                it.copy(
-                                                    pictureIds = it.pictureIds.filter { id -> id != picturePreview.id }
-                                                )
-                                            }
-
-                                            viewModelScope.launch {
-                                                deletePicturePreviewUseCase.invoke(picturePreview.id)
-                                            }
-                                        },
-                                        onFeaturedEvent = EquatableCallbackWithParam { isFeatured ->
-                                            if (picturePreview.isFeatured) return@EquatableCallbackWithParam
-
-                                            viewModelScope.launch {
-                                                updatePicturePreviewUseCase.invoke(
-                                                    picturePreview.id,
-                                                    isFeatured,
-                                                    picturePreview.description
-                                                )
-                                            }
-                                            formMutableStateFlow.update {
-                                                it.copy(featuredPictureId = picturePreview.id)
-                                            }
-                                        },
-                                        onDescriptionChanged = EquatableCallbackWithParam { description ->
-                                            viewModelScope.launch {
-                                                updatePicturePreviewUseCase.invoke(
-                                                    picturePreview.id,
-                                                    picturePreview.isFeatured,
-                                                    description
-                                                )
-                                            }
-                                        },
-                                    )
-                                },
+                            pictures = mapPicturePreviews(picturePreviews, form),
                             selectedAgent = form.agent,
                             priceCurrency = when (currencyType) {
                                 CurrencyType.DOLLAR -> NativeText.Argument(
@@ -338,6 +276,74 @@ class AddOrEditPropertyViewModel @Inject constructor(
         }
     }
 
+    private fun mapPicturePreviews(
+        picturePreviews: List<PicturePreviewEntity>,
+        form: FormDraftParams
+    ): List<PicturePreviewStateItem> =
+        picturePreviews.map { picturePreview ->
+            PicturePreviewStateItem.AddPropertyPicturePreview(
+                id = picturePreview.id,
+                uri = picturePreview.uri,
+                isFeatured = picturePreview.isFeatured,
+                description = picturePreview.description,
+                onDeleteEvent = EquatableCallback {
+                    if (form.featuredPictureId == picturePreview.id) {
+                        val newFeaturedId = form.pictureIds.find { it != picturePreview.id }
+
+                        formMutableStateFlow.update {
+                            it.copy(
+                                pictureIds = it.pictureIds.filter { id -> id != picturePreview.id },
+                                featuredPictureId = newFeaturedId
+                            )
+                        }
+
+                        viewModelScope.launch {
+                            if (newFeaturedId != null) {
+                                updatePicturePreviewUseCase.invoke(
+                                    newFeaturedId,
+                                    true,
+                                    picturePreviews.find { it.id == newFeaturedId }?.description
+                                )
+                            }
+                        }
+                    }
+
+                    formMutableStateFlow.update {
+                        it.copy(
+                            pictureIds = it.pictureIds.filter { id -> id != picturePreview.id }
+                        )
+                    }
+
+                    viewModelScope.launch {
+                        deletePicturePreviewUseCase.invoke(picturePreview.id)
+                    }
+                },
+                onFeaturedEvent = EquatableCallbackWithParam { isFeatured ->
+                    if (picturePreview.isFeatured) return@EquatableCallbackWithParam
+
+                    viewModelScope.launch {
+                        updatePicturePreviewUseCase.invoke(
+                            picturePreview.id,
+                            isFeatured,
+                            picturePreview.description
+                        )
+                    }
+                    formMutableStateFlow.update {
+                        it.copy(featuredPictureId = picturePreview.id)
+                    }
+                },
+                onDescriptionChanged = EquatableCallbackWithParam { description ->
+                    viewModelScope.launch {
+                        updatePicturePreviewUseCase.invoke(
+                            picturePreview.id,
+                            picturePreview.isFeatured,
+                            description
+                        )
+                    }
+                },
+            )
+        }
+
     private fun mapPredictionsToViewState(currentPredictionAddresses: PredictionWrapper?): List<PredictionViewState> {
         return when (currentPredictionAddresses) {
             is PredictionWrapper.Success -> {
@@ -363,10 +369,12 @@ class AddOrEditPropertyViewModel @Inject constructor(
             }
 
             is PredictionWrapper.NoResult -> listOf(PredictionViewState.EmptyState)
-            is PredictionWrapper.Error,
-            is PredictionWrapper.Failure -> emptyList()
+            is PredictionWrapper.Error -> emptyList<PredictionViewState>().also { println("Error: ${currentPredictionAddresses.error}") }
+            is PredictionWrapper.Failure -> emptyList<PredictionViewState>().also {
+                println("Failure: ${currentPredictionAddresses.failure}")
+            }
 
-            null -> emptyList()
+            else -> emptyList()
         }
     }
 

@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.domain.property
 
+import android.util.Log
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.geocoding.GeocodingRepository
 import com.emplk.realestatemanager.domain.geocoding.GeocodingWrapper
@@ -9,6 +10,8 @@ import com.emplk.realestatemanager.domain.map_picture.GenerateMapBaseUrlWithPara
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.location.LocationEntity
+import com.emplk.realestatemanager.domain.property.pictures.DeletePictureUseCase
+import com.emplk.realestatemanager.domain.property.pictures.GetPicturesIdsUseCase
 import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
 import com.emplk.realestatemanager.domain.property_draft.ClearPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.FormDraftParams
@@ -31,6 +34,8 @@ class AddOrEditPropertyUseCase @Inject constructor(
     private val generateMapBaseUrlWithParamsUseCase: GenerateMapBaseUrlWithParamsUseCase,
     private val convertToUsdDependingOnLocaleUseCase: ConvertToUsdDependingOnLocaleUseCase,
     private val getPicturePreviewsUseCase: GetPicturePreviewsUseCase,
+    private val getPicturesIdsUseCase: GetPicturesIdsUseCase,
+    private val deletePictureUseCase: DeletePictureUseCase,
     private val convertSurfaceToSquareFeetDependingOnLocaleUseCase: ConvertSurfaceToSquareFeetDependingOnLocaleUseCase,
     private val updatePropertyFormUseCase: UpdatePropertyFormUseCase,
     private val clearPropertyFormUseCase: ClearPropertyFormUseCase,
@@ -83,6 +88,14 @@ class AddOrEditPropertyUseCase @Inject constructor(
                                 description = it.description,
                                 isFeatured = it.id == form.featuredPictureId,
                             )
+                        }.also {
+                            // TODO: maybe delete cache too
+                            val pictureIdsToDelete = getPicturesIdsUseCase.invoke(form.id)
+                                .filter { it !in form.pictureIds }
+
+                            pictureIdsToDelete.forEach { pictureId ->
+                                deletePictureUseCase.invoke(pictureId)
+                            }
                         },
                         entryDate = LocalDateTime.now(clock),
                         isSold = form.isSold,
