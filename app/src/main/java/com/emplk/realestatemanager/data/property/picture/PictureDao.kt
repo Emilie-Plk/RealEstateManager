@@ -17,6 +17,9 @@ interface PictureDao {
     @Query("SELECT * FROM pictures WHERE property_id = :propertyId")
     fun getPicturesAsFlow(propertyId: Long): Flow<List<PictureDto>>
 
+    @Query("SELECT id FROM pictures WHERE property_id = :propertyId")
+    suspend fun getAllPicturesIds(propertyId: Long): List<Long>
+
     @Update
     suspend fun update(pictureDto: PictureDto): Int
 
@@ -24,5 +27,5 @@ interface PictureDao {
     suspend fun upsert(pictureDto: PictureDto): Long
 
     @Query("DELETE FROM pictures WHERE id = :pictureId")
-    suspend fun delete(pictureId: Long): Int
+    suspend fun delete(pictureId: Long)
 }

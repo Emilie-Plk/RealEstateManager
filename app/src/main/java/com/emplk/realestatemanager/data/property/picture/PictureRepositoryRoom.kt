@@ -24,6 +24,10 @@ class PictureRepositoryRoom @Inject constructor(
             }
         }
 
+    override suspend fun getPicturesIds(propertyId: Long): List<Long> = withContext(coroutineDispatcherProvider.io) {
+        pictureDao.getAllPicturesIds(propertyId)
+    }
+
     override suspend fun update(pictureEntity: PictureEntity, propertyId: Long): Boolean =
         withContext(coroutineDispatcherProvider.io) {
             val pictureDtoEntity = pictureMapper.mapToDtoEntity(pictureEntity, propertyId)
@@ -34,5 +38,10 @@ class PictureRepositoryRoom @Inject constructor(
         withContext(coroutineDispatcherProvider.io) {
             val pictureDtoEntity = pictureMapper.mapToDtoEntity(pictureEntity, propertyId)
             pictureDao.upsert(pictureDtoEntity)
+        }
+
+    override suspend fun delete(pictureId: Long) =
+        withContext(coroutineDispatcherProvider.io) {
+            pictureDao.delete(pictureId)
         }
 }
