@@ -3,6 +3,7 @@ package com.emplk.realestatemanager.data.content_resolver
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.content_resolver.PictureFileRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -28,7 +29,7 @@ class PictureFileRepositoryContentResolver @Inject constructor(
         withContext(coroutineDispatcherProvider.io) {
             try {
                 val inputStream = contentResolver.openInputStream(Uri.parse(stringUri))
-                val cacheFile = File(context.cacheDir, "${filePrefix}_${clock.millis()}.jpg")
+                val cacheFile = File(context.cacheDir, "${filePrefix}${clock.millis()}.jpg")
                 val outputStream = cacheFile.outputStream()
                 inputStream?.copyTo(outputStream)
                 outputStream.close()
@@ -39,4 +40,15 @@ class PictureFileRepositoryContentResolver @Inject constructor(
             }
             return@withContext "" // TODO: manage this lol magic values are bad!
         }
+
+    override suspend fun deleteFromAppFiles(absolutePaths: List<String>) {
+        withContext(coroutineDispatcherProvider.io) {
+            absolutePaths.forEach {
+                if (File(it).exists()) {
+                    File(it).delete()
+                    Log.d("COUCOU", "File $it deleted")
+                } else Log.d("COUCOU", "File $it does not exist")
+            }
+        }
+    }
 }
