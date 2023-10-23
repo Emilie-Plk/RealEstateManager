@@ -20,6 +20,9 @@ interface PictureDao {
     @Query("SELECT id FROM pictures WHERE property_id = :propertyId")
     suspend fun getAllPicturesIds(propertyId: Long): List<Long>
 
+    @Query("SELECT uri FROM pictures WHERE id IN (:pictureIds)")
+    suspend fun getPictureUris(pictureIds: List<Long>): List<String>
+
     @Update
     suspend fun update(pictureDto: PictureDto): Int
 

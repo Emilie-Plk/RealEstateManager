@@ -28,6 +28,10 @@ class PictureRepositoryRoom @Inject constructor(
         pictureDao.getAllPicturesIds(propertyId)
     }
 
+    override suspend fun getPicturesUris(pictureIds: List<Long>): List<String> = withContext(coroutineDispatcherProvider.io) {
+        pictureDao.getPictureUris(pictureIds)
+    }
+
     override suspend fun update(pictureEntity: PictureEntity, propertyId: Long): Boolean =
         withContext(coroutineDispatcherProvider.io) {
             val pictureDtoEntity = pictureMapper.mapToDtoEntity(pictureEntity, propertyId)
