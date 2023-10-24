@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.domain.property_draft.picture_preview
 
+import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.content_resolver.SaveFileToLocalAppFilesUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.id.PicturePreviewIdRepository
 import javax.inject.Inject
@@ -11,6 +12,8 @@ class SavePictureToLocalAppFilesAndToLocalDatabaseUseCase @Inject constructor(
 ) {
     suspend fun invoke(stringUri: String, isFormPictureIdEmpty: Boolean, propertyId: Long): Long {
         val absolutePath = saveFileToLocalAppFilesUseCase.invoke(stringUri)
-        return addPicturePreviewUseCase.invoke(absolutePath, isFormPictureIdEmpty, propertyId).also { picturePreviewIdRepository.add(it) }
+            ?: "android.resource://com.emplk.realestatemanager/${R.drawable.fallback_villa}"
+        return addPicturePreviewUseCase.invoke(absolutePath, isFormPictureIdEmpty, propertyId)
+            .also { picturePreviewIdRepository.add(it) }
     }
 }

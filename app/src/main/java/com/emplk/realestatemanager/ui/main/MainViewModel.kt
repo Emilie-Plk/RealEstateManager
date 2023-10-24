@@ -172,5 +172,5 @@ class MainViewModel @Inject constructor(
     }
 
     fun onNavigationChanged(navigationFragmentTypeString: String) =
-        setNavigationTypeUseCase.invoke(NavigationFragmentType.valueOf(navigationFragmentTypeString))
+      setNavigationTypeUseCase.invoke(NavigationFragmentType.valueOf(navigationFragmentTypeString))
 }

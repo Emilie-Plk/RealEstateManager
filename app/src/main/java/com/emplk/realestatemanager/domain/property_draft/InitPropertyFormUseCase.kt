@@ -7,7 +7,7 @@ class InitPropertyFormUseCase @Inject constructor(
     private val addPropertyFormWithDetailsUseCase: AddPropertyFormWithDetailsUseCase,
 ) {
     suspend fun invoke(id: Long?): PropertyFormState {
-        if (id == null || id == 0L)  {
+        if (id == null || id == 0L) {
             val existingAddDraftId = formDraftRepository.getAddFormId()
             return if (existingAddDraftId == null) {
                 // case add new

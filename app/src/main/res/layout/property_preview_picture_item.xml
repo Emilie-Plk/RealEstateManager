@@ -27,7 +27,7 @@
             app:layout_constraintEnd_toStartOf="@id/preview_picture_view"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/tools_villa" />
+            tools:src="@drawable/fallback_villa" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/preview_picture_title_textInputLayout"

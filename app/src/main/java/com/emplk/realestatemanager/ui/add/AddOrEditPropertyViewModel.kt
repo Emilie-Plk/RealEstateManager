@@ -10,6 +10,7 @@ import com.emplk.realestatemanager.domain.agent.GetAgentsMapUseCase
 import com.emplk.realestatemanager.domain.autocomplete.GetCurrentPredictionAddressesFlowWithDebounceUseCase
 import com.emplk.realestatemanager.domain.autocomplete.PredictionWrapper
 import com.emplk.realestatemanager.domain.connectivity.IsInternetEnabledFlowUseCase
+import com.emplk.realestatemanager.domain.content_resolver.DeleteFileFromLocalAppFilesUseCase
 import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceByLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
@@ -77,6 +78,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
     private val getPicturePreviewsAsFlowUseCase: GetPicturePreviewsAsFlowUseCase,
     private val deletePicturePreviewUseCase: DeletePicturePreviewUseCase,
+    private val deleteFileFromLocalAppFilesUseCase: DeleteFileFromLocalAppFilesUseCase, // à refactoooo
     private val getAgentsMapUseCase: GetAgentsMapUseCase,
     private val convertPriceByLocaleUseCase: ConvertPriceByLocaleUseCase,
     private val convertSurfaceDependingOnLocaleUseCase: ConvertSurfaceDependingOnLocaleUseCase,
@@ -289,14 +291,12 @@ class AddOrEditPropertyViewModel @Inject constructor(
                 onDeleteEvent = EquatableCallback {
                     if (form.featuredPictureId == picturePreview.id) {
                         val newFeaturedId = form.pictureIds.find { it != picturePreview.id }
-
                         formMutableStateFlow.update {
                             it.copy(
                                 pictureIds = it.pictureIds.filter { id -> id != picturePreview.id },
                                 featuredPictureId = newFeaturedId
                             )
                         }
-
                         viewModelScope.launch {
                             if (newFeaturedId != null) {
                                 updatePicturePreviewUseCase.invoke(
@@ -306,16 +306,15 @@ class AddOrEditPropertyViewModel @Inject constructor(
                                 )
                             }
                         }
+                    } else {
+                        formMutableStateFlow.update {
+                            it.copy(
+                                pictureIds = it.pictureIds.filter { id -> id != picturePreview.id }
+                            )
+                        }
                     }
-
-                    formMutableStateFlow.update {
-                        it.copy(
-                            pictureIds = it.pictureIds.filter { id -> id != picturePreview.id }
-                        )
-                    }
-
                     viewModelScope.launch {
-                        deletePicturePreviewUseCase.invoke(picturePreview.id)
+                        deletePicturePreviewUseCase.invoke(picturePreview.id, picturePreview.uri)
                     }
                 },
                 onFeaturedEvent = EquatableCallbackWithParam { isFeatured ->

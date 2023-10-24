@@ -6,16 +6,17 @@ import androidx.lifecycle.liveData
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceByLocaleUseCase
 import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdFlowUseCase
+import com.emplk.realestatemanager.domain.current_property.SetCurrentPropertyIdUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceDependingOnLocaleUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceToSquareFeetDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceByLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetRoundedSurfaceWithSurfaceUnitUseCase
-import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.GetPropertyByItsIdAsFlowUseCase
 import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
-import com.emplk.realestatemanager.ui.add.amenity.AmenityViewState
-import com.emplk.realestatemanager.ui.utils.EquatableCallback
+import com.emplk.realestatemanager.ui.map.bottom_sheet.MapBottomSheetFragment.Companion.DETAIL_PROPERTY_TAG
+import com.emplk.realestatemanager.ui.map.bottom_sheet.MapBottomSheetFragment.Companion.EDIT_PROPERTY_TAG
+import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParams
+import com.emplk.realestatemanager.ui.utils.Event
 import com.emplk.realestatemanager.ui.utils.NativePhoto
 import com.emplk.realestatemanager.ui.utils.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,14 +31,13 @@ import javax.inject.Inject
 class MapBottomSheetViewModel @Inject constructor(
     private val getCurrentPropertyIdFlowUseCase: GetCurrentPropertyIdFlowUseCase,
     private val getPropertyByItsIdAsFlowUseCase: GetPropertyByItsIdAsFlowUseCase,
-    private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val convertSurfaceDependingOnLocaleUseCase: ConvertSurfaceDependingOnLocaleUseCase,
     private val convertPriceByLocaleUseCase: ConvertPriceByLocaleUseCase,
     private val getRoundedSurfaceWithSurfaceUnitUseCase: GetRoundedSurfaceWithSurfaceUnitUseCase,
     private val formatPriceByLocaleUseCase: FormatPriceByLocaleUseCase,
 ) : ViewModel() {
 
-    private val onActionClickedMutableSharedFlow: MutableSharedFlow<String> =
+    private val onActionClickedMutableSharedFlow: MutableSharedFlow<Pair<Long, String>> =
         MutableSharedFlow(extraBufferCapacity = 1)
 
     private val isProgressBarVisibleMutableLiveData: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -61,11 +61,11 @@ class MapBottomSheetViewModel @Inject constructor(
                     price = formatPriceByLocaleUseCase.invoke(propertyWithConvertedPriceAndSurface.price),
                     surface = getRoundedSurfaceWithSurfaceUnitUseCase.invoke(propertyWithConvertedPriceAndSurface.surface),
                     featuredPicture = NativePhoto.Uri(getFeaturedPictureUri(propertyWithConvertedPriceAndSurface.pictures)),
-                    onDetailClick = EquatableCallback {
-                        setNavigationTypeUseCase.invoke(NavigationFragmentType.DETAIL_FRAGMENT)
+                    onDetailClick = EquatableCallbackWithParams { propertyId, fragmentTag ->
+                        onActionClickedMutableSharedFlow.tryEmit((propertyId to fragmentTag))
                     },
-                    onEditClick = EquatableCallback {
-                        setNavigationTypeUseCase.invoke(NavigationFragmentType.EDIT_FRAGMENT)
+                    onEditClick = EquatableCallbackWithParams { propertyId, fragmentTag ->
+                        onActionClickedMutableSharedFlow.tryEmit((propertyId to fragmentTag))
                     },
                     description = propertyWithConvertedPriceAndSurface.description,
                     rooms = NativeText.Argument(
@@ -81,13 +81,6 @@ class MapBottomSheetViewModel @Inject constructor(
                         propertyWithConvertedPriceAndSurface.bathrooms
                     ),
                     isProgressBarVisible = isProgressBarVisibleMutableLiveData.value,
-
-                    amenities = propertyWithConvertedPriceAndSurface.amenities.map { amenity ->
-                        AmenityViewState.AmenityItem(
-                            stringRes = amenity.stringRes,
-                            iconDrawable = amenity.iconDrawable,
-                        )
-                    },
                 )
             )
         }
@@ -96,13 +89,13 @@ class MapBottomSheetViewModel @Inject constructor(
     private fun getFeaturedPictureUri(pictures: List<PictureEntity>): String = pictures.first { it.isFeatured }.uri
 
 
-    /*val viewEvent: LiveData<Event<MapBottomSheetEvent>> = liveData {
+    val viewEvent: LiveData<Event<MapBottomSheetEvent>> = liveData {
         onActionClickedMutableSharedFlow.collect {
-            when (it) {
-                DETAIL_PROPERTY_TAG -> emit(Event(MapBottomSheetEvent.OnDetailClick(NavigationFragmentType.DETAIL_FRAGMENT.name)))
-                EDIT_PROPERTY_TAG -> emit(Event(MapBottomSheetEvent.OnEditClick(NavigationFragmentType.EDIT_FRAGMENT.name)))
+            when (it.second) {
+                EDIT_PROPERTY_TAG -> emit(Event(MapBottomSheetEvent.Edit(it.first)))
+                DETAIL_PROPERTY_TAG -> emit(Event(MapBottomSheetEvent.Detail))
             }
         }
-    }*/
+    }
 }
 

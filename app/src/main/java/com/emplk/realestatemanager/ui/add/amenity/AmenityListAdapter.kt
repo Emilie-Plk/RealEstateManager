@@ -1,6 +1,5 @@
 package com.emplk.realestatemanager.ui.add.amenity
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,7 +46,7 @@ class AmenityListAdapter :
                 binding.formAmenitiesCheckbox.setOnCheckedChangeListener { _, isChecked ->
                     item.onCheckBoxClicked.invoke(isChecked)
                 }
-               binding.formAmenitiesCheckbox.isChecked = item.isChecked
+                binding.formAmenitiesCheckbox.isChecked = item.isChecked
             }
         }
 

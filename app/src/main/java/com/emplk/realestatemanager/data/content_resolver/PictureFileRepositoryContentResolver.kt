@@ -25,7 +25,7 @@ class PictureFileRepositoryContentResolver @Inject constructor(
      */
     @Suppress("BlockingMethodInNonBlockingContext")
     @Throws(IOException::class)
-    override suspend fun saveToAppFiles(stringUri: String, filePrefix: String): String =
+    override suspend fun saveToAppFiles(stringUri: String, filePrefix: String): String? =
         withContext(coroutineDispatcherProvider.io) {
             try {
                 val inputStream = contentResolver.openInputStream(Uri.parse(stringUri))
@@ -37,18 +37,16 @@ class PictureFileRepositoryContentResolver @Inject constructor(
                 return@withContext cacheFile.absolutePath
             } catch (e: IOException) {
                 e.printStackTrace()
+                return@withContext null
             }
-            return@withContext "" // TODO: manage this lol magic values are bad!
         }
 
-    override suspend fun deleteFromAppFiles(absolutePaths: List<String>) {
+    override suspend fun deleteFromAppFiles(absolutePath: String) {
         withContext(coroutineDispatcherProvider.io) {
-            absolutePaths.forEach {
-                if (File(it).exists()) {
-                    File(it).delete()
-                    Log.d("COUCOU", "File $it deleted")
-                } else Log.d("COUCOU", "File $it does not exist")
-            }
+            if (File(absolutePath).exists()) {
+                File(absolutePath).delete()
+                Log.d("COUCOU", "File $absolutePath deleted")
+            } else Log.d("COUCOU", "File $absolutePath does not exist")
         }
     }
 }
