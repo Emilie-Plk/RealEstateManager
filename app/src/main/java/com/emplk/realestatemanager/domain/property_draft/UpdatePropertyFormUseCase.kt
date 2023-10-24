@@ -32,7 +32,9 @@ class UpdatePropertyFormUseCase @Inject constructor(
                     agentName = form.agent,
                     amenities = form.selectedAmenities,
                     isSold = form.isSold,
+                    entryDate = form.entryDate,
                     saleDate = form.soldDate,
+                    lastEditionDate = form.lastEditionDate,
                 )
             )
         }

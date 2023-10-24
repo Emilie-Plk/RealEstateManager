@@ -67,6 +67,11 @@ class AddOrEditPropertyUseCase @Inject constructor(
             val doesPropertyExist = formDraftRepository.doesPropertyExist(form.id)
             if (doesPropertyExist) {
                 // region edit existing property
+                require(
+                    form.entryDate != null
+                ) {
+                    "Impossible case: entry date should not be null => form : $form"
+                }
                 val updateSuccess = propertyRepository.update(
                     PropertyEntity(
                         id = form.id,
@@ -81,8 +86,7 @@ class AddOrEditPropertyUseCase @Inject constructor(
                         bedrooms = form.nbBedrooms,
                         agentName = form.agent,
                         amenities = form.selectedAmenities,
-                        pictures =
-                        getPicturePreviewsUseCase.invoke(form.id).map {
+                        pictures = getPicturePreviewsUseCase.invoke(form.id).map {
                             PictureEntity(
                                 id = it.id,
                                 uri = it.uri,
@@ -98,9 +102,10 @@ class AddOrEditPropertyUseCase @Inject constructor(
                                 deletePictureUseCase.invoke(pictureId)
                             }
                         },
-                        entryDate = LocalDateTime.now(clock),
+                        entryDate = form.entryDate,
+                        lastEditionDate = LocalDateTime.now(clock),
                         isSold = form.isSold,
-                        saleDate = form.soldDate,
+                        saleDate = if (form.isSold && form.soldDate == null) LocalDateTime.now(clock) else form.soldDate,
                     ),
                 )
                 resetCurrentPropertyIdUseCase.invoke()
@@ -137,6 +142,7 @@ class AddOrEditPropertyUseCase @Inject constructor(
                             )
                         },
                         entryDate = LocalDateTime.now(clock),
+                        lastEditionDate = null,
                         isSold = false,
                         saleDate = null,
                     ),

@@ -99,7 +99,7 @@
     <string name="form_location_error_message">Please chose an address from suggestions or try again!</string>
     <string name="form_locale_error_message">Sorry, app is only supported in France and US so far!</string>
     <string name="no_internet_connection_draft_saved">Draft saved, please check your connection and try again</string>
-    <string name="edit_property_btn">Edit Property</string>
+    <string name="form_edit_button">Edit Property</string>
     <string name="missing_description_a11y">Missing description</string>
     <string name="currency_rate_last_updated_date_tv">Currency rate as of %s</string>
     <string name="currency_rate_with_no_date_tv">Currency rate might be inaccurate</string>

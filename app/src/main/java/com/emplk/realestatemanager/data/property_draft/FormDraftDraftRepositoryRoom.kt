@@ -130,6 +130,7 @@ class FormDraftDraftRepositoryRoom @Inject constructor(
                 propertyFormDto.agentName,
                 propertyFormDto.isSold,
                 propertyFormDto.saleDate,
+                propertyFormDto.lastEditionDate,
                 propertyFormDto.id
             )
         }

@@ -6,6 +6,7 @@ import com.emplk.realestatemanager.ui.add.amenity.AmenityViewState
 import com.emplk.realestatemanager.ui.add.picture_preview.PicturePreviewStateItem
 import com.emplk.realestatemanager.ui.add.type.AddPropertyTypeViewStateItem
 import com.emplk.realestatemanager.ui.utils.NativeText
+import java.text.Normalizer.Form
 
 data class PropertyFormViewState(
     val propertyType: String?,
@@ -29,4 +30,5 @@ data class PropertyFormViewState(
     val propertyTypes: List<AddPropertyTypeViewStateItem>,
     val isSold: Boolean? = false,
     val soldDate: String? = null,
+    val formType: FormType,
 )

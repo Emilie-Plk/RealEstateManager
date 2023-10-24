@@ -31,7 +31,9 @@ class MapPropertyToDraftUseCase @Inject constructor(
             },
             amenities = propertyEntity.amenities.map { it },
             isSold = propertyEntity.isSold,
+            entryDate = propertyEntity.entryDate,
             saleDate = propertyEntity.saleDate,
+            lastEditionDate = propertyEntity.lastEditionDate,
         )
     }
 }

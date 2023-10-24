@@ -10,7 +10,6 @@ import com.emplk.realestatemanager.domain.agent.GetAgentsMapUseCase
 import com.emplk.realestatemanager.domain.autocomplete.GetCurrentPredictionAddressesFlowWithDebounceUseCase
 import com.emplk.realestatemanager.domain.autocomplete.PredictionWrapper
 import com.emplk.realestatemanager.domain.connectivity.IsInternetEnabledFlowUseCase
-import com.emplk.realestatemanager.domain.content_resolver.DeleteFileFromLocalAppFilesUseCase
 import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceByLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
@@ -60,6 +59,8 @@ import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
@@ -78,7 +79,6 @@ class AddOrEditPropertyViewModel @Inject constructor(
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
     private val getPicturePreviewsAsFlowUseCase: GetPicturePreviewsAsFlowUseCase,
     private val deletePicturePreviewUseCase: DeletePicturePreviewUseCase,
-    private val deleteFileFromLocalAppFilesUseCase: DeleteFileFromLocalAppFilesUseCase, // à refactoooo
     private val getAgentsMapUseCase: GetAgentsMapUseCase,
     private val convertPriceByLocaleUseCase: ConvertPriceByLocaleUseCase,
     private val convertSurfaceDependingOnLocaleUseCase: ConvertSurfaceDependingOnLocaleUseCase,
@@ -95,6 +95,8 @@ class AddOrEditPropertyViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val propertyId: Long? = savedStateHandle.get<Long>(AddOrEditPropertyFragment.PROPERTY_ID_KEY)
+    private val formTypeMutableStateFlow =
+        if (propertyId == null || propertyId == 0L) MutableStateFlow(FormType.ADD) else MutableStateFlow(FormType.EDIT)
 
     private val formMutableStateFlow = MutableStateFlow(FormDraftParams())
 
@@ -148,6 +150,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                             selectedAmenities = initPropertyFormState.formDraftEntity.amenities,
                             pictureIds = initPropertyFormState.formDraftEntity.pictures.map { it.id },
                             featuredPictureId = initPropertyFormState.formDraftEntity.pictures.find { it.isFeatured }?.id,
+                            entryDate = initPropertyFormState.formDraftEntity.entryDate,
                             isSold = initPropertyFormState.formDraftEntity.isSold,
                             soldDate = initPropertyFormState.formDraftEntity.saleDate,
                         )
@@ -242,7 +245,14 @@ class AddOrEditPropertyViewModel @Inject constructor(
                                 )
                             },
                             addressPredictions = mapPredictionsToViewState(predictionWrapper),
+                            isSold = form.isSold,
+                            soldDate = form.soldDate?.format(
+                                DateTimeFormatter.ofLocalizedDate(
+                                    FormatStyle.SHORT
+                                )
+                            ),
                             isAddressValid = form.isAddressValid,
+                            formType = formTypeMutableStateFlow.value,
                         )
                     )
                 }.collect()
@@ -481,6 +491,12 @@ class AddOrEditPropertyViewModel @Inject constructor(
     fun onBathroomsNumberChanged(value: Int) {
         formMutableStateFlow.update {
             it.copy(nbBathrooms = value)
+        }
+    }
+
+    fun onSoldStatusChanged(checked: Boolean) {
+        formMutableStateFlow.update {
+            it.copy(isSold = checked)
         }
     }
 
