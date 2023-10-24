@@ -43,6 +43,10 @@ data class FormDraftDto(
     val agentName: String?,
     @ColumnInfo(name = "is_sold")
     val isSold: Boolean,
+    @ColumnInfo(name = "entry_date")
+    val entryDate: LocalDateTime?,
     @ColumnInfo(name = "sale_date")
     val saleDate: LocalDateTime?,
+    @ColumnInfo(name = "last_edition_date")
+    val lastEditionDate: LocalDateTime?,
 )

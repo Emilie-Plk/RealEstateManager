@@ -52,7 +52,8 @@ interface FormDraftDao {
                 " amenity_library = :newAmenityLibrary," +
                 " agent_name = :newAgentName," +
                 " is_sold = :isSold," +
-                " sale_date = :saleDate  WHERE id = :propertyFormId"
+                " sale_date = :saleDate," +
+                " last_edition_date = :lastEditionDate WHERE id = :propertyFormId"
     )
     suspend fun update(
         newType: String?,
@@ -75,6 +76,7 @@ interface FormDraftDao {
         newAgentName: String?,
         isSold: Boolean,
         saleDate: LocalDateTime?,
+        lastEditionDate: LocalDateTime?,
         propertyFormId: Long,
     )
 

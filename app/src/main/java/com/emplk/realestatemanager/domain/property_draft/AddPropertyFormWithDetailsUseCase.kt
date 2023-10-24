@@ -24,7 +24,9 @@ class AddPropertyFormWithDetailsUseCase @Inject constructor(
                     isAddressValid = false,
                     agentName = "",
                     isSold = false,
+                    entryDate = null,
                     saleDate = null,
+                    lastEditionDate = null,
                 )
             )
         } else {

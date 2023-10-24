@@ -47,4 +47,6 @@ data class PropertyDto(
     val entryDate: LocalDateTime,
     @ColumnInfo(name = "sale_date")
     val saleDate: LocalDateTime?,
+    @ColumnInfo(name = "last_edition_date")
+    val lastEditionDate: LocalDateTime?,
 )

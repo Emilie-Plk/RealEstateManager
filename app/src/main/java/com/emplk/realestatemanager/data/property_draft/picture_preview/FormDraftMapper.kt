@@ -32,7 +32,9 @@ class FormDraftMapper @Inject constructor(
             amenityLibrary = propertyForm.amenities.contains(AmenityType.LIBRARY),
             agentName = propertyForm.agentName,
             isSold = propertyForm.isSold,
+            entryDate = propertyForm.entryDate,
             saleDate = propertyForm.saleDate,
+            lastEditionDate = propertyForm.lastEditionDate,
         )
 
     fun mapToPropertyDraftEntity(
@@ -54,7 +56,9 @@ class FormDraftMapper @Inject constructor(
             pictures = picturePreviewMapper.mapToPicturePreviewEntities(picturePreviewDtos),
             amenities = mapAmenities(formDraftDto),
             isSold = formDraftDto.isSold,
+            entryDate = formDraftDto.entryDate,
             saleDate = formDraftDto.saleDate,
+            lastEditionDate = formDraftDto.lastEditionDate,
         )
 
     private fun mapAmenities(formDraftDto: FormDraftDto): List<AmenityType> = buildList {

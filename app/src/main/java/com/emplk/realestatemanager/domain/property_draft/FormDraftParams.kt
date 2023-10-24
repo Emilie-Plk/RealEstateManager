@@ -24,5 +24,7 @@ data class FormDraftParams(
     val pictureIds: List<Long> = emptyList(),
     val featuredPictureId: Long? = null,
     val isSold: Boolean = false,
+    val entryDate: LocalDateTime? = null,
     val soldDate: LocalDateTime? = null,
+    val lastEditionDate: LocalDateTime? = null,
 )

@@ -56,10 +56,7 @@ class AddOrEditPropertyFragment : Fragment(R.layout.form_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-Log.d("COUCOU", "AddOrEditPropertyFragment onViewCreated: ")
-        binding.formSoldStatusTv.isVisible = false
-        binding.formSoldStatusSwitch.isVisible = false
-        binding.formSubmitButton.text = getString(R.string.form_create_button)
+        Log.d("COUCOU", "AddOrEditPropertyFragment onViewCreated: ")
 
         setNumberPickersListeners()
 
@@ -98,6 +95,19 @@ Log.d("COUCOU", "AddOrEditPropertyFragment onViewCreated: ")
         }
 
         viewModel.viewStateLiveData.observe(viewLifecycleOwner) { viewState ->
+            when (viewState.formType) {
+                FormType.ADD -> {
+                    binding.formSoldStatusTv.isVisible = false
+                    binding.formSoldStatusSwitch.isVisible = false
+                    binding.formSubmitButton.text = getString(R.string.form_create_button)
+                }
+
+                FormType.EDIT -> {
+                    binding.formSoldStatusTv.isVisible = true
+                    binding.formSoldStatusSwitch.isVisible = true
+                    binding.formSubmitButton.text = getString(R.string.form_edit_button)
+                }
+            }
             typeAdapter.setData(viewState.propertyTypes)
             agentAdapter.setData(viewState.agents)
             picturePreviewAdapter.submitList(viewState.pictures)
@@ -150,7 +160,6 @@ Log.d("COUCOU", "AddOrEditPropertyFragment onViewCreated: ")
                 if (newText != viewState.address) {
                     viewModel.onAddressChanged(newText)
                 }
-
             }
 
             binding.formAddressTextInputEditText.setOnFocusChangeListener { _, hasFocus ->
@@ -161,6 +170,11 @@ Log.d("COUCOU", "AddOrEditPropertyFragment onViewCreated: ")
             }
 
             binding.formAddressIsValidHelperTv.isVisible = viewState.isAddressValid
+
+            binding.formSoldStatusSwitch.isChecked = viewState.isSold ?: false
+            binding.formSoldStatusSwitch.setOnCheckedChangeListener { _, isChecked ->
+                viewModel.onSoldStatusChanged(isChecked)
+            }
 
             binding.formPriceCurrencyTv.text = viewState.priceCurrency.toCharSequence(requireContext())
             binding.formSurfaceUnitTv.text = viewState.surfaceUnit.toCharSequence(requireContext())

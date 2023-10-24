@@ -90,9 +90,7 @@ class MainViewModel @Inject constructor(
 
                 ADD_FRAGMENT -> resetCurrentPropertyIdUseCase.invoke()
 
-                DETAIL_FRAGMENT
-
-                -> if (!isTablet) {
+                DETAIL_FRAGMENT -> if (!isTablet) {
                     emit(
                         MainViewState(
                             false,

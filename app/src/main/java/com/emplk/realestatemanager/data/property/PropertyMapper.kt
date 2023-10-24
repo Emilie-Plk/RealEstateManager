@@ -35,6 +35,7 @@ class PropertyMapper @Inject constructor(
         isSold = property.isSold,
         entryDate = property.entryDate,
         saleDate = property.saleDate,
+        lastEditionDate = property.lastEditionDate,
     )
 
     fun mapToDomainEntity(
@@ -57,6 +58,7 @@ class PropertyMapper @Inject constructor(
         isSold = propertyDto.isSold,
         entryDate = propertyDto.entryDate,
         saleDate = propertyDto.saleDate,
+        lastEditionDate = propertyDto.lastEditionDate,
     )
 
     private fun mapAmenities(propertyDto: PropertyDto): List<AmenityType> = buildList {
