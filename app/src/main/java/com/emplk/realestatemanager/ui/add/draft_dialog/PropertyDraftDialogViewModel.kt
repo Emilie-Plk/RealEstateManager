@@ -2,6 +2,7 @@ package com.emplk.realestatemanager.ui.add.draft_dialog
 
 import androidx.lifecycle.ViewModel
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
+import com.emplk.realestatemanager.domain.current_property.ResetCurrentPropertyIdUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.ClearPropertyFormNavigationUseCase
@@ -13,10 +14,9 @@ import javax.inject.Inject
 @HiltViewModel
 class PropertyDraftDialogViewModel @Inject constructor(
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
-    private val clearPropertyFormUseCase: ClearPropertyFormUseCase,
+    private val resetCurrentPropertyIdUseCase: ResetCurrentPropertyIdUseCase,
     private val saveDraftNavigationUseCase: SaveDraftNavigationUseCase,
     private val clearPropertyFormNavigationUseCase: ClearPropertyFormNavigationUseCase,
-    private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : ViewModel() {
 
     fun onAddDraftClicked() {

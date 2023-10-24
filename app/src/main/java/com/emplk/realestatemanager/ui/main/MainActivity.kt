@@ -3,6 +3,7 @@ package com.emplk.realestatemanager.ui.main
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.addCallback
@@ -12,6 +13,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.commit
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.MainActivityBinding
+import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.ui.blank.BlankActivity
 import com.emplk.realestatemanager.ui.detail.DetailFragment
 import com.emplk.realestatemanager.ui.list.PropertiesFragment
@@ -44,12 +46,38 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+
+
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
         setSupportActionBar(binding.mainToolbar)
         val fragmentName = intent.getStringExtra(KEY_FRAGMENT_TAG)
-
+        Log.d("COUCOU", "MainActivity onCreate: with $fragmentName" )
         if (savedInstanceState == null) {
-            if (fragmentName != null) viewModel.onNavigationChanged(fragmentName)
+            if (fragmentName != null) {
+                when (fragmentName) {
+                    NavigationFragmentType.DETAIL_FRAGMENT.name
+                    -> {
+                        supportFragmentManager.commit {
+                            Log.d("COUCOU", "MainActivity onCreate detail: 58 ")
+                            add(
+                                binding.mainFrameLayoutContainerProperties.id,
+                                DetailFragment.newInstance(intent.getLongExtra("propertyId", 0)),
+                                DETAIL_FRAGMENT_TAG
+                            )
+                        }
+                    }
+                    NavigationFragmentType.LIST_FRAGMENT.name -> {
+                        supportFragmentManager.commit {
+                            Log.d("COUCOU", "MainActivity onCreate list: 67 ")
+                            add(
+                                binding.mainFrameLayoutContainerProperties.id,
+                                PropertiesFragment.newInstance(),
+                                PROPERTIES_FRAGMENT_TAG
+                            )
+                        }
+                    }
+                }
+            }
             else
                 supportFragmentManager.commit {
                     add(
@@ -91,6 +119,7 @@ class MainActivity : AppCompatActivity() {
 
                 is MainViewEvent.DisplayDetailFragmentOnPhone -> {
                     supportFragmentManager.commit {
+                        Log.d("COUCOU", "MainActivity onCreate: DisplayDetailFragmentOnPhone ")
                         replace(
                             binding.mainFrameLayoutContainerProperties.id,
                             DetailFragment.newInstance(event.propertyId),
@@ -173,5 +202,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         viewModel.onResume(resources.getBoolean(R.bool.isTablet))
+   /*     val fragmentName = intent.getStringExtra(KEY_FRAGMENT_TAG)
+        if (fragmentName != null) viewModel.onNavigationChanged(fragmentName)*/
     }
 }

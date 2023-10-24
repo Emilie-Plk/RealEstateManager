@@ -28,11 +28,7 @@ class BlankActivityViewModel @Inject constructor(
                 NavigationFragmentType.ADD_FRAGMENT -> Unit
                 NavigationFragmentType.EDIT_FRAGMENT -> Unit
                 NavigationFragmentType.FILTER_FRAGMENT -> Unit
-                NavigationFragmentType.DETAIL_FRAGMENT ->
-                    emit(
-                    Event(BlankViewEvent.NavigateToMain(NavigationFragmentType.DETAIL_FRAGMENT.name))
-                )
-
+                NavigationFragmentType.DETAIL_FRAGMENT -> Unit
                 NavigationFragmentType.LIST_FRAGMENT -> emit(Event(BlankViewEvent.NavigateToMain(NavigationFragmentType.LIST_FRAGMENT.name)))
                 NavigationFragmentType.DRAFT_DIALOG_FRAGMENT -> emit(Event(BlankViewEvent.DisplayDraftDialog))
                 NavigationFragmentType.MAP_FRAGMENT -> Unit

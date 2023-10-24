@@ -2,6 +2,7 @@ package com.emplk.realestatemanager.ui.detail
 
 import android.graphics.Paint
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -22,7 +23,7 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
     private val viewModel by viewModels<DetailViewModel>()
 
     companion object {
-        const val KEY_PROPERTY_ID = "KEY_PROPERTY_ID"
+        private const val KEY_PROPERTY_ID = "KEY_PROPERTY_ID"
         fun newInstance(id: Long? = null): Fragment {
             val bundle = Bundle().apply {
                 id?.let { putLong(KEY_PROPERTY_ID, it) }
@@ -36,11 +37,12 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        Log.d("COUCOU", "DetailFramgent onCreate: ")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        Log.d("COUCOU", "DetailFramgent onViewCreated: ")
         val pictureBannerAdapter = PictureBannerListAdapter()
         binding.detailPhotoCarouselRv.adapter = pictureBannerAdapter
 
