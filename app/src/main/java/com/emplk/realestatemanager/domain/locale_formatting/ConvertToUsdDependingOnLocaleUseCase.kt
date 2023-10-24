@@ -21,8 +21,12 @@ class ConvertToUsdDependingOnLocaleUseCase @Inject constructor(
         return if (locale == Locale.FRANCE) {
             when (val currencyWrapper = currencyRateRepository.getCurrentCurrencyRate()) {
                 is CurrencyRateWrapper.Success -> {
-                    localeFormattingRepository.convertEuroToDollar(price, currencyWrapper.currencyRateEntity.usdToEuroRate)
+                    localeFormattingRepository.convertEuroToDollar(
+                        price,
+                        currencyWrapper.currencyRateEntity.usdToEuroRate
+                    )
                 }
+
                 is CurrencyRateWrapper.Error -> {
                     localeFormattingRepository.convertEuroToDollar(price, currencyWrapper.fallbackUsToEuroRate)
                 }

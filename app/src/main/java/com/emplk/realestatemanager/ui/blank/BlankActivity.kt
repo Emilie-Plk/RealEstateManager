@@ -37,7 +37,7 @@ class BlankActivity : AppCompatActivity() {
 
         private const val KEY_FRAGMENT_TAG = "KEY_FRAGMENT_TAG"
         private const val PROPERTY_ID_KEY = "PROPERTY_ID_KEY"
-        private const val ADD_FRAGMENT_TAG = "ADD_FRAGMENT_TAG"
+        private const val ADD_OR_EDIT_FRAGMENT_TAG = "ADD_OR_EDIT_FRAGMENT_TAG"
     }
 
     private val binding by viewBinding { BlankActivityBinding.inflate(it) }
@@ -80,7 +80,7 @@ class BlankActivity : AppCompatActivity() {
                         add(
                             binding.blankFrameLayoutContainer.id,
                             AddOrEditPropertyFragment.newInstance(propertyId), // or null?
-                            ADD_FRAGMENT_TAG
+                            ADD_OR_EDIT_FRAGMENT_TAG
                         )
                     }
                 }
@@ -90,7 +90,7 @@ class BlankActivity : AppCompatActivity() {
         viewModel.viewEventLiveData.observeEvent(this) { blankViewEvent ->
             when (blankViewEvent) {
                 BlankViewEvent.NavigateToMain(NavigationFragmentType.LIST_FRAGMENT.name) -> {
-                    startActivity(MainActivity.navigate(this, NavigationFragmentType.LIST_FRAGMENT.name))
+                //  startActivity(MainActivity.navigate(this, NavigationFragmentType.LIST_FRAGMENT.name))
                     finish()
                 }
 
@@ -127,7 +127,7 @@ class BlankActivity : AppCompatActivity() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
 // if fragment displayed is ADD_FRAGMENT_TAG
-                if (supportFragmentManager.findFragmentByTag(ADD_FRAGMENT_TAG) != null) {
+                if (supportFragmentManager.findFragmentByTag(ADD_OR_EDIT_FRAGMENT_TAG) != null) {
                     viewModel.onBackClicked()
                     return
                 }

@@ -14,7 +14,7 @@ data class FormDraftParams(
     val address: String? = null,
     val isAddressValid: Boolean = false,
     val price: BigDecimal = BigDecimal.ZERO,
-    val surface:  BigDecimal = BigDecimal.ZERO,
+    val surface: BigDecimal = BigDecimal.ZERO,
     val description: String? = null,
     val nbRooms: Int = 0,
     val nbBathrooms: Int = 0,

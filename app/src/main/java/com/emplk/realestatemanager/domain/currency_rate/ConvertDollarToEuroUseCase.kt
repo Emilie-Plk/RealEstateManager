@@ -2,7 +2,6 @@ package com.emplk.realestatemanager.domain.currency_rate
 
 import com.emplk.realestatemanager.data.locale_formatting.UnitOfMeasurementRepositoryLocale
 import java.math.BigDecimal
-import java.math.RoundingMode
 import javax.inject.Inject
 
 class ConvertDollarToEuroUseCase @Inject constructor(

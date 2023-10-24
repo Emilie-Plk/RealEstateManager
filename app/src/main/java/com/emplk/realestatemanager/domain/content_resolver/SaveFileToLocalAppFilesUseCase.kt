@@ -7,6 +7,6 @@ class SaveFileToLocalAppFilesUseCase @Inject constructor(private val pictureFile
         private const val PROPERTY_PICTURE_PREFIX = "property_picture_"
     }
 
-    suspend fun invoke(stringUri: String): String =
+    suspend fun invoke(stringUri: String): String? =
         pictureFileRepository.saveToAppFiles(stringUri, PROPERTY_PICTURE_PREFIX)
 }

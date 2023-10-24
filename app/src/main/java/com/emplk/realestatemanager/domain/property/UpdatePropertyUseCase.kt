@@ -66,7 +66,7 @@ class UpdatePropertyUseCase @Inject constructor(
                 PropertyEntity(
                     id = form.id,
                     type = form.propertyType,
-                    price =  convertToUsdDependingOnLocaleUseCase.invoke(form.price),
+                    price = convertToUsdDependingOnLocaleUseCase.invoke(form.price),
                     surface = convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(form.surface),
                     description = form.description,
                     rooms = form.nbRooms,

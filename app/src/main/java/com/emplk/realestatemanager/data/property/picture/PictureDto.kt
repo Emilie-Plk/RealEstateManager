@@ -5,8 +5,9 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "pictures",
-     indices = [Index(value = ["id"], unique = true)]
+@Entity(
+    tableName = "pictures",
+    indices = [Index(value = ["id"], unique = true)]
 )
 data class PictureDto(
     @PrimaryKey(autoGenerate = false)

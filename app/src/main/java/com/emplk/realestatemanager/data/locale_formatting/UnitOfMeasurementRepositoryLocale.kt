@@ -1,6 +1,5 @@
 package com.emplk.realestatemanager.data.locale_formatting
 
-import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.LocaleFormattingRepository
 import com.emplk.realestatemanager.domain.locale_formatting.SurfaceUnitType

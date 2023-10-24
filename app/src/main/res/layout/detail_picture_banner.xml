@@ -16,7 +16,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/tools_villa" />
+        tools:src="@drawable/fallback_villa" />
 
     <TextView
         android:id="@+id/tv_banner"

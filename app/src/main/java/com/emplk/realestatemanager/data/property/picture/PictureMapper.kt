@@ -1,6 +1,5 @@
 package com.emplk.realestatemanager.data.property.picture
 
-import androidx.work.impl.utils.isDefaultProcess
 import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
 import javax.inject.Inject
 
