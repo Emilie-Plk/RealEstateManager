@@ -9,9 +9,10 @@ class GenerateMapUrlWithApiKeyUseCase @Inject constructor() {
     }
 
     fun invoke(baseUrlWithParams: String): String {
-        val completeUrl = baseUrlWithParams + KEY + "COUCOU"
+        val completeUrl = baseUrlWithParams + KEY + "BLABLA"
         //BuildConfig.GOOGLE_API_KEY
-        Log.d("COUCOU", "invoke: $completeUrl")
+     // Todo: activer la clé API pour le detail map bien fûr
+     // Log.d("COUCOU", "invoke: $completeUrl")
         return completeUrl
     }
 

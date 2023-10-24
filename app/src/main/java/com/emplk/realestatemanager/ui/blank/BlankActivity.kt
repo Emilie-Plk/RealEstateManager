@@ -90,7 +90,7 @@ class BlankActivity : AppCompatActivity() {
         viewModel.viewEventLiveData.observeEvent(this) { blankViewEvent ->
             when (blankViewEvent) {
                 BlankViewEvent.NavigateToMain(NavigationFragmentType.LIST_FRAGMENT.name) -> {
-                //  startActivity(MainActivity.navigate(this, NavigationFragmentType.LIST_FRAGMENT.name))
+                    startActivity(MainActivity.navigate(this, NavigationFragmentType.LIST_FRAGMENT.name))
                     finish()
                 }
 

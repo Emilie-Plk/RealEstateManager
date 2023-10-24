@@ -3,14 +3,11 @@ package com.emplk.realestatemanager.ui.map.bottom_sheet
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
-import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.MapBottomSheetFragmentBinding
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
-import com.emplk.realestatemanager.ui.add.AddOrEditPropertyFragment
 import com.emplk.realestatemanager.ui.blank.BlankActivity
-import com.emplk.realestatemanager.ui.detail.DetailFragment
 import com.emplk.realestatemanager.ui.main.MainActivity
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.NativePhoto.Companion.load
@@ -64,14 +61,21 @@ class MapBottomSheetFragment : BottomSheetDialogFragment(R.layout.map_bottom_she
         }
 
         viewModel.viewEvent.observeEvent(viewLifecycleOwner) { viewEvent ->
-            parentFragmentManager.commit {
-                when (viewEvent) {
-                    is MapBottomSheetEvent.Edit -> {
-                        startActivity(BlankActivity.navigate(requireContext(), NavigationFragmentType.EDIT_FRAGMENT.name, viewEvent.propertyId))
-                    }
-                    is MapBottomSheetEvent.Detail -> {
-                        startActivity(MainActivity.navigate(requireContext(), NavigationFragmentType.DETAIL_FRAGMENT.name))
-                    }
+            when (viewEvent) {
+                is MapBottomSheetEvent.Edit -> {
+                    startActivity(
+                        BlankActivity.navigate(
+                            requireContext(),
+                            NavigationFragmentType.EDIT_FRAGMENT.name,
+                            viewEvent.propertyId
+                        )
+                    )
+                    dismiss()
+                }
+
+                is MapBottomSheetEvent.Detail -> {
+                    startActivity(MainActivity.navigate(requireContext(), NavigationFragmentType.DETAIL_FRAGMENT.name))
+                    requireActivity().finish()
                 }
             }
         }

@@ -56,7 +56,7 @@ class AddOrEditPropertyFragment : Fragment(R.layout.form_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+Log.d("COUCOU", "AddOrEditPropertyFragment onViewCreated: ")
         binding.formSoldStatusTv.isVisible = false
         binding.formSoldStatusSwitch.isVisible = false
         binding.formSubmitButton.text = getString(R.string.form_create_button)

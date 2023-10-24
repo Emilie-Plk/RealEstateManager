@@ -1,6 +1,7 @@
 package com.emplk.realestatemanager.domain.property
 
 import com.emplk.realestatemanager.R
+import com.emplk.realestatemanager.domain.current_property.ResetCurrentPropertyIdUseCase
 import com.emplk.realestatemanager.domain.geocoding.GeocodingRepository
 import com.emplk.realestatemanager.domain.geocoding.GeocodingWrapper
 import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceToSquareFeetDependingOnLocaleUseCase
@@ -38,6 +39,7 @@ class AddOrEditPropertyUseCase @Inject constructor(
     private val convertSurfaceToSquareFeetDependingOnLocaleUseCase: ConvertSurfaceToSquareFeetDependingOnLocaleUseCase,
     private val updatePropertyFormUseCase: UpdatePropertyFormUseCase,
     private val clearPropertyFormUseCase: ClearPropertyFormUseCase,
+    private val resetCurrentPropertyIdUseCase: ResetCurrentPropertyIdUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val clock: Clock,
 ) {
@@ -101,6 +103,8 @@ class AddOrEditPropertyUseCase @Inject constructor(
                         saleDate = form.soldDate,
                     ),
                 )
+                resetCurrentPropertyIdUseCase.invoke()
+
                 if (updateSuccess) {
                     AddOrEditPropertyWrapper.Success(NativeText.Resource(R.string.form_successfully_updated_message))
                 } else {
@@ -137,6 +141,8 @@ class AddOrEditPropertyUseCase @Inject constructor(
                         saleDate = null,
                     ),
                 )
+                resetCurrentPropertyIdUseCase.invoke()
+
                 if (addSuccess) {
                     AddOrEditPropertyWrapper.Success(NativeText.Resource(R.string.form_successfully_created_message))
                 } else {
