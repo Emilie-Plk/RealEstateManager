@@ -105,7 +105,7 @@ class AddOrEditPropertyUseCase @Inject constructor(
                         entryDate = form.entryDate,
                         lastEditionDate = LocalDateTime.now(clock),
                         isSold = form.isSold,
-                        saleDate = if (form.isSold && form.soldDate == null) LocalDateTime.now(clock) else form.soldDate,
+                        saleDate = if (!form.isSold) null else form.soldDate ?: LocalDateTime.now(clock),
                     ),
                 )
                 resetCurrentPropertyIdUseCase.invoke()
