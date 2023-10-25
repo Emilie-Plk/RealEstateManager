@@ -36,7 +36,7 @@ class SaveDraftDialogFragment : DialogFragment(R.layout.save_draft_dialog_fragme
         }
 
         binding.addDraftDialogSaveTitle.setOnClickListener {
-            viewModel.getFormTitle(binding.addDraftDialogTitleTextInputEditText.text.toString())
+            viewModel.setFormTitle(binding.addDraftDialogTitleTextInputEditText.text?.toString() ?: "")
             viewModel.onAddDraftClicked()
             dismiss()
         }

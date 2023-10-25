@@ -27,7 +27,7 @@ class SaveDraftDialogViewModel @Inject constructor(
         setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
     }
 
-    fun getFormTitle(title: String) {
+    fun setFormTitle(title: String) {
         setFormTitleUseCase.invoke(title)
     }
 }

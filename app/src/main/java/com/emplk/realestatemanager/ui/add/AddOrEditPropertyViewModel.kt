@@ -57,7 +57,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -100,8 +100,11 @@ class AddOrEditPropertyViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val propertyId: Long? = savedStateHandle.get<Long>(AddOrEditPropertyFragment.PROPERTY_ID_KEY)
-    private val formTypeMutableStateFlow =
-        if (propertyId == null || propertyId == 0L) MutableStateFlow(FormType.ADD) else MutableStateFlow(FormType.EDIT)
+    private val formTypeMutableStateFlow = if (propertyId == null || propertyId == 0L) {
+        MutableStateFlow(FormType.ADD)
+    } else {
+        MutableStateFlow(FormType.EDIT)
+    }
 
     private val formMutableStateFlow = MutableStateFlow(FormDraftParams())
 
@@ -110,7 +113,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
     private val onCreateButtonClickedMutableSharedFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
 
     val viewEventLiveData: LiveData<Event<FormEvent>> = liveData {
-        onCreateButtonClickedMutableSharedFlow.collect {
+        onCreateButtonClickedMutableSharedFlow.flatMapLatest {
             combine(
                 formMutableStateFlow,
                 isInternetEnabledFlowUseCase.invoke()
@@ -118,14 +121,16 @@ class AddOrEditPropertyViewModel @Inject constructor(
                 if (isInternetEnabled) {
                     isAddingPropertyInDatabaseMutableStateFlow.tryEmit(true)
                     val resultEvent = addOrEditPropertyUseCase.invoke(form)
-                    emit(Event(resultEvent))
                     isAddingPropertyInDatabaseMutableStateFlow.tryEmit(false)
+                    Event(resultEvent)
                 } else {
                     updatePropertyFormUseCase.invoke(form)
                     setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
-                    emit(Event(FormEvent.Toast(NativeText.Resource(R.string.no_internet_connection_draft_saved))))
+                    Event(FormEvent.Toast(NativeText.Resource(R.string.no_internet_connection_draft_saved)))
                 }
-            }.collect()
+            }
+        }.collect {
+            emit(it)
         }
     }
 
@@ -180,34 +185,34 @@ class AddOrEditPropertyViewModel @Inject constructor(
                     val agents = getAgentsMapUseCase.invoke()
 
                     val isFormInProgress = !form.propertyType.isNullOrBlank() ||
-                            !form.address.isNullOrBlank() ||
-                            form.price > BigDecimal.ZERO ||
-                            form.surface > BigDecimal.ZERO ||
-                            !form.description.isNullOrBlank() ||
-                            form.nbRooms > 0 ||
-                            form.nbBathrooms > 0 ||
-                            form.nbBedrooms > 0 ||
-                            !form.agent.isNullOrBlank() ||
-                            form.selectedAmenities.isNotEmpty() ||
-                            form.pictureIds.isNotEmpty() ||
-                            form.featuredPictureId != null
+                        !form.address.isNullOrBlank() ||
+                        form.price > BigDecimal.ZERO ||
+                        form.surface > BigDecimal.ZERO ||
+                        !form.description.isNullOrBlank() ||
+                        form.nbRooms > 0 ||
+                        form.nbBathrooms > 0 ||
+                        form.nbBedrooms > 0 ||
+                        !form.agent.isNullOrBlank() ||
+                        form.selectedAmenities.isNotEmpty() ||
+                        form.pictureIds.isNotEmpty() ||
+                        form.featuredPictureId != null
 
                     setPropertyFormProgressUseCase.invoke(isFormInProgress)
 
                     isFormValidMutableStateFlow.tryEmit(
                         form.propertyType != null &&
-                                form.address != null &&
-                                form.isAddressValid &&
-                                form.price > BigDecimal.ZERO &&
-                                form.surface > BigDecimal.ZERO &&
-                                form.description != null &&
-                                form.nbRooms > 0 &&
-                                form.nbBathrooms > 0 &&
-                                form.nbBedrooms > 0 &&
-                                form.agent != null &&
-                                form.selectedAmenities.isNotEmpty() &&
-                                form.pictureIds.isNotEmpty() &&
-                                form.featuredPictureId != null
+                            form.address != null &&
+                            form.isAddressValid &&
+                            form.price > BigDecimal.ZERO &&
+                            form.surface > BigDecimal.ZERO &&
+                            form.description != null &&
+                            form.nbRooms > 0 &&
+                            form.nbBathrooms > 0 &&
+                            form.nbBedrooms > 0 &&
+                            form.agent != null &&
+                            form.selectedAmenities.isNotEmpty() &&
+                            form.pictureIds.isNotEmpty() &&
+                            form.featuredPictureId != null
                     )
 
                     PropertyFormViewState(
@@ -273,31 +278,25 @@ class AddOrEditPropertyViewModel @Inject constructor(
                     emit(it)
                     delay(10.seconds)
                 }.collect {
-                    updatePropertyFormUseCase.invoke(formMutableStateFlow.value)
+                    updatePropertyFormUseCase.invoke(it)
                 }
             }
 
 
             // Save draft when navigating away
             launch {
-                getDraftNavigationUseCase.invoke().collect {
-                    getFormTitleUseCase.invoke().collectLatest { title ->
-                        formMutableStateFlow.update {
-                            it.copy(title = title)
-                        }
+                getFormTitleUseCase.invoke().collect { title ->
+                    formMutableStateFlow.update {
+                        it.copy(title = title)
                     }
-                    formMutableStateFlow.map { form ->
-                        updatePropertyFormUseCase.invoke(form)
-                    }.collect()
+                    updatePropertyFormUseCase.invoke(formMutableStateFlow.value)
                 }
             }
 
             // Clear draft when navigating away
             launch {
                 getClearPropertyFormNavigationEventUseCase.invoke().collect {
-                    formMutableStateFlow.map { form ->
-                        clearPropertyFormUseCase.invoke(form.id)
-                    }.collect()
+                    clearPropertyFormUseCase.invoke(formMutableStateFlow.value.id)
                 }
             }
         }
