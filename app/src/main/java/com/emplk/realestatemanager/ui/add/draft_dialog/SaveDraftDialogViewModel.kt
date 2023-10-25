@@ -5,6 +5,7 @@ import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.ClearPropertyFormNavigationUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.SaveDraftNavigationUseCase
+import com.emplk.realestatemanager.domain.property_draft.SetFormTitleUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -12,6 +13,7 @@ import javax.inject.Inject
 class SaveDraftDialogViewModel @Inject constructor(
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val saveDraftNavigationUseCase: SaveDraftNavigationUseCase,
+    private val setFormTitleUseCase: SetFormTitleUseCase,
     private val clearPropertyFormNavigationUseCase: ClearPropertyFormNavigationUseCase,
 ) : ViewModel() {
 
@@ -23,6 +25,10 @@ class SaveDraftDialogViewModel @Inject constructor(
     fun onCancelClicked() {
         clearPropertyFormNavigationUseCase.invoke()
         setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
+    }
+
+    fun getFormTitle(title: String) {
+        setFormTitleUseCase.invoke(title)
     }
 }
 

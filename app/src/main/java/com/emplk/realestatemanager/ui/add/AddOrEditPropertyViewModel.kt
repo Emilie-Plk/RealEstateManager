@@ -25,7 +25,9 @@ import com.emplk.realestatemanager.domain.property.amenity.type.GetAmenityTypeUs
 import com.emplk.realestatemanager.domain.property_draft.ClearPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.FormDraftParams
 import com.emplk.realestatemanager.domain.property_draft.FormState
+import com.emplk.realestatemanager.domain.property_draft.GetFormTitleAsFlowUseCase
 import com.emplk.realestatemanager.domain.property_draft.InitPropertyFormUseCase
+import com.emplk.realestatemanager.domain.property_draft.SetFormTitleUseCase
 import com.emplk.realestatemanager.domain.property_draft.SetPropertyFormProgressUseCase
 import com.emplk.realestatemanager.domain.property_draft.UpdatePropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.address.SetHasAddressFocusUseCase
@@ -83,6 +85,8 @@ class AddOrEditPropertyViewModel @Inject constructor(
     private val getAgentsMapUseCase: GetAgentsMapUseCase,
     private val convertPriceByLocaleUseCase: ConvertPriceByLocaleUseCase,
     private val convertSurfaceDependingOnLocaleUseCase: ConvertSurfaceDependingOnLocaleUseCase,
+    private val getFormTitleUseCase: GetFormTitleAsFlowUseCase,
+    private val setFormTitleUseCase: SetFormTitleUseCase,
     private val setSelectedAddressStateUseCase: SetSelectedAddressStateUseCase,
     private val updateOnAddressClickedUseCase: UpdateOnAddressClickedUseCase,
     private val setHasAddressFocusUseCase: SetHasAddressFocusUseCase,
@@ -158,6 +162,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                             soldDate = initPropertyFormState.formDraftEntity.saleDate,
                         )
                     }
+                    setFormTitleUseCase.invoke(initPropertyFormState.formDraftEntity.title)
                     picturePreviewIdRepository.addAll(formMutableStateFlow.value.pictureIds)
                 }
             }
@@ -276,6 +281,11 @@ class AddOrEditPropertyViewModel @Inject constructor(
             // Save draft when navigating away
             launch {
                 getDraftNavigationUseCase.invoke().collect {
+                    getFormTitleUseCase.invoke().collectLatest { title ->
+                        formMutableStateFlow.update {
+                            it.copy(title = title)
+                        }
+                    }
                     formMutableStateFlow.map { form ->
                         updatePropertyFormUseCase.invoke(form)
                     }.collect()
