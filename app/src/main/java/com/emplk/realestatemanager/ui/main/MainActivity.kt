@@ -51,12 +51,11 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
         setSupportActionBar(binding.mainToolbar)
         val fragmentName = intent.getStringExtra(KEY_FRAGMENT_TAG)
-        Log.d("COUCOU", "MainActivity onCreate: with $fragmentName" )
+        Log.d("COUCOU", "MainActivity onCreate: with $fragmentName")
         if (savedInstanceState == null) {
             if (fragmentName != null) {
                 when (fragmentName) {
-                    NavigationFragmentType.DETAIL_FRAGMENT.name
-                    -> {
+                    NavigationFragmentType.DETAIL_FRAGMENT.name -> {
                         supportFragmentManager.commit {
                             Log.d("COUCOU", "MainActivity onCreate detail: 58 ")
                             add(
@@ -66,6 +65,7 @@ class MainActivity : AppCompatActivity() {
                             )
                         }
                     }
+
                     NavigationFragmentType.LIST_FRAGMENT.name -> {
                         supportFragmentManager.commit {
                             Log.d("COUCOU", "MainActivity onCreate list: 67 ")
@@ -77,8 +77,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 }
-            }
-            else
+            } else
                 supportFragmentManager.commit {
                     add(
                         binding.mainFrameLayoutContainerProperties.id,
@@ -111,9 +110,8 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.commit {
                         replace(
                             binding.mainFrameLayoutContainerProperties.id,
-                            PropertiesFragment.newInstance(),
-                            PROPERTIES_FRAGMENT_TAG
-                        ).addToBackStack(PROPERTIES_FRAGMENT_TAG)
+                            PropertiesFragment.newInstance()
+                        ).addToBackStack(null)
                     }
                 }
 
@@ -129,12 +127,15 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 is MainViewEvent.DisplayDetailFragmentOnTablet -> {
-                    supportFragmentManager.commit {
-                        replace(
-                            binding.mainFrameLayoutContainerProperties.id,
-                            PropertiesFragment.newInstance(),
-                            PROPERTIES_FRAGMENT_TAG
-                        )
+                    if (supportFragmentManager.findFragmentByTag(PROPERTIES_FRAGMENT_TAG) == null) {
+                        Log.d("COUCOU", "MainActivity onCreate: properties fragment is null ")
+                        supportFragmentManager.commit {
+                            replace(
+                                binding.mainFrameLayoutContainerProperties.id,
+                                PropertiesFragment.newInstance(),
+                                PROPERTIES_FRAGMENT_TAG
+                            )
+                        }
                     }
 
                     supportFragmentManager.commit {
@@ -202,7 +203,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         viewModel.onResume(resources.getBoolean(R.bool.isTablet))
-   /*     val fragmentName = intent.getStringExtra(KEY_FRAGMENT_TAG)
-        if (fragmentName != null) viewModel.onNavigationChanged(fragmentName)*/
+        /*     val fragmentName = intent.getStringExtra(KEY_FRAGMENT_TAG)
+             if (fragmentName != null) viewModel.onNavigationChanged(fragmentName)*/
     }
 }
