@@ -103,5 +103,7 @@
     <string name="missing_description_a11y">Missing description</string>
     <string name="currency_rate_last_updated_date_tv">Currency rate as of %s</string>
     <string name="currency_rate_with_no_date_tv">Currency rate might be inaccurate</string>
+    <string name="add_new_form_tv">Please choose a title for this form</string>
+    <string name="cancel_button">Cancel</string>
 
 </resources>

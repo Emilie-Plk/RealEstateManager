@@ -36,7 +36,7 @@
         <item name="iconTint">@color/white</item>
     </style>
 
-    <style name="Theme.RealEstateManager.CancelButton" parent="Widget.Material3.Button.OutlinedButton">
+    <style name="Theme.RealEstateManager.OutlinedButton" parent="Widget.Material3.Button.OutlinedButton">
         <item name="strokeColor">@color/lighter_gray</item>
     </style>
 
