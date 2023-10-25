@@ -203,7 +203,5 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         viewModel.onResume(resources.getBoolean(R.bool.isTablet))
-        /*     val fragmentName = intent.getStringExtra(KEY_FRAGMENT_TAG)
-             if (fragmentName != null) viewModel.onNavigationChanged(fragmentName)*/
     }
 }

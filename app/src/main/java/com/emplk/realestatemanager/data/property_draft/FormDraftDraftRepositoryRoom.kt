@@ -105,6 +105,15 @@ class FormDraftDraftRepositoryRoom @Inject constructor(
             )
         }
 
+    override suspend fun getDraftsCount(): Int = withContext(coroutineDispatcherProvider.io) {
+        formDraftDao.getAddPropertyDraftsCount()
+    }
+
+    override suspend fun getAllDrafts(): List<FormWithTitleAndLastEditionDate> =
+        withContext(coroutineDispatcherProvider.io) {
+            formDraftDao.getAllDrafts()
+        }
+
     override suspend fun update(formDraftEntity: FormDraftEntity) =
         withContext(coroutineDispatcherProvider.io) {
 
