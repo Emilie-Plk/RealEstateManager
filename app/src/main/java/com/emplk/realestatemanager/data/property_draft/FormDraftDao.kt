@@ -17,16 +17,6 @@ interface FormDraftDao {
     @Query("SELECT * FROM base_form_drafts WHERE id = :propertyFormId LIMIT 1")
     suspend fun getPropertyFormById(propertyFormId: Long): FormDraftWithDetails
 
-    @Transaction
-    @Query("SELECT * FROM base_form_drafts LIMIT 1")
-    suspend fun getExistingPropertyForm(): FormDraftWithDetails?
-
-    @Query("SELECT id FROM base_form_drafts LIMIT 1")
-    suspend fun getExistingPropertyFormId(): Long?  // TODO: to change
-
-    @Query("SELECT id FROM base_form_drafts WHERE id NOT IN (SELECT id FROM properties) LIMIT 1")
-    suspend fun getAddFormId(): Long?
-
     @RewriteQueriesToDropUnusedColumns
     @Query("SELECT * FROM base_form_drafts WHERE id NOT IN (SELECT id FROM properties)")
     suspend fun getAllDrafts(): List<FormWithTitleAndLastEditionDate>

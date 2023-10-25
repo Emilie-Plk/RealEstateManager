@@ -16,7 +16,6 @@ import com.emplk.realestatemanager.databinding.MainActivityBinding
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.ui.blank.BlankActivity
 import com.emplk.realestatemanager.ui.detail.DetailFragment
-import com.emplk.realestatemanager.ui.drafts.add_form_dialog.FormTitleDialogFragment
 import com.emplk.realestatemanager.ui.list.PropertiesFragment
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.viewBinding

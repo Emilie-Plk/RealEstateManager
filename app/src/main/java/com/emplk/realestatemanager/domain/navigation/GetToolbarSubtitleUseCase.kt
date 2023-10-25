@@ -26,9 +26,7 @@ class GetToolbarSubtitleUseCase @Inject constructor(
                     NavigationFragmentType.DETAIL_FRAGMENT -> "Property details"
                     NavigationFragmentType.DRAFT_DIALOG_FRAGMENT -> null
                     NavigationFragmentType.MAP_FRAGMENT -> "Map"
-                    NavigationFragmentType.DRAFTS_FRAGMENT -> null
-                    NavigationFragmentType.TITLE_DRAFT_DIALOG_FRAGMENT -> null
-                }
+                    NavigationFragmentType.DRAFTS_FRAGMENT -> null }
             }
         }
 }

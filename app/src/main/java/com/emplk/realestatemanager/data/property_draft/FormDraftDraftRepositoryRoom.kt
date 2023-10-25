@@ -42,23 +42,6 @@ class FormDraftDraftRepositoryRoom @Inject constructor(
             }
         }
 
-    override suspend fun getExistingPropertyFormId(): Long? = withContext(coroutineDispatcherProvider.io) {
-        try {
-            formDraftDao.getExistingPropertyFormId()
-        } catch (e: SQLiteException) {
-            e.printStackTrace()
-            null
-        }
-    }
-
-    override suspend fun getAddFormId(): Long? = withContext(coroutineDispatcherProvider.io) {
-        try {
-            formDraftDao.getAddFormId()
-        } catch (e: SQLiteException) {
-            e.printStackTrace()
-            null
-        }
-    }
 
     override suspend fun doesDraftExist(propertyFormId: Long?): Boolean =
         withContext(coroutineDispatcherProvider.io) {
@@ -81,20 +64,6 @@ class FormDraftDraftRepositoryRoom @Inject constructor(
                 false
             }
         }
-
-    override suspend fun getExistingPropertyForm(): FormDraftEntity? = withContext(coroutineDispatcherProvider.io) {
-        try {
-            formDraftDao.getExistingPropertyForm()?.let { propertyFormWithDetails ->
-                formDraftMapper.mapToPropertyDraftEntity(
-                    propertyFormWithDetails.propertyForm,
-                    propertyFormWithDetails.picturePreviews,
-                )
-            }
-        } catch (e: SQLiteException) {
-            e.printStackTrace()
-            null
-        }
-    }
 
     override suspend fun getPropertyFormById(propertyFormId: Long): FormDraftEntity =
         withContext(coroutineDispatcherProvider.io) {

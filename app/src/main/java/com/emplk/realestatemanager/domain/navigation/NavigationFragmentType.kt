@@ -9,5 +9,4 @@ enum class NavigationFragmentType {
     DRAFTS_FRAGMENT,
     DETAIL_FRAGMENT,
     DRAFT_DIALOG_FRAGMENT,
-    TITLE_DRAFT_DIALOG_FRAGMENT,
 }

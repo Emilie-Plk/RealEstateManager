@@ -21,9 +21,9 @@ class DraftsFragment : Fragment(R.layout.drafts_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val adapter = DraftsAdapter()
 
         viewModel.viewStates.observe(viewLifecycleOwner) { viewState ->
-            val adapter = DraftsAdapter()
             binding.draftsRv.adapter = adapter
             adapter.submitList(viewState.drafts)
 

@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.commit
 import androidx.fragment.app.commitNow
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.BlankActivityBinding
@@ -18,7 +19,6 @@ import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.ui.add.AddOrEditPropertyFragment
 import com.emplk.realestatemanager.ui.add.draft_dialog.SaveDraftDialogFragment
 import com.emplk.realestatemanager.ui.drafts.DraftsFragment
-import com.emplk.realestatemanager.ui.drafts.add_form_dialog.FormTitleDialogFragment
 import com.emplk.realestatemanager.ui.main.MainActivity
 import com.emplk.realestatemanager.ui.map.MapsFragment
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
@@ -118,8 +118,20 @@ class BlankActivity : AppCompatActivity() {
                 BlankViewEvent.SaveDraftDialog ->
                     SaveDraftDialogFragment.newInstance().show(supportFragmentManager, null)
 
-                BlankViewEvent.TitleDraftDialog ->
-                    FormTitleDialogFragment.newInstance().show(supportFragmentManager, null)
+                BlankViewEvent.OnAddNewDraftClicked -> {
+                    supportFragmentManager.commit {
+                        replace(R.id.blank_frameLayout_container, AddOrEditPropertyFragment.newInstance(null))
+                    }
+                }
+
+                is BlankViewEvent.OnDraftClicked -> {
+                    supportFragmentManager.commit {
+                        replace(
+                            R.id.blank_frameLayout_container,
+                            AddOrEditPropertyFragment.newInstance(blankViewEvent.id)
+                        )
+                    }
+                }
 
                 else -> {}
             }
