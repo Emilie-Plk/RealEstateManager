@@ -13,10 +13,21 @@
         android:layout_marginStart="12dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="8dp"
-        android:text="You have several forms in progress, please choose one to continue"
+        android:text="You have several forms in progress, please choose one to continue or start a new one"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/drafts_new_form_btn"
+        style="@style/Theme.RealEstateManager.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/baseline_add_home_24"
+        android:text="New form"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/drafts_choose_draft_tv" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/drafts_rv"
@@ -25,7 +36,7 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/drafts_choose_draft_tv"
+        app:layout_constraintTop_toBottomOf="@id/drafts_new_form_btn"
         tools:listitem="@layout/form_draft_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
