@@ -1,6 +1,8 @@
 package com.emplk.realestatemanager.domain.property_draft
 
+import com.emplk.realestatemanager.ui.add.FormType
+
 sealed class FormState {
-    data class EmptyForm(val newPropertyFormId: Long) : FormState()
-    data class Draft(val formDraftEntity: FormDraftEntity) : FormState()
+    data class EmptyForm(val newPropertyFormId: Long, val formType: FormType) : FormState()
+    data class Draft(val formDraftEntity: FormDraftEntity, val formType: FormType) : FormState()
 }
