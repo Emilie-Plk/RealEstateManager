@@ -9,7 +9,7 @@
     android:paddingEnd="20dp"
     android:minWidth="300dp"
     android:paddingBottom="12dp"
-    tools:context=".ui.add.draft_dialog.PropertyDraftDialogFragment">
+    tools:context=".ui.add.draft_dialog.SaveDraftDialogFragment">
 
     <TextView
         android:id="@+id/add_draft_dialog_title"

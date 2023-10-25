@@ -3,6 +3,7 @@ package com.emplk.realestatemanager.data.property_draft
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.RewriteQueriesToDropUnusedColumns
 import androidx.room.Transaction
 import java.math.BigDecimal
 import java.time.LocalDateTime
@@ -26,7 +27,7 @@ interface FormDraftDao {
     @Query("SELECT id FROM base_form_drafts WHERE id NOT IN (SELECT id FROM properties) LIMIT 1")
     suspend fun getAddFormId(): Long?
 
-    @Transaction
+    @RewriteQueriesToDropUnusedColumns
     @Query("SELECT * FROM base_form_drafts WHERE id NOT IN (SELECT id FROM properties)")
     suspend fun getAllDrafts(): List<FormWithTitleAndLastEditionDate>
 
@@ -41,6 +42,7 @@ interface FormDraftDao {
 
     @Query(
         "UPDATE base_form_drafts SET type = :newType," +
+                " title = :newTitle," +
                 " price = :newPrice," +
                 " surface = :newSurface," +
                 " address = :newAddress," +
@@ -64,6 +66,7 @@ interface FormDraftDao {
     )
     suspend fun update(
         newType: String?,
+        newTitle: String?,
         newPrice: BigDecimal,
         newSurface: BigDecimal,
         newAddress: String?,

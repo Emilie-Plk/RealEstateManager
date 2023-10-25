@@ -9,7 +9,7 @@
     android:minWidth="300dp"
     android:paddingBottom="12dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.drafts.add_form_dialog.AddNewFormDialogFragment">
+    tools:context=".ui.drafts.add_form_dialog.FormTitleDialogFragment">
 
     <TextView
         android:id="@+id/add_new_form_title_tv"
@@ -27,7 +27,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/add_new_form_title_textInputLayout"
         style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         app:endIconMode="clear_text"
@@ -40,10 +40,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:imeOptions="actionDone"
+            android:gravity="start|top"
             android:inputType="textMultiLine|textCapSentences"
             android:lines="3"
             android:maxLines="3"
-            android:padding="16dp" />
+            />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button

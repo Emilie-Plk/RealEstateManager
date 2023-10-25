@@ -13,6 +13,7 @@ class AddPropertyFormWithDetailsUseCase @Inject constructor(
                 FormDraftEntity(
                     id = 0L,
                     type = "",
+                    title = null,
                     price = BigDecimal.ZERO,
                     surface = BigDecimal.ZERO,
                     rooms = 0,

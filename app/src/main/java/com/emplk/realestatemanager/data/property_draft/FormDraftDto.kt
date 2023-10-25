@@ -11,7 +11,7 @@ import java.time.LocalDateTime
 data class FormDraftDto(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-    val title: String,
+    val title: String?,
     val type: String?,
     val price: BigDecimal,
     val surface: BigDecimal,

@@ -11,6 +11,7 @@ import java.time.LocalDateTime
 data class FormDraftParams(
     val id: Long = 0L,
     val propertyType: String? = null,
+    val title: String? = null,
     val address: String? = null,
     val isAddressValid: Boolean = false,
     val price: BigDecimal = BigDecimal.ZERO,

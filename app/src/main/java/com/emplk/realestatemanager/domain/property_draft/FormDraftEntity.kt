@@ -8,6 +8,7 @@ import java.time.LocalDateTime
 data class FormDraftEntity(
     val id: Long,
     val type: String?,
+    val title: String?,
     val price: BigDecimal,
     val surface: BigDecimal,
     val address: String?,
