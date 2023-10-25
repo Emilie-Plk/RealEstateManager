@@ -33,7 +33,8 @@ interface FormDraftDao {
     suspend fun doesPropertyExist(propertyFormId: Long): Boolean
 
     @Query(
-        "UPDATE base_form_drafts SET type = :newType," +
+        "UPDATE base_form_drafts SET title = :newTitle," +
+                " type = :newType," +
                 " price = :newPrice," +
                 " surface = :newSurface," +
                 " address = :newAddress," +
@@ -56,6 +57,7 @@ interface FormDraftDao {
                 " last_edition_date = :lastEditionDate WHERE id = :propertyFormId"
     )
     suspend fun update(
+        newTitle: String?,
         newType: String?,
         newPrice: BigDecimal,
         newSurface: BigDecimal,

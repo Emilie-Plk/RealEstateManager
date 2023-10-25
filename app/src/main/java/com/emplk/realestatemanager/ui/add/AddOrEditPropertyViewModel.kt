@@ -25,7 +25,7 @@ import com.emplk.realestatemanager.domain.property.amenity.type.GetAmenityTypeUs
 import com.emplk.realestatemanager.domain.property_draft.ClearPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.FormDraftParams
 import com.emplk.realestatemanager.domain.property_draft.InitPropertyFormUseCase
-import com.emplk.realestatemanager.domain.property_draft.PropertyFormState
+import com.emplk.realestatemanager.domain.property_draft.FormState
 import com.emplk.realestatemanager.domain.property_draft.SetPropertyFormProgressUseCase
 import com.emplk.realestatemanager.domain.property_draft.UpdatePropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.address.SetHasAddressFocusUseCase
@@ -129,12 +129,12 @@ class AddOrEditPropertyViewModel @Inject constructor(
         coroutineScope {
 
             when (val initPropertyFormState = initPropertyFormUseCase.invoke(propertyId)) {
-                is PropertyFormState.EmptyForm ->
+                is FormState.EmptyForm ->
                     formMutableStateFlow.update {
                         it.copy(id = initPropertyFormState.newPropertyFormId)
                     }
 
-                is PropertyFormState.Draft -> {
+                is FormState.Draft -> {
                     formMutableStateFlow.update { formState ->
                         formState.copy(
                             id = initPropertyFormState.formDraftEntity.id,
