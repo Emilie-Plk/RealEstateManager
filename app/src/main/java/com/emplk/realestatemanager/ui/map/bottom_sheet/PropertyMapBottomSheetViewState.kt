@@ -1,7 +1,5 @@
 package com.emplk.realestatemanager.ui.map.bottom_sheet
 
-import com.emplk.realestatemanager.ui.utils.EquatableCallback
-import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParam
 import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParams
 import com.emplk.realestatemanager.ui.utils.NativePhoto
 import com.emplk.realestatemanager.ui.utils.NativeText

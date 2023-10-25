@@ -94,7 +94,6 @@ class AddOrEditPropertyUseCase @Inject constructor(
                                 isFeatured = it.id == form.featuredPictureId,
                             )
                         }.also {
-                            // TODO: maybe delete cache too
                             val pictureIdsToDelete = getPicturesIdsUseCase.invoke(form.id)
                                 .filter { it !in form.pictureIds }
 

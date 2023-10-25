@@ -53,6 +53,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.transform
@@ -202,61 +203,62 @@ class AddOrEditPropertyViewModel @Inject constructor(
                                 form.featuredPictureId != null
                     )
 
-                    emit(
-                        PropertyFormViewState(
-                            propertyType = form.propertyType,
-                            address = form.address,
-                            price = if (form.price == BigDecimal.ZERO) "" else form.price.toString(),
-                            surface = if (form.surface == BigDecimal.ZERO) "" else form.surface.toString(),
-                            description = form.description,
-                            nbRooms = form.nbRooms,
-                            nbBathrooms = form.nbBathrooms,
-                            nbBedrooms = form.nbBedrooms,
-                            pictures = mapPicturePreviews(picturePreviews, form),
-                            selectedAgent = form.agent,
-                            priceCurrency = when (currencyType) {
-                                CurrencyType.DOLLAR -> NativeText.Argument(
-                                    R.string.price_currency_in_n,
-                                    currencyType.symbol
-                                )
+                    PropertyFormViewState(
+                        propertyType = form.propertyType,
+                        address = form.address,
+                        price = if (form.price == BigDecimal.ZERO) "" else form.price.toString(),
+                        surface = if (form.surface == BigDecimal.ZERO) "" else form.surface.toString(),
+                        description = form.description,
+                        nbRooms = form.nbRooms,
+                        nbBathrooms = form.nbBathrooms,
+                        nbBedrooms = form.nbBedrooms,
+                        pictures = mapPicturePreviews(picturePreviews, form),
+                        selectedAgent = form.agent,
+                        priceCurrency = when (currencyType) {
+                            CurrencyType.DOLLAR -> NativeText.Argument(
+                                R.string.price_currency_in_n,
+                                currencyType.symbol
+                            )
 
-                                CurrencyType.EURO -> NativeText.Argument(
-                                    R.string.price_currency_in_n,
-                                    currencyType.symbol
-                                )
-                            },
-                            surfaceUnit = NativeText.Argument(
-                                R.string.surface_unit_in_n,
-                                getSurfaceUnitUseCase.invoke().symbol,
-                            ),
-                            isSubmitButtonEnabled = isFormValidMutableStateFlow.value,
-                            isProgressBarVisible = isAddingInDatabase,
-                            amenities = mapAmenityTypesToViewStates(amenityTypes),
-                            propertyTypes = propertyTypes.map { propertyType ->
-                                AddPropertyTypeViewStateItem(
-                                    id = propertyType.key,
-                                    name = propertyType.value,
-                                )
-                            },
-                            agents = agents.map { agent ->
-                                AddPropertyAgentViewStateItem(
-                                    id = agent.key,
-                                    name = agent.value
-                                )
-                            },
-                            addressPredictions = mapPredictionsToViewState(predictionWrapper),
-                            isSold = form.isSold,
-                            soldDate = form.soldDate?.format(
-                                DateTimeFormatter.ofLocalizedDate(
-                                    FormatStyle.SHORT
-                                )
-                            ),
-                            isAddressValid = form.isAddressValid,
-                            formType = formTypeMutableStateFlow.value,
-                        )
+                            CurrencyType.EURO -> NativeText.Argument(
+                                R.string.price_currency_in_n,
+                                currencyType.symbol
+                            )
+                        },
+                        surfaceUnit = NativeText.Argument(
+                            R.string.surface_unit_in_n,
+                            getSurfaceUnitUseCase.invoke().symbol,
+                        ),
+                        isSubmitButtonEnabled = isFormValidMutableStateFlow.value,
+                        isProgressBarVisible = isAddingInDatabase,
+                        amenities = mapAmenityTypesToViewStates(amenityTypes),
+                        propertyTypes = propertyTypes.map { propertyType ->
+                            AddPropertyTypeViewStateItem(
+                                id = propertyType.key,
+                                name = propertyType.value,
+                            )
+                        },
+                        agents = agents.map { agent ->
+                            AddPropertyAgentViewStateItem(
+                                id = agent.key,
+                                name = agent.value
+                            )
+                        },
+                        addressPredictions = mapPredictionsToViewState(predictionWrapper),
+                        isSold = form.isSold,
+                        soldDate = form.soldDate?.format(
+                            DateTimeFormatter.ofLocalizedDate(
+                                FormatStyle.SHORT
+                            )
+                        ),
+                        isAddressValid = form.isAddressValid,
+                        formType = formTypeMutableStateFlow.value,
                     )
-                }.collect()
+                }.collectLatest {
+                    emit(it)
+                }
             }
+
 
             // Throttle
             launch {

@@ -1,6 +1,5 @@
 package com.emplk.realestatemanager.domain.map_picture
 
-import android.util.Log
 import javax.inject.Inject
 
 class GenerateMapUrlWithApiKeyUseCase @Inject constructor() {
@@ -11,8 +10,8 @@ class GenerateMapUrlWithApiKeyUseCase @Inject constructor() {
     fun invoke(baseUrlWithParams: String): String {
         val completeUrl = baseUrlWithParams + KEY + "BLABLA"
         //BuildConfig.GOOGLE_API_KEY
-     // Todo: activer la clé API pour le detail map bien fûr
-     // Log.d("COUCOU", "invoke: $completeUrl")
+        // Todo: activer la clé API pour le detail map bien fûr
+        // Log.d("COUCOU", "invoke: $completeUrl")
         return completeUrl
     }
 
