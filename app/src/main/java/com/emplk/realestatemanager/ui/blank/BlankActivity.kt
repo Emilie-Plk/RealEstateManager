@@ -16,8 +16,9 @@ import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.BlankActivityBinding
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.ui.add.AddOrEditPropertyFragment
-import com.emplk.realestatemanager.ui.add.draft_dialog.PropertyDraftDialogFragment
+import com.emplk.realestatemanager.ui.add.draft_dialog.SaveDraftDialogFragment
 import com.emplk.realestatemanager.ui.drafts.DraftsFragment
+import com.emplk.realestatemanager.ui.drafts.add_form_dialog.FormTitleDialogFragment
 import com.emplk.realestatemanager.ui.main.MainActivity
 import com.emplk.realestatemanager.ui.map.MapsFragment
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
@@ -95,6 +96,9 @@ class BlankActivity : AppCompatActivity() {
                     }
                 }
 
+                NavigationFragmentType.DRAFT_DIALOG_FRAGMENT.name ->
+                    SaveDraftDialogFragment.newInstance().show(supportFragmentManager, null)
+
                 else -> {}
             }
         }
@@ -111,8 +115,11 @@ class BlankActivity : AppCompatActivity() {
                     finish()
                 }
 
-                BlankViewEvent.DisplayDraftDialog ->
-                    PropertyDraftDialogFragment.newInstance().show(supportFragmentManager, null)
+                BlankViewEvent.SaveDraftDialog ->
+                    SaveDraftDialogFragment.newInstance().show(supportFragmentManager, null)
+
+                BlankViewEvent.TitleDraftDialog ->
+                    FormTitleDialogFragment.newInstance().show(supportFragmentManager, null)
 
                 else -> {}
             }

@@ -120,6 +120,7 @@ class FormDraftDraftRepositoryRoom @Inject constructor(
             val propertyFormDto = formDraftMapper.mapToPropertyDraftDto(formDraftEntity)
             formDraftDao.update(
                 propertyFormDto.type,
+                propertyFormDto.title,
                 propertyFormDto.price,
                 propertyFormDto.surface,
                 propertyFormDto.address,

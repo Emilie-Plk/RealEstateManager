@@ -12,12 +12,13 @@ import com.emplk.realestatemanager.domain.navigation.GetToolbarSubtitleUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.ADD_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.DETAIL_FRAGMENT
+import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.DRAFTS_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.DRAFT_DIALOG_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.EDIT_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.FILTER_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.LIST_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.MAP_FRAGMENT
-import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.DRAFTS_FRAGMENT
+import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.TITLE_DRAFT_DIALOG_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property_draft.GetDraftsCountUseCase
 import com.emplk.realestatemanager.domain.screen_width.SetScreenWidthTypeUseCase
@@ -118,6 +119,7 @@ class MainViewModel @Inject constructor(
                 DRAFT_DIALOG_FRAGMENT -> Unit
                 MAP_FRAGMENT -> Unit
                 DRAFTS_FRAGMENT -> Unit
+                TITLE_DRAFT_DIALOG_FRAGMENT -> Unit
             }
         }.collect()
     }
@@ -129,7 +131,7 @@ class MainViewModel @Inject constructor(
             getCurrentPropertyIdFlowUseCase.invoke(),
         ) { isTablet, navigationType, propertyId ->
             when (navigationType) {
-                LIST_FRAGMENT -> emit(Event(MainViewEvent.DisplayPropertyList))
+                LIST_FRAGMENT -> emit(Event(MainViewEvent.PropertyList))
 
                 ADD_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(ADD_FRAGMENT.name, propertyId)))
 
@@ -138,23 +140,23 @@ class MainViewModel @Inject constructor(
                 DETAIL_FRAGMENT ->
                     if (propertyId != null) {
                         if (!isTablet) {
-                            emit(Event(MainViewEvent.DisplayDetailFragmentOnPhone(propertyId)))
+                            emit(Event(MainViewEvent.DetailFragmentOnPhone(propertyId)))
                         } else {
-                            emit(Event(MainViewEvent.DisplayDetailFragmentOnTablet(propertyId)))
+                            emit(Event(MainViewEvent.DetailFragmentOnTablet(propertyId)))
                         }
                     }
 
                 FILTER_FRAGMENT ->
                     if (!isTablet) {
-                        emit(Event(MainViewEvent.DisplayFilterPropertiesFragmentOnPhone))
+                        emit(Event(MainViewEvent.FilterPropertiesFragmentOnPhone))
                     } else {
-                        emit(Event(MainViewEvent.DisplayFilterPropertiesFragmentOnTablet))
+                        emit(Event(MainViewEvent.FilterPropertiesFragmentOnTablet))
                     }
 
-                DRAFT_DIALOG_FRAGMENT -> Unit
                 DRAFTS_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(DRAFTS_FRAGMENT.name, null)))
                 MAP_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(MAP_FRAGMENT.name, null)))
-
+                DRAFT_DIALOG_FRAGMENT,
+                TITLE_DRAFT_DIALOG_FRAGMENT -> Unit
             }
         }.collect()
     }
@@ -162,8 +164,8 @@ class MainViewModel @Inject constructor(
     fun onAddPropertyClicked() {
         viewModelScope.launch {
             when (getDraftsCountUseCase.invoke()) {
-                0, 1 -> setNavigationTypeUseCase.invoke(ADD_FRAGMENT)
-                else -> setNavigationTypeUseCase.invoke(DRAFT_DIALOG_FRAGMENT)
+                0 -> setNavigationTypeUseCase.invoke(ADD_FRAGMENT) // TODO: maybe if 1 go to ADD and display filled form
+                else -> setNavigationTypeUseCase.invoke(DRAFTS_FRAGMENT)
             }
         }
     }

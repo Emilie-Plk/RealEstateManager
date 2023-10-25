@@ -20,7 +20,7 @@ class DraftsAdapter : ListAdapter<DraftViewStateItem, DraftsAdapter.DraftViewHol
             binding.draftItemTitleTv.text = item.title
             binding.draftItemDateTv.text = item.lastEditionDate
             binding.root.setOnClickListener {
-                item.onClick.invoke(item.id)
+                item.onClick.invoke()
             }
         }
     }

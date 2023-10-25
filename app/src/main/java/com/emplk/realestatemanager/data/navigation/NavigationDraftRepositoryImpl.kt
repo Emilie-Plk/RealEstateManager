@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filterNotNull
 import javax.inject.Inject
 
 class NavigationDraftRepositoryImpl @Inject constructor() : NavigationDraftRepository {
@@ -12,6 +13,7 @@ class NavigationDraftRepositoryImpl @Inject constructor() : NavigationDraftRepos
     private val clearPropertyDraftMutableSharedFlow: MutableSharedFlow<Unit> =
         MutableSharedFlow(extraBufferCapacity = 1)
     private val isPropertyFormInProgressMutableStateFlow = MutableStateFlow(false)
+    private val propertyFormTitleMutableStateFlow: MutableStateFlow<String?> = MutableStateFlow(null)
 
     override fun savePropertyDraftEvent() {
         savePropertyDraftMutableSharedFlow.tryEmit(Unit)
@@ -31,4 +33,10 @@ class NavigationDraftRepositoryImpl @Inject constructor() : NavigationDraftRepos
 
     override fun isPropertyFormInProgressAsFlow(): Flow<Boolean> =
         isPropertyFormInProgressMutableStateFlow.asStateFlow()
+
+    override fun setPropertyFormTitle(propertyFormTitle: String?) {
+        propertyFormTitleMutableStateFlow.tryEmit(propertyFormTitle)
+    }
+
+    override fun getPropertyFormTitle(): Flow<String?> = propertyFormTitleMutableStateFlow
 }

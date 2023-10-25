@@ -16,6 +16,7 @@ import com.emplk.realestatemanager.databinding.MainActivityBinding
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.ui.blank.BlankActivity
 import com.emplk.realestatemanager.ui.detail.DetailFragment
+import com.emplk.realestatemanager.ui.drafts.add_form_dialog.FormTitleDialogFragment
 import com.emplk.realestatemanager.ui.list.PropertiesFragment
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.viewBinding
@@ -106,7 +107,7 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.viewEventLiveData.observeEvent(this) { event ->
             when (event) {
-                MainViewEvent.DisplayPropertyList -> {
+                MainViewEvent.PropertyList -> {
                     supportFragmentManager.commit {
                         replace(
                             binding.mainFrameLayoutContainerProperties.id,
@@ -115,7 +116,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-                is MainViewEvent.DisplayDetailFragmentOnPhone -> {
+                is MainViewEvent.DetailFragmentOnPhone -> {
                     supportFragmentManager.commit {
                         Log.d("COUCOU", "MainActivity onCreate: DisplayDetailFragmentOnPhone ")
                         replace(
@@ -126,7 +127,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-                is MainViewEvent.DisplayDetailFragmentOnTablet -> {
+                is MainViewEvent.DetailFragmentOnTablet -> {
                     if (supportFragmentManager.findFragmentByTag(PROPERTIES_FRAGMENT_TAG) == null) {
                         Log.d("COUCOU", "MainActivity onCreate: properties fragment is null ")
                         supportFragmentManager.commit {
@@ -149,11 +150,11 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-                MainViewEvent.DisplayFilterPropertiesFragmentOnPhone -> {
+                MainViewEvent.FilterPropertiesFragmentOnPhone -> {
                     TODO()
                 }
 
-                MainViewEvent.DisplayFilterPropertiesFragmentOnTablet -> {
+                MainViewEvent.FilterPropertiesFragmentOnTablet -> {
                     TODO()
                 }
 
