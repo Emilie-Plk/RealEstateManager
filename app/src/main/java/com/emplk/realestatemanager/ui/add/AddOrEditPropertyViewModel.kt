@@ -15,12 +15,10 @@ import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceDepend
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
-import com.emplk.realestatemanager.domain.navigation.draft.GetPropertyFormTitleFlowUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.GetClearPropertyFormNavigationEventUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.GetDraftNavigationUseCase
-import com.emplk.realestatemanager.domain.navigation.draft.SetPropertyFormTitleUseCase
 import com.emplk.realestatemanager.domain.property.AddOrEditPropertyUseCase
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.amenity.type.GetAmenityTypeUseCase
@@ -57,7 +55,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.update
@@ -86,8 +83,6 @@ class AddOrEditPropertyViewModel @Inject constructor(
     private val getAgentsMapUseCase: GetAgentsMapUseCase,
     private val convertPriceByLocaleUseCase: ConvertPriceByLocaleUseCase,
     private val convertSurfaceDependingOnLocaleUseCase: ConvertSurfaceDependingOnLocaleUseCase,
-    private val setPropertyFormTitleUseCase: SetPropertyFormTitleUseCase,
-    private val getPropertyFormTitleFlowUseCase: GetPropertyFormTitleFlowUseCase,
     private val setSelectedAddressStateUseCase: SetSelectedAddressStateUseCase,
     private val updateOnAddressClickedUseCase: UpdateOnAddressClickedUseCase,
     private val setHasAddressFocusUseCase: SetHasAddressFocusUseCase,
@@ -140,7 +135,6 @@ class AddOrEditPropertyViewModel @Inject constructor(
                     }
                 }
 
-
                 is FormState.Draft -> {
                     formMutableStateFlow.update { formState ->
                         formState.copy(
@@ -165,7 +159,6 @@ class AddOrEditPropertyViewModel @Inject constructor(
                         )
                     }
                     picturePreviewIdRepository.addAll(formMutableStateFlow.value.pictureIds)
-                    setPropertyFormTitleUseCase.invoke(initPropertyFormState.formDraftEntity.title)
                 }
             }
 
@@ -283,17 +276,9 @@ class AddOrEditPropertyViewModel @Inject constructor(
             // Save draft when navigating away
             launch {
                 getDraftNavigationUseCase.invoke().collect {
-                    if (formMutableStateFlow.value.title.isNullOrBlank()) {
-                        getPropertyFormTitleFlowUseCase.invoke().filterNotNull().map { title ->
-                            formMutableStateFlow.update {
-                                it.copy(title = title)
-                            }
-                        }.collect()
-
-                        formMutableStateFlow.map { form ->
-                            updatePropertyFormUseCase.invoke(form)
-                        }.collect()
-                    }
+                    formMutableStateFlow.map { form ->
+                        updatePropertyFormUseCase.invoke(form)
+                    }.collect()
                 }
             }
 

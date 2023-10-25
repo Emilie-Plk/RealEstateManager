@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 
 data class FormWithTitleAndLastEditionDate(
     val id: Long,
-    val title: String,
+    val title: String?,
     @ColumnInfo(name = "last_edition_date")
-    val lastEditionDate: LocalDateTime,
+    val lastEditionDate: LocalDateTime?,
 )

@@ -4,12 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
+import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdFlowUseCase
 import com.emplk.realestatemanager.domain.navigation.GetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property_draft.IsPropertyFormInProgressUseCase
 import com.emplk.realestatemanager.ui.utils.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,20 +20,25 @@ import javax.inject.Inject
 class BlankActivityViewModel @Inject constructor(
     private val getNavigationTypeUseCase: GetNavigationTypeUseCase,
     private val isPropertyFormInProgressUseCase: IsPropertyFormInProgressUseCase,
+    private val getCurrentPropertyIdFlowUseCase: GetCurrentPropertyIdFlowUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
 ) : ViewModel() {
 
     val viewEventLiveData: LiveData<Event<BlankViewEvent>> = liveData {
         getNavigationTypeUseCase.invoke().collect { navigationType ->
             when (navigationType) {
-                NavigationFragmentType.ADD_FRAGMENT -> Unit
-                NavigationFragmentType.EDIT_FRAGMENT -> Unit
-                NavigationFragmentType.FILTER_FRAGMENT -> Unit
-                NavigationFragmentType.DETAIL_FRAGMENT -> Unit
+                NavigationFragmentType.ADD_FRAGMENT -> emit(Event(BlankViewEvent.OnAddNewDraftClicked))
+                NavigationFragmentType.EDIT_FRAGMENT -> {
+                    getCurrentPropertyIdFlowUseCase.invoke().filterNotNull().collectLatest { id ->
+                        emit(Event(BlankViewEvent.OnDraftClicked(id)))
+                    }
+                }
+
                 NavigationFragmentType.LIST_FRAGMENT -> emit(Event(BlankViewEvent.NavigateToMain(NavigationFragmentType.LIST_FRAGMENT.name)))
                 NavigationFragmentType.DRAFT_DIALOG_FRAGMENT -> emit(Event(BlankViewEvent.SaveDraftDialog))
-                NavigationFragmentType.TITLE_DRAFT_DIALOG_FRAGMENT -> emit(Event(BlankViewEvent.TitleDraftDialog))
-                NavigationFragmentType.MAP_FRAGMENT -> Unit
+                NavigationFragmentType.FILTER_FRAGMENT,
+                NavigationFragmentType.DETAIL_FRAGMENT,
+                NavigationFragmentType.MAP_FRAGMENT,
                 NavigationFragmentType.DRAFTS_FRAGMENT -> Unit
             }
         }

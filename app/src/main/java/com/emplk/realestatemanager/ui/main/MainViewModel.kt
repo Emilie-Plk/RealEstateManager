@@ -18,7 +18,6 @@ import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.EDIT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.FILTER_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.LIST_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.MAP_FRAGMENT
-import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.TITLE_DRAFT_DIALOG_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property_draft.GetDraftsCountUseCase
 import com.emplk.realestatemanager.domain.screen_width.SetScreenWidthTypeUseCase
@@ -119,7 +118,6 @@ class MainViewModel @Inject constructor(
                 DRAFT_DIALOG_FRAGMENT -> Unit
                 MAP_FRAGMENT -> Unit
                 DRAFTS_FRAGMENT -> Unit
-                TITLE_DRAFT_DIALOG_FRAGMENT -> Unit
             }
         }.collect()
     }
@@ -155,8 +153,7 @@ class MainViewModel @Inject constructor(
 
                 DRAFTS_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(DRAFTS_FRAGMENT.name, null)))
                 MAP_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(MAP_FRAGMENT.name, null)))
-                DRAFT_DIALOG_FRAGMENT,
-                TITLE_DRAFT_DIALOG_FRAGMENT -> Unit
+                DRAFT_DIALOG_FRAGMENT -> Unit
             }
         }.collect()
     }
