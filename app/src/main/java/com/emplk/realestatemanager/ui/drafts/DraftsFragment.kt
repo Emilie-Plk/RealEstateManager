@@ -1,6 +1,7 @@
 package com.emplk.realestatemanager.ui.drafts
 
 import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.emplk.realestatemanager.R
@@ -18,7 +19,15 @@ class DraftsFragment : Fragment(R.layout.drafts_fragment) {
         fun newInstance() = DraftsFragment()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.viewStates.observe(viewLifecycleOwner) { viewState ->
+            val adapter = DraftsAdapter()
+            binding.draftsRv.adapter = adapter
+            adapter.submitList(viewState.drafts)
+
+            binding.draftsNewFormBtn.setOnClickListener { viewState.onAddNewDraftClicked.invoke() }
+        }
     }
 }

@@ -26,6 +26,13 @@ interface FormDraftDao {
     @Query("SELECT id FROM base_form_drafts WHERE id NOT IN (SELECT id FROM properties) LIMIT 1")
     suspend fun getAddFormId(): Long?
 
+    @Transaction
+    @Query("SELECT * FROM base_form_drafts WHERE id NOT IN (SELECT id FROM properties)")
+    suspend fun getAllDrafts(): List<FormWithTitleAndLastEditionDate>
+
+    @Query("SELECT COUNT(*) FROM base_form_drafts WHERE id NOT IN (SELECT id FROM properties)")
+    suspend fun getAddPropertyDraftsCount(): Int
+
     @Query("SELECT EXISTS(SELECT * FROM base_form_drafts WHERE id = :propertyFormId)")
     suspend fun doesDraftExist(propertyFormId: Long): Boolean
 
@@ -33,8 +40,7 @@ interface FormDraftDao {
     suspend fun doesPropertyExist(propertyFormId: Long): Boolean
 
     @Query(
-        "UPDATE base_form_drafts SET title = :newTitle," +
-                " type = :newType," +
+        "UPDATE base_form_drafts SET type = :newType," +
                 " price = :newPrice," +
                 " surface = :newSurface," +
                 " address = :newAddress," +
@@ -57,7 +63,6 @@ interface FormDraftDao {
                 " last_edition_date = :lastEditionDate WHERE id = :propertyFormId"
     )
     suspend fun update(
-        newTitle: String?,
         newType: String?,
         newPrice: BigDecimal,
         newSurface: BigDecimal,

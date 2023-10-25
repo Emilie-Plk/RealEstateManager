@@ -3,6 +3,7 @@ package com.emplk.realestatemanager.ui.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdFlowUseCase
 import com.emplk.realestatemanager.domain.current_property.ResetCurrentPropertyIdUseCase
@@ -16,7 +17,9 @@ import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.EDIT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.FILTER_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.LIST_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.MAP_FRAGMENT
+import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.DRAFTS_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
+import com.emplk.realestatemanager.domain.property_draft.GetDraftsCountUseCase
 import com.emplk.realestatemanager.domain.screen_width.SetScreenWidthTypeUseCase
 import com.emplk.realestatemanager.ui.utils.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,6 +27,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,6 +37,7 @@ class MainViewModel @Inject constructor(
     private val getNavigationTypeUseCase: GetNavigationTypeUseCase,
     private val getToolbarSubtitleUseCase: GetToolbarSubtitleUseCase,
     private val resetCurrentPropertyIdUseCase: ResetCurrentPropertyIdUseCase,
+    private val getDraftsCountUseCase: GetDraftsCountUseCase,
     private val getCurrentPropertyIdFlowUseCase: GetCurrentPropertyIdFlowUseCase,
     coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : ViewModel() {
@@ -112,6 +117,7 @@ class MainViewModel @Inject constructor(
 
                 DRAFT_DIALOG_FRAGMENT -> Unit
                 MAP_FRAGMENT -> Unit
+                DRAFTS_FRAGMENT -> Unit
             }
         }.collect()
     }
@@ -146,14 +152,20 @@ class MainViewModel @Inject constructor(
                     }
 
                 DRAFT_DIALOG_FRAGMENT -> Unit
-
+                DRAFTS_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(DRAFTS_FRAGMENT.name, null)))
                 MAP_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(MAP_FRAGMENT.name, null)))
+
             }
         }.collect()
     }
 
     fun onAddPropertyClicked() {
-        setNavigationTypeUseCase.invoke(ADD_FRAGMENT)
+        viewModelScope.launch {
+            when (getDraftsCountUseCase.invoke()) {
+                0, 1 -> setNavigationTypeUseCase.invoke(ADD_FRAGMENT)
+                else -> setNavigationTypeUseCase.invoke(DRAFT_DIALOG_FRAGMENT)
+            }
+        }
     }
 
     fun onFilterPropertiesClicked() {
@@ -171,5 +183,4 @@ class MainViewModel @Inject constructor(
 
     fun onNavigationChanged(navigationFragmentTypeString: String) =
         setNavigationTypeUseCase.invoke(NavigationFragmentType.valueOf(navigationFragmentTypeString))
-
 }

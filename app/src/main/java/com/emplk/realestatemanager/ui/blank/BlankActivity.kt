@@ -17,6 +17,7 @@ import com.emplk.realestatemanager.databinding.BlankActivityBinding
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.ui.add.AddOrEditPropertyFragment
 import com.emplk.realestatemanager.ui.add.draft_dialog.PropertyDraftDialogFragment
+import com.emplk.realestatemanager.ui.drafts.DraftsFragment
 import com.emplk.realestatemanager.ui.main.MainActivity
 import com.emplk.realestatemanager.ui.map.MapsFragment
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
@@ -84,6 +85,17 @@ class BlankActivity : AppCompatActivity() {
                         )
                     }
                 }
+
+                NavigationFragmentType.DRAFTS_FRAGMENT.name -> {
+                    supportFragmentManager.commitNow {
+                        add(
+                            binding.blankFrameLayoutContainer.id,
+                            DraftsFragment.newInstance()
+                        )
+                    }
+                }
+
+                else -> {}
             }
         }
 
