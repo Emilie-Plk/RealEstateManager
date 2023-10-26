@@ -21,12 +21,11 @@ class DraftsFragment : Fragment(R.layout.drafts_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = DraftsAdapter()
+        val draftsAdapter = DraftsAdapter() // on déclare
+        binding.draftsRv.adapter = draftsAdapter // on l'associe à la recyclerview
 
         viewModel.viewStates.observe(viewLifecycleOwner) { viewState ->
-            binding.draftsRv.adapter = adapter
-            adapter.submitList(viewState.drafts)
-
+            draftsAdapter.submitList(viewState.drafts)
             binding.draftsNewFormBtn.setOnClickListener { viewState.onAddNewDraftClicked.invoke() }
         }
     }

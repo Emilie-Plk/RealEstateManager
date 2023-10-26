@@ -57,12 +57,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
+import java.time.Clock
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import javax.inject.Inject
@@ -97,6 +99,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
     private val getCurrentPredictionAddressesFlowWithDebounceUseCase: GetCurrentPredictionAddressesFlowWithDebounceUseCase,
     private val getPropertyTypeFlowUseCase: GetPropertyTypeFlowUseCase,
     private val isInternetEnabledFlowUseCase: IsInternetEnabledFlowUseCase,
+    private val clock: Clock,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -137,6 +140,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                         it.copy(
                             id = initPropertyFormState.newPropertyFormId,
                             formType = initPropertyFormState.formType,
+                            entryDate = LocalDateTime.now(clock)
                         )
                     }
                     if (initPropertyFormState.formType == FormType.ADD) setFormTitleUseCase.invoke(
@@ -287,16 +291,15 @@ class AddOrEditPropertyViewModel @Inject constructor(
                 }
             }
 
-
             // Save draft when navigating away
             launch {
-                getFormTitleUseCase.invoke().filterNotNull().collectLatest { formTypeAndTitle ->
-                    if (formTypeAndTitle.title == null) return@collectLatest
-                    formMutableStateFlow.update {
-                        it.copy(title = formTypeAndTitle.title)
+                getFormTitleUseCase.invoke().filter { it.title != null && it.formType == FormType.ADD }
+                    .collectLatest { formTypeAndTitle ->
+                        formMutableStateFlow.update {
+                            it.copy(title = formTypeAndTitle.title)
+                        }
+                        updatePropertyFormUseCase.invoke(formMutableStateFlow.value)
                     }
-                    updatePropertyFormUseCase.invoke(formMutableStateFlow.value)
-                }
             }
 
             // Clear draft when navigating away

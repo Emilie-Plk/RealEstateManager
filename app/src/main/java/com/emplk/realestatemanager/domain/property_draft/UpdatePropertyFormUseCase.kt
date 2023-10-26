@@ -4,12 +4,15 @@ import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceToSqua
 import com.emplk.realestatemanager.domain.locale_formatting.ConvertToUsdDependingOnLocaleUseCase
 import kotlinx.coroutines.coroutineScope
 import java.math.BigDecimal
+import java.time.Clock
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 class UpdatePropertyFormUseCase @Inject constructor(
     private val formDraftRepository: FormDraftRepository,
     private val convertSurfaceToSquareFeetDependingOnLocaleUseCase: ConvertSurfaceToSquareFeetDependingOnLocaleUseCase,
     private val convertToUsdDependingOnLocaleUseCase: ConvertToUsdDependingOnLocaleUseCase,
+    private val clock: Clock,
 ) {
     suspend fun invoke(form: FormDraftParams) {
         coroutineScope {
@@ -35,7 +38,7 @@ class UpdatePropertyFormUseCase @Inject constructor(
                     isSold = form.isSold,
                     entryDate = form.entryDate,
                     saleDate = form.soldDate,
-                    lastEditionDate = form.lastEditionDate,
+                    lastEditionDate = LocalDateTime.now(clock),
                 )
             )
         }
