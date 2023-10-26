@@ -29,5 +29,5 @@ data class PropertyFormViewState(
     val propertyTypes: List<AddPropertyTypeViewStateItem>,
     val isSold: Boolean? = false,
     val soldDate: String? = null,
-    val formType: FormType,
+    val formType: FormType? = null,
 )

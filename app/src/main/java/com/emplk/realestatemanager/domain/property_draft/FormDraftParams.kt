@@ -1,6 +1,7 @@
 package com.emplk.realestatemanager.domain.property_draft
 
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
+import com.emplk.realestatemanager.ui.add.FormType
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
@@ -28,4 +29,5 @@ data class FormDraftParams(
     val entryDate: LocalDateTime? = null,
     val soldDate: LocalDateTime? = null,
     val lastEditionDate: LocalDateTime? = null,
+    val formType: FormType? = null,
 )

@@ -95,19 +95,6 @@ class AddOrEditPropertyFragment : Fragment(R.layout.form_fragment) {
         }
 
         viewModel.viewStateLiveData.observe(viewLifecycleOwner) { viewState ->
-            when (viewState.formType) {
-                FormType.ADD -> {
-                    binding.formSoldStatusTv.isVisible = false
-                    binding.formSoldStatusSwitch.isVisible = false
-                    binding.formSubmitButton.text = getString(R.string.form_create_button)
-                }
-
-                FormType.EDIT -> {
-                    binding.formSoldStatusTv.isVisible = true
-                    binding.formSoldStatusSwitch.isVisible = true
-                    binding.formSubmitButton.text = getString(R.string.form_edit_button)
-                }
-            }
             typeAdapter.setData(viewState.propertyTypes)
             agentAdapter.setData(viewState.agents)
             picturePreviewAdapter.submitList(viewState.pictures)
