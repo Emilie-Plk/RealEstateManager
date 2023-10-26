@@ -12,7 +12,7 @@ class NavigationDraftRepositoryImpl @Inject constructor() : NavigationDraftRepos
     private val savePropertyDraftMutableSharedFlow: MutableSharedFlow<Unit> = MutableSharedFlow(extraBufferCapacity = 1)
     private val clearPropertyDraftMutableSharedFlow: MutableSharedFlow<Unit> =
         MutableSharedFlow(extraBufferCapacity = 1)
-    private val isPropertyFormInProgressMutableStateFlow = MutableStateFlow(false)
+    private val isPropertyFormInProgressMutableStateFlow: MutableStateFlow<Boolean?> = MutableStateFlow(null)
 
     override fun savePropertyDraftEvent() {
         savePropertyDraftMutableSharedFlow.tryEmit(Unit)
@@ -30,6 +30,10 @@ class NavigationDraftRepositoryImpl @Inject constructor() : NavigationDraftRepos
         isPropertyFormInProgressMutableStateFlow.tryEmit(isPropertyFormInProgress)
     }
 
-    override fun isPropertyFormInProgressAsFlow(): Flow<Boolean> =
-        isPropertyFormInProgressMutableStateFlow.asStateFlow()
+    override fun isPropertyFormInProgressAsFlow(): Flow<Boolean?> =
+        isPropertyFormInProgressMutableStateFlow
+
+    override fun clearPropertyFormProgress() {
+        isPropertyFormInProgressMutableStateFlow.tryEmit(false)
+    }
 }

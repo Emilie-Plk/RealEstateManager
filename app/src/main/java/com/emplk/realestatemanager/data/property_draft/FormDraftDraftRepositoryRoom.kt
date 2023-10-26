@@ -108,6 +108,7 @@ class FormDraftDraftRepositoryRoom @Inject constructor(
                 propertyFormDto.amenityLibrary,
                 propertyFormDto.agentName,
                 propertyFormDto.isSold,
+                propertyFormDto.entryDate,
                 propertyFormDto.saleDate,
                 propertyFormDto.lastEditionDate,
                 propertyFormDto.id

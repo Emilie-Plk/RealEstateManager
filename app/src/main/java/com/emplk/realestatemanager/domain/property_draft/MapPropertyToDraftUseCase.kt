@@ -2,10 +2,13 @@ package com.emplk.realestatemanager.domain.property_draft
 
 import com.emplk.realestatemanager.domain.property.PropertyRepository
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.PicturePreviewEntity
+import java.time.Clock
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 class MapPropertyToDraftUseCase @Inject constructor(
     private val propertyRepository: PropertyRepository,
+    private val clock: Clock,
 ) {
     suspend fun invoke(propertyId: Long): FormDraftEntity {
         val propertyEntity = propertyRepository.getPropertyById(propertyId)
@@ -32,7 +35,7 @@ class MapPropertyToDraftUseCase @Inject constructor(
             },
             amenities = propertyEntity.amenities.map { it },
             isSold = propertyEntity.isSold,
-            entryDate = propertyEntity.entryDate,
+            entryDate = LocalDateTime.now(clock),
             saleDate = propertyEntity.saleDate,
             lastEditionDate = propertyEntity.lastEditionDate,
         )

@@ -171,6 +171,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressedDispatcher.onBackPressed()
+                true
+            }
+
             R.id.main_menu_map_view -> {
                 viewModel.onMapClicked()
                 true
@@ -185,6 +190,7 @@ class MainActivity : AppCompatActivity() {
                 viewModel.onAddPropertyClicked()
                 true
             }
+
 
             else -> super.onOptionsItemSelected(item)
         }

@@ -1,4 +1,4 @@
-package com.emplk.realestatemanager.ui.add.draft_dialog
+package com.emplk.realestatemanager.ui.add.save_draft
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -12,11 +12,9 @@ import com.emplk.realestatemanager.domain.property_draft.SetFormTitleUseCase
 import com.emplk.realestatemanager.ui.add.FormType
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParam
-import com.emplk.realestatemanager.ui.utils.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
@@ -53,7 +51,6 @@ class SaveDraftDialogViewModel @Inject constructor(
                     isSubmitTitleButtonVisible = hasSaveButtonClicked == true && isTitleMissing == true,
                     submitTitleEvent = EquatableCallbackWithParam { title ->
                         setFormTitleUseCase.invoke(formTypeAndTitle.formType, title)
-                        saveDraftNavigationUseCase.invoke()
                         setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
                     },
                     discardEvent = EquatableCallback {

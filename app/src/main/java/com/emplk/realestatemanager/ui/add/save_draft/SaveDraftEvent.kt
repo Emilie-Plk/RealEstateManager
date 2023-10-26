@@ -1,4 +1,4 @@
-package com.emplk.realestatemanager.ui.add.draft_dialog
+package com.emplk.realestatemanager.ui.add.save_draft
 
 sealed class SaveDraftEvent {
     object Save : SaveDraftEvent()

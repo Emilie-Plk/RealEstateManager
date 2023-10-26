@@ -8,5 +8,6 @@ interface NavigationDraftRepository {
     fun clearPropertyDraftEvent()
     fun getClearedPropertyDraftEvent(): Flow<Unit>
     fun setPropertyFormProgress(isPropertyFormInProgress: Boolean)
-    fun isPropertyFormInProgressAsFlow(): Flow<Boolean>
+    fun isPropertyFormInProgressAsFlow(): Flow<Boolean?>
+    fun clearPropertyFormProgress()
 }

@@ -10,7 +10,9 @@ class InitPropertyFormUseCase @Inject constructor(
 ) {
     suspend fun invoke(id: Long?): FormState {
         return if (id == null || id == 0L) {
-            FormState.EmptyForm(addPropertyFormWithDetailsUseCase.invoke(null), FormType.ADD) // cas add new
+            val newlyAddedFormId = addPropertyFormWithDetailsUseCase.invoke(null)
+            Log.d("COUCOU", "invoke: Newly added form id: $newlyAddedFormId")
+            FormState.EmptyForm(formDraftRepository.getPropertyFormById(newlyAddedFormId), FormType.ADD) // cas add new
         } else {
             val doesDraftExist = formDraftRepository.doesDraftExist(id)
             val doesPropertyExist = formDraftRepository.doesPropertyExist(id)

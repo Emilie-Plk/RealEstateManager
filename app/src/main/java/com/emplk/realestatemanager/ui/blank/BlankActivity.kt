@@ -17,7 +17,7 @@ import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.BlankActivityBinding
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.ui.add.AddOrEditPropertyFragment
-import com.emplk.realestatemanager.ui.add.draft_dialog.SaveDraftDialogFragment
+import com.emplk.realestatemanager.ui.add.save_draft.SaveDraftDialogFragment
 import com.emplk.realestatemanager.ui.drafts.DraftsFragment
 import com.emplk.realestatemanager.ui.main.MainActivity
 import com.emplk.realestatemanager.ui.map.MapsFragment
@@ -63,7 +63,8 @@ class BlankActivity : AppCompatActivity() {
                     supportFragmentManager.commitNow {
                         add(
                             binding.blankFrameLayoutContainer.id,
-                            AddOrEditPropertyFragment.newInstance(propertyId)
+                            AddOrEditPropertyFragment.newInstance(propertyId),
+                            ADD_OR_EDIT_FRAGMENT_TAG
                         )
                     }
                 }
@@ -157,7 +158,6 @@ class BlankActivity : AppCompatActivity() {
     private fun onBackPress() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-// if fragment displayed is ADD_FRAGMENT_TAG
                 if (supportFragmentManager.findFragmentByTag(ADD_OR_EDIT_FRAGMENT_TAG) != null) {
                     viewModel.onBackClicked()
                     return

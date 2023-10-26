@@ -8,6 +8,4 @@ data class FormWithTitleAndLastEditionDate(
     val title: String?,
     @ColumnInfo(name = "last_edition_date")
     val lastEditionDate: LocalDateTime?,
-    @ColumnInfo(name = "entry_date")
-    val entryDate: LocalDateTime?,
 )

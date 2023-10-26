@@ -18,7 +18,7 @@ class DraftsAdapter : ListAdapter<DraftViewStateItem, DraftsAdapter.DraftViewHol
     class DraftViewHolder(val binding: FormDraftItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: DraftViewStateItem) {
             binding.draftItemTitleTv.text = item.title.toCharSequence(binding.root.context)
-            binding.draftItemDateTv.text = item.lastEditionDate.toCharSequence(binding.root.context)
+            binding.draftItemDateTv.text = item.lastEditionDate
             binding.root.setOnClickListener {
                 item.onClick.invoke()
             }

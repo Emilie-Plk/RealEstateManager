@@ -25,7 +25,7 @@ class BlankActivityViewModel @Inject constructor(
 ) : ViewModel() {
 
     val viewEventLiveData: LiveData<Event<BlankViewEvent>> = liveData {
-        getNavigationTypeUseCase.invoke().collect { navigationType ->
+        getNavigationTypeUseCase.invoke().collectLatest { navigationType ->
             when (navigationType) {
                 NavigationFragmentType.ADD_FRAGMENT -> emit(Event(BlankViewEvent.OnAddNewDraftClicked))
                 NavigationFragmentType.EDIT_FRAGMENT -> {
@@ -47,9 +47,9 @@ class BlankActivityViewModel @Inject constructor(
     fun onBackClicked() {
         viewModelScope.launch {
             isPropertyFormInProgressUseCase.invoke().collect { isPropertyFormInProgress ->
-                if (isPropertyFormInProgress) {
+                if (isPropertyFormInProgress == true) {
                     setNavigationTypeUseCase.invoke(NavigationFragmentType.DRAFT_DIALOG_FRAGMENT)
-                } else {
+                } else if (isPropertyFormInProgress == false) {
                     setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
                 }
             }

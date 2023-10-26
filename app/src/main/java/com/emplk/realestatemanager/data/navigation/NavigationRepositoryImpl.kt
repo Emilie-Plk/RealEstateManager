@@ -12,7 +12,7 @@ class NavigationRepositoryImpl @Inject constructor() : NavigationRepository {
         MutableSharedFlow<NavigationFragmentType>(extraBufferCapacity = 1)
 
     override fun getNavigationFragmentType(): Flow<NavigationFragmentType> =
-        navigationFragmentTypeMutableSharedFlow.distinctUntilChanged()
+        navigationFragmentTypeMutableSharedFlow
 
     override fun setNavigationFragmentType(navigationFragmentType: NavigationFragmentType) {
         navigationFragmentTypeMutableSharedFlow.tryEmit(navigationFragmentType)

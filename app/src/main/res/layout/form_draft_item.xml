@@ -20,12 +20,13 @@
             android:maxLines="3"
             android:textSize="16sp"
             android:textStyle="bold"
-            tools:text="Villa in the countryside nan klan lknkl  nd nds f fdklsnf kldsjfjdlfkjdsnd nds f fdklsnf kldsjfjdlfkjdsnd nds f fdklsnf kldsjfjdlfkjdsnd nds f fdklsnf kldsjfjdlfkjdsnd nds f fdklsnf kldsjfjdlfkjdsf" />
+            tools:text="Villa in  coude nan klan lknkl  nd nds f fdklsnf kldskldsjfjdlfkjds f fdklsnf kldsjfjdlfkjdsf" />
 
         <TextView
             android:id="@+id/draft_item_date_tv"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:textStyle="italic"
             tools:text="12/12/2023" />
     </LinearLayout>
