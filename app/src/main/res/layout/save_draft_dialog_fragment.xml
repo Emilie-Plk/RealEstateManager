@@ -30,8 +30,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:hint="Please enter draft title"
-
         app:endIconMode="clear_text"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/add_draft_dialog_discard_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -40,9 +41,11 @@
             android:id="@+id/add_draft_dialog_title_textInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="top|start"
             android:imeOptions="actionDone"
-            android:inputType="textCapSentences"
-            android:lines="1" />
+            android:inputType="textMultiLine|textCapSentences"
+            android:lines="3"
+            android:maxLines="3" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
@@ -72,11 +75,10 @@
         android:layout_width="wrap_content"
 
         android:layout_height="wrap_content"
-        android:layout_marginTop="1dp"
         android:text="Submit Title"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/add_draft_dialog_discard_button"
-        app:layout_constraintTop_toBottomOf="@+id/add_draft_dialog_title_textInputLayout" />
+        app:layout_constraintTop_toTopOf="@+id/add_draft_dialog_discard_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

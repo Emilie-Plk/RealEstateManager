@@ -7,13 +7,13 @@
     tools:context=".ui.drafts.DraftsFragment">
 
     <TextView
-        android:id="@+id/drafts_choose_draft_tv"
-        android:layout_width="match_parent"
+        android:id="@+id/drafts_new_draft_tv"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginStart="12dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="8dp"
-        android:text="You have several forms in progress, please choose one to continue or start a new one"
+        android:text="Add a new form"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -23,20 +23,32 @@
         style="@style/Theme.RealEstateManager.OutlinedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:icon="@drawable/baseline_add_home_24"
+        android:layout_marginTop="12dp"
         android:text="New form"
+        app:icon="@drawable/baseline_add_home_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/drafts_choose_draft_tv" />
+        app:layout_constraintTop_toBottomOf="@id/drafts_new_draft_tv" />
+
+    <TextView
+        android:id="@+id/drafts_saved_drafts_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:text="...or choose a saved draft"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/drafts_new_form_btn" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/drafts_rv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/drafts_new_form_btn"
+        app:layout_constraintTop_toBottomOf="@id/drafts_saved_drafts_tv"
         tools:listitem="@layout/form_draft_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
