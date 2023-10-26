@@ -305,7 +305,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                 }
             }
 
-            // Save draft when navigating away
+            // Save draft when title is set (only when FormType.ADD)
             launch {
                 getFormTitleUseCase.invoke().filter { it.title != null && it.formType == FormType.ADD }
                     .collectLatest { formTypeAndTitle ->
@@ -314,7 +314,10 @@ class AddOrEditPropertyViewModel @Inject constructor(
                         }
                         updatePropertyFormUseCase.invoke(formMutableStateFlow.value)
                     }
+            }
 
+            // Save draft when navigating away
+            launch {
                 getDraftNavigationUseCase.invoke().collect {
                     updatePropertyFormUseCase.invoke(formMutableStateFlow.value)
                 }
