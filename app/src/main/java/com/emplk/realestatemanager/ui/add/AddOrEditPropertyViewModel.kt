@@ -57,6 +57,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.update
@@ -100,8 +101,6 @@ class AddOrEditPropertyViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val propertyId: Long? = savedStateHandle.get<Long>(AddOrEditPropertyFragment.PROPERTY_ID_KEY)
-    private val formTypeMutableStateFlow =
-        if (propertyId == null || propertyId == 0L) MutableStateFlow(FormType.ADD) else MutableStateFlow(FormType.EDIT)
 
     private val formMutableStateFlow = MutableStateFlow(FormDraftParams())
 
@@ -135,14 +134,22 @@ class AddOrEditPropertyViewModel @Inject constructor(
             when (val initPropertyFormState = initPropertyFormUseCase.invoke(propertyId)) {
                 is FormState.EmptyForm -> {
                     formMutableStateFlow.update {
-                        it.copy(id = initPropertyFormState.newPropertyFormId)
+                        it.copy(
+                            id = initPropertyFormState.newPropertyFormId,
+                            formType = initPropertyFormState.formType,
+                        )
                     }
+                    if (initPropertyFormState.formType == FormType.ADD) setFormTitleUseCase.invoke(
+                        initPropertyFormState.formType,
+                        null
+                    )
                 }
 
                 is FormState.Draft -> {
                     formMutableStateFlow.update { formState ->
                         formState.copy(
                             id = initPropertyFormState.formDraftEntity.id,
+                            formType = initPropertyFormState.formType,
                             propertyType = initPropertyFormState.formDraftEntity.type,
                             title = initPropertyFormState.formDraftEntity.title,
                             address = initPropertyFormState.formDraftEntity.address,
@@ -162,8 +169,11 @@ class AddOrEditPropertyViewModel @Inject constructor(
                             soldDate = initPropertyFormState.formDraftEntity.saleDate,
                         )
                     }
-                    setFormTitleUseCase.invoke(initPropertyFormState.formDraftEntity.title)
                     picturePreviewIdRepository.addAll(formMutableStateFlow.value.pictureIds)
+                    setFormTitleUseCase.invoke(
+                        initPropertyFormState.formType,
+                        initPropertyFormState.formDraftEntity.title
+                    )
                 }
             }
 
@@ -259,7 +269,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                             )
                         ),
                         isAddressValid = form.isAddressValid,
-                        formType = formTypeMutableStateFlow.value,
+                        formType = form.formType,
                     )
                 }.collectLatest {
                     emit(it)
@@ -273,22 +283,19 @@ class AddOrEditPropertyViewModel @Inject constructor(
                     emit(it)
                     delay(10.seconds)
                 }.collect {
-                    updatePropertyFormUseCase.invoke(formMutableStateFlow.value)
+                    updatePropertyFormUseCase.invoke(it)
                 }
             }
 
 
             // Save draft when navigating away
             launch {
-                getDraftNavigationUseCase.invoke().collect {
-                    getFormTitleUseCase.invoke().collectLatest { title ->
-                        formMutableStateFlow.update {
-                            it.copy(title = title)
-                        }
+                getFormTitleUseCase.invoke().filterNotNull().collectLatest { formTypeAndTitle ->
+                    if (formTypeAndTitle.title == null) return@collectLatest
+                    formMutableStateFlow.update {
+                        it.copy(title = formTypeAndTitle.title)
                     }
-                    formMutableStateFlow.map { form ->
-                        updatePropertyFormUseCase.invoke(form)
-                    }.collect()
+                    updatePropertyFormUseCase.invoke(formMutableStateFlow.value)
                 }
             }
 

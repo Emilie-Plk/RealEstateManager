@@ -26,13 +26,14 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/add_draft_dialog_title_textInputLayout"
         style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:hint="Please enter draft title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:hint="Please enter draft title"
+
         app:endIconMode="clear_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -42,42 +43,40 @@
             android:imeOptions="actionDone"
             android:inputType="textCapSentences"
             android:lines="1" />
-
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/add_draft_dialog_discard"
+        android:id="@+id/add_draft_dialog_discard_button"
         style="@style/Theme.RealEstateManager.OutlinedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:text="Discard"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/add_draft_dialog_save"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/add_draft_dialog_title" />
+        app:layout_constraintEnd_toStartOf="@id/add_draft_dialog_save_button"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/add_draft_dialog_save"
+        android:id="@+id/add_draft_dialog_save_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/add_draft_dialog_discard"
+        app:layout_constraintStart_toEndOf="@id/add_draft_dialog_discard_button"
         app:layout_constraintTop_toBottomOf="@id/add_draft_dialog_title" />
 
 
     <Button
         android:id="@+id/add_draft_dialog_save_title"
         android:layout_width="wrap_content"
+
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Save"
+        android:layout_marginTop="1dp"
+        android:text="Submit Title"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/add_draft_dialog_discard"
-        app:layout_constraintTop_toBottomOf="@id/add_draft_dialog_title" />
+        app:layout_constraintStart_toEndOf="@id/add_draft_dialog_discard_button"
+        app:layout_constraintTop_toBottomOf="@+id/add_draft_dialog_title_textInputLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
