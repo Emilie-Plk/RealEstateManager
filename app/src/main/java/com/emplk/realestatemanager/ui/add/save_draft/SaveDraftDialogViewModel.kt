@@ -7,6 +7,7 @@ import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.ClearPropertyFormNavigationUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.SaveDraftNavigationUseCase
+import com.emplk.realestatemanager.domain.property_draft.ClearPropertyFormProgressUseCase
 import com.emplk.realestatemanager.domain.property_draft.GetFormTitleAsFlowUseCase
 import com.emplk.realestatemanager.domain.property_draft.SetFormTitleUseCase
 import com.emplk.realestatemanager.ui.add.FormType
@@ -24,6 +25,7 @@ class SaveDraftDialogViewModel @Inject constructor(
     private val saveDraftNavigationUseCase: SaveDraftNavigationUseCase,
     private val setFormTitleUseCase: SetFormTitleUseCase,
     private val getFormTitleAsFlowUseCase: GetFormTitleAsFlowUseCase,
+    private val clearPropertyFormProgressUseCase: ClearPropertyFormProgressUseCase,
     private val clearPropertyFormNavigationUseCase: ClearPropertyFormNavigationUseCase,
 ) : ViewModel() {
 
@@ -43,6 +45,7 @@ class SaveDraftDialogViewModel @Inject constructor(
                         if (formTypeAndTitle.formType == FormType.EDIT || (formTypeAndTitle.formType == FormType.ADD && formTypeAndTitle.title != null)) {
                             isTitleMissingMutableStateFlow.tryEmit(false)
                             saveDraftNavigationUseCase.invoke()
+                            clearPropertyFormProgressUseCase.invoke()
                             setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
                         } else {
                             isTitleMissingMutableStateFlow.tryEmit(true)
@@ -51,6 +54,7 @@ class SaveDraftDialogViewModel @Inject constructor(
                     isSubmitTitleButtonVisible = hasSaveButtonClicked == true && isTitleMissing == true,
                     submitTitleEvent = EquatableCallbackWithParam { title ->
                         setFormTitleUseCase.invoke(formTypeAndTitle.formType, title)
+                        clearPropertyFormProgressUseCase.invoke()
                         setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
                     },
                     discardEvent = EquatableCallback {

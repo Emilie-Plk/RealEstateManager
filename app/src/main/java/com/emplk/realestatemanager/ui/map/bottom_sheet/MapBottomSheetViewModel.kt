@@ -9,7 +9,7 @@ import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdF
 import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceByLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetRoundedSurfaceWithSurfaceUnitUseCase
-import com.emplk.realestatemanager.domain.property.GetPropertyByItsIdAsFlowUseCase
+import com.emplk.realestatemanager.domain.property.GetCurrentPropertyUseCase
 import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
 import com.emplk.realestatemanager.ui.map.bottom_sheet.MapBottomSheetFragment.Companion.DETAIL_PROPERTY_TAG
 import com.emplk.realestatemanager.ui.map.bottom_sheet.MapBottomSheetFragment.Companion.EDIT_PROPERTY_TAG
@@ -21,14 +21,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapLatest
 import javax.inject.Inject
 
 @HiltViewModel
 class MapBottomSheetViewModel @Inject constructor(
     private val getCurrentPropertyIdFlowUseCase: GetCurrentPropertyIdFlowUseCase,
-    private val getPropertyByItsIdAsFlowUseCase: GetPropertyByItsIdAsFlowUseCase,
+    private val getCurrentPropertyUseCase: GetCurrentPropertyUseCase,
     private val convertSurfaceDependingOnLocaleUseCase: ConvertSurfaceDependingOnLocaleUseCase,
     private val convertPriceByLocaleUseCase: ConvertPriceByLocaleUseCase,
     private val getRoundedSurfaceWithSurfaceUnitUseCase: GetRoundedSurfaceWithSurfaceUnitUseCase,
@@ -42,9 +40,7 @@ class MapBottomSheetViewModel @Inject constructor(
 
     val viewState: LiveData<PropertyMapBottomSheetViewState> = liveData {
         if (latestValue == null) isProgressBarVisibleMutableLiveData.tryEmit(true)
-        getCurrentPropertyIdFlowUseCase.invoke().filterNotNull().flatMapLatest { propertyId ->
-            getPropertyByItsIdAsFlowUseCase.invoke(propertyId)
-        }.collectLatest { property ->
+        getCurrentPropertyUseCase.invoke().collectLatest { property ->
             isProgressBarVisibleMutableLiveData.tryEmit(false)
 
             val propertyWithConvertedPriceAndSurface = property.copy(

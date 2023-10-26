@@ -34,6 +34,6 @@ class NavigationDraftRepositoryImpl @Inject constructor() : NavigationDraftRepos
         isPropertyFormInProgressMutableStateFlow
 
     override fun clearPropertyFormProgress() {
-        isPropertyFormInProgressMutableStateFlow.tryEmit(false)
+        isPropertyFormInProgressMutableStateFlow.tryEmit(null)
     }
 }
