@@ -8,14 +8,14 @@ import com.emplk.realestatemanager.domain.property_draft.picture_preview.id.Pict
 import javax.inject.Inject
 
 class ClearPropertyFormUseCase @Inject constructor(
-    private val deleteTemporaryPropertyFormUseCase: DeleteTemporaryPropertyFormUseCase,
+    private val deletePropertyFormUseCase: DeletePropertyFormUseCase,
     private val picturePreviewIdRepository: PicturePreviewIdRepository,
     private val resetSelectedAddressStateUseCase: ResetSelectedAddressStateUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val navigationDraftRepository: NavigationDraftRepository,
 ) {
     suspend fun invoke(id: Long?) {
-        id?.let { deleteTemporaryPropertyFormUseCase.invoke(it) }
+        id?.let { deletePropertyFormUseCase.invoke(it) }
         resetSelectedAddressStateUseCase.invoke()
         picturePreviewIdRepository.deleteAll()
         navigationDraftRepository.clearPropertyFormProgress()

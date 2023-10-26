@@ -121,15 +121,17 @@ class BlankActivity : AppCompatActivity() {
 
                 BlankViewEvent.OnAddNewDraftClicked -> {
                     supportFragmentManager.commit {
-                        replace(R.id.blank_frameLayout_container, AddOrEditPropertyFragment.newInstance(null))
+                        replace(
+                            R.id.blank_frameLayout_container,
+                            AddOrEditPropertyFragment.newInstance(null)
+                        )
                     }
                 }
 
                 is BlankViewEvent.OnDraftClicked -> {
                     supportFragmentManager.commit {
                         replace(
-                            R.id.blank_frameLayout_container,
-                            AddOrEditPropertyFragment.newInstance(blankViewEvent.id)
+                            R.id.blank_frameLayout_container, AddOrEditPropertyFragment.newInstance(blankViewEvent.id)
                         )
                     }
                 }
@@ -160,6 +162,7 @@ class BlankActivity : AppCompatActivity() {
             override fun handleOnBackPressed() {
                 if (supportFragmentManager.findFragmentByTag(ADD_OR_EDIT_FRAGMENT_TAG) != null) {
                     viewModel.onBackClicked()
+                    supportFragmentManager.popBackStack()
                     return
                 }
                 val backStackCount = supportFragmentManager.backStackEntryCount
