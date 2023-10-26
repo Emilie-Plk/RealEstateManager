@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.ui.drafts
 
+import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
@@ -21,6 +22,7 @@ class DraftsViewModel @Inject constructor(
     private val getAllDraftsWithTitleAndDateUseCase: GetAllDraftsWithTitleAndDateUseCase,
     private val setCurrentPropertyIdUseCase: SetCurrentPropertyIdUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
+    private val resources: Resources,
 ) : ViewModel() {
     val viewStates: LiveData<DraftViewState> = liveData {
         emit(
@@ -29,32 +31,27 @@ class DraftsViewModel @Inject constructor(
                     DraftViewStateItem(
                         id = it.id,
                         title = mapTitleToNativeText(it.title),
-                        lastEditionDate = mapDateToNativeText(it.entryDate, it.lastEditionDate),
+                        lastEditionDate = mapToString(it.lastEditionDate),
                         onClick = EquatableCallback {
                             setCurrentPropertyIdUseCase.invoke(it.id)
                             setNavigationTypeUseCase.invoke(NavigationFragmentType.EDIT_FRAGMENT)
                         }
                     )
-                },
+                }.sortedByDescending { it.lastEditionDate },
                 onAddNewDraftClicked = EquatableCallback { setNavigationTypeUseCase.invoke(NavigationFragmentType.ADD_FRAGMENT) },
             )
         )
     }
 
     private fun mapTitleToNativeText(title: String?): NativeText {
-   if (title != null) return NativeText.Simple(title)
+        if (title != null) return NativeText.Simple(title)
         else return NativeText.Resource(R.string.draft_no_title)
     }
 
-    private fun mapDateToNativeText(entryDate: LocalDateTime?, lastEditionDate: LocalDateTime?): NativeText {
-      if (lastEditionDate == null && entryDate != null) return NativeText.Argument(
-              R.string.draft_date_creation,
-              entryDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
-          )
-        else if (lastEditionDate != null) return NativeText.Argument(
+    private fun mapToString(lastEditionDate: LocalDateTime?): String =
+        if (lastEditionDate != null) resources.getString(
             R.string.draft_date_last_edition,
-            lastEditionDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+            lastEditionDate.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
         )
-        else return NativeText.Resource(R.string.draft_date_creation)
-    }
+        else resources.getString(R.string.draft_date_error)
 }

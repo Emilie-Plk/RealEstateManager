@@ -105,8 +105,7 @@
     <string name="currency_rate_with_no_date_tv">Currency rate might be inaccurate</string>
     <string name="add_new_form_tv">Please choose a title for this form</string>
     <string name="cancel_button">Cancel</string>
-    <string name="draft_date_creation">Draft created on %1$s</string>
-    <string name="draft_date_last_edition">Last edition on %1$s</string>
+    <string name="draft_date_last_edition">Last edited on: %1$s</string>
     <string name="draft_date_error">No date recorded</string>
     <string name="draft_no_title">Unnamed draft</string>
 </resources>

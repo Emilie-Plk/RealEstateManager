@@ -6,6 +6,6 @@ import javax.inject.Inject
 
 class IsPropertyFormInProgressUseCase @Inject constructor(private val navigationDraftRepository: NavigationDraftRepository) {
 
-    fun invoke(): Flow<Boolean> =
+    fun invoke(): Flow<Boolean?> =
         navigationDraftRepository.isPropertyFormInProgressAsFlow()
 }

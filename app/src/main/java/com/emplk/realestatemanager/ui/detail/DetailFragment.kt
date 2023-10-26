@@ -37,7 +37,6 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        Log.d("COUCOU", "DetailFramgent onCreate: ")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

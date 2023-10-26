@@ -1,4 +1,4 @@
-package com.emplk.realestatemanager.ui.add.draft_dialog
+package com.emplk.realestatemanager.ui.add.save_draft
 
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParam

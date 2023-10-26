@@ -64,7 +64,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.time.Clock
-import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import javax.inject.Inject
@@ -136,11 +135,26 @@ class AddOrEditPropertyViewModel @Inject constructor(
 
             when (val initPropertyFormState = initPropertyFormUseCase.invoke(propertyId)) {
                 is FormState.EmptyForm -> {
-                    formMutableStateFlow.update {
-                        it.copy(
-                            id = initPropertyFormState.newPropertyFormId,
-                            formType = initPropertyFormState.formType,
-                            entryDate = LocalDateTime.now(clock)
+                    formMutableStateFlow.update { form ->
+                        form.copy(
+                            id = initPropertyFormState.formDraftEntity.id,
+                            propertyType = initPropertyFormState.formDraftEntity.type,
+                            title = initPropertyFormState.formDraftEntity.title,
+                            address = initPropertyFormState.formDraftEntity.address,
+                            isAddressValid = initPropertyFormState.formDraftEntity.isAddressValid,
+                            price = convertPriceByLocaleUseCase.invoke(initPropertyFormState.formDraftEntity.price),
+                            surface = convertSurfaceDependingOnLocaleUseCase.invoke(initPropertyFormState.formDraftEntity.surface),
+                            description = initPropertyFormState.formDraftEntity.description,
+                            nbRooms = initPropertyFormState.formDraftEntity.rooms ?: 0,
+                            nbBathrooms = initPropertyFormState.formDraftEntity.bathrooms ?: 0,
+                            nbBedrooms = initPropertyFormState.formDraftEntity.bedrooms ?: 0,
+                            agent = initPropertyFormState.formDraftEntity.agentName,
+                            selectedAmenities = initPropertyFormState.formDraftEntity.amenities,
+                            pictureIds = initPropertyFormState.formDraftEntity.pictures.map { it.id },
+                            featuredPictureId = initPropertyFormState.formDraftEntity.pictures.find { it.isFeatured }?.id,
+                            entryDate = initPropertyFormState.formDraftEntity.entryDate,
+                            isSold = initPropertyFormState.formDraftEntity.isSold,
+                            soldDate = initPropertyFormState.formDraftEntity.saleDate,
                         )
                     }
                     if (initPropertyFormState.formType == FormType.ADD) setFormTitleUseCase.invoke(
@@ -150,8 +164,8 @@ class AddOrEditPropertyViewModel @Inject constructor(
                 }
 
                 is FormState.Draft -> {
-                    formMutableStateFlow.update { formState ->
-                        formState.copy(
+                    formMutableStateFlow.update { form ->
+                        form.copy(
                             id = initPropertyFormState.formDraftEntity.id,
                             formType = initPropertyFormState.formType,
                             propertyType = initPropertyFormState.formDraftEntity.type,
@@ -273,7 +287,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                             )
                         ),
                         isAddressValid = form.isAddressValid,
-                        formType = form.formType,
+                        isSoldSwitchVisible = form.formType == FormType.EDIT,
                     )
                 }.collectLatest {
                     emit(it)
@@ -300,6 +314,10 @@ class AddOrEditPropertyViewModel @Inject constructor(
                         }
                         updatePropertyFormUseCase.invoke(formMutableStateFlow.value)
                     }
+
+                getDraftNavigationUseCase.invoke().collect {
+                    updatePropertyFormUseCase.invoke(formMutableStateFlow.value)
+                }
             }
 
             // Clear draft when navigating away

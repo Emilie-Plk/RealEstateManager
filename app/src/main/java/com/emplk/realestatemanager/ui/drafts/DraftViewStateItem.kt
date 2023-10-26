@@ -6,6 +6,6 @@ import com.emplk.realestatemanager.ui.utils.NativeText
 data class DraftViewStateItem(
     val id: Long,
     val title: NativeText,
-    val lastEditionDate: NativeText,
+    val lastEditionDate: String,
     val onClick: EquatableCallback,
 )
