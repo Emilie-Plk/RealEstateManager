@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.RewriteQueriesToDropUnusedColumns
 import androidx.room.Transaction
+import com.emplk.realestatemanager.domain.property_draft.picture_preview.PicturePreviewEntity
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
@@ -18,8 +19,10 @@ interface FormDraftDao {
     suspend fun getPropertyFormById(propertyFormId: Long): FormDraftWithDetails
 
     @RewriteQueriesToDropUnusedColumns
-    @Query("SELECT * FROM base_form_drafts WHERE id NOT IN (SELECT id FROM properties)")
-    suspend fun getAllDrafts(): List<FormWithTitleAndLastEditionDate>
+    @Transaction
+    @Query("SELECT * FROM base_form_drafts")
+    suspend fun getFormsWithFeaturedPicture(): List<FormWithTitleDateAndFeaturedPicture>
+
 
     @Query("SELECT COUNT(*) FROM base_form_drafts WHERE id NOT IN (SELECT id FROM properties)")
     suspend fun getAddPropertyDraftsCount(): Int
