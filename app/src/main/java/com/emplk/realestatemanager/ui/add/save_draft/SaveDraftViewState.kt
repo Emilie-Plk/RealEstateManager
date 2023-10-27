@@ -4,7 +4,7 @@ import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParam
 
 data class SaveDraftViewState(
-    val isSaveButtonVisible: Boolean,
+    val isSaveMessageVisible: Boolean,
     val saveButtonEvent: EquatableCallback,
     val isSubmitTitleButtonVisible: Boolean,
     val submitTitleEvent: EquatableCallbackWithParam<String>,
