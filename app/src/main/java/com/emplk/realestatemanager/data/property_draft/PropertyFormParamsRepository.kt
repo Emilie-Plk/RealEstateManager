@@ -8,7 +8,9 @@ import kotlinx.coroutines.flow.filterNotNull
 import javax.inject.Inject
 
 class PropertyFormParamsRepositoryImpl @Inject constructor() : PropertyFormParamsRepository {
-    private val formTitleMutableStateFlow: MutableStateFlow<FormTypeAndTitleEntity?> = MutableStateFlow(FormTypeAndTitleEntity(FormType.UNKNOWN, null))
+    private val formTitleMutableStateFlow: MutableStateFlow<FormTypeAndTitleEntity?> =
+        MutableStateFlow(FormTypeAndTitleEntity(FormType.UNKNOWN, null))
+
     override fun setFormTitle(formTypeAndDraftTitle: FormTypeAndTitleEntity) {
         formTitleMutableStateFlow.tryEmit(formTypeAndDraftTitle)
     }

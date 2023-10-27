@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.RewriteQueriesToDropUnusedColumns
 import androidx.room.Transaction
-import com.emplk.realestatemanager.domain.property_draft.picture_preview.PicturePreviewEntity
 import java.math.BigDecimal
 import java.time.LocalDateTime
 

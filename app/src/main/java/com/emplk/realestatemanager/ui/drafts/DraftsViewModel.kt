@@ -25,42 +25,42 @@ class DraftsViewModel @Inject constructor(
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val resources: Resources,
 ) : ViewModel() {
-    val viewStates: LiveData<DraftViewState> = liveData {
+    val viewStates: LiveData<List<DraftViewState>> = liveData {
         emit(
-            DraftViewState(
-                drafts = buildList<DraftViewStateItem> { // on construit une liste de DraftViewStateItem
-                    getAllDraftsWithTitleAndDateUseCase.invoke().forEach { form ->
-                        add(
-                            DraftViewStateItem.Drafts(
-                                id = form.id,
-                                title = mapTitleToNativeText(form.title),
-                                lastEditionDate = mapToString(form.lastEditionDate),
-                                featuredPicture = form.featuredPicture?.let { NativePhoto.Uri(it) }
-                                    ?: NativePhoto.Resource(R.drawable.baseline_image_24),
-                                featuredPictureDescription = form.featuredPictureDescription?.let { NativeText.Simple(it) },
-                                onClick = EquatableCallback {
-                                    setCurrentPropertyIdUseCase.invoke(form.id)
-                                    setNavigationTypeUseCase.invoke(NavigationFragmentType.EDIT_FRAGMENT)
-                                }
-                            )
-                        )
-                    }
+            buildList<DraftViewState> { // on construit une liste de DraftViewStateItem
+                getAllDraftsWithTitleAndDateUseCase.invoke().forEach { form ->
                     add(
-                        DraftViewStateItem.AddNewDraft(
+                        DraftViewState.Drafts(
+                            id = form.id,
+                            title = mapTitleToNativeText(form.title),
+                            lastEditionDate = mapToString(form.lastEditionDate),
+                            featuredPicture = form.featuredPicture?.let { NativePhoto.Uri(it) }
+                                ?: NativePhoto.Resource(R.drawable.baseline_image_24),
+                            featuredPictureDescription = form.featuredPictureDescription?.let { NativeText.Simple(it) },
                             onClick = EquatableCallback {
-                                setNavigationTypeUseCase.invoke(NavigationFragmentType.ADD_FRAGMENT)
+                                setCurrentPropertyIdUseCase.invoke(form.id)
+                                setNavigationTypeUseCase.invoke(NavigationFragmentType.EDIT_FRAGMENT)
                             }
                         )
                     )
-                    // I want ADDNewDraft on top then drafts ordrered by lastEditionDate
-                }.sortedWith(compareBy<DraftViewStateItem> { it.type != DraftViewStateItem.Type.ADD_NEW_DRAFT }
-                    .thenByDescending { (it as DraftViewStateItem.Drafts).lastEditionDate }))
+                }
+                add(
+                    DraftViewState.AddNewDraft(
+                        text = NativeText.Resource(R.string.draft_add_new_draft),
+                        icon = NativePhoto.Resource(R.drawable.baseline_add_home_24),
+                        onClick = EquatableCallback {
+                            setNavigationTypeUseCase.invoke(NavigationFragmentType.ADD_FRAGMENT)
+                        }
+                    )
+                )
+            }.sortedWith(compareBy<DraftViewState> { it.type != DraftViewState.Type.ADD_NEW_DRAFT }
+                .thenByDescending { (it as DraftViewState.Drafts).lastEditionDate })
         )
     }
 
     private fun mapTitleToNativeText(title: String?): NativeText {
-        if (title != null) return NativeText.Simple(title)
-        else return NativeText.Resource(R.string.draft_no_title)
+        return if (title != null) NativeText.Simple(title)
+        else NativeText.Resource(R.string.draft_no_title)
     }
 
     private fun mapToString(lastEditionDate: LocalDateTime?): String =

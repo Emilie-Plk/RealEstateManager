@@ -82,7 +82,8 @@ class FormDraftDraftRepositoryRoom @Inject constructor(
 
     override suspend fun getDraftsWithFeaturePicture(): List<FormWithTitleDateAndFeaturedPictureEntity> =
         withContext(coroutineDispatcherProvider.io) {
-            formDraftDao.getFormsWithFeaturedPicture().let { formWithTitleDateAndFeaturedPictureMapper.mapToFormsWithTitleDateAndFeaturedPictureEntities(it) }
+            formDraftDao.getFormsWithFeaturedPicture()
+                .let { formWithTitleDateAndFeaturedPictureMapper.mapToFormsWithTitleDateAndFeaturedPictureEntities(it) }
         }
 
     override suspend fun update(formDraftEntity: FormDraftEntity) =

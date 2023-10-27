@@ -4,7 +4,7 @@ import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.NativePhoto
 import com.emplk.realestatemanager.ui.utils.NativeText
 
-sealed class DraftViewStateItem(val type: Type) {
+sealed class DraftViewState(val type: Type) {
 
     enum class Type {
         DRAFTS,
@@ -18,9 +18,11 @@ sealed class DraftViewStateItem(val type: Type) {
         val featuredPictureDescription: NativeText?,
         val lastEditionDate: String,
         val onClick: EquatableCallback,
-    ) : DraftViewStateItem(Type.DRAFTS)
+    ) : DraftViewState(Type.DRAFTS)
 
     data class AddNewDraft(
+        val text: NativeText,
+        val icon: NativePhoto,
         val onClick: EquatableCallback,
-    ) : DraftViewStateItem(Type.ADD_NEW_DRAFT)
+    ) : DraftViewState(Type.ADD_NEW_DRAFT)
 }

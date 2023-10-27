@@ -14,17 +14,17 @@ import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.FormDraftItemBinding
 import com.emplk.realestatemanager.ui.utils.NativePhoto.Companion.load
 
-class DraftsAdapter : ListAdapter<DraftViewStateItem, DraftsAdapter.DraftViewHolder>(DraftViewStateDiffCallback) {
+class DraftsAdapter : ListAdapter<DraftViewState, DraftsAdapter.DraftViewHolder>(DraftViewStateDiffCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DraftViewHolder =
-        when (DraftViewStateItem.Type.values()[viewType]) {
-            DraftViewStateItem.Type.DRAFTS -> DraftViewHolder.Drafts.create(parent)
-            DraftViewStateItem.Type.ADD_NEW_DRAFT -> DraftViewHolder.AddNewDraft.create(parent)
+        when (DraftViewState.Type.values()[viewType]) {
+            DraftViewState.Type.DRAFTS -> DraftViewHolder.Drafts.create(parent)
+            DraftViewState.Type.ADD_NEW_DRAFT -> DraftViewHolder.AddNewDraft.create(parent)
         }
 
     override fun onBindViewHolder(holder: DraftViewHolder, position: Int) =
         when (holder) {
-            is DraftViewHolder.Drafts -> holder.bind(item = getItem(position) as DraftViewStateItem.Drafts)
-            is DraftViewHolder.AddNewDraft -> holder.bind(item = getItem(position) as DraftViewStateItem.AddNewDraft)
+            is DraftViewHolder.Drafts -> holder.bind(item = getItem(position) as DraftViewState.Drafts)
+            is DraftViewHolder.AddNewDraft -> holder.bind(item = getItem(position) as DraftViewState.AddNewDraft)
         }
 
     override fun getItemViewType(position: Int): Int = getItem(position).type.ordinal
@@ -41,16 +41,16 @@ class DraftsAdapter : ListAdapter<DraftViewStateItem, DraftsAdapter.DraftViewHol
                 )
             }
 
-            fun bind(item: DraftViewStateItem.Drafts) {
+            fun bind(item: DraftViewState.Drafts) {
                 binding.draftItemTitleTv.text = item.title.toCharSequence(binding.root.context)
                 binding.draftItemDateTv.text = item.lastEditionDate
                 binding.root.setOnClickListener {
                     item.onClick.invoke()
                 }
                 item.featuredPicture.load(binding.draftItemPreviewIv)
-                    .transform(CenterCrop(), RoundedCorners(16))
                     .error(R.drawable.baseline_image_24)
                     .placeholder(R.drawable.baseline_image_24)
+                    .transform(CenterCrop(), RoundedCorners(16))
                     .into(binding.draftItemPreviewIv)
             }
         }
@@ -66,8 +66,8 @@ class DraftsAdapter : ListAdapter<DraftViewStateItem, DraftsAdapter.DraftViewHol
                 )
             }
 
-            fun bind(item: DraftViewStateItem.AddNewDraft) {
-                binding.draftItemTitleTv.text = "Add new draft"
+            fun bind(item: DraftViewState.AddNewDraft) {
+                binding.draftItemTitleTv.text = item.text.toCharSequence(binding.root.context)
                 binding.root.setCardBackgroundColor(
                     ContextCompat.getColor(
                         binding.root.context,
@@ -83,7 +83,9 @@ class DraftsAdapter : ListAdapter<DraftViewStateItem, DraftsAdapter.DraftViewHol
                 binding.draftItemTitleTv.requestLayout()
 
                 binding.root.strokeColor = ContextCompat.getColor(binding.root.context, R.color.secondary)
-                binding.draftItemPreviewIv.setImageResource(R.drawable.baseline_add_home_24)
+                item.icon.load(binding.draftItemPreviewIv)
+                    .into(binding.draftItemPreviewIv)
+
                 binding.root.setOnClickListener {
                     item.onClick.invoke()
                 }
@@ -92,14 +94,14 @@ class DraftsAdapter : ListAdapter<DraftViewStateItem, DraftsAdapter.DraftViewHol
     }
 }
 
-object DraftViewStateDiffCallback : DiffUtil.ItemCallback<DraftViewStateItem>() {
-    override fun areItemsTheSame(oldItem: DraftViewStateItem, newItem: DraftViewStateItem): Boolean =
+object DraftViewStateDiffCallback : DiffUtil.ItemCallback<DraftViewState>() {
+    override fun areItemsTheSame(oldItem: DraftViewState, newItem: DraftViewState): Boolean =
         when {
-            oldItem is DraftViewStateItem.Drafts && newItem is DraftViewStateItem.Drafts -> oldItem.id == newItem.id
-            oldItem is DraftViewStateItem.AddNewDraft && newItem is DraftViewStateItem.AddNewDraft -> oldItem.type == newItem.type
+            oldItem is DraftViewState.Drafts && newItem is DraftViewState.Drafts -> oldItem.id == newItem.id
+            oldItem is DraftViewState.AddNewDraft && newItem is DraftViewState.AddNewDraft -> oldItem.type == newItem.type
             else -> false
         }
 
-    override fun areContentsTheSame(oldItem: DraftViewStateItem, newItem: DraftViewStateItem): Boolean =
+    override fun areContentsTheSame(oldItem: DraftViewState, newItem: DraftViewState): Boolean =
         oldItem == newItem
 }

@@ -38,7 +38,8 @@ class SaveDraftDialogViewModel @Inject constructor(
             isTitleMissingMutableStateFlow,
             hasSaveButtonBeingClicked
         ) { formTypeAndTitle, isTitleMissing, hasSaveButtonClicked ->
-            emit(SaveDraftViewState(
+            emit(
+                SaveDraftViewState(
                     isSaveButtonVisible = hasSaveButtonClicked == null || hasSaveButtonClicked == false,
                     saveButtonEvent = EquatableCallback {
                         hasSaveButtonBeingClicked.tryEmit(true)

@@ -25,7 +25,7 @@ class DraftsFragment : Fragment(R.layout.drafts_fragment) {
         binding.draftsRv.adapter = draftsAdapter // on l'associe à la recyclerview
 
         viewModel.viewStates.observe(viewLifecycleOwner) { viewState ->
-            draftsAdapter.submitList(viewState.drafts)
+            draftsAdapter.submitList(viewState)
         }
     }
 }
