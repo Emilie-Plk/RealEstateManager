@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.ui.add
 
+import androidx.annotation.DrawableRes
 import com.emplk.realestatemanager.ui.add.address_predictions.PredictionViewState
 import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem
 import com.emplk.realestatemanager.ui.add.amenity.AmenityViewState
@@ -22,13 +23,15 @@ data class PropertyFormViewState(
     val pictures: List<PicturePreviewStateItem>,
     val agents: List<AddPropertyAgentViewStateItem>,
     val selectedAgent: String?,
-    val priceCurrency: NativeText,
+    val priceCurrencyHint: NativeText,
+    @DrawableRes val currencyDrawableRes: Int,
     val surfaceUnit: NativeText,
     val isSubmitButtonEnabled: Boolean,
     val submitButtonText: NativeText,
     val isProgressBarVisible: Boolean,
     val propertyTypes: List<AddPropertyTypeViewStateItem>,
+    val propertyCreationDate: NativeText?,
     val isSold: Boolean? = false,
     val soldDate: String? = null,
-    val isSoldSwitchVisible: Boolean,
+    val areEditItemsVisible: Boolean,
 )

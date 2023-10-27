@@ -12,12 +12,12 @@
     tools:context=".ui.add.save_draft.SaveDraftDialogFragment">
 
     <TextView
-        android:id="@+id/add_draft_dialog_title"
+        android:id="@+id/add_draft_dialog_textView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="18dp"
         android:gravity="center"
-        android:text="You started creating a property but didn't finish.\nWhat would you like to do?"
+        android:text="@string/add_draft_dialog_textView"
         app:layout_constraintBottom_toTopOf="@+id/add_draft_dialog_save_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,7 +30,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:hint="Please enter draft title"
+        android:hint="@string/enter_draft_title_textInputLayout"
         app:endIconMode="clear_text"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/add_draft_dialog_discard_button"
