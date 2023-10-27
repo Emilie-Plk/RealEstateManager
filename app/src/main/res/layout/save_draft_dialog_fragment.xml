@@ -18,6 +18,7 @@
         android:layout_margin="18dp"
         android:gravity="center"
         android:text="You started creating a property but didn't finish.\nWhat would you like to do?"
+        app:layout_constraintBottom_toTopOf="@+id/add_draft_dialog_save_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -62,23 +63,9 @@
         android:id="@+id/add_draft_dialog_save_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Save"
+        android:text="@string/save_draft_btn_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/add_draft_dialog_discard_button"
-        app:layout_constraintTop_toBottomOf="@id/add_draft_dialog_title" />
-
-
-    <Button
-        android:id="@+id/add_draft_dialog_save_title"
-        android:layout_width="wrap_content"
-
-        android:layout_height="wrap_content"
-        android:text="Submit Title"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/add_draft_dialog_discard_button"
-        app:layout_constraintTop_toTopOf="@+id/add_draft_dialog_discard_button" />
+        app:layout_constraintStart_toEndOf="@id/add_draft_dialog_discard_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

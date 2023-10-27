@@ -109,4 +109,7 @@
     <string name="draft_date_error">No date recorded</string>
     <string name="draft_no_title">Unnamed draft</string>
     <string name="draft_add_new_draft">Add new property</string>
+    <string name="form_title_untitled">Untitled</string>
+    <string name="submit_title_btn_text">Submit Title</string>
+    <string name="save_draft_btn_text">Save</string>
 </resources>

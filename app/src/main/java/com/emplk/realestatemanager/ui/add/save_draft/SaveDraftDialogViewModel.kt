@@ -1,8 +1,10 @@
 package com.emplk.realestatemanager.ui.add.save_draft
 
+import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
+import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.ClearPropertyFormNavigationUseCase
@@ -27,11 +29,13 @@ class SaveDraftDialogViewModel @Inject constructor(
     private val getFormTitleAsFlowUseCase: GetFormTitleAsFlowUseCase,
     private val clearPropertyFormProgressUseCase: ClearPropertyFormProgressUseCase,
     private val clearPropertyFormNavigationUseCase: ClearPropertyFormNavigationUseCase,
+    private val resources: Resources,
 ) : ViewModel() {
 
     private val isTitleMissingMutableStateFlow: MutableStateFlow<Boolean?> = MutableStateFlow(null)
     private val hasSaveButtonBeingClicked: MutableStateFlow<Boolean?> =
         MutableStateFlow(null)
+
     val viewState: LiveData<SaveDraftViewState> = liveData {
         combine(
             getFormTitleAsFlowUseCase.invoke(),
@@ -40,21 +44,23 @@ class SaveDraftDialogViewModel @Inject constructor(
         ) { formTypeAndTitle, isTitleMissing, hasSaveButtonClicked ->
             emit(
                 SaveDraftViewState(
-                    isSaveButtonVisible = hasSaveButtonClicked == null || hasSaveButtonClicked == false,
+                    isSaveMessageVisible = hasSaveButtonClicked == null || hasSaveButtonClicked == false,
                     saveButtonEvent = EquatableCallback {
-                        hasSaveButtonBeingClicked.tryEmit(true)
                         if (formTypeAndTitle.formType == FormType.EDIT || (formTypeAndTitle.formType == FormType.ADD && formTypeAndTitle.title != null)) {
-                            isTitleMissingMutableStateFlow.tryEmit(false)
+                            setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
                             saveDraftNavigationUseCase.invoke()
                             clearPropertyFormProgressUseCase.invoke()
-                            setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
                         } else {
+                            hasSaveButtonBeingClicked.tryEmit(true)
                             isTitleMissingMutableStateFlow.tryEmit(true)
                         }
                     },
                     isSubmitTitleButtonVisible = hasSaveButtonClicked == true && isTitleMissing == true,
                     submitTitleEvent = EquatableCallbackWithParam { title ->
-                        setFormTitleUseCase.invoke(formTypeAndTitle.formType, title)
+                        if (title.isBlank()) setFormTitleUseCase.invoke(
+                            formTypeAndTitle.formType,
+                            resources.getString(R.string.form_title_untitled)
+                        ) else setFormTitleUseCase.invoke(formTypeAndTitle.formType, title)
                         clearPropertyFormProgressUseCase.invoke()
                         setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
                     },

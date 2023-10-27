@@ -24,15 +24,17 @@ class SaveDraftDialogFragment : DialogFragment(R.layout.save_draft_dialog_fragme
         super.onViewCreated(view, savedInstanceState)
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
             binding.apply {
-                addDraftDialogSaveButton.isVisible = viewState.isSaveButtonVisible
-                addDraftDialogTitle.isVisible = viewState.isSaveButtonVisible
-                addDraftDialogSaveButton.setOnClickListener {
-                    viewState.saveButtonEvent()
-                }
-
-                addDraftDialogSaveTitle.isVisible = viewState.isSubmitTitleButtonVisible
-                addDraftDialogSaveTitle.setOnClickListener {
-                    viewState.submitTitleEvent(addDraftDialogTitleTextInputEditText.text?.toString() ?: "")
+                addDraftDialogTitle.isVisible = viewState.isSaveMessageVisible
+                if (viewState.isSaveMessageVisible) {
+                    addDraftDialogSaveButton.text = resources.getString(R.string.save_draft_btn_text)
+                    addDraftDialogSaveButton.setOnClickListener {
+                        viewState.saveButtonEvent()
+                    }
+                } else {
+                    addDraftDialogSaveButton.text = resources.getString(R.string.submit_title_btn_text)
+                    addDraftDialogSaveButton.setOnClickListener {
+                        viewState.submitTitleEvent(addDraftDialogTitleTextInputEditText.text?.toString() ?: "")
+                    }
                 }
 
                 addDraftDialogDiscardButton.setOnClickListener {
