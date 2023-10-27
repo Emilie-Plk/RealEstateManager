@@ -24,7 +24,6 @@ import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.amenity.type.GetAmenityTypeUseCase
 import com.emplk.realestatemanager.domain.property_draft.ClearPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.FormDraftParams
-import com.emplk.realestatemanager.domain.property_draft.FormState
 import com.emplk.realestatemanager.domain.property_draft.GetFormTitleAsFlowUseCase
 import com.emplk.realestatemanager.domain.property_draft.InitPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.SetFormTitleUseCase
@@ -129,67 +128,39 @@ class AddOrEditPropertyViewModel @Inject constructor(
     val viewStateLiveData: LiveData<PropertyFormViewState> = liveData {
         coroutineScope {
 
-            when (val initPropertyFormState = initPropertyFormUseCase.invoke(propertyId)) {
-                is FormState.EmptyForm -> {
-                    formMutableStateFlow.update { form ->
-                        form.copy(
-                            id = initPropertyFormState.formDraftEntity.id,
-                            propertyType = initPropertyFormState.formDraftEntity.type,
-                            title = initPropertyFormState.formDraftEntity.title,
-                            address = initPropertyFormState.formDraftEntity.address,
-                            isAddressValid = initPropertyFormState.formDraftEntity.isAddressValid,
-                            price = convertPriceByLocaleUseCase.invoke(initPropertyFormState.formDraftEntity.price),
-                            surface = convertSurfaceDependingOnLocaleUseCase.invoke(initPropertyFormState.formDraftEntity.surface),
-                            description = initPropertyFormState.formDraftEntity.description,
-                            nbRooms = initPropertyFormState.formDraftEntity.rooms ?: 0,
-                            nbBathrooms = initPropertyFormState.formDraftEntity.bathrooms ?: 0,
-                            nbBedrooms = initPropertyFormState.formDraftEntity.bedrooms ?: 0,
-                            agent = initPropertyFormState.formDraftEntity.agentName,
-                            selectedAmenities = initPropertyFormState.formDraftEntity.amenities,
-                            pictureIds = initPropertyFormState.formDraftEntity.pictures.map { it.id },
-                            featuredPictureId = initPropertyFormState.formDraftEntity.pictures.find { it.isFeatured }?.id,
-                            entryDate = initPropertyFormState.formDraftEntity.entryDate,
-                            isSold = initPropertyFormState.formDraftEntity.isSold,
-                            soldDate = initPropertyFormState.formDraftEntity.saleDate,
-                        )
-                    }
-                    if (initPropertyFormState.formType == FormType.ADD) setFormTitleUseCase.invoke(
-                        initPropertyFormState.formType,
-                        null
-                    )
-                }
+            val formWithType = initPropertyFormUseCase.invoke(propertyId)
 
-                is FormState.Draft -> {
-                    formMutableStateFlow.update { form ->
-                        form.copy(
-                            id = initPropertyFormState.formDraftEntity.id,
-                            formType = initPropertyFormState.formType,
-                            propertyType = initPropertyFormState.formDraftEntity.type,
-                            title = initPropertyFormState.formDraftEntity.title,
-                            address = initPropertyFormState.formDraftEntity.address,
-                            isAddressValid = initPropertyFormState.formDraftEntity.isAddressValid,
-                            price = convertPriceByLocaleUseCase.invoke(initPropertyFormState.formDraftEntity.price),
-                            surface = convertSurfaceDependingOnLocaleUseCase.invoke(initPropertyFormState.formDraftEntity.surface),
-                            description = initPropertyFormState.formDraftEntity.description,
-                            nbRooms = initPropertyFormState.formDraftEntity.rooms ?: 0,
-                            nbBathrooms = initPropertyFormState.formDraftEntity.bathrooms ?: 0,
-                            nbBedrooms = initPropertyFormState.formDraftEntity.bedrooms ?: 0,
-                            agent = initPropertyFormState.formDraftEntity.agentName,
-                            selectedAmenities = initPropertyFormState.formDraftEntity.amenities,
-                            pictureIds = initPropertyFormState.formDraftEntity.pictures.map { it.id },
-                            featuredPictureId = initPropertyFormState.formDraftEntity.pictures.find { it.isFeatured }?.id,
-                            entryDate = initPropertyFormState.formDraftEntity.entryDate,
-                            isSold = initPropertyFormState.formDraftEntity.isSold,
-                            soldDate = initPropertyFormState.formDraftEntity.saleDate,
-                        )
-                    }
-                    picturePreviewIdRepository.addAll(formMutableStateFlow.value.pictureIds)
-                    setFormTitleUseCase.invoke(
-                        initPropertyFormState.formType,
-                        initPropertyFormState.formDraftEntity.title
-                    )
-                }
+            formMutableStateFlow.update { form ->
+                form.copy(
+                    id = formWithType.formDraftEntity.id,
+                    formType = formWithType.formType,
+                    propertyType = formWithType.formDraftEntity.type,
+                    title = formWithType.formDraftEntity.title,
+                    address = formWithType.formDraftEntity.address,
+                    isAddressValid = formWithType.formDraftEntity.isAddressValid,
+                    price = convertPriceByLocaleUseCase.invoke(formWithType.formDraftEntity.price),
+                    surface = convertSurfaceDependingOnLocaleUseCase.invoke(formWithType.formDraftEntity.surface),
+                    description = formWithType.formDraftEntity.description,
+                    nbRooms = formWithType.formDraftEntity.rooms ?: 0,
+                    nbBathrooms = formWithType.formDraftEntity.bathrooms ?: 0,
+                    nbBedrooms = formWithType.formDraftEntity.bedrooms ?: 0,
+                    agent = formWithType.formDraftEntity.agentName,
+                    selectedAmenities = formWithType.formDraftEntity.amenities,
+                    pictureIds = formWithType.formDraftEntity.pictures.map { it.id },
+                    featuredPictureId = formWithType.formDraftEntity.pictures.find { it.isFeatured }?.id,
+                    entryDate = formWithType.formDraftEntity.entryDate,
+                    isSold = formWithType.formDraftEntity.isSold,
+                    soldDate = formWithType.formDraftEntity.saleDate,
+                )
             }
+            if (formWithType.formType == FormType.ADD) setFormTitleUseCase.invoke(
+                formWithType.formType,
+                null
+            )
+            //else setFormTitleUseCase.invoke(formWithType.formType, formWithType.formDraftEntity.title)
+
+            picturePreviewIdRepository.addAll(formMutableStateFlow.value.pictureIds)
+            setFormTitleUseCase.invoke(formWithType.formType, formWithType.formDraftEntity.title)
 
             launch {
                 combine(
@@ -261,6 +232,9 @@ class AddOrEditPropertyViewModel @Inject constructor(
                             getSurfaceUnitUseCase.invoke().symbol,
                         ),
                         isSubmitButtonEnabled = isFormValidMutableStateFlow.value,
+                        submitButtonText = if (form.formType == FormType.ADD) NativeText.Resource(R.string.form_create_button) else NativeText.Resource(
+                            R.string.form_edit_button
+                        ),
                         isProgressBarVisible = isAddingInDatabase,
                         amenities = mapAmenityTypesToViewStates(amenityTypes),
                         propertyTypes = propertyTypes.map { propertyType ->
@@ -291,7 +265,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
             }
 
 
-            // Throttle
+// Throttle
             launch {
                 formMutableStateFlow.transform {
                     emit(it)
@@ -301,7 +275,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                 }
             }
 
-            // Save draft when title is set (only when FormType.ADD and when title is null)
+// Save draft when title is set (only when FormType.ADD and when title is null)
             launch {
                 getFormTitleUseCase.invoke().collect { formTypeAndTitle ->
                     if (formTypeAndTitle.formType == FormType.ADD && formMutableStateFlow.value.title == null) {
@@ -313,14 +287,14 @@ class AddOrEditPropertyViewModel @Inject constructor(
                 }
             }
 
-            // Save draft when navigating away
+// Save draft when navigating away
             launch {
                 getDraftNavigationUseCase.invoke().collect {
                     updatePropertyFormUseCase.invoke(formMutableStateFlow.value)
                 }
             }
 
-            // Clear draft when navigating away
+// Clear draft when navigating away
             launch {
                 getClearPropertyFormNavigationEventUseCase.invoke().collect {
                     clearPropertyFormUseCase.invoke(formMutableStateFlow.value.id)

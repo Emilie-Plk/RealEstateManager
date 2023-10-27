@@ -25,9 +25,10 @@ data class PropertyFormViewState(
     val priceCurrency: NativeText,
     val surfaceUnit: NativeText,
     val isSubmitButtonEnabled: Boolean,
+    val submitButtonText: NativeText,
     val isProgressBarVisible: Boolean,
     val propertyTypes: List<AddPropertyTypeViewStateItem>,
     val isSold: Boolean? = false,
     val soldDate: String? = null,
-    val isSoldSwitchVisible: Boolean? = null,
+    val isSoldSwitchVisible: Boolean,
 )
