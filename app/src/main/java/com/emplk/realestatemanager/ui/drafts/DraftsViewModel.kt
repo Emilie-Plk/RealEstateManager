@@ -28,22 +28,33 @@ class DraftsViewModel @Inject constructor(
     val viewStates: LiveData<DraftViewState> = liveData {
         emit(
             DraftViewState(
-                drafts = getAllDraftsWithTitleAndDateUseCase.invoke().map { form -> // ptet des flows ici
-                    DraftViewStateItem(
-                        id = form.id,
-                        title = mapTitleToNativeText(form.title),
-                        lastEditionDate = mapToString(form.lastEditionDate),
-                        featuredPicture = form.featuredPicture?.let { NativePhoto.Uri(it) }
-                            ?: NativePhoto.Resource(R.drawable.baseline_image_24),
-                        featuredPictureDescription = form.featuredPictureDescription?.let { NativeText.Simple(it) },
-                        onClick = EquatableCallback {
-                            setCurrentPropertyIdUseCase.invoke(form.id)
-                            setNavigationTypeUseCase.invoke(NavigationFragmentType.EDIT_FRAGMENT)
-                        }
+                drafts = buildList<DraftViewStateItem> { // on construit une liste de DraftViewStateItem
+                    getAllDraftsWithTitleAndDateUseCase.invoke().forEach { form ->
+                        add(
+                            DraftViewStateItem.Drafts(
+                                id = form.id,
+                                title = mapTitleToNativeText(form.title),
+                                lastEditionDate = mapToString(form.lastEditionDate),
+                                featuredPicture = form.featuredPicture?.let { NativePhoto.Uri(it) }
+                                    ?: NativePhoto.Resource(R.drawable.baseline_image_24),
+                                featuredPictureDescription = form.featuredPictureDescription?.let { NativeText.Simple(it) },
+                                onClick = EquatableCallback {
+                                    setCurrentPropertyIdUseCase.invoke(form.id)
+                                    setNavigationTypeUseCase.invoke(NavigationFragmentType.EDIT_FRAGMENT)
+                                }
+                            )
+                        )
+                    }
+                    add(
+                        DraftViewStateItem.AddNewDraft(
+                            onClick = EquatableCallback {
+                                setNavigationTypeUseCase.invoke(NavigationFragmentType.ADD_FRAGMENT)
+                            }
+                        )
                     )
-                }.sortedByDescending { it.lastEditionDate },
-                onAddNewDraftClicked = EquatableCallback { setNavigationTypeUseCase.invoke(NavigationFragmentType.ADD_FRAGMENT) },
-            )
+                    // I want ADDNewDraft on top then drafts ordrered by lastEditionDate
+                }.sortedWith(compareBy<DraftViewStateItem> { it.type != DraftViewStateItem.Type.ADD_NEW_DRAFT }
+                    .thenByDescending { (it as DraftViewStateItem.Drafts).lastEditionDate }))
         )
     }
 

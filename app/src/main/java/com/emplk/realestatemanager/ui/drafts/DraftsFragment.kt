@@ -26,7 +26,6 @@ class DraftsFragment : Fragment(R.layout.drafts_fragment) {
 
         viewModel.viewStates.observe(viewLifecycleOwner) { viewState ->
             draftsAdapter.submitList(viewState.drafts)
-            binding.draftsNewFormBtn.setOnClickListener { viewState.onAddNewDraftClicked.invoke() }
         }
     }
 }
