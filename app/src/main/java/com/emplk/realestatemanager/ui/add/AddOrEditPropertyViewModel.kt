@@ -127,7 +127,6 @@ class AddOrEditPropertyViewModel @Inject constructor(
 
     val viewStateLiveData: LiveData<PropertyFormViewState> = liveData {
         coroutineScope {
-
             val formWithType = initPropertyFormUseCase.invoke(propertyId)
 
             formMutableStateFlow.update { form ->
@@ -213,21 +212,35 @@ class AddOrEditPropertyViewModel @Inject constructor(
                         nbBedrooms = form.nbBedrooms,
                         pictures = mapPicturePreviews(picturePreviews, form),
                         selectedAgent = form.agent,
-                        priceCurrency = when (currencyType) {
-                            CurrencyType.DOLLAR -> NativeText.Argument(
-                                R.string.price_currency_in_n,
-                                currencyType.symbol
+                        priceCurrencyHint = when (currencyType) {
+                            CurrencyType.DOLLAR -> NativeText.Resource(
+                                R.string.price_in_dollar,
                             )
 
-                            CurrencyType.EURO -> NativeText.Argument(
-                                R.string.price_currency_in_n,
-                                currencyType.symbol
+                            CurrencyType.EURO -> NativeText.Resource(
+                                R.string.price_in_euro,
                             )
+                        },
+                        currencyDrawableRes = when (currencyType) {
+                            CurrencyType.DOLLAR -> R.drawable.baseline_dollar_24
+                            CurrencyType.EURO -> R.drawable.baseline_euro_24
                         },
                         surfaceUnit = NativeText.Argument(
                             R.string.surface_unit_in_n,
                             getSurfaceUnitUseCase.invoke().symbol,
                         ),
+                        propertyCreationDate = if (form.formType == FormType.EDIT) {
+                            form.entryDate?.let {
+                                NativeText.Argument(
+                                    R.string.form_creation_date_tv,
+                                    it.format(
+                                        DateTimeFormatter.ofLocalizedDateTime(
+                                            FormatStyle.SHORT
+                                        )
+                                    )
+                                )
+                            }
+                        } else null,
                         isSubmitButtonEnabled = isFormValidMutableStateFlow.value,
                         submitButtonText = if (form.formType == FormType.ADD) NativeText.Resource(R.string.form_create_button) else NativeText.Resource(
                             R.string.form_edit_button
@@ -254,7 +267,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                             )
                         ),
                         isAddressValid = form.isAddressValid,
-                        isSoldSwitchVisible = form.formType == FormType.EDIT,
+                        areEditItemsVisible = form.formType == FormType.EDIT,
                     )
                 }.collectLatest {
                     emit(it)

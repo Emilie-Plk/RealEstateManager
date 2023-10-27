@@ -13,6 +13,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
@@ -102,8 +103,10 @@ class AddOrEditPropertyFragment : Fragment(R.layout.form_fragment) {
             predictionAdapter.submitList(viewState.addressPredictions)
 
             binding.formSubmitButton.text = viewState.submitButtonText.toCharSequence(requireContext())
-            binding.formSoldStatusSwitch.isVisible = viewState.isSoldSwitchVisible
-            binding.formSoldStatusTv.isVisible = viewState.isSoldSwitchVisible
+            binding.formSoldStatusSwitch.isVisible = viewState.areEditItemsVisible
+            binding.formSoldStatusTv.isVisible = viewState.areEditItemsVisible
+            binding.formInfoTv.isVisible = viewState.areEditItemsVisible
+            binding.formInfoTv.text = viewState.propertyCreationDate?.toCharSequence(requireContext())
 
             binding.formTypeActv.setOnItemClickListener { _, _, position, _ ->
                 typeAdapter.getItem(position)?.let {
@@ -157,7 +160,9 @@ class AddOrEditPropertyFragment : Fragment(R.layout.form_fragment) {
                 viewModel.onAddressEditTextFocused(hasFocus)
                 if (!hasFocus) {
                     hideKeyboard(binding.formAddressTextInputEditText)
+                    binding.formAddressTextInputLayout.isHelperTextEnabled = false
                 }
+                if (hasFocus) binding.formAddressTextInputLayout.helperText = "Please select a valid address"
             }
 
             binding.formAddressIsValidHelperTv.isVisible = viewState.isAddressValid
@@ -167,8 +172,13 @@ class AddOrEditPropertyFragment : Fragment(R.layout.form_fragment) {
                 viewModel.onSoldStatusChanged(isChecked)
             }
 
-            binding.formPriceCurrencyTv.text = viewState.priceCurrency.toCharSequence(requireContext())
-            binding.formSurfaceUnitTv.text = viewState.surfaceUnit.toCharSequence(requireContext())
+            binding.formPriceTextInputLayout.hint = viewState.priceCurrencyHint.toCharSequence(requireContext())
+            binding.formPriceTextInputLayout.startIconDrawable = ContextCompat.getDrawable(
+                requireContext(),
+                viewState.currencyDrawableRes
+            )
+
+            binding.formSurfaceTextInputLayout.hint = viewState.surfaceUnit.toCharSequence(requireContext())
 
             binding.formTypeActv.setText(viewState.propertyType, false)
             binding.formAgentActv.setText(viewState.selectedAgent, false)
