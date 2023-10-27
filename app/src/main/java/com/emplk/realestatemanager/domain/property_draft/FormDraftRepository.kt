@@ -1,6 +1,6 @@
 package com.emplk.realestatemanager.domain.property_draft
 
-import com.emplk.realestatemanager.data.property_draft.FormWithTitleAndLastEditionDate
+import com.emplk.realestatemanager.data.property_draft.FormWithTitleDateAndFeaturedPicture
 
 interface FormDraftRepository {
     suspend fun add(formDraftEntity: FormDraftEntity): Long
@@ -15,7 +15,7 @@ interface FormDraftRepository {
 
     suspend fun getDraftsCount(): Int
 
-    suspend fun getAllDrafts(): List<FormWithTitleAndLastEditionDate>
+    suspend fun getDraftsWithFeaturePicture(): List<FormWithTitleDateAndFeaturedPictureEntity>
 
     suspend fun update(formDraftEntity: FormDraftEntity)
 

@@ -153,11 +153,8 @@ class AddOrEditPropertyViewModel @Inject constructor(
                     soldDate = formWithType.formDraftEntity.saleDate,
                 )
             }
-            if (formWithType.formType == FormType.ADD) setFormTitleUseCase.invoke(
-                formWithType.formType,
-                null
-            )
-            //else setFormTitleUseCase.invoke(formWithType.formType, formWithType.formDraftEntity.title)
+            if (formWithType.formType == FormType.ADD) setFormTitleUseCase.invoke(formWithType.formType, null)
+
 
             picturePreviewIdRepository.addAll(formMutableStateFlow.value.pictureIds)
             setFormTitleUseCase.invoke(formWithType.formType, formWithType.formDraftEntity.title)

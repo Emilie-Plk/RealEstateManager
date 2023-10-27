@@ -5,7 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.FormDraftItemBinding
+import com.emplk.realestatemanager.ui.utils.NativePhoto.Companion.load
 
 class DraftsAdapter : ListAdapter<DraftViewStateItem, DraftsAdapter.DraftViewHolder>(DraftViewStateDiffCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DraftViewHolder =
@@ -22,6 +26,11 @@ class DraftsAdapter : ListAdapter<DraftViewStateItem, DraftsAdapter.DraftViewHol
             binding.root.setOnClickListener {
                 item.onClick.invoke()
             }
+            item.featuredPicture.load(binding.draftItemPreviewIv)
+                .transform(CenterCrop(), RoundedCorners(16))
+                .error(R.drawable.baseline_image_24)
+                .placeholder(R.drawable.baseline_image_24)
+                .into(binding.draftItemPreviewIv)
         }
     }
 }

@@ -10,6 +10,7 @@ import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property_draft.GetAllDraftsWithTitleAndDateUseCase
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
+import com.emplk.realestatemanager.ui.utils.NativePhoto
 import com.emplk.realestatemanager.ui.utils.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDateTime
@@ -27,13 +28,16 @@ class DraftsViewModel @Inject constructor(
     val viewStates: LiveData<DraftViewState> = liveData {
         emit(
             DraftViewState(
-                drafts = getAllDraftsWithTitleAndDateUseCase.invoke().map { // ptet des flows ici
+                drafts = getAllDraftsWithTitleAndDateUseCase.invoke().map { form -> // ptet des flows ici
                     DraftViewStateItem(
-                        id = it.id,
-                        title = mapTitleToNativeText(it.title),
-                        lastEditionDate = mapToString(it.lastEditionDate),
+                        id = form.id,
+                        title = mapTitleToNativeText(form.title),
+                        lastEditionDate = mapToString(form.lastEditionDate),
+                        featuredPicture = form.featuredPicture?.let { NativePhoto.Uri(it) }
+                            ?: NativePhoto.Resource(R.drawable.baseline_image_24),
+                        featuredPictureDescription = form.featuredPictureDescription?.let { NativeText.Simple(it) },
                         onClick = EquatableCallback {
-                            setCurrentPropertyIdUseCase.invoke(it.id)
+                            setCurrentPropertyIdUseCase.invoke(form.id)
                             setNavigationTypeUseCase.invoke(NavigationFragmentType.EDIT_FRAGMENT)
                         }
                     )
