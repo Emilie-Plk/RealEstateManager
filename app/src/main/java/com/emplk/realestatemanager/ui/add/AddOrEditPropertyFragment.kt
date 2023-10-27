@@ -101,6 +101,10 @@ class AddOrEditPropertyFragment : Fragment(R.layout.form_fragment) {
             amenityAdapter.submitList(viewState.amenities)
             predictionAdapter.submitList(viewState.addressPredictions)
 
+            binding.formSubmitButton.text = viewState.submitButtonText.toCharSequence(requireContext())
+            binding.formSoldStatusSwitch.isVisible = viewState.isSoldSwitchVisible
+            binding.formSoldStatusTv.isVisible = viewState.isSoldSwitchVisible
+
             binding.formTypeActv.setOnItemClickListener { _, _, position, _ ->
                 typeAdapter.getItem(position)?.let {
                     viewModel.onPropertyTypeSelected(it.name)
