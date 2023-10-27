@@ -1,7 +1,5 @@
 package com.emplk.realestatemanager.domain.property_draft
 
-import com.emplk.realestatemanager.data.property_draft.FormWithTitleDateAndFeaturedPicture
-
 interface FormDraftRepository {
     suspend fun add(formDraftEntity: FormDraftEntity): Long
 

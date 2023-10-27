@@ -2,7 +2,6 @@ package com.emplk.realestatemanager.domain.property_draft
 
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.PicturePreviewEntity
-import com.emplk.realestatemanager.ui.add.FormType
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
