@@ -9,5 +9,7 @@ sealed class MainViewEvent {
     object FilterPropertiesFragmentOnPhone : MainViewEvent()
     object FilterPropertiesFragmentOnTablet : MainViewEvent()
 
+    object LoanSimulator: MainViewEvent()
+
     data class NavigateToBlank(val fragmentTag: String, val propertyId: Long?) : MainViewEvent()
 }

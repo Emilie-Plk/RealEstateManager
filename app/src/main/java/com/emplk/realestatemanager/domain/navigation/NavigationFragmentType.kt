@@ -9,4 +9,5 @@ enum class NavigationFragmentType {
     DRAFTS_FRAGMENT,
     DETAIL_FRAGMENT,
     DRAFT_DIALOG_FRAGMENT,
+    LOAN_SIMULATOR_DIALOG_FRAGMENT
 }
