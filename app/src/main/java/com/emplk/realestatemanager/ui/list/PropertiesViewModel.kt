@@ -36,7 +36,11 @@ class PropertiesViewModel @Inject constructor(
 
         getPropertiesAsFlowUseCase.invoke().collect { properties ->
             if (properties.isEmpty()) {
-                emit(listOf(PropertiesViewState.EmptyState))
+                emit(listOf(PropertiesViewState.EmptyState(
+                    onAddClick = EquatableCallback {
+                        setNavigationTypeUseCase.invoke(NavigationFragmentType.ADD_FRAGMENT)
+                    }
+                )))
                 return@collect
             }
 

@@ -9,7 +9,7 @@ import java.text.NumberFormat
 import java.util.Locale
 import javax.inject.Inject
 
-class UnitOfMeasurementRepositoryLocale @Inject constructor(
+class LocaleFormattingRepositoryImpl @Inject constructor(
     private val locale: Locale,
 ) : LocaleFormattingRepository {
 

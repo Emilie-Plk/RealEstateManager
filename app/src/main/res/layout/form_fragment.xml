@@ -16,16 +16,16 @@
         <TextView
             android:id="@+id/form_info_tv"
             style="@style/Theme.RealEstateManager.AddPropertySubtitle"
-            android:textStyle="bold|italic"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/form_soldStatus_tv"
-            android:maxLines="2"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
+            android:maxLines="2"
             android:text="Property creation date: 12/12/2022 at 12:12"
-            android:layout_height="wrap_content"/>
+            android:textStyle="bold|italic"
+            app:layout_constraintEnd_toStartOf="@id/form_soldStatus_tv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/form_soldStatus_tv"
@@ -52,8 +52,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
             android:layout_marginTop="14dp"
+            android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/form_soldStatus_switch"
@@ -75,20 +75,20 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
             android:hint="Address"
-            tools:helperText="Please select an address from suggestions"
             app:endIconMode="clear_text"
             app:layout_constraintEnd_toEndOf="@+id/form_type_textInputLayout"
             app:layout_constraintStart_toStartOf="@+id/form_type_textInputLayout"
             app:layout_constraintTop_toBottomOf="@+id/form_type_textInputLayout"
-            app:startIconDrawable="@drawable/baseline_location_on_24">
+            app:startIconDrawable="@drawable/baseline_location_on_24"
+            tools:helperText="Please select an address from suggestions">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/form_address_textInputEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:imeOptions="actionDone"
-                android:inputType="textCapSentences"
-                android:lines="1"
+                android:inputType="textMultiLine|textCapSentences"
+                android:maxLines="2"
                 android:padding="16dp" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -134,12 +134,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
-            tools:hint="Surface in m²"
             app:endIconMode="clear_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/form_price_textInputLayout"
-            app:startIconDrawable="@drawable/baseline_surface_24">
+            app:startIconDrawable="@drawable/baseline_surface_24"
+            tools:hint="Surface in m²">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/form_surface_textInputEditText"
@@ -194,8 +194,8 @@
             style="@style/Theme.RealEstateManager.AddPropertySubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Bathrooms"
             android:layout_marginTop="20dp"
+            android:text="Bathrooms"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/form_bedrooms_tv"
             app:layout_constraintTop_toBottomOf="@id/form_surface_textInputLayout" />
@@ -215,8 +215,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
-
-            android:hint="Be creative!"
+            android:hint="Description"
             app:endIconMode="clear_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -227,7 +226,6 @@
                 android:id="@+id/form_description_textInputEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="start|top"
                 android:imeOptions="actionDone"
                 android:inputType="textMultiLine|textCapSentences"
                 android:lines="5" />

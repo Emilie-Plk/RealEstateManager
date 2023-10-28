@@ -1,12 +1,12 @@
 package com.emplk.realestatemanager.domain.currency_rate
 
-import com.emplk.realestatemanager.data.locale_formatting.UnitOfMeasurementRepositoryLocale
+import com.emplk.realestatemanager.data.locale_formatting.LocaleFormattingRepositoryImpl
 import java.math.BigDecimal
 import javax.inject.Inject
 
 class ConvertDollarToEuroUseCase @Inject constructor(
-    private val unitOfMeasurementRepositoryLocale: UnitOfMeasurementRepositoryLocale,
+    private val localeFormattingRepositoryImpl: LocaleFormattingRepositoryImpl,
 ) {
     fun invoke(priceInUsd: BigDecimal, usdToEuroRate: BigDecimal): BigDecimal =
-        unitOfMeasurementRepositoryLocale.convertDollarToEuro(priceInUsd, usdToEuroRate)
+        localeFormattingRepositoryImpl.convertDollarToEuro(priceInUsd, usdToEuroRate)
 }
