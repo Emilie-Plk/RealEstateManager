@@ -17,6 +17,7 @@ import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.ui.blank.BlankActivity
 import com.emplk.realestatemanager.ui.detail.DetailFragment
 import com.emplk.realestatemanager.ui.list.PropertiesFragment
+import com.emplk.realestatemanager.ui.loan_simulator.LoanSimulatorFragment
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -160,6 +161,10 @@ class MainActivity : AppCompatActivity() {
                 is MainViewEvent.NavigateToBlank -> {
                     startActivity(BlankActivity.navigate(this, event.fragmentTag, event.propertyId))
                 }
+
+                MainViewEvent.LoanSimulator -> {
+                    LoanSimulatorFragment.newInstance().show(supportFragmentManager, null)
+                }
             }
         }
     }
@@ -188,6 +193,11 @@ class MainActivity : AppCompatActivity() {
 
             R.id.main_menu_form -> {
                 viewModel.onAddPropertyClicked()
+                true
+            }
+
+            R.id.main_menu_loan_simulator -> {
+                viewModel.onLoanSimulatorClicked()
                 true
             }
 

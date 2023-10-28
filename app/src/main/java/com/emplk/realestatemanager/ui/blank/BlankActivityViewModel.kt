@@ -39,6 +39,7 @@ class BlankActivityViewModel @Inject constructor(
                 NavigationFragmentType.FILTER_FRAGMENT,
                 NavigationFragmentType.DETAIL_FRAGMENT,
                 NavigationFragmentType.MAP_FRAGMENT,
+                NavigationFragmentType.LOAN_SIMULATOR_DIALOG_FRAGMENT,
                 NavigationFragmentType.DRAFTS_FRAGMENT -> Unit
             }
         }

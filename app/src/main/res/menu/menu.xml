@@ -15,4 +15,10 @@
         android:orderInCategory="2"
         app:showAsAction="ifRoom"
         android:title="@string/menu_map_view" />
+    <item
+        android:id="@+id/main_menu_loan_simulator"
+        android:icon="@drawable/loan_logo_24"
+        android:orderInCategory="3"
+        app:showAsAction="ifRoom"
+        android:title="@string/menu_loan_simulator" />
 </menu>

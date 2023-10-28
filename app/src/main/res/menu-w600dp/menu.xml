@@ -13,12 +13,18 @@
         android:icon="@drawable/baseline_map_24"
         android:orderInCategory="2"
         android:title="@string/menu_map_view"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/main_menu_form"
         android:icon="@drawable/baseline_add_home_24"
         android:orderInCategory="3"
         android:title="@string/main_fab_add_new_property_a11y"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
+<item
+        android:id="@+id/main_menu_loan_simulator"
+        android:icon="@drawable/loan_logo_24"
+        android:orderInCategory="4"
+        android:title="@string/menu_loan_simulator"
+        app:showAsAction="ifRoom" />
 
 </menu>

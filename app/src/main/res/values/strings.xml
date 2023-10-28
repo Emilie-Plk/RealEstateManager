@@ -113,4 +113,5 @@
     <string name="save_draft_btn_text">Save</string>
     <string name="enter_draft_title_textInputLayout">Please enter draft title</string>
     <string name="add_draft_dialog_textView">You started creating a property but didn\'t finish.\nWhat would you like to do?</string>
+    <string name="menu_loan_simulator">Loan simulator</string>
 </resources>

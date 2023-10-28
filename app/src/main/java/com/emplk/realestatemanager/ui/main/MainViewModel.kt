@@ -17,6 +17,7 @@ import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.EDIT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.FILTER_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.LIST_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.MAP_FRAGMENT
+import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.LOAN_SIMULATOR_DIALOG_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property_draft.GetDraftsCountUseCase
 import com.emplk.realestatemanager.domain.screen_width.SetScreenWidthTypeUseCase
@@ -113,8 +114,9 @@ class MainViewModel @Inject constructor(
                     )
                 }
 
-                DRAFT_DIALOG_FRAGMENT -> Unit
-                MAP_FRAGMENT -> Unit
+                LOAN_SIMULATOR_DIALOG_FRAGMENT,
+                DRAFT_DIALOG_FRAGMENT,
+                MAP_FRAGMENT,
                 DRAFTS_FRAGMENT -> Unit
             }
         }.collect()
@@ -157,6 +159,7 @@ class MainViewModel @Inject constructor(
 
                 DRAFTS_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(DRAFTS_FRAGMENT.name, null)))
                 MAP_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(MAP_FRAGMENT.name, null)))
+                LOAN_SIMULATOR_DIALOG_FRAGMENT -> emit(Event(MainViewEvent.LoanSimulator))
                 DRAFT_DIALOG_FRAGMENT -> Unit
             }
         }.collect()
@@ -172,6 +175,10 @@ class MainViewModel @Inject constructor(
 
     fun onMapClicked() {
         setNavigationTypeUseCase.invoke(MAP_FRAGMENT)
+    }
+
+    fun onLoanSimulatorClicked() {
+        setNavigationTypeUseCase.invoke(LOAN_SIMULATOR_DIALOG_FRAGMENT)
     }
 
     fun onResume(isTablet: Boolean) {
