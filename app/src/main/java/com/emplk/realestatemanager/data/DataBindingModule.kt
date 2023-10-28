@@ -7,7 +7,7 @@ import com.emplk.realestatemanager.data.content_resolver.PictureFileRepositoryCo
 import com.emplk.realestatemanager.data.currency_rate.CurrencyRateRepositoryFixer
 import com.emplk.realestatemanager.data.current_property.CurrentPropertyRepositoryImpl
 import com.emplk.realestatemanager.data.geocoding.GeocodingRepositoryGoogle
-import com.emplk.realestatemanager.data.locale_formatting.UnitOfMeasurementRepositoryLocale
+import com.emplk.realestatemanager.data.locale_formatting.LocaleFormattingRepositoryImpl
 import com.emplk.realestatemanager.data.navigation.NavigationDraftRepositoryImpl
 import com.emplk.realestatemanager.data.navigation.NavigationRepositoryImpl
 import com.emplk.realestatemanager.data.property.PropertyRepositoryRoom
@@ -124,7 +124,7 @@ abstract class DataBindingModule {
 
     @Singleton
     @Binds
-    abstract fun bindCurrencyRepository(implementation: UnitOfMeasurementRepositoryLocale): LocaleFormattingRepository
+    abstract fun bindCurrencyRepository(implementation: LocaleFormattingRepositoryImpl): LocaleFormattingRepository
 
     @Singleton
     @Binds

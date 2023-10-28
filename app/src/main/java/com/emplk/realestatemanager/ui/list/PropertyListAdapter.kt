@@ -30,7 +30,7 @@ class PropertyListAdapter :
         when (holder) {
             is PropertyViewHolder.Property -> holder.bind(item = getItem(position) as PropertiesViewState.Properties)
             is PropertyViewHolder.LoadingState -> Unit
-            is PropertyViewHolder.EmptyState -> Unit
+            is PropertyViewHolder.EmptyState -> holder.bind(item = getItem(position) as PropertiesViewState.EmptyState)
         }
     }
 
@@ -92,6 +92,9 @@ class PropertyListAdapter :
                         false
                     )
                 )
+            }
+            fun bind(item: PropertiesViewState.EmptyState) {
+                binding.emptyPropertyButtonAdd.setOnClickListener { item.onAddClick.invoke() }
             }
         }
 

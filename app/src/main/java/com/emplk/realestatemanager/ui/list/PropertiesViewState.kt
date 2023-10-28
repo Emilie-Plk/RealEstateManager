@@ -28,5 +28,5 @@ sealed class PropertiesViewState(val type: Type) {
 
     object LoadingState : PropertiesViewState(Type.LOADING)
 
-    object EmptyState : PropertiesViewState(Type.EMPTY_STATE)
+    data class EmptyState(val onAddClick: EquatableCallback) : PropertiesViewState(Type.EMPTY_STATE)
 }

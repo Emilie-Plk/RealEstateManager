@@ -3,7 +3,6 @@ package com.emplk.realestatemanager.ui.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
-import androidx.lifecycle.viewModelScope
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdFlowUseCase
 import com.emplk.realestatemanager.domain.current_property.ResetCurrentPropertyIdUseCase
@@ -27,7 +26,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -131,7 +129,13 @@ class MainViewModel @Inject constructor(
             when (navigationType) {
                 LIST_FRAGMENT -> emit(Event(MainViewEvent.PropertyList))
 
-                ADD_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(ADD_FRAGMENT.name, propertyId)))
+                ADD_FRAGMENT -> {
+                    when (getDraftsCountUseCase.invoke()) {
+                        0 -> emit(Event(MainViewEvent.NavigateToBlank(ADD_FRAGMENT.name, propertyId)))
+                        else -> setNavigationTypeUseCase.invoke(DRAFTS_FRAGMENT)
+                    }
+
+                }
 
                 EDIT_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(EDIT_FRAGMENT.name, propertyId)))
 
@@ -159,12 +163,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun onAddPropertyClicked() {
-        viewModelScope.launch {
-            when (getDraftsCountUseCase.invoke()) {
-                0 -> setNavigationTypeUseCase.invoke(ADD_FRAGMENT) // TODO: maybe if 1 go to ADD and display filled form
-                else -> setNavigationTypeUseCase.invoke(DRAFTS_FRAGMENT)
-            }
-        }
+        setNavigationTypeUseCase.invoke(ADD_FRAGMENT)
     }
 
     fun onFilterPropertiesClicked() {
