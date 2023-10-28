@@ -7,6 +7,7 @@ import com.emplk.realestatemanager.data.content_resolver.PictureFileRepositoryCo
 import com.emplk.realestatemanager.data.currency_rate.CurrencyRateRepositoryFixer
 import com.emplk.realestatemanager.data.current_property.CurrentPropertyRepositoryImpl
 import com.emplk.realestatemanager.data.geocoding.GeocodingRepositoryGoogle
+import com.emplk.realestatemanager.data.loan_simulator.LoanSimulatorRepositoryImpl
 import com.emplk.realestatemanager.data.locale_formatting.LocaleFormattingRepositoryImpl
 import com.emplk.realestatemanager.data.navigation.NavigationDraftRepositoryImpl
 import com.emplk.realestatemanager.data.navigation.NavigationRepositoryImpl
@@ -28,6 +29,7 @@ import com.emplk.realestatemanager.domain.content_resolver.PictureFileRepository
 import com.emplk.realestatemanager.domain.currency_rate.CurrencyRateRepository
 import com.emplk.realestatemanager.domain.current_property.CurrentPropertyRepository
 import com.emplk.realestatemanager.domain.geocoding.GeocodingRepository
+import com.emplk.realestatemanager.domain.loan_simulator.LoanSimulatorRepository
 import com.emplk.realestatemanager.domain.locale_formatting.LocaleFormattingRepository
 import com.emplk.realestatemanager.domain.navigation.NavigationRepository
 import com.emplk.realestatemanager.domain.navigation.draft.NavigationDraftRepository
@@ -137,4 +139,8 @@ abstract class DataBindingModule {
     @Singleton
     @Binds
     abstract fun bindPropertyFormParamsRepository(implementation: PropertyFormParamsRepositoryImpl): PropertyFormParamsRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindLoanSimulatorRepository(implementation: LoanSimulatorRepositoryImpl): LoanSimulatorRepository
 }
