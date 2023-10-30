@@ -1,9 +1,9 @@
 plugins {
     id("com.android.application")
-    id("kotlin-android")
+    kotlin("android")
+    kotlin("kapt")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin") version "2.0.1"
     id("dagger.hilt.android.plugin")
-    id("kotlin-kapt")
 }
 
 android {
@@ -18,6 +18,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunnerArguments["clearPackageData"] = "true"
     }
 
     buildFeatures {
@@ -39,8 +40,19 @@ android {
         jvmTarget = "17"
         freeCompilerArgs = listOf(
             "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-            "-opt-in=kotlinx.coroutines.DelicateCoroutinesApi"
+            "-opt-in=kotlinx.coroutines.DelicateCoroutinesApi",
+            "-opt-in=kotlin.ExperimentalStdlibApi"
         )
+    }
+
+
+    testOptions {
+        execution = "ANDROIDX_TEST_ORCHESTRATOR"
+        animationsDisabled = true
+
+        unitTests {
+            isReturnDefaultValues = true
+        }
     }
 }
 
@@ -51,6 +63,11 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")
     implementation("androidx.activity:activity-ktx:1.7.2")
     implementation("androidx.fragment:fragment-ktx:1.6.1")
+    implementation("junit:junit:4.13.2")
+    // mockk
+    api("io.mockk:mockk:1.13.4")
+    // coroutines tests
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
 
     implementation("com.google.android.gms:play-services-awareness:19.0.1")
 
@@ -59,7 +76,6 @@ dependencies {
     implementation("com.google.android.gms:play-services-maps:18.1.0")
     implementation("com.google.maps.android:android-maps-utils:2.3.0")
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.4")
-    implementation("androidx.navigation:navigation-ui-ktx:2.7.4")
 
     // DESUGARING
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
@@ -99,9 +115,27 @@ dependencies {
     // DATASTORE
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
-    // TEST
-    testImplementation("junit:junit:4.13.2")
+    // Unit tests
 
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    testImplementation("androidx.arch.core:core-testing:2.2.0") {
+        exclude("org.mockito", "mockito-core") // excludes redundant mockito dependency bundled with arch core
+    }
+    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")  // weird but testImplementation doesn't work
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("io.mockk:mockk:1.13.4")
+    testImplementation("app.cash.turbine:turbine:1.0.0")
+
+
+    // Android tests
+
+    androidTestImplementation("androidx.arch.core:core-testing:2.2.0") {
+        exclude("org.mockito", "mockito-core") // excludes redundant mockito dependency bundled with arch core
+    }
+    androidTestImplementation("androidx.test:core:1.5.0")
+    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.5.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test:rules:1.5.0")
+    androidTestImplementation("androidx.test:runner:1.5.2")
 }
