@@ -15,7 +15,7 @@ class PictureMapper @Inject constructor() {
         )
     }
 
-    fun mapToDtoEntities(pictures: List<PictureEntity>, propertyId: Long): List<PictureDto> {
+    fun mapToDtos(pictures: List<PictureEntity>, propertyId: Long): List<PictureDto> {
         return pictures.map {
             PictureDto(
                 id = it.id,

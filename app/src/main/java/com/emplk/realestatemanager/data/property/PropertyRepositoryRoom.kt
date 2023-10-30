@@ -39,7 +39,7 @@ class PropertyRepositoryRoom @Inject constructor(
             val propertyId = add(propertyEntity) ?: return@withContext false
 
             val locationAsync = async {
-                val locationDtoEntity = locationMapper.mapToDtoEntity(propertyEntity.location, propertyId)
+                val locationDtoEntity = locationMapper.mapToDto(propertyEntity.location, propertyId)
                 locationDao.insert(locationDtoEntity)
             }
 
@@ -94,7 +94,7 @@ class PropertyRepositoryRoom @Inject constructor(
         withContext(coroutineDispatcherProvider.io) {
             try {
                 propertyDao.update(propertyMapper.mapToDto(propertyEntity))
-                locationDao.update(locationMapper.mapToDtoEntity(propertyEntity.location, propertyEntity.id))
+                locationDao.update(locationMapper.mapToDto(propertyEntity.location, propertyEntity.id))
                 propertyEntity.pictures.map {
                     pictureDao.upsert(pictureMapper.mapToDtoEntity(it, propertyEntity.id))
                 }
