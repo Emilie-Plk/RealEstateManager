@@ -6,4 +6,6 @@ plugins {
     id("com.google.dagger.hilt.android") version "2.45" apply false
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin") version "2.0.1"
     kotlin("kapt") version "1.8.0"
+
+    
 }
