@@ -27,7 +27,7 @@ class PropertyRepositoryRoom @Inject constructor(
 
     override suspend fun add(propertyEntity: PropertyEntity): Long? = withContext(coroutineDispatcherProvider.io) {
         try {
-            propertyDao.insert(propertyMapper.mapToDtoEntity(propertyEntity))
+            propertyDao.insert(propertyMapper.mapToDto(propertyEntity))
         } catch (e: SQLiteException) {
             e.printStackTrace()
             null
@@ -93,7 +93,7 @@ class PropertyRepositoryRoom @Inject constructor(
     override suspend fun update(propertyEntity: PropertyEntity): Boolean =
         withContext(coroutineDispatcherProvider.io) {
             try {
-                propertyDao.update(propertyMapper.mapToDtoEntity(propertyEntity))
+                propertyDao.update(propertyMapper.mapToDto(propertyEntity))
                 locationDao.update(locationMapper.mapToDtoEntity(propertyEntity.location, propertyEntity.id))
                 propertyEntity.pictures.map {
                     pictureDao.upsert(pictureMapper.mapToDtoEntity(it, propertyEntity.id))

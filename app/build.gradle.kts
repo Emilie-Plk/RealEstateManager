@@ -124,6 +124,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")  // weird but testImplementation doesn't work
     testImplementation("junit:junit:4.13.2")
     testImplementation("io.mockk:mockk:1.13.4")
+    testImplementation("org.slf4j:slf4j-nop:2.0.9") // to avoid warning about missing logger
     testImplementation("app.cash.turbine:turbine:1.0.0")
 
 
