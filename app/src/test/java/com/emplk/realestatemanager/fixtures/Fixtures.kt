@@ -1,11 +1,18 @@
 package com.emplk.realestatemanager.fixtures
 
 import com.emplk.realestatemanager.data.property.PropertyDto
+import com.emplk.realestatemanager.data.property.location.LocationDto
+import com.emplk.realestatemanager.data.property.picture.PictureDto
 import com.emplk.realestatemanager.domain.property.PropertyEntity
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.location.LocationEntity
 import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
+import com.emplk.realestatemanager.ui.detail.DetailViewState
+import com.emplk.realestatemanager.ui.detail.picture_banner.PictureBannerViewState
+import com.emplk.realestatemanager.ui.utils.NativePhoto
+import com.emplk.realestatemanager.ui.utils.NativeText
 import com.google.android.gms.maps.model.LatLng
+import org.hamcrest.CoreMatchers.any
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
@@ -43,8 +50,8 @@ fun getTestPropertyDto(id: Long) = PropertyDto(
 fun getTestPropertyEntity(id: Long) = PropertyEntity(
     id = id,
     type = "House",
-    price = BigDecimal(100000),
-    surface = BigDecimal(100),
+    price = BigDecimal(1000000),
+    surface = BigDecimal(500),
     location = LocationEntity(
         address = "1st, Dummy Street, 12345, Dummy City",
         miniatureMapUrl = "https://www.google.com/maps/123456789",
@@ -94,6 +101,46 @@ fun getTestPropertyEntity(id: Long) = PropertyEntity(
 // endregion PropertyEntity
 
 
+// region LocationDto
+fun getTestLocationDto(propertyId: Long) = LocationDto(
+    propertyId = propertyId,
+    address = "1st, Dummy Street, 12345, Dummy City",
+    miniatureMapUrl = "https://www.google.com/maps/123456789",
+    latitude = 123.0,
+    longitude = 456.0,
+)
+// endregion LocationDto
+
+// region PictureDto
+fun getPictureDtos(propertyId: Long) = buildList {
+    add(
+        PictureDto(
+            propertyId = propertyId,
+            uri = "https://www.google.com/front_view",
+            description = "Front view",
+            isFeatured = true,
+        )
+    )
+    add(
+        PictureDto(
+            propertyId = propertyId,
+            uri = "https://www.google.com/garden",
+            description = "Garden",
+            isFeatured = false,
+        )
+    )
+    add(
+        PictureDto(
+            propertyId = propertyId,
+            uri = "https://www.google.com/swimming_pool",
+            description = "Swimming pool",
+            isFeatured = false,
+        )
+    )
+}
+// endregion PictureDto
+
+
 // region mappers
 fun mapPropertyEntityToDto(property: PropertyEntity) = PropertyDto(
     id = property.id,
@@ -119,3 +166,5 @@ fun mapPropertyEntityToDto(property: PropertyEntity) = PropertyDto(
     saleDate = property.saleDate,
     lastEditionDate = property.lastEditionDate,
 )
+
+// endregion mappers

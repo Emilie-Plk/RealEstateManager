@@ -3,6 +3,7 @@ plugins {
     kotlin("android")
     kotlin("kapt")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin") version "2.0.1"
+    id("org.jetbrains.kotlinx.kover")
     id("dagger.hilt.android.plugin")
 }
 
@@ -54,6 +55,10 @@ android {
             isReturnDefaultValues = true
         }
     }
+
+    packaging {
+        resources.excludes.add("META-INF/*")
+    }
 }
 
 dependencies {
@@ -71,6 +76,8 @@ dependencies {
 
     implementation("com.google.android.gms:play-services-awareness:19.0.1")
 
+    // KOVER
+    implementation("org.jetbrains.kotlinx:kover-gradle-plugin:0.7.4")
 
     // GOOGLE MAPS SDK
     implementation("com.google.android.gms:play-services-maps:18.1.0")
@@ -139,4 +146,46 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test:rules:1.5.0")
     androidTestImplementation("androidx.test:runner:1.5.2")
+}
+
+koverReport {
+
+    androidReports("debug") {
+        // filters for all report types only of 'release' build type
+        filters {
+            excludes {
+                annotatedBy(
+                    "dagger.Module",
+                    "dagger.internal.DaggerGenerated",
+                    "androidx.room.Database",
+                )
+                packages(
+                    "hilt_aggregated_deps", // Hilt: GeneratedInjectors (NOT annotated by DaggerGenerated)
+                    "com.emplk.realestatemanager.databinding", // ViewBinding
+                )
+                classes(
+                    // Hilt
+                    "*_*Factory\$*",
+
+                    // Room
+                    "*_Impl",
+                    "*_Impl\$*",
+
+                    "*AppDatabase\$*",
+
+                    // Gradle generated
+                    "com.emplk.realestatemanager.BuildConfig",
+
+                    "*MainApplication",
+                    "*MainApplication\$*",
+                    "*Fragment",
+                    "*Fragment\$*",
+                    "*Activity",
+                    "*Activity\$*",
+                    "*Adapter",
+                    "*Adapter\$*",
+                )
+            }
+        }
+    }
 }
