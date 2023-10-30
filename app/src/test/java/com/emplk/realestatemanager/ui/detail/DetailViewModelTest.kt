@@ -11,5 +11,5 @@ class DetailViewModelTest {
     @get:Rule
     val testCoroutineRule = TestCoroutineRule()
     private val getCurrentPropertyUseCase: GetCurrentPropertyUseCase = mockk()
-    private val viewModel = DetailViewModel()
+
 }

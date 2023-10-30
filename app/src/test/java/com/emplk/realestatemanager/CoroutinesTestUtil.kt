@@ -14,7 +14,7 @@ import kotlin.coroutines.coroutineContext
 
 fun <T> MockKStubScope<Unit, T>.ensuresDispatcher(
     coroutineDispatcher: CoroutineDispatcher
-): MockKAdditionalAnswerScope<Unit, T> = ensuresDispatcher(coroutineDispatcher) {}
+): MockKAdditionalAnswerScope<Unit, T> = ensuresDispatcher(coroutineDispatcher)
 
 fun <T, B> MockKStubScope<T, B>.ensuresDispatcher(
     coroutineDispatcher: CoroutineDispatcher,

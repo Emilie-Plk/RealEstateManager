@@ -13,7 +13,7 @@ class PropertyMapper @Inject constructor(
     private val pictureMapper: PictureMapper,
 ) {
 
-    fun mapToDtoEntity(property: PropertyEntity) = PropertyDto(
+    fun mapToDto(property: PropertyEntity) = PropertyDto(
         id = property.id,
         type = property.type,
         price = property.price,
