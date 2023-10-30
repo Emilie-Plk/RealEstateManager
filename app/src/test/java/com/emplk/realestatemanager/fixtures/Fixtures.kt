@@ -1,6 +1,7 @@
 package com.emplk.realestatemanager.fixtures
 
 import com.emplk.realestatemanager.data.property.PropertyDto
+import com.emplk.realestatemanager.data.property.PropertyWithDetails
 import com.emplk.realestatemanager.data.property.location.LocationDto
 import com.emplk.realestatemanager.data.property.picture.PictureDto
 import com.emplk.realestatemanager.domain.property.PropertyEntity
@@ -99,6 +100,14 @@ fun getTestPropertyEntity(id: Long) = PropertyEntity(
     entryDate = LocalDateTime.of(2023, 1, 1, 12, 0),
 )
 // endregion PropertyEntity
+
+// region PropertyWithDetail
+fun getPropertyWithDetail(propertyId: Long) = PropertyWithDetails(
+    property = getTestPropertyDto(propertyId),
+    location = getTestLocationDto(propertyId),
+    pictures = getPictureDtos(propertyId),
+)
+// endregion PropertyWithDetail
 
 
 // region LocationDto

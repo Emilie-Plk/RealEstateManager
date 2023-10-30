@@ -82,12 +82,13 @@ class PropertyRepositoryRoom @Inject constructor(
 
     override suspend fun getPropertyById(propertyId: Long): PropertyEntity =
         withContext(coroutineDispatcherProvider.io) {
-            val propertyWithDetailsEntity = propertyDao.getPropertyById(propertyId)
-            propertyMapper.mapToDomainEntity(
-                propertyWithDetailsEntity.property,
-                propertyWithDetailsEntity.location ?: return@withContext null,
-                propertyWithDetailsEntity.pictures,
-            )
+            propertyDao.getPropertyById(propertyId)?.let {
+                propertyMapper.mapToDomainEntity(
+                    it.property,
+                    it.location ?: return@withContext null,
+                    it.pictures,
+                )
+            }
         } ?: throw IllegalStateException("Property with id $propertyId not found")
 
     override suspend fun update(propertyEntity: PropertyEntity): Boolean =
