@@ -19,7 +19,7 @@ interface PropertyDao {
 
     @Transaction
     @Query("SELECT * FROM properties WHERE id = :propertyId")
-    suspend fun getPropertyById(propertyId: Long): PropertyWithDetails
+    suspend fun getPropertyById(propertyId: Long): PropertyWithDetails?
 
     @Transaction
     @Query("SELECT * FROM properties")
