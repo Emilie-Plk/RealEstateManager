@@ -27,13 +27,13 @@ class PredictionRepositoryAutocomplete @Inject constructor(
                 when (response.status) {
                     "OK" -> {
                         val predictions = mapResponseToPredictionWrapper(response)
-                        PredictionWrapper.Success(predictions)
+                        if (predictions.isEmpty())  PredictionWrapper.NoResult
+                        else  PredictionWrapper.Success(predictions)
                     }
 
-                    "ZERO_RESULTS" -> return@withContext PredictionWrapper.NoResult
+                    "ZERO_RESULTS" -> PredictionWrapper.NoResult
                     else -> PredictionWrapper.Failure(Throwable(response.status))
                 }.also { predictionsLruCache.put(query, it) }
-
             } catch (e: Exception) {
                 e.printStackTrace()
                 PredictionWrapper.Error(e.message ?: "Unknown error occurred")
