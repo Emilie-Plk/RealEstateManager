@@ -1,6 +1,7 @@
 package com.emplk.realestatemanager.data.geocoding
 
 import android.util.LruCache
+import com.emplk.realestatemanager.data.DataModule
 import com.emplk.realestatemanager.data.api.GoogleApi
 import com.emplk.realestatemanager.data.geocoding.response.GeocodingResponse
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
@@ -14,10 +15,10 @@ import javax.inject.Inject
 
 class GeocodingRepositoryGoogle @Inject constructor(
     private val googleApi: GoogleApi,
+    @DataModule.LruCacheGeocode private val geocodingLruCache: LruCache<String, GeocodingWrapper>,
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : GeocodingRepository {
 
-    private val geocodingLruCache = LruCache<String, GeocodingWrapper>(200)
     override suspend fun getLatLong(address: String): GeocodingWrapper = withContext(coroutineDispatcherProvider.io) {
         geocodingLruCache.get(address) ?: try {
             val response = googleApi.getGeocode(address)

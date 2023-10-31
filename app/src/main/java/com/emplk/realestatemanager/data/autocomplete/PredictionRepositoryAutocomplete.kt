@@ -1,6 +1,7 @@
 package com.emplk.realestatemanager.data.autocomplete
 
 import android.util.LruCache
+import com.emplk.realestatemanager.data.DataModule
 import com.emplk.realestatemanager.data.api.GoogleApi
 import com.emplk.realestatemanager.data.autocomplete.response.AutocompleteResponse
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
@@ -11,14 +12,13 @@ import javax.inject.Inject
 
 class PredictionRepositoryAutocomplete @Inject constructor(
     private val googleApi: GoogleApi,
+    @DataModule.LruCachePredictions private val predictionsLruCache: LruCache<String, PredictionWrapper>,
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : PredictionRepository {
 
     private companion object {
         private const val TYPE = "address"
     }
-
-    private val predictionsLruCache = LruCache<String, PredictionWrapper>(200)
 
     override suspend fun getAddressPredictions(query: String): PredictionWrapper =
         withContext(coroutineDispatcherProvider.io) {

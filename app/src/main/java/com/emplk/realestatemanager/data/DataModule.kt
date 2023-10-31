@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.ContentResolver
 import android.content.res.Resources
 import android.os.Build
+import android.util.LruCache
 import androidx.work.WorkManager
 import com.emplk.realestatemanager.BuildConfig
 import com.emplk.realestatemanager.data.api.FixerApi
@@ -13,6 +14,8 @@ import com.emplk.realestatemanager.data.property.location.LocationDao
 import com.emplk.realestatemanager.data.property.picture.PictureDao
 import com.emplk.realestatemanager.data.property_draft.FormDraftDao
 import com.emplk.realestatemanager.data.property_draft.picture_preview.PicturePreviewDao
+import com.emplk.realestatemanager.domain.autocomplete.PredictionWrapper
+import com.emplk.realestatemanager.domain.geocoding.GeocodingWrapper
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -115,7 +118,7 @@ class DataModule {
     @Provides
     @FixerApiRetrofit
     fun provideFixerCurrencyApiRetrofit(
-        @FixerApiOkHttpClient okHttpClient: okhttp3.OkHttpClient,
+        @FixerApiOkHttpClient okHttpClient: OkHttpClient,
         gson: Gson
     ): Retrofit =
         Retrofit.Builder()
@@ -187,7 +190,26 @@ class DataModule {
 
     @Singleton
     @Provides
+    @LruCachePredictions
+    fun providePredictionsLruCache(): LruCache<String, PredictionWrapper> = LruCache(200)
+
+
+    @Singleton
+    @Provides
+    @LruCacheGeocode
+    fun provideGeocodeLruCache(): LruCache<String, GeocodingWrapper> = LruCache(200)
+
+    @Singleton
+    @Provides
     fun provideClock(): Clock = Clock.systemDefaultZone()
+
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class LruCachePredictions
+
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class LruCacheGeocode
 
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
