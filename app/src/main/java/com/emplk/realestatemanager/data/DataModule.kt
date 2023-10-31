@@ -193,7 +193,6 @@ class DataModule {
     @LruCachePredictions
     fun providePredictionsLruCache(): LruCache<String, PredictionWrapper> = LruCache(200)
 
-
     @Singleton
     @Provides
     @LruCacheGeocode
