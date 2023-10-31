@@ -19,8 +19,10 @@ import com.emplk.realestatemanager.fixtures.getTestLocationDto
 import com.emplk.realestatemanager.fixtures.getTestPropertyDto
 import com.emplk.realestatemanager.fixtures.getTestPropertyEntity
 import com.emplk.utils.TestCoroutineRule
+import io.mockk.Ordering
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.coVerifyOrder
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
@@ -150,18 +152,26 @@ class PropertyRepositoryRoomTest {
         assertThat(result).isNotNull()
         assertThat(result).isTrue()
         coVerify(exactly = 1) { propertyDao.insert(getTestPropertyDto(TEST_PROPERTY_ID)) }
-        coVerify(exactly = 1) { locationDao.insert(getTestLocationDto(TEST_PROPERTY_ID)) }
-        coVerify(exactly = 1) { pictureDao.insert(getPictureDtos(TEST_PROPERTY_ID)[0]) }
-        coVerify(exactly = 1) { pictureDao.insert(getPictureDtos(TEST_PROPERTY_ID)[1]) }
-        coVerify(exactly = 1) { pictureDao.insert(getPictureDtos(TEST_PROPERTY_ID)[2]) }
+
+        coVerifyOrder {
+            locationDao.insert(getTestLocationDto(TEST_PROPERTY_ID))
+            pictureDao.insert(getPictureDtos(TEST_PROPERTY_ID)[0])
+            pictureDao.insert(getPictureDtos(TEST_PROPERTY_ID)[1])
+            pictureDao.insert(getPictureDtos(TEST_PROPERTY_ID)[2])
+        }
         confirmVerified(propertyDao)
     }
 
     @Test
     fun `add property with details - error with property insertion`() = testCoroutineRule.runTest {
-        // Given
-        val propertyEntity = getTestPropertyEntity(TEST_PROPERTY_ID)
-        // coEvery { propertyRepositoryRoom.add(any()) } returns null
+       /* // Given
+         coEvery { propertyRepositoryRoom.add(any()) } returns null
+
+        // When
+        val result = propertyRepositoryRoom.addPropertyWithDetails(getTestPropertyEntity(TEST_PROPERTY_ID))
+
+        // Then
+        assertThat(result).isFalse()*/
         // I want to test case where " val propertyId = add(propertyEntity) ?: return@withContext false"
         // TODO NINO: how to test that?
     }
