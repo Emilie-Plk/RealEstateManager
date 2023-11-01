@@ -76,7 +76,7 @@ class MapsFragment : SupportMapFragment(), OnMapReadyCallback {
         }
 
 
-        viewModel.viewEventLiveData.observeEvent(this) { event ->
+        viewModel.viewEvent.observeEvent(this) { event ->
             when (event) {
                 is MapEvent.OnMarkerClicked -> {
                     MapBottomSheetFragment.newInstance().show(childFragmentManager, MapBottomSheetFragment.TAG)

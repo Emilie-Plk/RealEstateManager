@@ -17,7 +17,6 @@ class MapViewModel @Inject constructor(
     private val setCurrentPropertyIdUseCase: SetCurrentPropertyIdUseCase,
 ) : ViewModel() {
 
-
     private val onClickMutableSharedFlow: MutableSharedFlow<Unit> = MutableSharedFlow(extraBufferCapacity = 1)
 
     val viewState: LiveData<List<MarkerViewState>> = liveData {
@@ -34,7 +33,7 @@ class MapViewModel @Inject constructor(
             })
     }
 
-    val viewEventLiveData: LiveData<Event<MapEvent>> = liveData {
+    val viewEvent: LiveData<Event<MapEvent>> = liveData {
         onClickMutableSharedFlow.collect {
             emit(Event(MapEvent.OnMarkerClicked))
         }

@@ -162,6 +162,10 @@ koverReport {
                 packages(
                     "hilt_aggregated_deps", // Hilt: GeneratedInjectors (NOT annotated by DaggerGenerated)
                     "com.emplk.realestatemanager.databinding", // ViewBinding
+                    // Gradle generated
+                    "com.emplk.realestatemanager.BuildConfig",
+                    // UI Utils
+                    "com.emplk.realestatemanager.ui.utils",
                 )
                 classes(
                     // Hilt
@@ -171,10 +175,20 @@ koverReport {
                     "*_Impl",
                     "*_Impl\$*",
 
+                    "*AppDatabase",
                     "*AppDatabase\$*",
 
-                    // Gradle generated
-                    "com.emplk.realestatemanager.BuildConfig",
+                    "*BuildConfig",
+                    "*BuildConfig\$*",
+
+                    "*Dto",
+                    "*Dto\$*",
+
+                    "*Entity",
+                    "*Entity\$*",
+
+                    "*Response",
+                    "*Response\$*",
 
                     "*MainApplication",
                     "*MainApplication\$*",
@@ -184,12 +198,11 @@ koverReport {
                     "*Activity\$*",
                     "*Adapter",
                     "*Adapter\$*",
+                    "*ViewState",
                     "*ViewState\$*",
-
-                    // Utils
-                    "com.emplk.realestatemanager.ui.utils",
-
-                    )
+                    "*DiffCallback",
+                    "*DiffCallback\$*",
+                )
             }
         }
     }
