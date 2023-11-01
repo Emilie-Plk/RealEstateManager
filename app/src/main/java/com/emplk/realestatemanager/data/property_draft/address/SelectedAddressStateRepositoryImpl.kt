@@ -10,24 +10,25 @@ class SelectedAddressStateRepositoryImpl @Inject constructor(
     private val currentAddressInputMutableStateFlow: MutableStateFlow<String?> = MutableStateFlow(null)
     private val isPredictionSelectedByUserMutableStateFlow = MutableStateFlow<Boolean?>(null)
     private val hasAddressFocusMutableStateFlow = MutableStateFlow<Boolean?>(null)
-    override fun getCurrentAddressInput(): Flow<String?> = currentAddressInputMutableStateFlow
 
     override fun setCurrentAddressInput(address: String?) {
         currentAddressInputMutableStateFlow.tryEmit(address)
     }
 
-    override fun getIsPredictionSelectedByUser(): MutableStateFlow<Boolean?> =
-        isPredictionSelectedByUserMutableStateFlow
+    override fun getCurrentAddressInput(): Flow<String?> = currentAddressInputMutableStateFlow
 
     override fun setIsPredictionSelectedByUser(isSelected: Boolean) {
         isPredictionSelectedByUserMutableStateFlow.tryEmit(isSelected)
     }
 
-    override fun getHasAddressFocus(): MutableStateFlow<Boolean?> = hasAddressFocusMutableStateFlow
+    override fun getIsPredictionSelectedByUser(): MutableStateFlow<Boolean?> =
+        isPredictionSelectedByUserMutableStateFlow
 
     override fun setHasAddressFocus(hasFocus: Boolean) {
         hasAddressFocusMutableStateFlow.tryEmit(hasFocus)
     }
+
+    override fun getHasAddressFocus(): MutableStateFlow<Boolean?> = hasAddressFocusMutableStateFlow
 
     override fun resetSelectedAddressState() {
         currentAddressInputMutableStateFlow.tryEmit(null)

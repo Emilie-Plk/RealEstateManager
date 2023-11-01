@@ -134,7 +134,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                     id = formWithType.formDraftEntity.id,
                     formType = formWithType.formType,
                     propertyType = formWithType.formDraftEntity.type,
-                    title = formWithType.formDraftEntity.title,
+                    draftTitle = formWithType.formDraftEntity.title,
                     address = formWithType.formDraftEntity.address,
                     isAddressValid = formWithType.formDraftEntity.isAddressValid,
                     price = convertPriceByLocaleUseCase.invoke(formWithType.formDraftEntity.price),
@@ -288,9 +288,9 @@ class AddOrEditPropertyViewModel @Inject constructor(
 // Save draft when title is set (only when FormType.ADD and when title is null)
             launch {
                 getFormTitleUseCase.invoke().collect { formTypeAndTitle ->
-                    if (formTypeAndTitle.formType == FormType.ADD && formMutableStateFlow.value.title == null) {
+                    if (formTypeAndTitle.formType == FormType.ADD && formMutableStateFlow.value.draftTitle == null) {
                         formMutableStateFlow.update {
-                            it.copy(title = formTypeAndTitle.title)
+                            it.copy(draftTitle = formTypeAndTitle.title)
                         }
                         updatePropertyFormUseCase.invoke(formMutableStateFlow.value)
                     }

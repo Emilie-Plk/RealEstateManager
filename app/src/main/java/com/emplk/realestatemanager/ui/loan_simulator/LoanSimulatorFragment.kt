@@ -3,7 +3,6 @@ package com.emplk.realestatemanager.ui.loan_simulator
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.LoanSimulatorFragmentBinding
@@ -26,7 +25,7 @@ class LoanSimulatorFragment : BottomSheetDialogFragment(R.layout.loan_simulator_
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // bottom sheet expanded
-     val standardBottomSheetBehavior = BottomSheetBehavior.from(binding.loanSimulatorConstraintLayout as View)
+        val standardBottomSheetBehavior = BottomSheetBehavior.from(binding.loanSimulatorConstraintLayout as View)
         standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
 // set peek height to half screen
         standardBottomSheetBehavior.peekHeight = ViewGroup.LayoutParams.MATCH_PARENT
@@ -36,7 +35,6 @@ class LoanSimulatorFragment : BottomSheetDialogFragment(R.layout.loan_simulator_
         binding.exitButtonIv.setOnClickListener {
             dismiss()
         }
-
 
 
     }

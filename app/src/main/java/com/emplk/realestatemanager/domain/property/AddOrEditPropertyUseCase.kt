@@ -10,9 +10,8 @@ import com.emplk.realestatemanager.domain.map_picture.GenerateMapBaseUrlWithPara
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.location.LocationEntity
-import com.emplk.realestatemanager.domain.property.pictures.DeletePictureUseCase
-import com.emplk.realestatemanager.domain.property.pictures.GetPicturesIdsUseCase
 import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
+import com.emplk.realestatemanager.domain.property.pictures.PictureRepository
 import com.emplk.realestatemanager.domain.property_draft.ClearPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.FormDraftParams
 import com.emplk.realestatemanager.domain.property_draft.FormDraftRepository
@@ -31,11 +30,10 @@ class AddOrEditPropertyUseCase @Inject constructor(
     private val propertyRepository: PropertyRepository,
     private val formDraftRepository: FormDraftRepository,
     private val geocodingRepository: GeocodingRepository,
+    private val pictureRepository: PictureRepository,
     private val generateMapBaseUrlWithParamsUseCase: GenerateMapBaseUrlWithParamsUseCase,
     private val convertToUsdDependingOnLocaleUseCase: ConvertToUsdDependingOnLocaleUseCase,
     private val getPicturePreviewsUseCase: GetPicturePreviewsUseCase,
-    private val getPicturesIdsUseCase: GetPicturesIdsUseCase,
-    private val deletePictureUseCase: DeletePictureUseCase,
     private val convertSurfaceToSquareFeetDependingOnLocaleUseCase: ConvertSurfaceToSquareFeetDependingOnLocaleUseCase,
     private val updatePropertyFormUseCase: UpdatePropertyFormUseCase,
     private val clearPropertyFormUseCase: ClearPropertyFormUseCase,
@@ -94,11 +92,11 @@ class AddOrEditPropertyUseCase @Inject constructor(
                                 isFeatured = it.id == form.featuredPictureId,
                             )
                         }.also {
-                            val pictureIdsToDelete = getPicturesIdsUseCase.invoke(form.id)
+                            val pictureIdsToDelete = pictureRepository.getPicturesIds(form.id)
                                 .filter { it !in form.pictureIds }
 
                             pictureIdsToDelete.forEach { pictureId ->
-                                deletePictureUseCase.invoke(pictureId)
+                                pictureRepository.delete(pictureId)
                             }
                         },
                         entryDate = form.entryDate,

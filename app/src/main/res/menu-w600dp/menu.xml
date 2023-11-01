@@ -20,7 +20,7 @@
         android:orderInCategory="3"
         android:title="@string/main_fab_add_new_property_a11y"
         app:showAsAction="ifRoom" />
-<item
+    <item
         android:id="@+id/main_menu_loan_simulator"
         android:icon="@drawable/loan_logo_24"
         android:orderInCategory="4"

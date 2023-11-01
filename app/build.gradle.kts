@@ -184,7 +184,12 @@ koverReport {
                     "*Activity\$*",
                     "*Adapter",
                     "*Adapter\$*",
-                )
+                    "*ViewState\$*",
+
+                    // Utils
+                    "com.emplk.realestatemanager.ui.utils",
+
+                    )
             }
         }
     }

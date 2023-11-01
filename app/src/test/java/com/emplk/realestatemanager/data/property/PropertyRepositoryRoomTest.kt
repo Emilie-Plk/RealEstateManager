@@ -19,7 +19,6 @@ import com.emplk.realestatemanager.fixtures.getTestLocationDto
 import com.emplk.realestatemanager.fixtures.getTestPropertyDto
 import com.emplk.realestatemanager.fixtures.getTestPropertyEntity
 import com.emplk.utils.TestCoroutineRule
-import io.mockk.Ordering
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.coVerifyOrder
@@ -164,14 +163,14 @@ class PropertyRepositoryRoomTest {
 
     @Test
     fun `add property with details - error with property insertion`() = testCoroutineRule.runTest {
-       /* // Given
-         coEvery { propertyRepositoryRoom.add(any()) } returns null
+        /* // Given
+          coEvery { propertyRepositoryRoom.add(any()) } returns null
 
-        // When
-        val result = propertyRepositoryRoom.addPropertyWithDetails(getTestPropertyEntity(TEST_PROPERTY_ID))
+         // When
+         val result = propertyRepositoryRoom.addPropertyWithDetails(getTestPropertyEntity(TEST_PROPERTY_ID))
 
-        // Then
-        assertThat(result).isFalse()*/
+         // Then
+         assertThat(result).isFalse()*/
         // I want to test case where " val propertyId = add(propertyEntity) ?: return@withContext false"
         // TODO NINO: how to test that?
     }
@@ -188,7 +187,6 @@ class PropertyRepositoryRoomTest {
         propertyRepositoryRoom.getPropertiesAsFlow().test { awaitComplete() }
 
         // Then
-        // TODO NINO: assert that result is Flow of List<PropertyEntity>> ?
         coVerify(exactly = 1) { propertyDao.getPropertiesWithDetailsAsFlow() }
         confirmVerified(propertyDao)
     }

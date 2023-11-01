@@ -20,7 +20,7 @@ class UpdatePropertyFormUseCase @Inject constructor(
                 FormDraftEntity(
                     id = form.id,
                     type = form.propertyType,
-                    title = form.title,
+                    title = form.draftTitle,
                     price = convertToUsdDependingOnLocaleUseCase.invoke(form.price),
                     surface = if (form.surface > BigDecimal.ZERO) {
                         convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(form.surface)

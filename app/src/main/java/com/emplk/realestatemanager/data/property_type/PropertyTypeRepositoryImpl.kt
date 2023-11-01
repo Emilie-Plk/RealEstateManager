@@ -3,7 +3,7 @@ package com.emplk.realestatemanager.data.property_type
 import com.emplk.realestatemanager.domain.property_type.PropertyTypeRepository
 import javax.inject.Inject
 
-class PropertyTypeRepositoryImpl @Inject() constructor() : PropertyTypeRepository {
+class PropertyTypeRepositoryImpl @Inject constructor() : PropertyTypeRepository {
     /*    private val propertyTypeMap: Map<Long, NativeText> = mapOf(
             1L to NativeText.Resource(R.string.property_type_house),
             2L to NativeText.Resource(R.string.property_type_flat),

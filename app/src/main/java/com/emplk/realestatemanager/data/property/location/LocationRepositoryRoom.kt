@@ -36,10 +36,4 @@ class LocationRepositoryRoom @Inject constructor(
                 emptyList()
             }
         }
-
-    override suspend fun update(locationEntity: LocationEntity, propertyId: Long): Boolean =
-        withContext(coroutineDispatcherProvider.io) {
-            val locationDtoEntity = locationMapper.mapToDto(locationEntity, propertyId)
-            locationDao.update(locationDtoEntity) == 1
-        }
 }

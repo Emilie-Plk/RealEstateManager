@@ -1,11 +1,11 @@
 package com.emplk.realestatemanager.domain.autocomplete
 
+import assertk.assertThat
 import com.emplk.utils.TestCoroutineRule
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.confirmVerified
 import io.mockk.mockk
-import io.mockk.verify
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -37,8 +37,8 @@ class GetAddressPredictionsUseCaseTest {
         // Then
         assert(result is PredictionWrapper.Success)
         assert((result as PredictionWrapper.Success).predictions.size == 2)
-        assert(result.predictions[0] == TEST_RESULT_LYON)
-        assert(result.predictions[1] == TEST_RESULT_PARIS)
+        assertThat { result.predictions[0] == TEST_RESULT_LYON }
+        assertThat { result.predictions[1] == TEST_RESULT_PARIS }
         coVerify(exactly = 1) { predictionRepository.getAddressPredictions(any()) }
         confirmVerified(predictionRepository)
     }

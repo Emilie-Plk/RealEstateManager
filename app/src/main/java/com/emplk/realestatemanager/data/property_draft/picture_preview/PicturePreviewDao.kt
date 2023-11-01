@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -13,23 +12,11 @@ interface PicturePreviewDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(picturePreviewDto: PicturePreviewDto): Long
 
-    @Insert
-    suspend fun insertAll(picturePreviewDtos: List<PicturePreviewDto>): List<Long?>
-
     @Query("SELECT * FROM picture_previews WHERE property_draft_id = :propertyFormId")
     fun getAllAsFlow(propertyFormId: Long): Flow<List<PicturePreviewDto>>
 
     @Query("SELECT * FROM picture_previews WHERE property_draft_id = :propertyFormId")
     suspend fun getAll(propertyFormId: Long): List<PicturePreviewDto>
-
-    @Query("SELECT id FROM picture_previews WHERE property_draft_id = :propertyFormId")
-    suspend fun getAllIds(propertyFormId: Long): List<Long>
-
-    @Query("SELECT * FROM picture_previews WHERE id = :picturePreviewId LIMIT 1")
-    suspend fun getPictureById(picturePreviewId: Long): PicturePreviewDto?
-
-    @Upsert
-    suspend fun upsert(picturePreviewDto: PicturePreviewDto): Long
 
     @Query("UPDATE picture_previews SET is_featured = :newIsFeatured, description = :newDescription WHERE id = :picturePreviewId")
     suspend fun update(picturePreviewId: Long, newIsFeatured: Boolean?, newDescription: String?): Int
