@@ -5,7 +5,6 @@ import java.math.BigDecimal
 
 interface LoanSimulatorRepository {
     fun setLoanData(loanDataEntity: LoanDataEntity)
-    fun getLoanData(): Flow<LoanDataEntity>
-
-    fun getYearlyPayment(): Flow<BigDecimal>
+    fun getLoanDataAsFlow(): Flow<LoanDataEntity>
+    fun resetLoanData()
 }
