@@ -91,7 +91,7 @@ class DetailViewModelTest {
         detailViewModel.viewState.observeForTesting(this) {
 
             // Then
-            assertThat(it.value).isEqualTo(getDetailViewStateDetails())
+            assertThat(it.value).isEqualTo(testDetailViewStateDetails)
         }
     }
 
@@ -104,7 +104,7 @@ class DetailViewModelTest {
         detailViewModel.viewState.observeForTesting(this) {
 
             // Then
-            assertThat(it.value).isEqualTo(getDetailViewStateLoading())
+            assertThat(it.value).isEqualTo(testDetailViewStateLoading)
         }
     }
 
@@ -117,9 +117,9 @@ class DetailViewModelTest {
         verify(exactly = 1) { setNavigationTypeUseCase.invoke(NavigationFragmentType.EDIT_FRAGMENT) }
     }
 
-    private fun getDetailViewStateLoading() = DetailViewState.LoadingState
+    private val testDetailViewStateLoading = DetailViewState.LoadingState
 
-    private fun getDetailViewStateDetails() = DetailViewState.PropertyDetail(
+    private val testDetailViewStateDetails = DetailViewState.PropertyDetail(
         id = TEST_PROPERTY_ID,
         propertyType = "House",
         pictures = listOf(
