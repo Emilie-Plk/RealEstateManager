@@ -2,7 +2,6 @@ package com.emplk.realestatemanager.data.autocomplete
 
 
 import android.util.LruCache
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.emplk.realestatemanager.data.api.GoogleApi
@@ -20,7 +19,6 @@ import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import kotlinx.coroutines.test.runCurrent
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -54,6 +52,8 @@ class PredictionRepositoryAutocompleteTest {
     @Before
     fun setUp() {
         every { testPredictionLruCache.maxSize() } returns 200
+        every { testPredictionLruCache.get(any()) } returns null
+        every { testPredictionLruCache.put(any(), any()) } returns null  // TODO NINO: pourquoi ?
         coEvery { googleApi.getAddressPredictions(TEST_INPUT, TEST_TYPE) } returns
                 AutocompleteResponse(getTestPredictionsResponses(), TEST_STATUS_OK)
     }
@@ -67,6 +67,7 @@ class PredictionRepositoryAutocompleteTest {
     fun `nominal case`() = testCoroutineRule.runTest {
         // When
         every { testPredictionLruCache.get(any()) } returns null
+        every { testPredictionLruCache.put(any(), any()) } returns null
         val result = predictionRepositoryAutocomplete.getAddressPredictions(TEST_INPUT)
 
         // Then
@@ -79,6 +80,7 @@ class PredictionRepositoryAutocompleteTest {
     @Test
     fun `get address predictions - with lru cache`() = testCoroutineRule.runTest {
         // Given
+
         every { testPredictionLruCache.get(TEST_INPUT) } returns TEST_PREDICTION_WRAPPER_SUCCESS
 
         // When

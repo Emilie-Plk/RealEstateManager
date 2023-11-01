@@ -93,6 +93,7 @@ class PropertyListAdapter :
                     )
                 )
             }
+
             fun bind(item: PropertiesViewState.EmptyState) {
                 binding.emptyPropertyButtonAdd.setOnClickListener { item.onAddClick.invoke() }
             }

@@ -22,15 +22,6 @@ class PicturePreviewRepositoryRoom @Inject constructor(
             )
         }
 
-    override suspend fun addAll(picturePreviewEntities: List<PicturePreviewEntity>, propertyFormId: Long): List<Long?> =
-        withContext(coroutineDispatcherProvider.io) {
-            picturePreviewDao.insertAll(
-                picturePreviewEntities.map { picturePreviewEntity ->
-                    picturePreviewMapper.mapToPicturePreviewDto(picturePreviewEntity, propertyFormId)
-                }
-            )
-        }
-
     override fun getAllAsFlow(propertyFormId: Long): Flow<List<PicturePreviewEntity>> = picturePreviewDao
         .getAllAsFlow(propertyFormId)
         .map { picturePreviewDtoList ->
@@ -47,37 +38,17 @@ class PicturePreviewRepositoryRoom @Inject constructor(
             }
         }
 
-    override suspend fun getPictureById(picturePreviewId: Long): PicturePreviewEntity? =
-        withContext(coroutineDispatcherProvider.io) {
-            picturePreviewDao.getPictureById(picturePreviewId)?.let { picturePreviewDto ->
-                picturePreviewMapper.mapToPicturePreviewEntity(picturePreviewDto)
-            }
-        }
-
     override suspend fun update(picturePreviewId: Long, isFeatured: Boolean?, description: String?): Boolean =
         withContext(coroutineDispatcherProvider.io) {
             if (isFeatured != null && isFeatured) {
                 picturePreviewDao.clearFeaturedPicture()
             }
 
-            // Set the new picture as featured or update description
             picturePreviewDao.update(
                 picturePreviewId,
                 isFeatured,
                 description
             ) == 1
-        }
-
-    override suspend fun upsert(picturePreviewEntity: PicturePreviewEntity, propertyFormId: Long): Long =
-        withContext(coroutineDispatcherProvider.io) {
-            try {
-                picturePreviewDao.upsert(
-                    picturePreviewMapper.mapToPicturePreviewDto(picturePreviewEntity, propertyFormId)
-                )
-            } catch (e: SQLiteException) {
-                e.printStackTrace()
-                -1
-            }
         }
 
 

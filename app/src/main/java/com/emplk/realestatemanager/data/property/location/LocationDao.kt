@@ -6,16 +6,12 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.RewriteQueriesToDropUnusedColumns
 import androidx.room.Update
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface LocationDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(locationDto: LocationDto): Long?
-
-    @Query("SELECT * FROM locations WHERE property_id = :propertyId LIMIT 1")
-    fun getLocationAsFlow(propertyId: Long): Flow<LocationDto>
 
     @RewriteQueriesToDropUnusedColumns
     @Query("SELECT * FROM locations")

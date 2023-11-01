@@ -81,7 +81,7 @@ class DataModule {
     @Singleton
     @Provides
     @GoogleApiRetrofit
-    fun provideGoogleApiRetrofit(@GoogleApiOkHttpClient okHttpClient: okhttp3.OkHttpClient, gson: Gson): Retrofit =
+    fun provideGoogleApiRetrofit(@GoogleApiOkHttpClient okHttpClient: OkHttpClient, gson: Gson): Retrofit =
         Retrofit.Builder()
             .baseUrl("https://maps.googleapis.com/maps/api/")
             .client(okHttpClient)
@@ -91,7 +91,7 @@ class DataModule {
     @Singleton
     @Provides
     @GoogleApiOkHttpClient
-    fun provideGoogleOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): okhttp3.OkHttpClient =
+    fun provideGoogleOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient =
         OkHttpClient.Builder()
             .addInterceptor(httpLoggingInterceptor)
             .connectTimeout(8, TimeUnit.SECONDS)

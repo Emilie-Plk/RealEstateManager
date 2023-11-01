@@ -7,5 +7,4 @@ class GetAllDraftsWithTitleAndDateUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(): List<FormWithTitleDateAndFeaturedPictureEntity> =
         formDraftRepository.getDraftsWithFeaturePicture()
-
 }

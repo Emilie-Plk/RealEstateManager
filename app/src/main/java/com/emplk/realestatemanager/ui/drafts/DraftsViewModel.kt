@@ -27,7 +27,7 @@ class DraftsViewModel @Inject constructor(
 ) : ViewModel() {
     val viewStates: LiveData<List<DraftViewState>> = liveData {
         emit(
-            buildList<DraftViewState> { // on construit une liste de DraftViewStateItem
+            buildList {
                 getAllDraftsWithTitleAndDateUseCase.invoke().forEach { form ->
                     add(
                         DraftViewState.Drafts(

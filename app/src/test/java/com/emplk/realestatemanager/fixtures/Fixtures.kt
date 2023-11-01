@@ -8,12 +8,8 @@ import com.emplk.realestatemanager.domain.property.PropertyEntity
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.location.LocationEntity
 import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
-import com.emplk.realestatemanager.ui.detail.DetailViewState
-import com.emplk.realestatemanager.ui.detail.picture_banner.PictureBannerViewState
-import com.emplk.realestatemanager.ui.utils.NativePhoto
-import com.emplk.realestatemanager.ui.utils.NativeText
+import com.emplk.realestatemanager.domain.property_draft.FormDraftParams
 import com.google.android.gms.maps.model.LatLng
-import org.hamcrest.CoreMatchers.any
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
@@ -177,3 +173,36 @@ fun mapPropertyEntityToDto(property: PropertyEntity) = PropertyDto(
 )
 
 // endregion mappers
+
+// region FormDraftParams
+fun getTestFormDraftParams(id: Long) = FormDraftParams(
+    id = id,
+    propertyType = "House",
+    draftTitle = "House for sale in Dummy City",
+    address = "1st, Dummy Street, 12345, Dummy City",
+    isAddressValid = true,
+    price = BigDecimal(1000000),
+    surface = BigDecimal(500),
+    description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    nbRooms = 5,
+    nbBathrooms = 2,
+    nbBedrooms = 3,
+    agent = "John Doe",
+    selectedAmenities = buildList {
+        add(AmenityType.SCHOOL)
+        add(AmenityType.PARK)
+        add(AmenityType.SHOPPING_MALL)
+    },
+    pictureIds = buildList {
+        add(1L)
+        add(2L)
+        add(3L)
+    },
+    featuredPictureId = 1L,
+    isSold = false,
+    entryDate = LocalDateTime.of(2023, 1, 1, 12, 0),
+    soldDate = null,
+    lastEditionDate = LocalDateTime.of(2023, 1, 1, 12, 0),
+    formType = null,
+)
+// endregion FormDraftParams

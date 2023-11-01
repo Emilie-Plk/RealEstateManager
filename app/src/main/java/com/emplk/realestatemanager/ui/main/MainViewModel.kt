@@ -16,8 +16,8 @@ import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.DRAF
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.EDIT_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.FILTER_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.LIST_FRAGMENT
-import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.MAP_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.LOAN_SIMULATOR_DIALOG_FRAGMENT
+import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.MAP_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property_draft.GetDraftsCountUseCase
 import com.emplk.realestatemanager.domain.screen_width.SetScreenWidthTypeUseCase

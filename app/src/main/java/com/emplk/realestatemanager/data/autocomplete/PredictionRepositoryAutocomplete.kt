@@ -27,8 +27,8 @@ class PredictionRepositoryAutocomplete @Inject constructor(
                 when (response.status) {
                     "OK" -> {
                         val predictions = mapResponseToPredictionWrapper(response)
-                        if (predictions.isEmpty())  PredictionWrapper.NoResult
-                        else  PredictionWrapper.Success(predictions)
+                        if (predictions.isEmpty()) PredictionWrapper.NoResult
+                        else PredictionWrapper.Success(predictions)
                     }
 
                     "ZERO_RESULTS" -> PredictionWrapper.NoResult

@@ -5,7 +5,6 @@
     <color name="gray">#3A3A3A</color>
     <color name="medium_gray">#555555</color>
     <color name="lighter_gray">#7A7A7A</color>
-    <color name="silver">#cccccc</color>
     <color name="dull_silver">#BBBBBB</color>
     <color name="transparent_silver">#9AC1C8CC</color>
     <color name="primary">#384260</color>
@@ -13,12 +12,9 @@
     <color name="primary_light">#677491</color>
     <color name="secondary">#fcb332</color>
     <color name="secondary_translucent">#11FCB332</color>
-    <color name="secondary_slightly_opaque">#ABFCB332</color>
     <color name="secondary_dark">#c98e2e</color>
     <color name="secondary_light">#fedeaa</color>
-    <color name="secondary_super_light">#fff2dd</color>
     <color name="almost_white">#F6F6F5</color>
     <color name="cherry_red">#C51162</color>
     <color name="grey_overlay">#5EBEC1C3</color>
-    <color name="transparent">#00FFFFFF</color>
 </resources>
