@@ -4,17 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="12dp"
-    android:focusableInTouchMode="true"
     android:fitsSystemWindows="true"
+    android:focusableInTouchMode="true"
+    android:padding="12dp"
     tools:context=".ui.loan_simulator.LoanSimulatorFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/loan_simulator_constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:focusableInTouchMode="true"
         android:focusable="true"
+        android:focusableInTouchMode="true"
         app:enableEdgeToEdge="true"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
@@ -37,12 +37,14 @@
             android:layout_height="match_parent"
             android:layout_marginTop="4dp"
             android:hint="Loan amount in $"
+            app:endIconMode="clear_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/exit_button_iv"
             app:startIconDrawable="@drawable/baseline_dollar_24">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/amount_editText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
@@ -55,6 +57,7 @@
             style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:endIconMode="clear_text"
             android:layout_marginTop="12dp"
             android:hint="Interest rate in %"
             app:layout_constraintEnd_toEndOf="@id/amount_textInputLayout"
@@ -63,6 +66,7 @@
             app:startIconDrawable="@drawable/round_percent_24">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/interest_rate_editText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
@@ -70,18 +74,20 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/loan_term_textInputLayout"
+            android:id="@+id/loan_duration_textInputLayout"
             style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:hint="Loan term in years"
+            android:hint="Loan duration in years"
+            app:endIconMode="clear_text"
             app:layout_constraintEnd_toEndOf="@id/interest_rate_textInputLayout"
             app:layout_constraintStart_toStartOf="@id/interest_rate_textInputLayout"
             app:layout_constraintTop_toBottomOf="@id/interest_rate_textInputLayout"
             app:startIconDrawable="@drawable/calendar_24">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/loan_duration_editText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
@@ -94,10 +100,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            app:layout_constraintEnd_toEndOf="@id/loan_term_textInputLayout"
-            app:layout_constraintStart_toStartOf="@id/loan_term_textInputLayout"
-            app:layout_constraintTop_toBottomOf="@id/loan_term_textInputLayout"
-            tools:text="Monthly payment: $850" />
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="@id/loan_duration_textInputLayout"
+            app:layout_constraintStart_toStartOf="@id/loan_duration_textInputLayout"
+            app:layout_constraintTop_toBottomOf="@id/loan_duration_textInputLayout"
+            tools:text="$14,400/year\n ($1200 per month)" />
 
         <Button
             android:id="@+id/reset_button"
@@ -105,8 +112,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Reset"
             android:layout_marginBottom="24dp"
+            android:text="Reset"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/calculate_button"
             app:layout_constraintStart_toStartOf="parent"
