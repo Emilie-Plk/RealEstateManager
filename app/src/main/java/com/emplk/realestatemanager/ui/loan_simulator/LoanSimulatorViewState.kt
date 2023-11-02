@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.ui.loan_simulator
 
+import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.NativeText
 
 data class LoanSimulatorViewState(
@@ -7,4 +8,6 @@ data class LoanSimulatorViewState(
     val loanRate: String,
     val loanDuration: String,
     val yearlyAndMonthlyPayment: NativeText?,
+    val onCalculateClicked: EquatableCallback,
+    val onResetClicked: EquatableCallback,
     )

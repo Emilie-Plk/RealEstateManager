@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity() {
         private const val PROPERTIES_FRAGMENT_TAG = "PROPERTIES_FRAGMENT_TAG"
         private const val DETAIL_FRAGMENT_TAG = "DETAIL_FRAGMENT_TAG"
         private const val FILTER_FRAGMENT_TAG = "FILTER_FRAGMENT_TAG"
+        private const val LOAN_SIM_BOTTOM_SHEET_FRAGMENT = "LOAN_SIM_BOTTOM_SHEET_FRAGMENT"
     }
 
     private val binding by viewBinding { MainActivityBinding.inflate(it) }
@@ -166,7 +167,8 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 MainViewEvent.LoanSimulator -> {
-                    LoanSimulatorFragment.newInstance().show(supportFragmentManager, null)
+                    if (supportFragmentManager.findFragmentByTag(LOAN_SIM_BOTTOM_SHEET_FRAGMENT) == null)
+                    LoanSimulatorFragment.newInstance().show(supportFragmentManager, LOAN_SIM_BOTTOM_SHEET_FRAGMENT)
                 }
             }
         }
