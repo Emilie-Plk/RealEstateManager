@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:focusableInTouchMode="true"
-    android:padding="12dp"
     tools:context=".ui.loan_simulator.LoanSimulatorFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,6 +17,13 @@
         app:enableEdgeToEdge="true"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
+        <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+            android:id="@+id/drag_handle"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
         <ImageView
             android:id="@+id/exit_button_iv"
             android:layout_width="wrap_content"
@@ -25,7 +31,8 @@
             android:clickable="true"
             android:contentDescription="Close dialog"
             android:focusable="true"
-            android:padding="8dp"
+            app:layout_constraintBottom_toTopOf="@id/amount_textInputLayout"
+            android:padding="12dp"
             android:src="@drawable/cross_24"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -34,7 +41,7 @@
             android:id="@+id/amount_textInputLayout"
             style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:hint="Loan amount in $"
             app:endIconMode="clear_text"

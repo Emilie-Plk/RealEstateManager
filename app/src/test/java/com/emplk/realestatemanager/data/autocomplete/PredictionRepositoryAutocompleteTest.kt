@@ -53,7 +53,7 @@ class PredictionRepositoryAutocompleteTest {
     fun setUp() {
         every { testPredictionLruCache.maxSize() } returns 200
         every { testPredictionLruCache.get(any()) } returns null
-        every { testPredictionLruCache.put(any(), any()) } returns null  // TODO NINO: pourquoi ?
+        every { testPredictionLruCache.put(any(), any()) } returns null
         coEvery { googleApi.getAddressPredictions(TEST_INPUT, TEST_TYPE) } returns
                 AutocompleteResponse(getTestPredictionsResponses(), TEST_STATUS_OK)
     }

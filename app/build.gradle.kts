@@ -123,7 +123,6 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     // Unit tests
-
     testImplementation("androidx.arch.core:core-testing:2.2.0") {
         exclude("org.mockito", "mockito-core") // excludes redundant mockito dependency bundled with arch core
     }
@@ -136,7 +135,6 @@ dependencies {
 
 
     // Android tests
-
     androidTestImplementation("androidx.arch.core:core-testing:2.2.0") {
         exclude("org.mockito", "mockito-core") // excludes redundant mockito dependency bundled with arch core
     }
@@ -149,7 +147,6 @@ dependencies {
 }
 
 koverReport {
-
     androidReports("debug") {
         // filters for all report types only of 'release' build type
         filters {
@@ -186,6 +183,9 @@ koverReport {
 
                     "*Entity",
                     "*Entity\$*",
+
+                    "*Wrapper",
+                    "*Wrapper\$*",
 
                     "*Response",
                     "*Response\$*",
