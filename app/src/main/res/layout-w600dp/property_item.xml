@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:maxWidth="200dp">
+    android:maxWidth="300dp">
 
     <ImageView
         android:id="@+id/property_item_image_view"
@@ -67,12 +67,13 @@
         style="@style/Theme.RealEstateManager.GrayTextSubheading"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:maxLines="2"
         android:layout_marginStart="12dp"
         app:layout_constraintBottom_toTopOf="@id/property_item_price_text_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/guideline"
         app:layout_constraintTop_toBottomOf="@id/property_item_type_text_view"
-        tools:text="Upper East Side" />
+        tools:text="Upper East dsfsml kfosdkf opjfpodjs Side" />
 
     <TextView
         android:id="@+id/property_item_price_text_view"
@@ -93,12 +94,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.33" />
+        app:layout_constraintGuide_percent="0.25" />
 
 
     <View
         android:id="@+id/property_item_sold_shade"
         android:layout_width="0dp"
+        tools:visibility="gone"
         android:layout_height="0dp"
         android:background="@color/grey_overlay"
         app:layout_constraintTop_toTopOf="parent"

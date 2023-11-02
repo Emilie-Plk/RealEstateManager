@@ -46,7 +46,6 @@ class DetailViewModelTest {
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-
     private val getCurrentPropertyUseCase: GetCurrentPropertyUseCase = mockk()
     private val formatPriceByLocaleUseCase: FormatPriceByLocaleUseCase = mockk()
     private val convertPriceByLocaleUseCase: ConvertPriceByLocaleUseCase = mockk()
@@ -87,7 +86,7 @@ class DetailViewModelTest {
 
     @Test
     fun `initial case`() = testCoroutineRule.runTest {
-// When
+        // When
         detailViewModel.viewState.observeForTesting(this) {
 
             // Then
@@ -113,7 +112,7 @@ class DetailViewModelTest {
         // When
         detailViewModel.onEditClicked()
 
-        // Then verify that the navigation type has been set to EDIT
+        // Then
         verify(exactly = 1) { setNavigationTypeUseCase.invoke(NavigationFragmentType.EDIT_FRAGMENT) }
     }
 

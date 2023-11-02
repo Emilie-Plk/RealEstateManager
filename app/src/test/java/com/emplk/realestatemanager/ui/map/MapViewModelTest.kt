@@ -65,23 +65,16 @@ class MapViewModelTest {
     @Test
     fun `viewEvent onMarkerClicked case`() = testCoroutineRule.runTest {
         // Given
-        mapViewModel.viewEvent.observeForTesting(this) {
-            // When
-            (mapViewModel.viewState.value?.first() as MarkerViewState).onMarkerClicked.invoke(1L)
-            runCurrent()
-            // TODO NINO: doesn't work :/
+        mapViewModel.viewState.observeForTesting(this) { viewState ->
+            mapViewModel.viewEvent.observeForTesting(this) {event ->
+                // When
+                viewState.value!!.first().onMarkerClicked.invoke(1L)
+                runCurrent()
 
-            // Then
-            assertThat(it.value).isEqualTo(Event(MapEvent.OnMarkerClicked))
+                // Then
+                assertThat(event.value).isEqualTo(Event(MapEvent.OnMarkerClicked))
+            }
         }
-
-        /*      mapViewModel.viewState.observeForTesting(this) {
-                  assertThat(it.value).isEqualTo(testMarkersViewStates)
-                  (it.value?.first() as MarkerViewState).onMarkerClicked.invoke(1L)
-                  runCurrent()
-
-                  assertThat(mapViewModel.viewEvent.value).isEqualTo(Event(MapEvent.OnMarkerClicked))
-              }*/
     }
 
     private val testPropertiesLatLongEntities = buildList {

@@ -20,6 +20,7 @@ import com.emplk.utils.TestCoroutineRule
 import com.google.android.gms.maps.model.LatLng
 import io.mockk.coEvery
 import io.mockk.every
+import io.mockk.justRun
 import io.mockk.mockk
 import org.junit.Assert.assertThrows
 import org.junit.Before
@@ -91,13 +92,13 @@ class AddOrEditPropertyUseCaseTest {
 
         coEvery { getPicturePreviewsUseCase.invoke(any()) } returns emptyList()
 
-        coEvery { pictureRepository.delete(TEST_PROPERTY_ID) }  // pa sûre lol
+        coEvery { pictureRepository.delete(TEST_PROPERTY_ID) }
 
-        every { resetCurrentPropertyIdUseCase.invoke() } returns Unit
+        justRun { resetCurrentPropertyIdUseCase.invoke() }
 
         coEvery { clearPropertyFormUseCase.invoke(any()) } returns Unit
 
-        every { setNavigationTypeUseCase.invoke(any()) } returns Unit
+        justRun { setNavigationTypeUseCase.invoke(any()) }
 
         every { generateMapBaseUrlWithParamsUseCase.invoke(any()) } returns "https://www.google.com/maps/123456789"
     }
