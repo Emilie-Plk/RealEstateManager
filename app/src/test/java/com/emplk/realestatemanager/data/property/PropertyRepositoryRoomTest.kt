@@ -163,14 +163,14 @@ class PropertyRepositoryRoomTest {
 
     @Test
     fun `add property with details - error with property insertion`() = testCoroutineRule.runTest {
-        /* // Given
+         // Given
           coEvery { propertyRepositoryRoom.add(any()) } returns null
 
          // When
          val result = propertyRepositoryRoom.addPropertyWithDetails(getTestPropertyEntity(TEST_PROPERTY_ID))
 
          // Then
-         assertThat(result).isFalse()*/
+         assertThat(result).isFalse()
         // I want to test case where " val propertyId = add(propertyEntity) ?: return@withContext false"
         // TODO NINO: how to test that?
     }

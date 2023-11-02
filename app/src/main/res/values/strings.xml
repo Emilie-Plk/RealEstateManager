@@ -67,5 +67,5 @@
     <string name="enter_draft_title_textInputLayout">Please enter draft title</string>
     <string name="add_draft_dialog_textView">You started creating a property but didn\'t finish.\nWhat would you like to do?</string>
     <string name="menu_loan_simulator">Loan simulator</string>
-    <string name="loan_simulator_payment_result">%1s\/year\n (%2s per month)</string>
+    <string name="loan_simulator_payment_result">%1s per year\n%2s per month</string>
 </resources>
