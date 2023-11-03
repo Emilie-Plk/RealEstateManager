@@ -4,6 +4,7 @@ package com.emplk.realestatemanager.data.autocomplete
 import android.util.LruCache
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import assertk.assertions.isInstanceOf
 import com.emplk.realestatemanager.data.api.GoogleApi
 import com.emplk.realestatemanager.data.autocomplete.response.AutocompleteResponse
 import com.emplk.realestatemanager.data.autocomplete.response.MatchedSubstringResponse
@@ -20,9 +21,11 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.After
+import org.junit.Assert.assertThrows
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import java.lang.Exception
 
 class PredictionRepositoryAutocompleteTest {
 
@@ -31,6 +34,7 @@ class PredictionRepositoryAutocompleteTest {
         private const val TEST_INPUT = "TEST_INPUT"
         private const val TEST_STATUS_OK = "OK"
         private const val TEST_STATUS_ZERO_RESULTS = "ZERO_RESULTS"
+        private const val TEST_STATUS_UNKNOWN_ERROR = "UNKNOWN_ERROR"
         private val TEST_PREDICTION_WRAPPER_SUCCESS: PredictionWrapper =
             PredictionWrapper.Success(listOf("blabla", "blabla"))
         private val TEST_PREDICTION_WRAPPER_NO_RESULT: PredictionWrapper = PredictionWrapper.NoResult
@@ -66,8 +70,6 @@ class PredictionRepositoryAutocompleteTest {
     @Test
     fun `nominal case`() = testCoroutineRule.runTest {
         // When
-        every { testPredictionLruCache.get(any()) } returns null
-        every { testPredictionLruCache.put(any(), any()) } returns null
         val result = predictionRepositoryAutocomplete.getAddressPredictions(TEST_INPUT)
 
         // Then
@@ -80,7 +82,6 @@ class PredictionRepositoryAutocompleteTest {
     @Test
     fun `get address predictions - with lru cache`() = testCoroutineRule.runTest {
         // Given
-
         every { testPredictionLruCache.get(TEST_INPUT) } returns TEST_PREDICTION_WRAPPER_SUCCESS
 
         // When
@@ -91,7 +92,7 @@ class PredictionRepositoryAutocompleteTest {
         verify(exactly = 1) { testPredictionLruCache.get(TEST_INPUT) }
         coVerify(exactly = 0) { googleApi.getAddressPredictions(TEST_INPUT, TEST_TYPE) }
         verify(exactly = 0) { testPredictionLruCache.put(TEST_INPUT, TEST_PREDICTION_WRAPPER_SUCCESS) }
-        verify { googleApi wasNot called }
+        verify(exactly = 1) { googleApi wasNot called }
         confirmVerified(googleApi)
     }
 
@@ -126,6 +127,39 @@ class PredictionRepositoryAutocompleteTest {
         confirmVerified(googleApi)
     }
 
+    @Test
+    fun `googleApi call gives UNKNOWN_ERROR status - should catch & throw an Exception`() = testCoroutineRule.runTest {
+        // Given
+        coEvery { googleApi.getAddressPredictions(TEST_INPUT, TEST_TYPE) } returns
+                AutocompleteResponse(emptyList(), TEST_STATUS_UNKNOWN_ERROR)
+
+        // When
+        val result = predictionRepositoryAutocomplete.getAddressPredictions(TEST_INPUT)
+
+        // Then
+        assertThat(result).isInstanceOf(PredictionWrapper.Failure::class)
+        assertThrows(Exception::class.java) { coEvery {  predictionRepositoryAutocomplete.getAddressPredictions(TEST_INPUT) } }
+        coVerify(exactly = 1) { googleApi.getAddressPredictions(TEST_INPUT, TEST_TYPE) }
+        confirmVerified(googleApi)
+    }
+
+
+    @Test
+    fun `googleApi call gives Exception - should catch & throw an Exception`() = testCoroutineRule.runTest {
+        // Given
+        coEvery { googleApi.getAddressPredictions(TEST_INPUT, TEST_TYPE) } returns
+                AutocompleteResponse(emptyList(), TEST_STATUS_UNKNOWN_ERROR)
+
+        // When
+        val result = predictionRepositoryAutocomplete.getAddressPredictions(TEST_INPUT)
+
+        // Then
+        assertThat(result).isInstanceOf(PredictionWrapper.Failure::class)
+        assertThrows(Exception::class.java) { coEvery {  predictionRepositoryAutocomplete.getAddressPredictions(TEST_INPUT) } }
+        coVerify(exactly = 1) { googleApi.getAddressPredictions(TEST_INPUT, TEST_TYPE) }
+        confirmVerified(googleApi)
+    }
+
     private fun getTestPredictionsResponses() = buildList {
         add(
             PredictionResponse(
@@ -150,6 +184,5 @@ class PredictionRepositoryAutocompleteTest {
                 listOf("type1", "type2")
             )
         )
-
     }
 }

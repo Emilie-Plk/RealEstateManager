@@ -65,8 +65,8 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.10.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")
-    implementation("androidx.activity:activity-ktx:1.7.2")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
+    implementation("androidx.activity:activity-ktx:1.8.0")
     implementation("androidx.fragment:fragment-ktx:1.6.1")
     implementation("junit:junit:4.13.2")
     // mockk
@@ -75,9 +75,6 @@ dependencies {
     api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
 
     implementation("com.google.android.gms:play-services-awareness:19.0.1")
-
-    // KOVER
-    implementation("org.jetbrains.kotlinx:kover-gradle-plugin:0.7.4")
 
     // GOOGLE MAPS SDK
     implementation("com.google.android.gms:play-services-maps:18.1.0")
@@ -102,9 +99,9 @@ dependencies {
     kapt("com.google.dagger:hilt-compiler:2.46.1")
 
     // ROOM
-    implementation("androidx.room:room-runtime:2.5.2")
-    kapt("androidx.room:room-compiler:2.5.2")
-    implementation("androidx.room:room-ktx:2.5.2")
+    implementation("androidx.room:room-runtime:2.6.0")
+    kapt("androidx.room:room-compiler:2.6.0")
+    implementation("androidx.room:room-ktx:2.6.0")
 
     // RETROFIT
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
@@ -132,7 +129,8 @@ dependencies {
     testImplementation("io.mockk:mockk:1.13.4")
     testImplementation("org.slf4j:slf4j-nop:2.0.9") // to avoid warning about missing logger
     testImplementation("app.cash.turbine:turbine:1.0.0")
-
+    // KOVER
+    implementation("org.jetbrains.kotlinx:kover-gradle-plugin:0.7.4")
 
     // Android tests
     androidTestImplementation("androidx.arch.core:core-testing:2.2.0") {
@@ -148,7 +146,6 @@ dependencies {
 
 koverReport {
     androidReports("debug") {
-        // filters for all report types only of 'release' build type
         filters {
             excludes {
                 annotatedBy(

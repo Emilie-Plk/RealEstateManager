@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.emplk.realestatemanager.data.DataModule
 import com.emplk.realestatemanager.data.api.FixerApi
 import com.emplk.realestatemanager.data.currency_rate.response.FixerCurrencyRateResponse
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
@@ -20,15 +21,18 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import java.io.IOException
 import java.math.BigDecimal
 import java.time.Clock
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 
 class CurrencyRateRepositoryFixer @Inject constructor(
     private val fixerApi: FixerApi,
+   // @DataModule.FixerApiDataStore private val preferencesDataStore: DataStore<Preferences>,
     private val application: Application,
     private val clock: Clock,
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
@@ -46,7 +50,7 @@ class CurrencyRateRepositoryFixer @Inject constructor(
 
     override suspend fun getCurrentCurrencyRate(): CurrencyRateWrapper = withContext(coroutineDispatcherProvider.io) {
         val cachedCurrencyRate = getCachedCurrencyRateFlow().firstOrNull()
-        if (cachedCurrencyRate == null || cachedCurrencyRate.lastUpdatedDate != LocalDate.now(clock)) {
+        if (cachedCurrencyRate == null || cachedCurrencyRate.lastUpdatedDate.isBefore(LocalDateTime.now(clock).minusHours(8))) {
             try {
                 val response: FixerCurrencyRateResponse = fixerApi.getLatestCurrencyRates()
                 if (response.success == true && response.rateResponse != null) {
@@ -78,16 +82,18 @@ class CurrencyRateRepositoryFixer @Inject constructor(
     private suspend fun getCachedCurrencyRateFlow(): Flow<CurrencyRateEntity?> =
         application.currencyRateDatastore.data
             .catch { exception ->
-                exception.printStackTrace()
-                emit(emptyPreferences())
-            }
-            .map { preferences ->
+                if (exception is IOException) {
+                    emit(emptyPreferences())
+                } else {
+                    throw exception
+                }
+            }.map { preferences ->
                 val usdToEuroRate = preferences[USD_TO_EUR_RATE_KEY]
                 val lastRateDate = preferences[LAST_RATE_DATE_KEY]
                 if (usdToEuroRate != null && lastRateDate != null) {
                     CurrencyRateEntity(
                         usdToEuroRate = BigDecimal(usdToEuroRate),
-                        lastUpdatedDate = LocalDate.parse(lastRateDate)
+                        lastUpdatedDate = LocalDateTime.parse(lastRateDate)
                     )
                 } else null
             }
@@ -98,7 +104,7 @@ class CurrencyRateRepositoryFixer @Inject constructor(
         ) {
             CurrencyRateEntity(
                 usdToEuroRate = BigDecimal(response.rateResponse.usd),
-                lastUpdatedDate = LocalDate.parse(response.date, DateTimeFormatter.ISO_DATE)
+                lastUpdatedDate = LocalDateTime.parse(response.date, DateTimeFormatter.ISO_DATE)
             )
         } else null
     }

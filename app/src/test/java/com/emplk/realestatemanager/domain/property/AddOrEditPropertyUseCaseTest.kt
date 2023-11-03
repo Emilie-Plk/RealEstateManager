@@ -128,7 +128,7 @@ class AddOrEditPropertyUseCaseTest {
     }
 
     @Test
-    fun `edge case - `() = testCoroutineRule.runTest {
+    fun `edge case - incorrect FormDraftParams properties throws IllegalArgumentException`() = testCoroutineRule.runTest {
         val formDraftParams = getTestFormDraftParams(TEST_PROPERTY_ID)
         val copy = formDraftParams.copy(
             address = null,
