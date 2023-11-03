@@ -47,7 +47,7 @@ import javax.inject.Singleton
 class DataModule {
 
     companion object {
-        private val DATASTORE_NAME: String = "com.emplk.realestatemanager.currency_rate"
+        private const val DATASTORE_NAME: String = "com.emplk.realestatemanager.currency_rate"
     }
 
     @Singleton
@@ -171,7 +171,7 @@ class DataModule {
     fun provideCurrencyRateApi(@FixerApiRetrofit retrofit: Retrofit): FixerApi =
         retrofit.create(FixerApi::class.java)
 
-    @Singleton
+  @Singleton
     @Provides
     @FixerApiDataStore
     fun providePreferencesDatastore(@ApplicationContext appContext: Context): DataStore<Preferences> =

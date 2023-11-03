@@ -137,7 +137,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                     draftTitle = formWithType.formDraftEntity.title,
                     address = formWithType.formDraftEntity.address,
                     isAddressValid = formWithType.formDraftEntity.isAddressValid,
-                    price = convertPriceByLocaleUseCase.invoke(formWithType.formDraftEntity.price),
+                    price = convertPriceByLocaleUseCase.invoke(formWithType.formDraftEntity.price),  // TODO: voir si pas trop appelé
                     surface = convertSurfaceDependingOnLocaleUseCase.invoke(formWithType.formDraftEntity.surface),
                     description = formWithType.formDraftEntity.description,
                     nbRooms = formWithType.formDraftEntity.rooms ?: 0,
