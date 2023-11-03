@@ -1,7 +1,9 @@
 # RealEstateManager
 ## A realestate management app designed for realtors
 
+:construction:     :construction:
 WORK STILL IN PROGRESS
+:construction:     :construction:
 
 - *MVVM architecture* + *Domain layer* + *Repository pattern* to stay clean (as possible!)
 - DI using *Hilt* :syringe:
