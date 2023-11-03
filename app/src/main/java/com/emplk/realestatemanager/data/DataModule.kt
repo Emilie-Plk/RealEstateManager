@@ -2,9 +2,17 @@ package com.emplk.realestatemanager.data
 
 import android.app.Application
 import android.content.ContentResolver
+import android.content.Context
 import android.content.res.Resources
 import android.os.Build
 import android.util.LruCache
+import androidx.datastore.core.DataStore
+import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.work.WorkManager
 import com.emplk.realestatemanager.BuildConfig
 import com.emplk.realestatemanager.data.api.FixerApi
@@ -21,6 +29,7 @@ import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -36,6 +45,10 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class DataModule {
+
+    companion object {
+        private val DATASTORE_NAME: String = "com.emplk.realestatemanager.currency_rate"
+    }
 
     @Singleton
     @Provides
@@ -160,6 +173,17 @@ class DataModule {
 
     @Singleton
     @Provides
+    @FixerApiDataStore
+    fun providePreferencesDatastore(@ApplicationContext appContext: Context): DataStore<Preferences> =
+        PreferenceDataStoreFactory.create(
+            produceFile = {
+                appContext.preferencesDataStoreFile(DATASTORE_NAME)
+            },
+        )
+
+
+    @Singleton
+    @Provides
     fun provideContentResolver(application: Application): ContentResolver =
         application.contentResolver
 
@@ -225,4 +249,8 @@ class DataModule {
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
     annotation class FixerApiOkHttpClient
+
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class FixerApiDataStore
 }

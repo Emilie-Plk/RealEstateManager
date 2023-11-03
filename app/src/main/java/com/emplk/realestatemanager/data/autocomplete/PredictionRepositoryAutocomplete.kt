@@ -22,7 +22,7 @@ class PredictionRepositoryAutocomplete @Inject constructor(
 
     override suspend fun getAddressPredictions(query: String): PredictionWrapper =
         withContext(coroutineDispatcherProvider.io) {
-            predictionsLruCache.get(query) ?: try {  //TODO: check if this is correct
+            predictionsLruCache.get(query) ?: try {
                 val response = googleApi.getAddressPredictions(query, TYPE)
                 when (response.status) {
                     "OK" -> {
