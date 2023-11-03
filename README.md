@@ -9,6 +9,6 @@ WORK STILL IN PROGRESS
 - DI using *Hilt* :syringe:
 - *Retrofit* to easily manage API calls :phone: (allo?)
 - Unit tests using *Mockk*, *AssertK*, and *Turbine*, just to make sure everything's fine :suspect:
-- Kover for test coverage (use command ./gradlew koverHtmlReportDebug to generate test report!)
+- Kover for test coverage (use command `./gradlew koverHtmlReportDebug` to generate test report!)
 
 (sorry for the emoji overload... but I mean come on, how cute is that tiger? :tiger:)
