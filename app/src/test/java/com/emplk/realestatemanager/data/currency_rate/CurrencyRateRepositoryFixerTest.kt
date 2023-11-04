@@ -33,7 +33,6 @@ class CurrencyRateRepositoryFixerTest {
         private val TEST_LAST_RATE_DATE_KEY = stringPreferencesKey("last_rate_timestamp")
         private const val TEST_USD_TO_EUR_RATE = "1.07"
         private val TEST_LAST_RATE_DATE = (LocalDateTime.of(2023, 10, 31, 13, 22, 35)).toString()
-        private const val TEST_DATASTORE_NAME = "user.preferences_pb"
     }
 
     @get:Rule

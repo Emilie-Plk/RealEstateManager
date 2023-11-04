@@ -13,6 +13,7 @@ import com.emplk.realestatemanager.domain.property.GetCurrentPropertyUseCase
 import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
 import com.emplk.realestatemanager.ui.map.bottom_sheet.MapBottomSheetFragment.Companion.DETAIL_PROPERTY_TAG
 import com.emplk.realestatemanager.ui.map.bottom_sheet.MapBottomSheetFragment.Companion.EDIT_PROPERTY_TAG
+import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParam
 import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParams
 import com.emplk.realestatemanager.ui.utils.Event
 import com.emplk.realestatemanager.ui.utils.NativePhoto

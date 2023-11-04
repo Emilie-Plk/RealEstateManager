@@ -23,7 +23,7 @@ class MapBottomSheetFragment : BottomSheetDialogFragment(R.layout.map_bottom_she
         const val TAG = "MapBottomSheetFragment"
         const val EDIT_PROPERTY_TAG = "EDIT_PROPERTY_TAG"
         const val DETAIL_PROPERTY_TAG = "DETAIL_PROPERTY_TAG"
-        const val KEY_PROPERTY_ID = "KEY_PROPERTY_ID"
+
         fun newInstance() = MapBottomSheetFragment()
     }
 
