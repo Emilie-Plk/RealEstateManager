@@ -1,6 +1,6 @@
 package com.emplk.realestatemanager.ui.loan_simulator
 
-import DecimalDigitsInputFilter
+import com.emplk.realestatemanager.ui.utils.DecimalDigitsInputFilter
 import android.app.Dialog
 import android.os.Bundle
 import android.view.View
@@ -10,6 +10,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.LoanSimulatorFragmentBinding
+import com.emplk.realestatemanager.ui.utils.InputFilterMinMax
 import com.emplk.realestatemanager.ui.utils.viewBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -92,7 +93,7 @@ class LoanSimulatorFragment : BottomSheetDialogFragment(R.layout.loan_simulator_
             viewModel.onLoanAmountChanged(it?.toString() ?: "")
         }
 
-        binding.interestRateEditText.filters = arrayOf(DecimalDigitsInputFilter(2))
+        binding.interestRateEditText.filters = arrayOf(DecimalDigitsInputFilter(2), InputFilterMinMax(0.0F, 100.0F))
         binding.interestRateEditText.doOnTextChanged { text, _, _, _ ->
             if (text.toString().trim().length == 1 && text.toString().trim() == "0") {
                 binding.interestRateEditText.setText("");

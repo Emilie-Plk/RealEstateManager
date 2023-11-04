@@ -198,6 +198,8 @@ koverReport {
                     "*Adapter\$*",
                     "*ViewState",
                     "*ViewState\$*",
+                    "*ViewEvent",
+                    "*ViewEvent\$*",
                     "*DiffCallback",
                     "*DiffCallback\$*",
                 )
