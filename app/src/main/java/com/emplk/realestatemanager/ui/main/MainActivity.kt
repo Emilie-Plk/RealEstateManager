@@ -51,8 +51,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-
-
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
         setSupportActionBar(binding.mainToolbar)
         val fragmentName = intent.getStringExtra(KEY_FRAGMENT_TAG)
@@ -168,7 +166,7 @@ class MainActivity : AppCompatActivity() {
 
                 MainViewEvent.LoanSimulator -> {
                     if (supportFragmentManager.findFragmentByTag(LOAN_SIM_BOTTOM_SHEET_FRAGMENT) == null)
-                    LoanSimulatorFragment.newInstance().show(supportFragmentManager, LOAN_SIM_BOTTOM_SHEET_FRAGMENT)
+                        LoanSimulatorFragment.newInstance().show(supportFragmentManager, LOAN_SIM_BOTTOM_SHEET_FRAGMENT)
                 }
             }
         }

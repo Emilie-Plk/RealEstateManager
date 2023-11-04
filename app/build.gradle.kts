@@ -92,6 +92,9 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.15.1")
     kapt("com.github.bumptech.glide:compiler:4.15.1")
 
+    // LOTTIE FILES
+    implementation("com.airbnb.android:lottie:4.2.2")
+
     // CarouselRecyclerView
     implementation("com.github.sparrow007:carouselrecyclerview:1.2.6")
 
