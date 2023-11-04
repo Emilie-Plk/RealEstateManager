@@ -23,6 +23,7 @@ import com.emplk.utils.TestCoroutineRule
 import com.emplk.utils.observeForTesting
 import io.mockk.coEvery
 import io.mockk.every
+import io.mockk.justRun
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.flow.flowOf
@@ -69,7 +70,7 @@ class DetailViewModelTest {
         every { getRoundedSurfaceWithSurfaceUnitUseCase.invoke(BigDecimal(500)) } returns "500 m²"
         coEvery { convertSurfaceDependingOnLocaleUseCase.invoke(BigDecimal(500)) } returns BigDecimal(500)
         every { generateMapUrlWithApiKeyUseCase.invoke(any()) } returns "https://www.google.com/maps/123456789"
-        every { setNavigationTypeUseCase.invoke(any()) } returns Unit
+        justRun { setNavigationTypeUseCase.invoke(any()) }
 
         detailViewModel = DetailViewModel(
             getCurrentPropertyUseCase = getCurrentPropertyUseCase,

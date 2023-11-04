@@ -1,5 +1,7 @@
 package com.emplk.realestatemanager.fixtures
 
+import com.emplk.realestatemanager.data.currency_rate.response.FixerCurrencyRateResponse
+import com.emplk.realestatemanager.data.currency_rate.response.RateResponse
 import com.emplk.realestatemanager.data.property.PropertyDto
 import com.emplk.realestatemanager.data.property.PropertyWithDetails
 import com.emplk.realestatemanager.data.property.location.LocationDto
@@ -11,9 +13,16 @@ import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
 import com.emplk.realestatemanager.domain.property_draft.FormDraftParams
 import com.google.android.gms.maps.model.LatLng
 import java.math.BigDecimal
+import java.time.Clock
+import java.time.Instant
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 
-
+/**
+ * A fixed clock that always returns 31 Oct 2023 13:22:35 GMT
+ */
+val testFixedClock: Clock =
+    Clock.fixed(Instant.ofEpochSecond(1698758555), ZoneOffset.UTC)
 // region PropertyDto
 
 fun getTestPropertyDto(id: Long) = PropertyDto(
@@ -206,3 +215,4 @@ fun getTestFormDraftParams(id: Long) = FormDraftParams(
     formType = null,
 )
 // endregion FormDraftParams
+

@@ -1,6 +1,5 @@
 package com.emplk.realestatemanager.data.currency_rate
 
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -83,10 +82,6 @@ class CurrencyRateRepositoryFixer @Inject constructor(
                 val usdToEuroRate = preferences[USD_TO_EUR_RATE_KEY]
                 val lastRateDate = preferences[LAST_RATE_DATE_KEY]
                 if (usdToEuroRate != null && lastRateDate != null) {
-                    Log.d(
-                        "COUCOU",
-                        "CurrencyRateRepositoryFixer getCachedCurrencyRateFlow: ${LocalDateTime.parse(lastRateDate)}"
-                    )
                     CurrencyRateEntity(
                         usdToEuroRate = BigDecimal(usdToEuroRate),
                         lastUpdatedDate = LocalDateTime.parse(lastRateDate)

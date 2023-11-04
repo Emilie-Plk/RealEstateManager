@@ -25,7 +25,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MapBottomSheetViewModel @Inject constructor(
-    private val getCurrentPropertyIdFlowUseCase: GetCurrentPropertyIdFlowUseCase,
     private val getCurrentPropertyUseCase: GetCurrentPropertyUseCase,
     private val convertSurfaceDependingOnLocaleUseCase: ConvertSurfaceDependingOnLocaleUseCase,
     private val convertPriceByLocaleUseCase: ConvertPriceByLocaleUseCase,
@@ -35,8 +34,10 @@ class MapBottomSheetViewModel @Inject constructor(
 
     private val onActionClickedMutableSharedFlow: MutableSharedFlow<Pair<Long, String>> =
         MutableSharedFlow(extraBufferCapacity = 1)
+    // tODO: virer le long
 
     private val isProgressBarVisibleMutableLiveData: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    // TODO: 2021-08-31  virer ça
 
     val viewState: LiveData<PropertyMapBottomSheetViewState> = liveData {
         if (latestValue == null) isProgressBarVisibleMutableLiveData.tryEmit(true)
