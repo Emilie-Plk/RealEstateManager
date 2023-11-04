@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
                             Log.d("COUCOU", "MainActivity onCreate detail: 58 ")
                             add(
                                 binding.mainFrameLayoutContainerProperties.id,
-                                DetailFragment.newInstance(intent.getLongExtra("propertyId", 0)),
+                                DetailFragment.newInstance(),
                                 DETAIL_FRAGMENT_TAG
                             )
                         }
@@ -125,7 +125,7 @@ class MainActivity : AppCompatActivity() {
                         Log.d("COUCOU", "MainActivity onCreate: DisplayDetailFragmentOnPhone ")
                         replace(
                             binding.mainFrameLayoutContainerProperties.id,
-                            DetailFragment.newInstance(event.propertyId),
+                            DetailFragment.newInstance(),
                             DETAIL_FRAGMENT_TAG
                         ).addToBackStack(DETAIL_FRAGMENT_TAG)
                     }
@@ -147,7 +147,7 @@ class MainActivity : AppCompatActivity() {
                         binding.mainFrameLayoutContainerDetail?.id?.let {
                             replace(
                                 it,
-                                DetailFragment.newInstance(event.propertyId),
+                                DetailFragment.newInstance(),
                                 DETAIL_FRAGMENT_TAG
                             )
                         }
@@ -163,7 +163,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 is MainViewEvent.NavigateToBlank -> {
-                    startActivity(BlankActivity.navigate(this, event.fragmentTag, event.propertyId))
+                    startActivity(BlankActivity.navigate(this, event.fragmentTag))
                 }
 
                 MainViewEvent.LoanSimulator -> {

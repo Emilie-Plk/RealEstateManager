@@ -38,16 +38,7 @@ import java.math.BigDecimal
 class AddOrEditPropertyFragment : Fragment(R.layout.form_fragment) {
 
     companion object {
-        const val PROPERTY_ID_KEY = "PROPERTY_ID_KEY"
-
-        fun newInstance(id: Long?): Fragment {
-            val bundle = Bundle().apply {
-                id?.let { putLong(PROPERTY_ID_KEY, it) }
-            }
-            val fragment = AddOrEditPropertyFragment()
-            fragment.arguments = bundle
-            return fragment
-        }
+        fun newInstance() = AddOrEditPropertyFragment()
 
         private var currentPhotoUri: Uri? = null
     }

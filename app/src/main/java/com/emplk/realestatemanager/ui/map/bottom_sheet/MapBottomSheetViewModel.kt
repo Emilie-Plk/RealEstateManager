@@ -33,9 +33,7 @@ class MapBottomSheetViewModel @Inject constructor(
     private val formatPriceByLocaleUseCase: FormatPriceByLocaleUseCase,
 ) : ViewModel() {
 
-    private val onActionClickedMutableSharedFlow: MutableSharedFlow<Pair<Long, String>> =
-        MutableSharedFlow(extraBufferCapacity = 1)
-    // tODO: virer le long
+    private val onActionClickedMutableSharedFlow: MutableSharedFlow<String> = MutableSharedFlow(extraBufferCapacity = 1)
 
     private val isProgressBarVisibleMutableLiveData: MutableStateFlow<Boolean> = MutableStateFlow(false)
     // TODO: 2021-08-31  virer ça
@@ -57,11 +55,11 @@ class MapBottomSheetViewModel @Inject constructor(
                     price = formatPriceByLocaleUseCase.invoke(propertyWithConvertedPriceAndSurface.price),
                     surface = getRoundedSurfaceWithSurfaceUnitUseCase.invoke(propertyWithConvertedPriceAndSurface.surface),
                     featuredPicture = NativePhoto.Uri(getFeaturedPictureUri(propertyWithConvertedPriceAndSurface.pictures)),
-                    onDetailClick = EquatableCallbackWithParams { propertyId, fragmentTag ->
-                        onActionClickedMutableSharedFlow.tryEmit((propertyId to fragmentTag))
+                    onDetailClick = EquatableCallbackWithParam { fragmentTag ->
+                        onActionClickedMutableSharedFlow.tryEmit(fragmentTag)
                     },
-                    onEditClick = EquatableCallbackWithParams { propertyId, fragmentTag ->
-                        onActionClickedMutableSharedFlow.tryEmit((propertyId to fragmentTag))
+                    onEditClick = EquatableCallbackWithParam { fragmentTag ->
+                        onActionClickedMutableSharedFlow.tryEmit(fragmentTag)
                     },
                     description = propertyWithConvertedPriceAndSurface.description,
                     rooms = NativeText.Argument(
@@ -87,8 +85,8 @@ class MapBottomSheetViewModel @Inject constructor(
 
     val viewEvent: LiveData<Event<MapBottomSheetEvent>> = liveData {
         onActionClickedMutableSharedFlow.collect {
-            when (it.second) {
-                EDIT_PROPERTY_TAG -> emit(Event(MapBottomSheetEvent.Edit(it.first)))
+            when (it) {
+                EDIT_PROPERTY_TAG -> emit(Event(MapBottomSheetEvent.Edit))
                 DETAIL_PROPERTY_TAG -> emit(Event(MapBottomSheetEvent.Detail))
             }
         }
