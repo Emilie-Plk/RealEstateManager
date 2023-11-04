@@ -133,20 +133,19 @@ class MainViewModel @Inject constructor(
 
                 ADD_FRAGMENT -> {
                     when (getDraftsCountUseCase.invoke()) {
-                        0 -> emit(Event(MainViewEvent.NavigateToBlank(ADD_FRAGMENT.name, propertyId)))
+                        0 -> emit(Event(MainViewEvent.NavigateToBlank(ADD_FRAGMENT.name)))
                         else -> setNavigationTypeUseCase.invoke(DRAFTS_FRAGMENT)
                     }
-
                 }
 
-                EDIT_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(EDIT_FRAGMENT.name, propertyId)))
+                EDIT_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(EDIT_FRAGMENT.name)))
 
                 DETAIL_FRAGMENT ->
                     if (propertyId != null) {
                         if (!isTablet) {
-                            emit(Event(MainViewEvent.DetailFragmentOnPhone(propertyId)))
+                            emit(Event(MainViewEvent.DetailFragmentOnPhone))
                         } else {
-                            emit(Event(MainViewEvent.DetailFragmentOnTablet(propertyId)))
+                            emit(Event(MainViewEvent.DetailFragmentOnTablet))
                         }
                     }
 
@@ -157,8 +156,8 @@ class MainViewModel @Inject constructor(
                         emit(Event(MainViewEvent.FilterPropertiesFragmentOnTablet))
                     }
 
-                DRAFTS_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(DRAFTS_FRAGMENT.name, null)))
-                MAP_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(MAP_FRAGMENT.name, null)))
+                DRAFTS_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(DRAFTS_FRAGMENT.name)))
+                MAP_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(MAP_FRAGMENT.name)))
                 LOAN_SIMULATOR_DIALOG_FRAGMENT -> emit(Event(MainViewEvent.LoanSimulator))
                 DRAFT_DIALOG_FRAGMENT -> Unit
             }

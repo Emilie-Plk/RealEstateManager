@@ -71,8 +71,8 @@ class PropertiesViewModel @Inject constructor(
                         bedroom = NativeText.Argument(R.string.bedrooms_nb_short_version, property.bedrooms),
                         surface = getRoundedSurfaceWithSurfaceUnitUseCase.invoke(property.surface),
                         onClickEvent = EquatableCallback {
-                            setNavigationTypeUseCase.invoke(NavigationFragmentType.DETAIL_FRAGMENT)
                             setCurrentPropertyIdUseCase.invoke(property.id)
+                            setNavigationTypeUseCase.invoke(NavigationFragmentType.DETAIL_FRAGMENT)
                         }
                     )
                 }

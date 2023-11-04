@@ -46,10 +46,10 @@ class MapBottomSheetFragment : BottomSheetDialogFragment(R.layout.map_bottom_she
                 .into(binding.mapBottomSheetPropertyImageView)
 
             binding.mapBottomSheetPropertyEditBtn.setOnClickListener {
-                viewState.onEditClick.invoke(viewState.propertyId, EDIT_PROPERTY_TAG)
+                viewState.onEditClick.invoke(EDIT_PROPERTY_TAG)
             }
             binding.mapBottomSheetPropertyDetailBtn.setOnClickListener {
-                viewState.onDetailClick.invoke(viewState.propertyId, DETAIL_PROPERTY_TAG)
+                viewState.onDetailClick.invoke(DETAIL_PROPERTY_TAG)
             }
             binding.mapBottomSheetPropertyDescriptionTv.text = viewState.description
             binding.mapBottomSheetPropertySurfaceTv.text = viewState.surface
@@ -67,7 +67,6 @@ class MapBottomSheetFragment : BottomSheetDialogFragment(R.layout.map_bottom_she
                         BlankActivity.navigate(
                             requireContext(),
                             NavigationFragmentType.EDIT_FRAGMENT.name,
-                            viewEvent.propertyId
                         )
                     )
                     dismiss()

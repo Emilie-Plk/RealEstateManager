@@ -1,7 +1,6 @@
 package com.emplk.realestatemanager.ui.add
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
@@ -11,6 +10,7 @@ import com.emplk.realestatemanager.domain.autocomplete.GetCurrentPredictionAddre
 import com.emplk.realestatemanager.domain.autocomplete.PredictionWrapper
 import com.emplk.realestatemanager.domain.connectivity.IsInternetEnabledFlowUseCase
 import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceByLocaleUseCase
+import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdFlowUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
@@ -56,6 +56,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -68,6 +69,7 @@ import kotlin.time.Duration.Companion.seconds
 @HiltViewModel
 class AddOrEditPropertyViewModel @Inject constructor(
     private val addOrEditPropertyUseCase: AddOrEditPropertyUseCase,
+    private val getCurrentPropertyIdFlowUseCase: GetCurrentPropertyIdFlowUseCase,
     private val getDraftNavigationUseCase: GetDraftNavigationUseCase,
     private val getClearPropertyFormNavigationEventUseCase: GetClearPropertyFormNavigationEventUseCase,
     private val clearPropertyFormUseCase: ClearPropertyFormUseCase,
@@ -94,10 +96,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
     private val getCurrentPredictionAddressesFlowWithDebounceUseCase: GetCurrentPredictionAddressesFlowWithDebounceUseCase,
     private val getPropertyTypeFlowUseCase: GetPropertyTypeFlowUseCase,
     private val isInternetEnabledFlowUseCase: IsInternetEnabledFlowUseCase,
-    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-
-    private val propertyId: Long? = savedStateHandle.get<Long>(AddOrEditPropertyFragment.PROPERTY_ID_KEY)
 
     private val formMutableStateFlow = MutableStateFlow(FormDraftParams())
 
@@ -127,6 +126,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
 
     val viewStateLiveData: LiveData<PropertyFormViewState> = liveData {
         coroutineScope {
+            val propertyId = getCurrentPropertyIdFlowUseCase.invoke().firstOrNull()
             val formWithType = initPropertyFormUseCase.invoke(propertyId)
 
             formMutableStateFlow.update { form ->
@@ -213,13 +213,9 @@ class AddOrEditPropertyViewModel @Inject constructor(
                         pictures = mapPicturePreviews(picturePreviews, form),
                         selectedAgent = form.agent,
                         priceCurrencyHint = when (currencyType) {
-                            CurrencyType.DOLLAR -> NativeText.Resource(
-                                R.string.price_in_dollar,
-                            )
+                            CurrencyType.DOLLAR -> NativeText.Resource(R.string.price_in_dollar)
 
-                            CurrencyType.EURO -> NativeText.Resource(
-                                R.string.price_in_euro,
-                            )
+                            CurrencyType.EURO -> NativeText.Resource(R.string.price_in_euro)
                         },
                         currencyDrawableRes = when (currencyType) {
                             CurrencyType.DOLLAR -> R.drawable.baseline_dollar_24
@@ -242,9 +238,8 @@ class AddOrEditPropertyViewModel @Inject constructor(
                             }
                         } else null,
                         isSubmitButtonEnabled = isFormValidMutableStateFlow.value,
-                        submitButtonText = if (form.formType == FormType.ADD) NativeText.Resource(R.string.form_create_button) else NativeText.Resource(
-                            R.string.form_edit_button
-                        ),
+                        submitButtonText = if (form.formType == FormType.ADD) NativeText.Resource(R.string.form_create_button)
+                        else NativeText.Resource(R.string.form_edit_button),
                         isProgressBarVisible = isAddingInDatabase,
                         amenities = mapAmenityTypesToViewStates(amenityTypes),
                         propertyTypes = propertyTypes.map { propertyType ->
@@ -274,7 +269,6 @@ class AddOrEditPropertyViewModel @Inject constructor(
                 }
             }
 
-
 // Throttle
             launch {
                 formMutableStateFlow.transform {
@@ -285,7 +279,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                 }
             }
 
-// Save draft when title is set (only when FormType.ADD and when title is null)
+// Save draft when title is set (case when FormType.ADD and when title is null)
             launch {
                 getFormTitleUseCase.invoke().collect { formTypeAndTitle ->
                     if (formTypeAndTitle.formType == FormType.ADD && formMutableStateFlow.value.draftTitle == null) {

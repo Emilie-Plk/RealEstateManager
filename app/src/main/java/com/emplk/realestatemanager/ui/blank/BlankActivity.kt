@@ -30,10 +30,9 @@ import dagger.hilt.android.AndroidEntryPoint
 class BlankActivity : AppCompatActivity() {
 
     companion object {
-        fun navigate(context: Context, fragmentTag: String, propertyId: Long?): Intent {
+        fun navigate(context: Context, fragmentTag: String): Intent {
             val intent = Intent(context, BlankActivity::class.java)
             intent.putExtra(KEY_FRAGMENT_TAG, fragmentTag)
-            intent.putExtra(PROPERTY_ID_KEY, propertyId)
             return intent
         }
 
@@ -63,7 +62,7 @@ class BlankActivity : AppCompatActivity() {
                     supportFragmentManager.commitNow {
                         add(
                             binding.blankFrameLayoutContainer.id,
-                            AddOrEditPropertyFragment.newInstance(propertyId),
+                            AddOrEditPropertyFragment.newInstance(),
                             ADD_OR_EDIT_FRAGMENT_TAG
                         )
                     }
@@ -82,7 +81,7 @@ class BlankActivity : AppCompatActivity() {
                     supportFragmentManager.commitNow {
                         add(
                             binding.blankFrameLayoutContainer.id,
-                            AddOrEditPropertyFragment.newInstance(propertyId), // or null?
+                            AddOrEditPropertyFragment.newInstance(),
                             ADD_OR_EDIT_FRAGMENT_TAG
                         )
                     }
@@ -123,7 +122,7 @@ class BlankActivity : AppCompatActivity() {
                     supportFragmentManager.commit {
                         replace(
                             R.id.blank_frameLayout_container,
-                            AddOrEditPropertyFragment.newInstance(null)
+                            AddOrEditPropertyFragment.newInstance()
                         )
                     }
                 }
@@ -131,7 +130,7 @@ class BlankActivity : AppCompatActivity() {
                 is BlankViewEvent.OnDraftClicked -> {
                     supportFragmentManager.commit {
                         replace(
-                            R.id.blank_frameLayout_container, AddOrEditPropertyFragment.newInstance(blankViewEvent.id)
+                            R.id.blank_frameLayout_container, AddOrEditPropertyFragment.newInstance()
                         )
                     }
                 }
