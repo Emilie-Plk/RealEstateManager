@@ -8,30 +8,40 @@ import com.emplk.realestatemanager.ui.add.picture_preview.PicturePreviewStateIte
 import com.emplk.realestatemanager.ui.add.type.AddPropertyTypeViewStateItem
 import com.emplk.realestatemanager.ui.utils.NativeText
 
-data class PropertyFormViewState(
-    val propertyType: String?,
-    val addressPredictions: List<PredictionViewState>,
-    val isAddressValid: Boolean,
-    val address: String?,
-    val price: String?,
-    val surface: String?,
-    val description: String?,
-    val nbRooms: Int,
-    val nbBathrooms: Int,
-    val nbBedrooms: Int,
-    val amenities: List<AmenityViewState>,
-    val pictures: List<PicturePreviewStateItem>,
-    val agents: List<AddPropertyAgentViewStateItem>,
-    val selectedAgent: String?,
-    val priceCurrencyHint: NativeText,
-    @DrawableRes val currencyDrawableRes: Int,
-    val surfaceUnit: NativeText,
-    val isSubmitButtonEnabled: Boolean,
-    val submitButtonText: NativeText,
-    val isProgressBarVisible: Boolean,
-    val propertyTypes: List<AddPropertyTypeViewStateItem>,
-    val propertyCreationDate: NativeText?,
-    val isSold: Boolean? = false,
-    val soldDate: String? = null,
-    val areEditItemsVisible: Boolean,
-)
+sealed class PropertyFormViewState(val type: Type) {
+
+    enum class Type {
+        LOADING,
+        FORM,
+    }
+
+    object LoadingState : PropertyFormViewState(Type.LOADING)
+
+    data class PropertyForm(
+        val propertyType: String?,
+        val addressPredictions: List<PredictionViewState>,
+        val isAddressValid: Boolean,
+        val address: String?,
+        val price: String?,
+        val surface: String?,
+        val description: String?,
+        val nbRooms: Int,
+        val nbBathrooms: Int,
+        val nbBedrooms: Int,
+        val amenities: List<AmenityViewState>,
+        val pictures: List<PicturePreviewStateItem>,
+        val agents: List<AddPropertyAgentViewStateItem>,
+        val selectedAgent: String?,
+        val priceCurrencyHint: NativeText,
+        @DrawableRes val currencyDrawableRes: Int,
+        val surfaceUnit: NativeText,
+        val isSubmitButtonEnabled: Boolean,
+        val submitButtonText: NativeText,
+        val isProgressBarVisible: Boolean,
+        val propertyTypes: List<AddPropertyTypeViewStateItem>,
+        val propertyCreationDate: NativeText?,
+        val isSold: Boolean? = false,
+        val soldDate: String? = null,
+        val areEditItemsVisible: Boolean,
+    ) : PropertyFormViewState(Type.FORM)
+}

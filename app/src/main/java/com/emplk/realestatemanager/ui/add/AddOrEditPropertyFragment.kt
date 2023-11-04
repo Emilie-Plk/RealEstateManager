@@ -44,7 +44,8 @@ class AddOrEditPropertyFragment : Fragment(R.layout.form_fragment) {
     }
 
     private val viewModel by viewModels<AddOrEditPropertyViewModel>()
-    private val binding by viewBinding { FormFragmentBinding.bind(it) }
+    private val binding by viewBinding { FormFragmentBinding.bind(it).propertyForm }
+    private val loadingBinding by viewBinding { FormFragmentBinding.bind(it).loadingState }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -87,92 +88,107 @@ class AddOrEditPropertyFragment : Fragment(R.layout.form_fragment) {
         }
 
         viewModel.viewStateLiveData.observe(viewLifecycleOwner) { viewState ->
-            typeAdapter.setData(viewState.propertyTypes)
-            agentAdapter.setData(viewState.agents)
-            picturePreviewAdapter.submitList(viewState.pictures)
-            amenityAdapter.submitList(viewState.amenities)
-            predictionAdapter.submitList(viewState.addressPredictions)
 
-            binding.formSubmitButton.text = viewState.submitButtonText.toCharSequence(requireContext())
-            binding.formSoldStatusSwitch.isVisible = viewState.areEditItemsVisible
-            binding.formSoldStatusTv.isVisible = viewState.areEditItemsVisible
-            binding.formInfoTv.isVisible = viewState.areEditItemsVisible
-            binding.formInfoTv.text = viewState.propertyCreationDate?.toCharSequence(requireContext())
+            when (viewState) {
+                is PropertyFormViewState.LoadingState -> {
+                    binding.root.isVisible = false
+                    loadingBinding.root.isVisible = true
+                }
 
-            binding.formTypeActv.setOnItemClickListener { _, _, position, _ ->
-                typeAdapter.getItem(position)?.let {
-                    viewModel.onPropertyTypeSelected(it.name)
+                is PropertyFormViewState.PropertyForm -> {
+                    binding.root.isVisible = true
+                    loadingBinding.root.isVisible = false
+                    typeAdapter.setData(viewState.propertyTypes)
+                    agentAdapter.setData(viewState.agents)
+
+                    picturePreviewAdapter.submitList(viewState.pictures)
+                    amenityAdapter.submitList(viewState.amenities)
+                    predictionAdapter.submitList(viewState.addressPredictions)
+
+                    binding.formSubmitButton.text = viewState.submitButtonText.toCharSequence(requireContext())
+                    binding.formSoldStatusSwitch.isVisible = viewState.areEditItemsVisible
+                    binding.formSoldStatusTv.isVisible = viewState.areEditItemsVisible
+                    binding.formInfoTv.isVisible = viewState.areEditItemsVisible
+                    binding.formInfoTv.text = viewState.propertyCreationDate?.toCharSequence(requireContext())
+
+                    binding.formTypeActv.setOnItemClickListener { _, _, position, _ ->
+                        typeAdapter.getItem(position)?.let {
+                            viewModel.onPropertyTypeSelected(it.name)
+                        }
+                    }
+
+                    binding.formAgentActv.setOnItemClickListener { _, _, position, _ ->
+                        agentAdapter.getItem(position)?.let {
+                            viewModel.onAgentSelected(it.name)
+                        }
+                    }
+
+                    binding.formSubmitButton.isEnabled = viewState.isSubmitButtonEnabled
+                    binding.formProgressBar.isVisible = viewState.isProgressBarVisible
+
+                    setNumberPickers()
+                    binding.formRoomsNumberPicker.value = viewState.nbRooms
+                    binding.formBedroomsNumberPicker.value = viewState.nbBedrooms
+                    binding.formBathroomsNumberPicker.value = viewState.nbBathrooms
+
+                    val currentDescription = binding.formDescriptionTextInputEditText.text.toString()
+                    if (currentDescription != viewState.description) {
+                        binding.formDescriptionTextInputEditText.setText(viewState.description)
+                    }
+
+                    val currentSurface = binding.formSurfaceTextInputEditText.text.toString()
+                    if (currentSurface != viewState.surface) {
+                        binding.formSurfaceTextInputEditText.setText(viewState.surface)
+                    }
+
+                    val currentPrice = binding.formPriceTextInputEditText.text.toString()
+
+                    if (currentPrice != viewState.price) {
+                        binding.formPriceTextInputEditText.setText(viewState.price)
+                    }
+
+                    val currentAddress = binding.formAddressTextInputEditText.text.toString()
+
+                    if (currentAddress != viewState.address) {
+                        binding.formAddressTextInputEditText.setText(viewState.address)
+                    }
+
+                    binding.formAddressTextInputEditText.doAfterTextChanged {
+                        binding.formAddressTextInputEditText.setSelection(it.toString().length)
+                        val newText = it.toString()
+                        if (newText != viewState.address) {
+                            viewModel.onAddressChanged(newText)
+                        }
+                    }
+
+                    binding.formAddressTextInputEditText.setOnFocusChangeListener { _, hasFocus ->
+                        viewModel.onAddressEditTextFocused(hasFocus)
+                        if (!hasFocus) {
+                            hideKeyboard(binding.formAddressTextInputEditText)
+                            binding.formAddressTextInputLayout.isHelperTextEnabled = false
+                        }
+                        if (hasFocus) binding.formAddressTextInputLayout.helperText = "Please select a valid address"
+                    }
+
+                    binding.formAddressIsValidHelperTv.isVisible = viewState.isAddressValid
+
+                    binding.formSoldStatusSwitch.isChecked = viewState.isSold ?: false
+                    binding.formSoldStatusSwitch.setOnCheckedChangeListener { _, isChecked ->
+                        viewModel.onSoldStatusChanged(isChecked)
+                    }
+
+                    binding.formPriceTextInputLayout.hint = viewState.priceCurrencyHint.toCharSequence(requireContext())
+                    binding.formPriceTextInputLayout.startIconDrawable = ContextCompat.getDrawable(
+                        requireContext(),
+                        viewState.currencyDrawableRes
+                    )
+
+                    binding.formSurfaceTextInputLayout.hint = viewState.surfaceUnit.toCharSequence(requireContext())
+
+                    binding.formTypeActv.setText(viewState.propertyType, false)
+                    binding.formAgentActv.setText(viewState.selectedAgent, false)
                 }
             }
-
-            binding.formAgentActv.setOnItemClickListener { _, _, position, _ ->
-                agentAdapter.getItem(position)?.let {
-                    viewModel.onAgentSelected(it.name)
-                }
-            }
-
-            binding.formSubmitButton.isEnabled = viewState.isSubmitButtonEnabled
-            binding.formProgressBar.isVisible = viewState.isProgressBarVisible
-
-            setNumberPickers()
-            binding.formRoomsNumberPicker.value = viewState.nbRooms
-            binding.formBedroomsNumberPicker.value = viewState.nbBedrooms
-            binding.formBathroomsNumberPicker.value = viewState.nbBathrooms
-
-            val currentDescription = binding.formDescriptionTextInputEditText.text.toString()
-            if (currentDescription != viewState.description) {
-                binding.formDescriptionTextInputEditText.setText(viewState.description)
-            }
-
-            val currentSurface = binding.formSurfaceTextInputEditText.text.toString()
-            if (currentSurface != viewState.surface) {
-                binding.formSurfaceTextInputEditText.setText(viewState.surface)
-            }
-
-            val currentPrice = binding.formPriceTextInputEditText.text.toString()
-            if (currentPrice != viewState.price) {
-                binding.formPriceTextInputEditText.setText(viewState.price)
-            }
-
-            val currentAddress = binding.formAddressTextInputEditText.text.toString()
-            if (currentAddress != viewState.address) {
-                binding.formAddressTextInputEditText.setText(viewState.address)
-            }
-
-            binding.formAddressTextInputEditText.doAfterTextChanged {
-                binding.formAddressTextInputEditText.setSelection(it.toString().length)
-                val newText = it.toString()
-                if (newText != viewState.address) {
-                    viewModel.onAddressChanged(newText)
-                }
-            }
-
-            binding.formAddressTextInputEditText.setOnFocusChangeListener { _, hasFocus ->
-                viewModel.onAddressEditTextFocused(hasFocus)
-                if (!hasFocus) {
-                    hideKeyboard(binding.formAddressTextInputEditText)
-                    binding.formAddressTextInputLayout.isHelperTextEnabled = false
-                }
-                if (hasFocus) binding.formAddressTextInputLayout.helperText = "Please select a valid address"
-            }
-
-            binding.formAddressIsValidHelperTv.isVisible = viewState.isAddressValid
-
-            binding.formSoldStatusSwitch.isChecked = viewState.isSold ?: false
-            binding.formSoldStatusSwitch.setOnCheckedChangeListener { _, isChecked ->
-                viewModel.onSoldStatusChanged(isChecked)
-            }
-
-            binding.formPriceTextInputLayout.hint = viewState.priceCurrencyHint.toCharSequence(requireContext())
-            binding.formPriceTextInputLayout.startIconDrawable = ContextCompat.getDrawable(
-                requireContext(),
-                viewState.currencyDrawableRes
-            )
-
-            binding.formSurfaceTextInputLayout.hint = viewState.surfaceUnit.toCharSequence(requireContext())
-
-            binding.formTypeActv.setText(viewState.propertyType, false)
-            binding.formAgentActv.setText(viewState.selectedAgent, false)
         }
 
         // region Import pictures

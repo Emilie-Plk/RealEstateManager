@@ -93,12 +93,8 @@ class LoanSimulatorFragment : BottomSheetDialogFragment(R.layout.loan_simulator_
             viewModel.onLoanAmountChanged(it?.toString() ?: "")
         }
 
-        binding.interestRateEditText.filters = arrayOf(DecimalDigitsInputFilter(2), InputFilterMinMax(0.0F, 100.0F))
-        binding.interestRateEditText.doOnTextChanged { text, _, _, _ ->
-            if (text.toString().trim().length == 1 && text.toString().trim() == "0") {
-                binding.interestRateEditText.setText("");
-            }
-        }
+        binding.interestRateEditText.filters = arrayOf(DecimalDigitsInputFilter(2), InputFilterMinMax(0.1F, 100.0F))
+
         binding.interestRateEditText.doAfterTextChanged {
             viewModel.onInterestRateChanged(it?.toString() ?: "")
         }

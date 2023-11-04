@@ -44,6 +44,7 @@ import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem
 import com.emplk.realestatemanager.ui.add.amenity.AmenityViewState
 import com.emplk.realestatemanager.ui.add.picture_preview.PicturePreviewStateItem
 import com.emplk.realestatemanager.ui.add.type.AddPropertyTypeViewStateItem
+import com.emplk.realestatemanager.ui.list.PropertiesViewState
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParam
 import com.emplk.realestatemanager.ui.utils.Event
@@ -126,6 +127,10 @@ class AddOrEditPropertyViewModel @Inject constructor(
 
     val viewStateLiveData: LiveData<PropertyFormViewState> = liveData {
         coroutineScope {
+            if (latestValue == null) {
+                emit(PropertyFormViewState.LoadingState)
+            }
+
             val propertyId = getCurrentPropertyIdFlowUseCase.invoke().firstOrNull()
             val formWithType = initPropertyFormUseCase.invoke(propertyId)
 
@@ -201,7 +206,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                                 form.featuredPictureId != null
                     )
 
-                    PropertyFormViewState(
+                    PropertyFormViewState.PropertyForm(
                         propertyType = form.propertyType,
                         address = form.address,
                         price = if (form.price == BigDecimal.ZERO) "" else form.price.toString(),
