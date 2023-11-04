@@ -41,7 +41,6 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("COUCOU", "DetailFramgent onViewCreated: ")
         val pictureBannerAdapter = PictureBannerListAdapter()
         binding.detailPhotoCarouselRv.adapter = pictureBannerAdapter
 
