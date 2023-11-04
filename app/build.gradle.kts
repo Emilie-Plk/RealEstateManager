@@ -80,6 +80,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-maps:18.1.0")
     implementation("com.google.maps.android:android-maps-utils:2.3.0")
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.4")
+    implementation("androidx.test:core-ktx:1.5.0")
 
     // DESUGARING
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")

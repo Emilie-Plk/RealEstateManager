@@ -15,10 +15,12 @@ import com.emplk.realestatemanager.domain.property_draft.FormDraftRepository
 import com.emplk.realestatemanager.domain.property_draft.UpdatePropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.GetPicturePreviewsUseCase
 import com.emplk.realestatemanager.fixtures.getTestFormDraftParams
+import com.emplk.realestatemanager.fixtures.testFixedClock
 import com.emplk.realestatemanager.ui.add.FormEvent
 import com.emplk.utils.TestCoroutineRule
 import com.google.android.gms.maps.model.LatLng
 import io.mockk.coEvery
+import io.mockk.coJustRun
 import io.mockk.every
 import io.mockk.justRun
 import io.mockk.mockk
@@ -27,9 +29,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import java.math.BigDecimal
-import java.time.Clock
-import java.time.Instant
-import java.time.ZoneOffset
 
 class AddOrEditPropertyUseCaseTest {
 
@@ -73,7 +72,7 @@ class AddOrEditPropertyUseCaseTest {
         clearPropertyFormUseCase,
         resetCurrentPropertyIdUseCase,
         setNavigationTypeUseCase,
-        Clock.fixed(Instant.ofEpochSecond(1698758555), ZoneOffset.UTC) // Tue, 31 Oct 2023 13:22:35 GMT
+        testFixedClock
     )
 
     @Before
@@ -96,7 +95,7 @@ class AddOrEditPropertyUseCaseTest {
 
         justRun { resetCurrentPropertyIdUseCase.invoke() }
 
-        coEvery { clearPropertyFormUseCase.invoke(any()) } returns Unit
+        coJustRun { clearPropertyFormUseCase.invoke(any()) }
 
         justRun { setNavigationTypeUseCase.invoke(any()) }
 
@@ -128,12 +127,13 @@ class AddOrEditPropertyUseCaseTest {
     }
 
     @Test
-    fun `edge case - incorrect FormDraftParams properties throws IllegalArgumentException`() = testCoroutineRule.runTest {
-        val formDraftParams = getTestFormDraftParams(TEST_PROPERTY_ID)
-        val copy = formDraftParams.copy(
-            address = null,
-            price = BigDecimal.ZERO
-        )
-        assertThrows(IllegalArgumentException::class.java) { coEvery { addOrEditPropertyUseCase.invoke(copy) } }
-    }
+    fun `edge case - incorrect FormDraftParams properties throws IllegalArgumentException`() =
+        testCoroutineRule.runTest {
+            val formDraftParams = getTestFormDraftParams(TEST_PROPERTY_ID)
+            val copy = formDraftParams.copy(
+                address = null,
+                price = BigDecimal.ZERO
+            )
+            assertThrows(IllegalArgumentException::class.java) { coEvery { addOrEditPropertyUseCase.invoke(copy) } }
+        }
 }
