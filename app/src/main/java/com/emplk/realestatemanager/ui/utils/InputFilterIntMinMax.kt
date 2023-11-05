@@ -4,9 +4,10 @@ import android.text.InputFilter
 import android.text.Spanned
 
 
-class InputFilterMinMax(min: Float, max: Float) : InputFilter {
-    private var min: Float = 0.0F
-    private var max: Float = 0.0F
+
+class InputFilterIntMinMax(min: Int, max: Int) : InputFilter {
+    private var min: Int = 0
+    private var max: Int = 0
 
     init {
         this.min = min
@@ -22,8 +23,7 @@ class InputFilterMinMax(min: Float, max: Float) : InputFilter {
         dend: Int
     ): CharSequence? {
         try {
-            val input =
-                (dest.subSequence(0, dstart).toString() + source + dest.subSequence(dend, dest.length)).toFloat()
+            val input = (dest.subSequence(0, dstart).toString() + source + dest.subSequence(dend, dest.length)).toInt()
             if (isInRange(min, max, input))
                 return null
         } catch (_: NumberFormatException) {
@@ -31,7 +31,7 @@ class InputFilterMinMax(min: Float, max: Float) : InputFilter {
         return ""
     }
 
-    private fun isInRange(a: Float, b: Float, c: Float): Boolean {
+    private fun isInRange(a: Int, b: Int, c: Int): Boolean {
         return if (b > a) c in a..b else c in b..a
     }
 }

@@ -12,7 +12,8 @@ import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.LoanSimulatorFragmentBinding
 import com.emplk.realestatemanager.ui.utils.DecimalDigitsInputFilter
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
-import com.emplk.realestatemanager.ui.utils.InputFilterMinMax
+import com.emplk.realestatemanager.ui.utils.InputFilterFloatMinMax
+import com.emplk.realestatemanager.ui.utils.InputFilterIntMinMax
 import com.emplk.realestatemanager.ui.utils.viewBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -109,7 +110,8 @@ class LoanSimulatorFragment : BottomSheetDialogFragment(R.layout.loan_simulator_
             viewModel.onLoanAmountReset()
         }
 
-        binding.interestRateEditText.filters = arrayOf(DecimalDigitsInputFilter(2), InputFilterMinMax(0.1F, 100.0F))
+        binding.interestRateEditText.filters =
+            arrayOf(DecimalDigitsInputFilter(2), InputFilterFloatMinMax(0.1F, 100.0F))
 
         binding.interestRateEditText.doAfterTextChanged {
             viewModel.onInterestRateChanged(it?.toString() ?: "")
@@ -119,6 +121,8 @@ class LoanSimulatorFragment : BottomSheetDialogFragment(R.layout.loan_simulator_
         binding.interestRateTextInputLayout.setEndIconOnClickListener {
             viewModel.onInterestRateReset()
         }
+
+        binding.loanDurationEditText.filters = arrayOf(InputFilterIntMinMax(1, 30))
 
         binding.loanDurationEditText.doOnTextChanged { text, _, _, _ ->
             if (text.toString().trim().length == 1 && text.toString().trim() == "0") {
