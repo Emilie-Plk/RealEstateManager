@@ -66,7 +66,7 @@ class MapViewModelTest {
     fun `viewEvent onMarkerClicked case`() = testCoroutineRule.runTest {
         // Given
         mapViewModel.viewState.observeForTesting(this) { viewState ->
-            mapViewModel.viewEvent.observeForTesting(this) {event ->
+            mapViewModel.viewEvent.observeForTesting(this) { event ->
                 // When
                 viewState.value!!.first().onMarkerClicked.invoke(1L)
                 runCurrent()

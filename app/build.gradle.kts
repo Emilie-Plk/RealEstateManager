@@ -46,7 +46,7 @@ android {
         )
     }
 
-
+    @Suppress("UnstableApiUsage")
     testOptions {
         execution = "ANDROIDX_TEST_ORCHESTRATOR"
         animationsDisabled = true
@@ -77,13 +77,13 @@ dependencies {
     implementation("com.google.android.gms:play-services-awareness:19.0.1")
 
     // GOOGLE MAPS SDK
-    implementation("com.google.android.gms:play-services-maps:18.1.0")
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
     implementation("com.google.maps.android:android-maps-utils:2.3.0")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.7.4")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.5")
     implementation("androidx.test:core-ktx:1.5.0")
 
     // DESUGARING
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 
     // FLEXBOX
     implementation("com.google.android.flexbox:flexbox:3.0.0")
@@ -91,6 +91,9 @@ dependencies {
     // GLIDE
     implementation("com.github.bumptech.glide:glide:4.15.1")
     kapt("com.github.bumptech.glide:compiler:4.15.1")
+
+    // SPLASH SCREEN
+    implementation("androidx.core:core-splashscreen:1.1.0-alpha02")
 
     // LOTTIE FILES
     implementation("com.airbnb.android:lottie:4.2.2")

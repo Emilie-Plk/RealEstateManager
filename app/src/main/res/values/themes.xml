@@ -23,6 +23,14 @@
         <item name="navigationIconTint">@color/secondary_dark</item>
     </style>
 
+    <style name="Theme.RealEstateManager.SplashTheme" parent="Theme.SplashScreen">
+        <!-- Set the splash screen background, animated icon, and animation
+  duration. -->
+        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_foreground</item>
+        <item name="windowSplashScreenAnimationDuration">200</item>
+        <item name="postSplashScreenTheme">@style/Theme.RealEstateManager</item>
+    </style>
 
     <style name="Theme.RealEstateManager.YellowFab" parent="Widget.Material3.FloatingActionButton.Primary">
         <item name="backgroundTint">@color/secondary</item>
