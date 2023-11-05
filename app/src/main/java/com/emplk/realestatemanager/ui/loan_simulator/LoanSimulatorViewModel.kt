@@ -63,7 +63,6 @@ class LoanSimulatorViewModel @Inject constructor(
                     delay(5.seconds)
                 }.collect {
                     setLoanDataUseCase.invoke(it)
-                    Log.d("LoanSimulatorViewModel", "trhrollee: $it")
                 }
             }
 
