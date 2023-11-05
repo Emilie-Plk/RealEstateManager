@@ -12,13 +12,16 @@ import com.emplk.realestatemanager.domain.loan_simulator.ResetLoanDataUseCase
 import com.emplk.realestatemanager.domain.loan_simulator.SetLoanDataUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceByLocaleUseCase
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
+import com.emplk.realestatemanager.ui.utils.Event
 import com.emplk.realestatemanager.ui.utils.NativeText
 import com.emplk.utils.TestCoroutineRule
 import com.emplk.utils.observeForTesting
 import io.mockk.every
 import io.mockk.justRun
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runCurrent
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -97,13 +100,145 @@ class LoanSimulatorViewModelTest {
     @Test
     fun `on interest rate change - should update value`() = testCoroutineRule.runTest {
         // Given
+        loanSimulatorViewModel.onInterestRateChanged("2.22")
+        every { getLoanDataAsFlowUseCase.invoke() } returns flowOf(
+            testLoanDataEntity.copy(
+                interestRate = BigDecimal(2.22).setScale(2, RoundingMode.HALF_UP)
+            )
+        )
 
-        loanSimulatorViewModel.onLoanDurationChanged("15")
         // When
         loanSimulatorViewModel.viewState.observeForTesting(this) {
             // Then
-            assertThat(it.value!!.loanDuration).isEqualTo("15")
+            assertThat(it.value!!.loanRate).isEqualTo("2.22")
         }
+    }
+
+    @Test
+    fun `on loan amount change - should update value`() = testCoroutineRule.runTest {
+        // Given
+        loanSimulatorViewModel.onLoanAmountChanged("2000000")
+        every { getLoanDataAsFlowUseCase.invoke() } returns flowOf(
+            testLoanDataEntity.copy(
+                loanAmount = BigDecimal(2000000)
+            )
+        )
+
+        // When
+        loanSimulatorViewModel.viewState.observeForTesting(this) {
+            // Then
+            assertThat(it.value!!.loanAmount).isEqualTo("2000000")
+        }
+    }
+
+    @Test
+    fun `on duration change - should update value`() = testCoroutineRule.runTest {
+        // Given
+        loanSimulatorViewModel.onLoanAmountChanged("2000000")
+        every { getLoanDataAsFlowUseCase.invoke() } returns flowOf(
+            testLoanDataEntity.copy(
+                loanAmount = BigDecimal(2000000)
+            )
+        )
+
+        // When
+        loanSimulatorViewModel.viewState.observeForTesting(this) {
+            // Then
+            assertThat(it.value!!.loanAmount).isEqualTo("2000000")
+        }
+    }
+
+    @Test
+    fun `on calculate clicked with missing interest rate - should trigger event`() = testCoroutineRule.runTest {
+        // Given
+        every { getLoanDataAsFlowUseCase.invoke() } returns flowOf(
+            testLoanDataEntity.copy(
+                interestRate = BigDecimal(0)
+            )
+        )
+
+        loanSimulatorViewModel.viewEvent.observeForTesting(this) { event ->
+            loanSimulatorViewModel.viewState.observeForTesting(this) { viewState ->
+                viewState.value!!.onCalculateClicked.invoke()
+                runCurrent()
+
+                assertThat(event.value).isEqualTo(
+                    Event(
+                        LoanErrorMessages(
+                            loanDurationErrorMessage = null,
+                            amountErrorMessage = null,
+                            interestRateErrorMessage = NativeText.Resource(R.string.loan_simulator_calculate_button_error_message)
+                        )
+                    )
+                )
+            }
+        }
+    }
+
+    @Test
+    fun `on calculate clicked with missing loan amount - should trigger event`() = testCoroutineRule.runTest {
+        // Given
+        every { getLoanDataAsFlowUseCase.invoke() } returns flowOf(
+            testLoanDataEntity.copy(
+                loanAmount = BigDecimal(0)
+            )
+        )
+
+        loanSimulatorViewModel.viewEvent.observeForTesting(this) { event ->
+            loanSimulatorViewModel.viewState.observeForTesting(this) { viewState ->
+                viewState.value!!.onCalculateClicked.invoke()
+                runCurrent()
+
+                assertThat(event.value).isEqualTo(
+                    Event(
+                        LoanErrorMessages(
+                            loanDurationErrorMessage = null,
+                            amountErrorMessage = NativeText.Resource(R.string.loan_simulator_calculate_button_error_message),
+                            interestRateErrorMessage = null
+                        )
+                    )
+                )
+            }
+        }
+    }
+
+    @Test
+    fun `on calculate clicked with missing duration - should trigger event`() = testCoroutineRule.runTest {
+        // Given
+        every { getLoanDataAsFlowUseCase.invoke() } returns flowOf(
+            testLoanDataEntity.copy(
+                loanDuration = BigDecimal(0)
+            )
+        )
+
+        loanSimulatorViewModel.viewEvent.observeForTesting(this) { event ->
+            loanSimulatorViewModel.viewState.observeForTesting(this) { viewState ->
+                viewState.value!!.onCalculateClicked.invoke()
+                runCurrent()
+
+                assertThat(event.value).isEqualTo(
+                    Event(
+                        LoanErrorMessages(
+                            loanDurationErrorMessage = NativeText.Resource(
+                                R.string.loan_simulator_calculate_button_error_message
+                            ), amountErrorMessage = null, interestRateErrorMessage = null
+                        )
+                    )
+                )
+            }
+        }
+    }
+
+    @Test
+    fun `onResumed() called - should trigger setLoanDataUseCase`() = testCoroutineRule.runTest {
+        // When
+        loanSimulatorViewModel.onResume()
+
+        // Then
+        loanSimulatorViewModel.viewState.observeForTesting(this) {
+            assertThat(it.value).isEqualTo(testLoanSimulatorViewState)
+        } // called twice bc when launching it tis empty form!
+        verify(exactly = 1) { setLoanDataUseCase.invoke(any()) }
     }
 
     private val testLoanDataEntity = LoanDataEntity(
