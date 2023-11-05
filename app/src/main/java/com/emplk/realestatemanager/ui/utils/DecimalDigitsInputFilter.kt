@@ -7,7 +7,7 @@ import java.util.regex.Pattern
 
 class DecimalDigitsInputFilter(maxDecimalPlaces: Int) : InputFilter {
     private val pattern: Pattern = Pattern.compile(
-        "[0-9]"  + "+((\\.[0-9]{0,"
+        "[0-9]" + "+((\\.[0-9]{0,"
                 + (maxDecimalPlaces - 1) + "})?)||(\\.)?"
     )
 

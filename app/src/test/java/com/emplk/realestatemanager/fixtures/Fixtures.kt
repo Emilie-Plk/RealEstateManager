@@ -1,7 +1,5 @@
 package com.emplk.realestatemanager.fixtures
 
-import com.emplk.realestatemanager.data.currency_rate.response.FixerCurrencyRateResponse
-import com.emplk.realestatemanager.data.currency_rate.response.RateResponse
 import com.emplk.realestatemanager.data.property.PropertyDto
 import com.emplk.realestatemanager.data.property.PropertyWithDetails
 import com.emplk.realestatemanager.data.property.location.LocationDto

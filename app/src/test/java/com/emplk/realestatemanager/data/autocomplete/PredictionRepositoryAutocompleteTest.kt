@@ -25,7 +25,6 @@ import org.junit.Assert.assertThrows
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import java.lang.Exception
 
 class PredictionRepositoryAutocompleteTest {
 
@@ -138,7 +137,13 @@ class PredictionRepositoryAutocompleteTest {
 
         // Then
         assertThat(result).isInstanceOf(PredictionWrapper.Failure::class)
-        assertThrows(Exception::class.java) { coEvery {  predictionRepositoryAutocomplete.getAddressPredictions(TEST_INPUT) } }
+        assertThrows(Exception::class.java) {
+            coEvery {
+                predictionRepositoryAutocomplete.getAddressPredictions(
+                    TEST_INPUT
+                )
+            }
+        }
         coVerify(exactly = 1) { googleApi.getAddressPredictions(TEST_INPUT, TEST_TYPE) }
         confirmVerified(googleApi)
     }
@@ -155,7 +160,13 @@ class PredictionRepositoryAutocompleteTest {
 
         // Then
         assertThat(result).isInstanceOf(PredictionWrapper.Failure::class)
-        assertThrows(Exception::class.java) { coEvery {  predictionRepositoryAutocomplete.getAddressPredictions(TEST_INPUT) } }
+        assertThrows(Exception::class.java) {
+            coEvery {
+                predictionRepositoryAutocomplete.getAddressPredictions(
+                    TEST_INPUT
+                )
+            }
+        }
         coVerify(exactly = 1) { googleApi.getAddressPredictions(TEST_INPUT, TEST_TYPE) }
         confirmVerified(googleApi)
     }

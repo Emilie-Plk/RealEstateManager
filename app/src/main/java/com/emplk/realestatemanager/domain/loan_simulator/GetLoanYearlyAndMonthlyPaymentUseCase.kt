@@ -13,7 +13,8 @@ class GetLoanYearlyAndMonthlyPaymentUseCase @Inject constructor() {
         val monthlyInterestRate = loanInterest.divide(BigDecimal(12 * 100), 8, RoundingMode.HALF_UP)
         val loanDurationInMonths = loanDuration.multiply(BigDecimal(12))
 
-        val numerator = monthlyInterestRate.multiply((BigDecimal.ONE + monthlyInterestRate).pow(loanDurationInMonths.toInt()))
+        val numerator =
+            monthlyInterestRate.multiply((BigDecimal.ONE + monthlyInterestRate).pow(loanDurationInMonths.toInt()))
         val denominator = (BigDecimal.ONE + monthlyInterestRate).pow(loanDurationInMonths.toInt()) - BigDecimal.ONE
 
         val monthlyPayment: BigDecimal = loanAmount.multiply(numerator).divide(denominator, 2, RoundingMode.HALF_UP)

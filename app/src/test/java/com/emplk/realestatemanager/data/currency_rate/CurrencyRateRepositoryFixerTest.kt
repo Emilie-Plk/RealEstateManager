@@ -14,9 +14,7 @@ import com.emplk.realestatemanager.domain.currency_rate.CurrencyRateWrapper
 import com.emplk.realestatemanager.fixtures.testFixedClock
 import com.emplk.utils.TestCoroutineRule
 import io.mockk.coEvery
-import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.verify
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runCurrent
@@ -108,12 +106,13 @@ class CurrencyRateRepositoryFixerTest {
         coEvery {
             testDataStore.edit { preferences ->
                 preferences[TEST_USD_TO_EUR_RATE_KEY] = "1.15"
-                preferences[TEST_LAST_RATE_DATE_KEY] =  LocalDateTime.of(2023, 10, 31, 13, 22, 35).toString()
+                preferences[TEST_LAST_RATE_DATE_KEY] = LocalDateTime.of(2023, 10, 31, 13, 22, 35).toString()
             }
         } returns mockedPreferencesChanged
 
         coEvery { mockedPreferencesChanged[TEST_USD_TO_EUR_RATE_KEY] } returns "1.15"
-        coEvery { mockedPreferencesChanged[TEST_LAST_RATE_DATE_KEY] } returns LocalDateTime.of(2023, 10, 31, 13, 22, 35).toString()
+        coEvery { mockedPreferencesChanged[TEST_LAST_RATE_DATE_KEY] } returns LocalDateTime.of(2023, 10, 31, 13, 22, 35)
+            .toString()
 
 
         // When

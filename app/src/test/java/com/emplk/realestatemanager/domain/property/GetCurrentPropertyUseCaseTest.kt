@@ -77,17 +77,17 @@ class GetCurrentPropertyUseCaseTest {
 
     @Test
     fun `invoke - current property is null`() = testCoroutineRule.runTest {
-  /*      // Given
-        every { propertyRepository.getPropertyByIdAsFlow(TEST_PROPERTY_ID) } returns flowOf(null)
+        /*      // Given
+              every { propertyRepository.getPropertyByIdAsFlow(TEST_PROPERTY_ID) } returns flowOf(null)
 
-        // When
-        getCurrentPropertyUseCase.invoke().test {
-            // TODO Nino: how to "test" that flow is... non-existent?
-        }
-        // Then
-        coVerify(exactly = 1) { getCurrentPropertyIdFlowUseCase.invoke() }
-        coVerify(exactly = 1) { propertyRepository.getPropertyByIdAsFlow(TEST_PROPERTY_ID) }
-        confirmVerified(getCurrentPropertyIdFlowUseCase)*/
+              // When
+              getCurrentPropertyUseCase.invoke().test {
+                  // TODO Nino: how to "test" that flow is... non-existent?
+              }
+              // Then
+              coVerify(exactly = 1) { getCurrentPropertyIdFlowUseCase.invoke() }
+              coVerify(exactly = 1) { propertyRepository.getPropertyByIdAsFlow(TEST_PROPERTY_ID) }
+              confirmVerified(getCurrentPropertyIdFlowUseCase)*/
     }
 
 

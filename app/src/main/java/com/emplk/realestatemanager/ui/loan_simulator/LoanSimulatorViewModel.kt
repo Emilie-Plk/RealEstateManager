@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.ui.loan_simulator
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
@@ -11,6 +12,7 @@ import com.emplk.realestatemanager.domain.loan_simulator.ResetLoanDataUseCase
 import com.emplk.realestatemanager.domain.loan_simulator.SetLoanDataUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceByLocaleUseCase
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
+import com.emplk.realestatemanager.ui.utils.Event
 import com.emplk.realestatemanager.ui.utils.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.coroutineScope
@@ -34,11 +36,13 @@ class LoanSimulatorViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val loanParamsMutableStateFlow: MutableStateFlow<LoanParams> = MutableStateFlow(LoanParams())
+    private val errorMessageMutableSharedFlow: MutableStateFlow<LoanErrorMessages> =
+        MutableStateFlow(LoanErrorMessages())
 
     val viewState: LiveData<LoanSimulatorViewState> = liveData {
         coroutineScope {
             launch {
-                getLoanDataAsFlowUseCase.invoke().collectLatest { loanData ->
+                getLoanDataAsFlowUseCase.invoke().collect { loanData ->
                     loanParamsMutableStateFlow.update {
                         it.copy(
                             loanAmount = loanData.loanAmount,
@@ -48,6 +52,18 @@ class LoanSimulatorViewModel @Inject constructor(
                             monthlyPayment = loanData.monthlyPayment,
                         )
                     }
+                    Log.d("LoanSimulatorViewModel", "LoanData collected: $loanData")
+                }
+            }
+
+            // throttle
+            launch {
+                loanParamsMutableStateFlow.transform {
+                    emit(it)
+                    delay(5.seconds)
+                }.collect {
+                    setLoanDataUseCase.invoke(it)
+                    Log.d("LoanSimulatorViewModel", "trhrollee: $it")
                 }
             }
 
@@ -68,7 +84,26 @@ class LoanSimulatorViewModel @Inject constructor(
                                     formatPriceByLocaleUseCase.invoke(loanParams.monthlyPayment),
                                 )
                             ),
-                        onCalculateClicked = EquatableCallback { // maybe event show?
+                        onCalculateClicked = EquatableCallback {
+                            if (loanParams.loanAmount == BigDecimal.ZERO ||
+                                loanParams.interestRate == BigDecimal.ZERO ||
+                                loanParams.loanDuration == BigDecimal.ZERO
+                            ) {
+                                errorMessageMutableSharedFlow.tryEmit(
+                                    LoanErrorMessages(
+                                        amountErrorMessage = if (loanParams.loanAmount == BigDecimal.ZERO) NativeText.Resource(
+                                            R.string.loan_simulator_calculate_button_error_message
+                                        ) else null,
+                                        interestRateErrorMessage = if (loanParams.interestRate == BigDecimal.ZERO) NativeText.Resource(
+                                            R.string.loan_simulator_calculate_button_error_message
+                                        ) else null,
+                                        loanDurationErrorMessage = if (loanParams.loanDuration == BigDecimal.ZERO) NativeText.Resource(
+                                            R.string.loan_simulator_calculate_button_error_message
+                                        ) else null,
+                                    )
+                                )
+                                return@EquatableCallback
+                            }
                             val result = getLoanYearlyAndMonthlyPaymentUseCase.invoke(
                                 loanParamsMutableStateFlow.value.loanAmount,
                                 loanParamsMutableStateFlow.value.interestRate,
@@ -86,60 +121,87 @@ class LoanSimulatorViewModel @Inject constructor(
                         },
                         onResetClicked = EquatableCallback {
                             resetLoanDataUseCase.invoke()
-                            loanParamsMutableStateFlow.update {
-                                it.copy(
-                                    loanAmount = BigDecimal.ZERO,
-                                    interestRate = BigDecimal.ZERO,
-                                    loanDuration = BigDecimal.ZERO,
-                                    yearlyPayment = BigDecimal.ZERO,
-                                    monthlyPayment = BigDecimal.ZERO,
-                                )
-                            }
-                        }
+                        },
                     )
                 )
-            }
-
-            launch {
-                loanParamsMutableStateFlow.transform {
-                    emit(it)
-                    delay(5.seconds)
-                }.collect {
-                    setLoanDataUseCase.invoke(it)
-                }
             }
         }
     }
 
+    val viewEvent: LiveData<Event<LoanErrorMessages>> = liveData {
+        errorMessageMutableSharedFlow.collectLatest {
+            emit(Event(it))
+        }
+    }
+
     fun onLoanAmountChanged(loanAmount: String) {
+        if (errorMessageMutableSharedFlow.value.amountErrorMessage != null)
+            errorMessageMutableSharedFlow.tryEmit(LoanErrorMessages(amountErrorMessage = null))
+
         if (loanAmount.isBlank() || loanAmount.startsWith("0")) return
-        else
-            loanParamsMutableStateFlow.update {
-                it.copy(
-                    loanAmount = BigDecimal(loanAmount)
-                )
-            }
+
+        loanParamsMutableStateFlow.update {
+            it.copy(
+                loanAmount = BigDecimal(loanAmount)
+            )
+        }
     }
 
     fun onInterestRateChanged(interestRate: String) {
+        if (errorMessageMutableSharedFlow.value.interestRateErrorMessage != null)
+            errorMessageMutableSharedFlow.tryEmit(LoanErrorMessages(interestRateErrorMessage = null))
         if (interestRate.isBlank() || interestRate.startsWith("0")) return
-        else
-            loanParamsMutableStateFlow.update {
-                it.copy(
-                    interestRate = BigDecimal(interestRate)
-                )
-            }
+
+        loanParamsMutableStateFlow.update {
+            it.copy(
+                interestRate = BigDecimal(interestRate)
+            )
+        }
     }
 
     fun onLoanDurationChanged(loanDuration: String) {
+        if (errorMessageMutableSharedFlow.value.loanDurationErrorMessage != null)
+            errorMessageMutableSharedFlow.tryEmit(LoanErrorMessages(loanDurationErrorMessage = null))
         if (loanDuration.isBlank() || loanDuration.startsWith("0")) return
-        else
-            loanParamsMutableStateFlow.update {
-                it.copy(
-                    loanDuration = BigDecimal(loanDuration)
-                )
-            }
+
+        loanParamsMutableStateFlow.update {
+            it.copy(
+                loanDuration = BigDecimal(loanDuration)
+            )
+        }
+    }
+
+    fun onResume() {
         setLoanDataUseCase.invoke(loanParamsMutableStateFlow.value)
     }
 
+    fun onLoanAmountReset() {
+        loanParamsMutableStateFlow.update {
+            it.copy(
+                interestRate = BigDecimal.ZERO
+            )
+        }
+    }
+
+    fun onInterestRateReset() {
+        loanParamsMutableStateFlow.update {
+            it.copy(
+                interestRate = BigDecimal.ZERO
+            )
+        }
+    }
+
+    fun onLoanDurationReset() {
+        loanParamsMutableStateFlow.update {
+            it.copy(
+                loanDuration = BigDecimal.ZERO
+            )
+        }
+    }
 }
+
+data class LoanErrorMessages(
+    val amountErrorMessage: NativeText? = null,
+    val interestRateErrorMessage: NativeText? = null,
+    val loanDurationErrorMessage: NativeText? = null,
+)

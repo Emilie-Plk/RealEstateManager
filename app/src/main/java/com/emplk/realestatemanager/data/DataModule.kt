@@ -7,11 +7,8 @@ import android.content.res.Resources
 import android.os.Build
 import android.util.LruCache
 import androidx.datastore.core.DataStore
-import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.emptyPreferences
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.work.WorkManager
 import com.emplk.realestatemanager.BuildConfig
@@ -171,7 +168,7 @@ class DataModule {
     fun provideCurrencyRateApi(@FixerApiRetrofit retrofit: Retrofit): FixerApi =
         retrofit.create(FixerApi::class.java)
 
-  @Singleton
+    @Singleton
     @Provides
     @FixerApiDataStore
     fun providePreferencesDatastore(@ApplicationContext appContext: Context): DataStore<Preferences> =
