@@ -10,4 +10,4 @@ data class LoanSimulatorViewState(
     val yearlyAndMonthlyPayment: NativeText?,
     val onCalculateClicked: EquatableCallback,
     val onResetClicked: EquatableCallback,
-    )
+)

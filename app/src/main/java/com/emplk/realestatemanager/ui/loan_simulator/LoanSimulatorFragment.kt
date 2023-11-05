@@ -1,8 +1,8 @@
 package com.emplk.realestatemanager.ui.loan_simulator
 
-import com.emplk.realestatemanager.ui.utils.DecimalDigitsInputFilter
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
@@ -10,6 +10,8 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.LoanSimulatorFragmentBinding
+import com.emplk.realestatemanager.ui.utils.DecimalDigitsInputFilter
+import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.InputFilterMinMax
 import com.emplk.realestatemanager.ui.utils.viewBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -80,8 +82,17 @@ class LoanSimulatorFragment : BottomSheetDialogFragment(R.layout.loan_simulator_
             }
 
             binding.resetButton.setOnClickListener { viewState.onResetClicked() }
-            binding.calculateButton.setOnClickListener { viewState.onCalculateClicked.invoke() }
+            binding.calculateButton.setOnClickListener {
+                viewState.onCalculateClicked.invoke()
+            }
             binding.monthlyPaymentTv.text = viewState.yearlyAndMonthlyPayment?.toCharSequence(view.context) ?: ""
+        }
+
+        viewModel.viewEvent.observeEvent(viewLifecycleOwner) { event ->
+            Log.d("LoanSimulatorFragment", "event: $event")
+            binding.amountTextInputLayout.error = event.amountErrorMessage?.toCharSequence(view.context)
+            binding.interestRateTextInputLayout.error = event.interestRateErrorMessage?.toCharSequence(view.context)
+            binding.loanDurationTextInputLayout.error = event.loanDurationErrorMessage?.toCharSequence(view.context)
         }
 
         binding.amountEditText.doOnTextChanged { text, _, _, _ ->
@@ -91,12 +102,22 @@ class LoanSimulatorFragment : BottomSheetDialogFragment(R.layout.loan_simulator_
         }
         binding.amountEditText.doAfterTextChanged {
             viewModel.onLoanAmountChanged(it?.toString() ?: "")
+
+        }
+
+        binding.amountTextInputLayout.setEndIconOnClickListener {
+            viewModel.onLoanAmountReset()
         }
 
         binding.interestRateEditText.filters = arrayOf(DecimalDigitsInputFilter(2), InputFilterMinMax(0.1F, 100.0F))
 
         binding.interestRateEditText.doAfterTextChanged {
             viewModel.onInterestRateChanged(it?.toString() ?: "")
+
+        }
+
+        binding.interestRateTextInputLayout.setEndIconOnClickListener {
+            viewModel.onInterestRateReset()
         }
 
         binding.loanDurationEditText.doOnTextChanged { text, _, _, _ ->
@@ -106,6 +127,16 @@ class LoanSimulatorFragment : BottomSheetDialogFragment(R.layout.loan_simulator_
         }
         binding.loanDurationEditText.doAfterTextChanged {
             viewModel.onLoanDurationChanged(it?.toString() ?: "")
+
         }
+
+        binding.loanDurationTextInputLayout.setEndIconOnClickListener {
+            viewModel.onLoanDurationReset()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.onResume()
     }
 }

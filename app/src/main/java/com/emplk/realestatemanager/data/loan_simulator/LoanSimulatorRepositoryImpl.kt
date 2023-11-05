@@ -4,8 +4,6 @@ import com.emplk.realestatemanager.domain.loan_simulator.LoanDataEntity
 import com.emplk.realestatemanager.domain.loan_simulator.LoanSimulatorRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.map
-import java.math.BigDecimal
 import javax.inject.Inject
 
 class LoanSimulatorRepositoryImpl @Inject constructor() : LoanSimulatorRepository {
