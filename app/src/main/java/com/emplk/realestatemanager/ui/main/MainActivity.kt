@@ -121,7 +121,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-                is MainViewEvent.DetailFragmentOnPhone -> {
+                is MainViewEvent.DetailOnPhone -> {
                     supportFragmentManager.commit {
                         Log.d("COUCOU", "MainActivity onCreate: DisplayDetailFragmentOnPhone ")
                         replace(
@@ -132,7 +132,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-                is MainViewEvent.DetailFragmentOnTablet -> {
+                is MainViewEvent.DetailOnTablet -> {
                     if (supportFragmentManager.findFragmentByTag(PROPERTIES_FRAGMENT_TAG) == null) {
                         Log.d("COUCOU", "MainActivity onCreate: properties fragment is null ")
                         supportFragmentManager.commit {
@@ -155,16 +155,11 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-                MainViewEvent.FilterPropertiesFragmentOnPhone -> {
-                    val filterFragment = FilterPropertiesFragment.newInstance()
-                    filterFragment.show(supportFragmentManager, FILTER_FRAGMENT_TAG)
+                MainViewEvent.FilterProperties -> {
+                    if (supportFragmentManager.findFragmentByTag(FILTER_FRAGMENT_TAG) == null)
+                        FilterPropertiesFragment.newInstance().show(supportFragmentManager, FILTER_FRAGMENT_TAG)
                 }
 
-                MainViewEvent.FilterPropertiesFragmentOnTablet -> {
-                    // filter Dialog fragment
-                    val filterFragment = FilterPropertiesFragment.newInstance()
-                    filterFragment.show(supportFragmentManager, FILTER_FRAGMENT_TAG)
-                }
 
                 is MainViewEvent.NavigateToBlank -> {
                     startActivity(BlankActivity.navigate(this, event.fragmentTag))

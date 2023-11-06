@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:padding="8dp"
     android:layout_marginStart="8dp"
     android:layout_marginTop="8dp"
     android:layout_marginEnd="8dp">
@@ -139,7 +140,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
-
+*
         <TextView
             android:id="@+id/filter_property_entry_date_tv"
             style="@style/Theme.RealEstateManager.FilterPropertySubtitle"
@@ -149,51 +150,47 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/filter_property_city_textInputLayout" />
 
-        <RadioGroup
-            android:id="@+id/filter_property_entry_date_radioGroup"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/filter_property_entry_date_chipGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:gravity="center"
-            android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
-
+            app:singleSelection="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/filter_property_entry_date_tv">
 
-            <RadioButton
+            <com.google.android.material.chip.Chip
                 android:id="@+id/filter_property_more_than_6_months_radio"
+                style="@style/Theme.RealEstateManager.ChipSingleSelection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
+                android:checked="true"
                 android:text="+ 6mths" />
 
-            <RadioButton
+
+            <com.google.android.material.chip.Chip
                 android:id="@+id/filter_property_entry_date_less_than_6_months_radio"
                 android:layout_width="wrap_content"
+                style="@style/Theme.RealEstateManager.ChipSingleSelection"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
                 android:text="&lt; 3mths" />
 
-            <RadioButton
+            <com.google.android.material.chip.Chip
                 android:id="@+id/filter_property_entry_date_less_than_1_month_radio"
                 android:layout_width="wrap_content"
+                style="@style/Theme.RealEstateManager.ChipSingleSelection"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
                 android:text="&lt; 1mth" />
 
-            <RadioButton
+            <com.google.android.material.chip.Chip
                 android:id="@+id/filter_property_entry_date_less_than_1_week_radio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
+                style="@style/Theme.RealEstateManager.ChipSingleSelection"
                 android:text="&lt; 1wk" />
 
-        </RadioGroup>
+        </com.google.android.material.chip.ChipGroup>
 
         <TextView
             android:id="@+id/filter_property_entry_sale_state_tv"
@@ -203,7 +200,7 @@
             android:layout_marginTop="24dp"
             android:text="Available for sale"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/filter_property_entry_date_radioGroup" />
+            app:layout_constraintTop_toBottomOf="@+id/filter_property_entry_date_chipGroup" />
 
         <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/filter_property_entry_sale_state_switch"

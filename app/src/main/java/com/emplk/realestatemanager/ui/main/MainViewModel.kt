@@ -143,13 +143,13 @@ class MainViewModel @Inject constructor(
                 DETAIL_FRAGMENT ->
                     if (propertyId != null) {
                         if (!isTablet) {
-                            emit(Event(MainViewEvent.DetailFragmentOnPhone))
+                            emit(Event(MainViewEvent.DetailOnPhone))
                         } else {
-                            emit(Event(MainViewEvent.DetailFragmentOnTablet))
+                            emit(Event(MainViewEvent.DetailOnTablet))
                         }
                     }
 
-                FILTER_DIALOG_FRAGMENT -> emit(Event(MainViewEvent.FilterPropertiesFragmentOnTablet))
+                FILTER_DIALOG_FRAGMENT -> emit(Event(MainViewEvent.FilterProperties))
 
                 DRAFTS_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(DRAFTS_FRAGMENT.name)))
                 MAP_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(MAP_FRAGMENT.name)))

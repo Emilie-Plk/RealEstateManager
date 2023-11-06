@@ -12,13 +12,34 @@
         android:layout_width="match_parent"
         android:layout_height="0dp">
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintGuide_percent="0.08"
+            android:orientation="vertical" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintGuide_percent="0.92"
+            android:orientation="vertical" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintGuide_percent="0.5"
+            android:orientation="vertical" />
+
         <TextView
             android:id="@+id/filter_property_type_tv"
             style="@style/Theme.RealEstateManager.FilterPropertySubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Type"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -26,11 +47,9 @@
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_3"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
             app:layout_constraintTop_toBottomOf="@id/filter_property_type_tv">
 
             <AutoCompleteTextView
@@ -47,7 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Price"
-            app:layout_constraintStart_toStartOf="@+id/filter_property_price_rangeSlider"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
             app:layout_constraintTop_toBottomOf="@id/filter_property_type_textInputLayout" />
 
         <TextView
@@ -67,10 +86,9 @@
             android:id="@+id/filter_property_price_rangeSlider"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/filter_property_surface_rangeSlider"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
             app:layout_constraintTop_toBottomOf="@id/filter_property_price_tv"
             tools:valueFrom="1"
             tools:valueTo="100.0" />
@@ -102,9 +120,8 @@
             android:id="@+id/filter_property_surface_rangeSlider"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginEnd="24dp"
             app:layout_constraintBottom_toBottomOf="@+id/filter_property_price_rangeSlider"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_2"
             app:layout_constraintStart_toEndOf="@+id/filter_property_price_rangeSlider"
             app:layout_constraintTop_toTopOf="@+id/filter_property_price_rangeSlider"
             tools:valueFrom="0"
@@ -117,7 +134,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="City"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
             app:layout_constraintTop_toBottomOf="@+id/filter_property_surface_rangeSlider" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -126,8 +143,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_2"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
             app:layout_constraintTop_toBottomOf="@+id/filter_property_city_tv">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -142,76 +159,70 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Entry date"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
             app:layout_constraintTop_toBottomOf="@+id/filter_property_city_textInputLayout" />
 
-        <RadioGroup
-            android:id="@+id/filter_property_entry_date_radioGroup"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/filter_property_entry_date_chipGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:gravity="center"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/filter_property_entry_date_tv"
+            app:layout_constraintTop_toBottomOf="@id/filter_property_entry_date_tv"
+            app:singleSelection="true">
 
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/filter_property_entry_date_tv">
-
-            <RadioButton
+            <com.google.android.material.chip.Chip
                 android:id="@+id/filter_property_more_than_6_months_radio"
+                style="@style/Theme.RealEstateManager.ChipSingleSelection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
+                android:checked="true"
                 android:text="+ 6mths" />
 
-            <RadioButton
+
+            <com.google.android.material.chip.Chip
                 android:id="@+id/filter_property_entry_date_less_than_6_months_radio"
+                style="@style/Theme.RealEstateManager.ChipSingleSelection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
                 android:text="&lt; 3mths" />
 
-            <RadioButton
+            <com.google.android.material.chip.Chip
                 android:id="@+id/filter_property_entry_date_less_than_1_month_radio"
+                style="@style/Theme.RealEstateManager.ChipSingleSelection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
                 android:text="&lt; 1mth" />
 
-            <RadioButton
+            <com.google.android.material.chip.Chip
                 android:id="@+id/filter_property_entry_date_less_than_1_week_radio"
+                style="@style/Theme.RealEstateManager.ChipSingleSelection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:text="&lt; 1 week" />
+                android:text="&lt; 1wk" />
 
-        </RadioGroup>
+        </com.google.android.material.chip.ChipGroup>
+
 
         <TextView
             android:id="@+id/filter_property_entry_sale_state_tv"
             style="@style/Theme.RealEstateManager.FilterPropertySubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
             android:text="Available for sale"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/filter_property_entry_date_radioGroup" />
+            app:layout_constraintStart_toStartOf="@+id/guideline_3"
+            app:layout_constraintTop_toBottomOf="@+id/filter_property_city_textInputLayout" />
 
         <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/filter_property_entry_sale_state_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/filter_property_entry_date_chipGroup"
+            app:layout_constraintEnd_toEndOf="@+id/filter_property_entry_sale_state_tv"
+            app:layout_constraintStart_toEndOf="@+id/filter_property_entry_date_chipGroup"
+            app:layout_constraintTop_toTopOf="@+id/filter_property_entry_date_chipGroup"
             app:thumbIconTint="@color/secondary"
-            app:thumbTint="@color/secondary"
-
-            android:layout_marginStart="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/filter_property_entry_sale_state_tv"
-            app:layout_constraintStart_toEndOf="@+id/filter_property_entry_sale_state_tv"
-            app:layout_constraintTop_toTopOf="@+id/filter_property_entry_sale_state_tv" />
+            app:thumbTint="@color/secondary" />
 
 
         <Button
@@ -219,13 +230,13 @@
             style="@style/Theme.RealEstateManager.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="12dp"
             android:layout_marginBottom="12dp"
             android:text="Cancel"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/filter_property_filter_btn"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/filter_property_entry_sale_state_tv" />
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@+id/filter_property_entry_date_chipGroup" />
 
         <Button
             android:id="@+id/filter_property_filter_btn"
@@ -235,9 +246,10 @@
             android:text="Filter"
             app:icon="@drawable/baseline_filter_list_24"
             app:layout_constraintBottom_toBottomOf="@+id/filter_property_cancel_btn"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_2"
             app:layout_constraintStart_toEndOf="@id/filter_property_cancel_btn"
             app:layout_constraintTop_toTopOf="@id/filter_property_cancel_btn" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

@@ -53,7 +53,8 @@ class PropertiesViewModel @Inject constructor(
                 )
             }
 
-            emit(propertiesWithConvertedPriceAndSurface.asSequence()
+            emit(propertiesWithConvertedPriceAndSurface
+                .asSequence()
                 .map { property ->
                     val photoUrl = property.pictures.find { it.isFeatured }?.uri
                     val featuredPicture = photoUrl?.let { NativePhoto.Uri(it) }
