@@ -3,11 +3,10 @@ package com.emplk.realestatemanager.ui.main
 sealed class MainViewEvent {
     object PropertyList : MainViewEvent()
 
-    object DetailFragmentOnPhone : MainViewEvent()
-    object DetailFragmentOnTablet : MainViewEvent()
+    object DetailOnPhone : MainViewEvent()
+    object DetailOnTablet : MainViewEvent()
 
-    object FilterPropertiesFragmentOnPhone : MainViewEvent()
-    object FilterPropertiesFragmentOnTablet : MainViewEvent()
+    object FilterProperties : MainViewEvent()
 
     object LoanSimulator : MainViewEvent()
 
