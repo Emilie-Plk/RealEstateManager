@@ -21,7 +21,7 @@ class GetToolbarSubtitleUseCase @Inject constructor(
                 when (navigationType) {
                     NavigationFragmentType.EDIT_FRAGMENT -> "Edit property"
                     NavigationFragmentType.LIST_FRAGMENT -> "All properties"
-                    NavigationFragmentType.FILTER_FRAGMENT -> "Filter properties"
+                    NavigationFragmentType.FILTER_DIALOG_FRAGMENT -> "Filter properties"
                     NavigationFragmentType.ADD_FRAGMENT -> "Add property"
                     NavigationFragmentType.DETAIL_FRAGMENT -> "Property details"
                     NavigationFragmentType.DRAFT_DIALOG_FRAGMENT -> null

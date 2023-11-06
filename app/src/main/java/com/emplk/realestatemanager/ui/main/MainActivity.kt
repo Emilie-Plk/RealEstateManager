@@ -20,6 +20,7 @@ import com.emplk.realestatemanager.databinding.MainActivityBinding
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.ui.blank.BlankActivity
 import com.emplk.realestatemanager.ui.detail.DetailFragment
+import com.emplk.realestatemanager.ui.filter.FilterPropertiesFragment
 import com.emplk.realestatemanager.ui.list.PropertiesFragment
 import com.emplk.realestatemanager.ui.loan_simulator.LoanSimulatorFragment
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
@@ -155,11 +156,14 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 MainViewEvent.FilterPropertiesFragmentOnPhone -> {
-                    TODO()
+                    val filterFragment = FilterPropertiesFragment.newInstance()
+                    filterFragment.show(supportFragmentManager, FILTER_FRAGMENT_TAG)
                 }
 
                 MainViewEvent.FilterPropertiesFragmentOnTablet -> {
-                    TODO()
+                    // filter Dialog fragment
+                    val filterFragment = FilterPropertiesFragment.newInstance()
+                    filterFragment.show(supportFragmentManager, FILTER_FRAGMENT_TAG)
                 }
 
                 is MainViewEvent.NavigateToBlank -> {

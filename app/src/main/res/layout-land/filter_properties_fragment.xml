@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:layout_marginStart="8dp"
     android:layout_marginTop="8dp"
     android:layout_marginEnd="8dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
 
         <TextView
             android:id="@+id/filter_property_type_tv"
@@ -26,9 +26,9 @@
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/filter_property_type_tv">
@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Price"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/filter_property_price_rangeSlider"
             app:layout_constraintTop_toBottomOf="@id/filter_property_type_textInputLayout" />
 
         <TextView
@@ -65,13 +65,12 @@
 
         <com.google.android.material.slider.RangeSlider
             android:id="@+id/filter_property_price_rangeSlider"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="24dp"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/filter_property_surface_rangeSlider"
             app:layout_constraintTop_toBottomOf="@id/filter_property_price_tv"
             tools:valueFrom="1"
             tools:valueTo="100.0" />
@@ -82,9 +81,11 @@
             style="@style/Theme.RealEstateManager.FilterPropertySubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
             android:text="Surface"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/filter_property_price_rangeSlider" />
+            app:layout_constraintStart_toEndOf="@+id/filter_property_price_unit_tv"
+            app:layout_constraintStart_toStartOf="@+id/filter_property_surface_rangeSlider"
+            app:layout_constraintTop_toBottomOf="@+id/filter_property_type_textInputLayout" />
 
         <TextView
             android:id="@+id/filter_property_surface_unit_tv"
@@ -95,18 +96,17 @@
             app:layout_constraintBottom_toBottomOf="@id/filter_property_surface_tv"
             app:layout_constraintStart_toEndOf="@id/filter_property_surface_tv"
             app:layout_constraintTop_toTopOf="@id/filter_property_surface_tv"
-            tools:text="(in sq ft)" />
+            tools:text="(in m²)" />
 
         <com.google.android.material.slider.RangeSlider
             android:id="@+id/filter_property_surface_rangeSlider"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="24dp"
+            app:layout_constraintBottom_toBottomOf="@+id/filter_property_price_rangeSlider"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/filter_property_surface_tv"
+            app:layout_constraintStart_toEndOf="@+id/filter_property_price_rangeSlider"
+            app:layout_constraintTop_toTopOf="@+id/filter_property_price_rangeSlider"
             tools:valueFrom="0"
             tools:valueTo="100.0" />
 
@@ -116,7 +116,7 @@
             style="@style/Theme.RealEstateManager.FilterPropertySubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Location"
+            android:text="City"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/filter_property_surface_rangeSlider" />
 
@@ -126,16 +126,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:imeOptions="actionDone"
-            android:hint="Address, neighborhood, city..."
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/filter_property_city_tv">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/filter_property_city_editText"
-                android:inputType="textMultiLine|textCapSentences"
-                android:maxLines="2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -191,7 +187,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
-                android:text="&lt; 1wk" />
+                android:text="&lt; 1 week" />
 
         </RadioGroup>
 
@@ -209,13 +205,13 @@
             android:id="@+id/filter_property_entry_sale_state_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:thumbIconTint="@color/secondary"
+            app:thumbTint="@color/secondary"
+
             android:layout_marginStart="8dp"
             app:layout_constraintBottom_toBottomOf="@+id/filter_property_entry_sale_state_tv"
-
             app:layout_constraintStart_toEndOf="@+id/filter_property_entry_sale_state_tv"
-            app:layout_constraintTop_toTopOf="@+id/filter_property_entry_sale_state_tv"
-            app:thumbIconTint="@color/secondary"
-            app:thumbTint="@color/secondary" />
+            app:layout_constraintTop_toTopOf="@+id/filter_property_entry_sale_state_tv" />
 
 
         <Button
@@ -233,10 +229,11 @@
 
         <Button
             android:id="@+id/filter_property_filter_btn"
+            style="@style/Theme.RealEstateManager.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/secondary"
-            android:text="View 24 results"
+            android:text="Filter"
+            app:icon="@drawable/baseline_filter_list_24"
             app:layout_constraintBottom_toBottomOf="@+id/filter_property_cancel_btn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/filter_property_cancel_btn"
