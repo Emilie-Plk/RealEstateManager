@@ -14,7 +14,7 @@ import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.DETA
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.DRAFTS_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.DRAFT_DIALOG_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.EDIT_FRAGMENT
-import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.FILTER_FRAGMENT
+import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.FILTER_DIALOG_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.LIST_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.LOAN_SIMULATOR_DIALOG_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.MAP_FRAGMENT
@@ -72,7 +72,7 @@ class MainViewModel @Inject constructor(
 
                 EDIT_FRAGMENT -> Unit
 
-                FILTER_FRAGMENT -> if (!isTablet) {
+                FILTER_DIALOG_FRAGMENT -> if (!isTablet) {
                     emit(
                         MainViewState(
                             false,
@@ -149,12 +149,7 @@ class MainViewModel @Inject constructor(
                         }
                     }
 
-                FILTER_FRAGMENT ->
-                    if (!isTablet) {
-                        emit(Event(MainViewEvent.FilterPropertiesFragmentOnPhone))
-                    } else {
-                        emit(Event(MainViewEvent.FilterPropertiesFragmentOnTablet))
-                    }
+                FILTER_DIALOG_FRAGMENT -> emit(Event(MainViewEvent.FilterPropertiesFragmentOnTablet))
 
                 DRAFTS_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(DRAFTS_FRAGMENT.name)))
                 MAP_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(MAP_FRAGMENT.name)))
@@ -169,7 +164,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun onFilterPropertiesClicked() {
-        setNavigationTypeUseCase.invoke(FILTER_FRAGMENT)
+        setNavigationTypeUseCase.invoke(FILTER_DIALOG_FRAGMENT)
     }
 
     fun onMapClicked() {

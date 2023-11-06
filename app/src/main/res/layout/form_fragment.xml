@@ -14,12 +14,12 @@
         <include
             android:id="@+id/property_form"
             layout="@layout/form_layout"
-            tools:visibility="gone" />
+            tools:visibility="visible" />
 
         <include
             android:id="@+id/loading_state"
             layout="@layout/loading_state"
-            tools:visibility="visible" />
+            tools:visibility="gone" />
     </LinearLayout>
 
 </ScrollView>

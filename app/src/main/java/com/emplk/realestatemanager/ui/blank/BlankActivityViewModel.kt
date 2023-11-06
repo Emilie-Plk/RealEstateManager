@@ -36,7 +36,7 @@ class BlankActivityViewModel @Inject constructor(
 
                 NavigationFragmentType.LIST_FRAGMENT -> emit(Event(BlankViewEvent.NavigateToMain(NavigationFragmentType.LIST_FRAGMENT.name)))
                 NavigationFragmentType.DRAFT_DIALOG_FRAGMENT -> emit(Event(BlankViewEvent.SaveDraftDialog))
-                NavigationFragmentType.FILTER_FRAGMENT,
+                NavigationFragmentType.FILTER_DIALOG_FRAGMENT,
                 NavigationFragmentType.DETAIL_FRAGMENT,
                 NavigationFragmentType.MAP_FRAGMENT,
                 NavigationFragmentType.LOAN_SIMULATOR_DIALOG_FRAGMENT,
