@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import java.math.BigDecimal
 import javax.inject.Inject
 
 class PropertyRepositoryRoom @Inject constructor(
@@ -90,6 +91,26 @@ class PropertyRepositoryRoom @Inject constructor(
                 )
             }
         } ?: throw IllegalStateException("Property with id $propertyId not found")
+
+    override suspend fun getFilteredProperties(
+        propertyType: String?,
+        minPrice: BigDecimal?,
+        maxPrice: BigDecimal?,
+        minSurface: BigDecimal?,
+        maxSurface: BigDecimal?,
+        entryDate: String?,
+        isSold: Boolean?
+    ): List<PropertyIdWithLatLong> = withContext(coroutineDispatcherProvider.io) {
+        propertyDao.getFilteredPropertiesIds(
+            propertyType,
+            minPrice,
+            maxPrice,
+            minSurface,
+            maxSurface,
+            entryDate,
+            isSold
+        )
+    }
 
     override suspend fun update(propertyEntity: PropertyEntity): Boolean =
         withContext(coroutineDispatcherProvider.io) {

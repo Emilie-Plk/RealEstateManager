@@ -10,6 +10,7 @@ data class FilterViewState(
     val minSurface: Int = 0,
     val maxSurface: Int = 0,
     val location: String? = null,
+    val isRadiusEditTextVisible: Boolean = false,
     val entryDate: EntryDateStatus = EntryDateStatus.NONE,
     val availableForSale: Boolean = false,
     val filterButtonText: NativeText,

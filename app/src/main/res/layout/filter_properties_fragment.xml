@@ -13,6 +13,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.72" />
         <TextView
             android:id="@+id/filter_property_type_tv"
             style="@style/Theme.RealEstateManager.FilterPropertySubtitle"
@@ -92,7 +98,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="@string/surface_unit_in_n"
+            android:text="@string/surface_area_unit_in_n"
             app:layout_constraintBottom_toBottomOf="@id/filter_property_surface_tv"
             app:layout_constraintStart_toEndOf="@id/filter_property_surface_tv"
             app:layout_constraintTop_toTopOf="@id/filter_property_surface_tv"
@@ -113,7 +119,7 @@
 
 
         <TextView
-            android:id="@+id/filter_property_city_tv"
+            android:id="@+id/filter_property_location_tv"
             style="@style/Theme.RealEstateManager.FilterPropertySubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -122,25 +128,61 @@
             app:layout_constraintTop_toBottomOf="@+id/filter_property_surface_rangeSlider" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/filter_property_city_textInputLayout"
+            android:id="@+id/filter_property_location_textInputLayout"
             style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:imeOptions="actionDone"
+            tools:helperText="Specify a search radius (miles)"
             android:hint="Address, neighborhood, city..."
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/filter_property_city_tv">
+            app:layout_constraintTop_toBottomOf="@+id/filter_property_location_tv">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/filter_property_city_editText"
+                android:id="@+id/filter_property_location_editText"
                 android:inputType="textMultiLine|textCapSentences"
                 android:maxLines="2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
-*
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/filter_address_predictions_recyclerView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="@id/filter_property_location_textInputLayout"
+            app:layout_constraintStart_toStartOf="@id/filter_property_location_textInputLayout"
+            app:layout_constraintTop_toBottomOf="@id/filter_property_location_textInputLayout"
+            tools:itemCount="6"
+            tools:listitem="@layout/property_address_prediction_item"
+            tools:visibility="gone" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/filter_property_radius_textInputLayout"
+            style="@style/Theme.RealEstateManager.FilledTextInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Radius"
+            app:hintTextAppearance="@color/primary_dark"
+            tools:visibility="visible"
+            android:imeOptions="actionDone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@+id/filter_property_location_textInputLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/filter_property_radius_editText"
+                android:layout_width="match_parent"
+                android:textSize="12sp"
+                android:layout_height="match_parent"
+                android:inputType="textMultiLine|textCapSentences"
+                android:maxLines="2" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
         <TextView
             android:id="@+id/filter_property_entry_date_tv"
             style="@style/Theme.RealEstateManager.FilterPropertySubtitle"
@@ -148,7 +190,7 @@
             android:layout_height="wrap_content"
             android:text="Entry date"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/filter_property_city_textInputLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/filter_property_radius_textInputLayout" />
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/filter_property_entry_date_chipGroup"
