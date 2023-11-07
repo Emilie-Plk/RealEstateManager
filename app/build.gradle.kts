@@ -1,7 +1,10 @@
+import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
+
 plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
+    id("com.google.devtools.ksp")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin") version "2.0.1"
     id("org.jetbrains.kotlinx.kover")
     id("dagger.hilt.android.plugin")
@@ -20,6 +23,12 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["clearPackageData"] = "true"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments["room.schemaLocation"] = "$projectDir/schemas"
+            }
+        }
     }
 
     buildFeatures {
@@ -67,12 +76,8 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
     implementation("androidx.activity:activity-ktx:1.8.0")
-    implementation("androidx.fragment:fragment-ktx:1.6.1")
+    implementation("androidx.fragment:fragment-ktx:1.6.2")
     implementation("junit:junit:4.13.2")
-    // mockk
-    api("io.mockk:mockk:1.13.4")
-    // coroutines tests
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
 
     implementation("com.google.android.gms:play-services-awareness:19.0.1")
 
@@ -90,7 +95,7 @@ dependencies {
 
     // GLIDE
     implementation("com.github.bumptech.glide:glide:4.15.1")
-    kapt("com.github.bumptech.glide:compiler:4.15.1")
+    kapt("com.github.bumptech.glide:ksp:4.15.1")
 
     // SPLASH SCREEN
     implementation("androidx.core:core-splashscreen:1.1.0-alpha02")
@@ -102,13 +107,14 @@ dependencies {
     implementation("com.github.sparrow007:carouselrecyclerview:1.2.6")
 
     // HILT
-    implementation("com.google.dagger:hilt-android:2.46.1")
-    kapt("com.google.dagger:hilt-compiler:2.46.1")
+    implementation("com.google.dagger:hilt-android:2.48")
+    kapt("com.google.dagger:hilt-compiler:2.48")
 
     // ROOM
     implementation("androidx.room:room-runtime:2.6.0")
     kapt("androidx.room:room-compiler:2.6.0")
     implementation("androidx.room:room-ktx:2.6.0")
+
 
     // RETROFIT
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
@@ -138,6 +144,10 @@ dependencies {
     testImplementation("app.cash.turbine:turbine:1.0.0")
     // KOVER
     implementation("org.jetbrains.kotlinx:kover-gradle-plugin:0.7.4")
+    // mockk
+    api("io.mockk:mockk:1.13.4")
+    // coroutines tests
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
 
     // Android tests
     androidTestImplementation("androidx.arch.core:core-testing:2.2.0") {
