@@ -22,7 +22,6 @@ interface FormDraftDao {
     @Query("SELECT * FROM base_form_drafts")
     suspend fun getFormsWithFeaturedPicture(): List<FormWithTitleDateAndFeaturedPicture>
 
-
     @Query("SELECT COUNT(*) FROM base_form_drafts WHERE id NOT IN (SELECT id FROM properties)")
     suspend fun getAddPropertyDraftsCount(): Int
 

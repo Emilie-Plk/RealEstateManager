@@ -6,6 +6,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
+import java.math.BigDecimal
 
 @Dao
 interface PropertyDao {
@@ -27,4 +28,24 @@ interface PropertyDao {
 
     @Update
     suspend fun update(propertyDto: PropertyDto): Int
+
+    @Query("SELECT properties.id, locations.latitude, locations.longitude FROM properties " +
+            "INNER JOIN locations ON properties.id = locations.property_id " +
+            "WHERE (:propertyType IS NULL OR type = :propertyType) " +
+            "AND (:minPrice IS NULL OR price > :minPrice) " +
+            "AND (:maxPrice IS NULL OR price < :maxPrice) " +
+            "AND (:minSurface IS NULL OR surface > :minSurface) " +
+            "AND (:maxSurface IS NULL OR surface < :maxSurface) " +
+            "AND (:entryDate IS NULL OR entry_date = :entryDate) " +
+            "AND (:isSold IS NULL OR (:isSold = 1 AND sale_date IS NOT NULL) OR " +
+            "(:isSold = 0 AND sale_date IS NULL))")
+    suspend fun getFilteredPropertiesIds(
+        propertyType: String?,
+        minPrice: BigDecimal?,
+        maxPrice: BigDecimal?,
+        minSurface: BigDecimal?,
+        maxSurface: BigDecimal?,
+        entryDate: String?,
+        isSold: Boolean?
+    ): List<PropertyIdWithLatLong>
 }

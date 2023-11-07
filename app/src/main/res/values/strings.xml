@@ -2,8 +2,8 @@
     <string name="app_name">RealEstateManager</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="main_fab_add_new_property_a11y">Add new property</string>
-    <string name="price_in_euro">Price in \u20ac</string>
-    <string name="price_in_dollar">Price in \u0024</string>
+    <string name="price_in_euro">Price (\u20ac)</string>
+    <string name="price_in_dollar">Price (\u0024)</string>
     <string name="amenity_school">School</string>
     <string name="amenity_park">Park</string>
     <string name="amenity_shopping_mall">Mall</string>
@@ -40,7 +40,7 @@
     <string name="checkbox_amenity_library">Library</string>
     <string name="iv_preview_delete_property_btn">Delete property</string>
     <string name="price_currency_in_n">(in %s)</string>
-    <string name="surface_unit_in_n">Surface in %s</string>
+    <string name="surface_area_unit_in_n">Area (%s)</string>
     <string name="rooms_nb_short_version">%s RM</string>
     <string name="bathrooms_nb_short_version">%s BA</string>
     <string name="bedrooms_nb_short_version">%s BR</string>
@@ -49,7 +49,6 @@
     <string name="form_successfully_created_message">Property successfully created!</string>
     <string name="form_successfully_updated_message">Property successfully updated!</string>
     <string name="title_activity_blank">BlankActivity</string>
-    <!-- Strings used for fragments for navigation -->
 
     <string name="prediction_no_address_found">No address found</string>
     <string name="form_generic_error_message">Oops, an error occurred, try again later!</string>

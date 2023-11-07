@@ -110,7 +110,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="@string/surface_unit_in_n"
+            android:text="@string/surface_area_unit_in_n"
             app:layout_constraintBottom_toBottomOf="@id/filter_property_surface_tv"
             app:layout_constraintStart_toEndOf="@id/filter_property_surface_tv"
             app:layout_constraintTop_toTopOf="@id/filter_property_surface_tv"
@@ -129,29 +129,41 @@
 
 
         <TextView
-            android:id="@+id/filter_property_city_tv"
+            android:id="@+id/filter_property_location_tv"
             style="@style/Theme.RealEstateManager.FilterPropertySubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="City"
+            android:text="Location"
             app:layout_constraintStart_toStartOf="@+id/guideline"
             app:layout_constraintTop_toBottomOf="@+id/filter_property_surface_rangeSlider" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/filter_property_city_textInputLayout"
+            android:id="@+id/filter_property_location_textInputLayout"
             style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toStartOf="@+id/guideline_2"
             app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/filter_property_city_tv">
+            app:layout_constraintTop_toBottomOf="@+id/filter_property_location_tv">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/filter_property_city_editText"
+                android:id="@+id/filter_property_location_editText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/filter_address_predictions_recyclerView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="@id/filter_property_location_textInputLayout"
+            app:layout_constraintStart_toStartOf="@id/filter_property_location_textInputLayout"
+            app:layout_constraintTop_toBottomOf="@id/filter_property_location_textInputLayout"
+            tools:itemCount="6"
+            tools:listitem="@layout/property_address_prediction_item"
+            tools:visibility="gone" />
 
         <TextView
             android:id="@+id/filter_property_entry_date_tv"
@@ -160,7 +172,7 @@
             android:layout_height="wrap_content"
             android:text="Entry date"
             app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/filter_property_city_textInputLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/filter_property_location_textInputLayout" />
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/filter_property_entry_date_chipGroup"
@@ -211,7 +223,7 @@
             android:layout_height="wrap_content"
             android:text="Available for sale"
             app:layout_constraintStart_toStartOf="@+id/guideline_3"
-            app:layout_constraintTop_toBottomOf="@+id/filter_property_city_textInputLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/filter_property_location_textInputLayout" />
 
         <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/filter_property_entry_sale_state_switch"

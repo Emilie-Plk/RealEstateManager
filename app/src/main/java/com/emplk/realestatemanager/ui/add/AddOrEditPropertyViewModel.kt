@@ -226,7 +226,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                             CurrencyType.EURO -> R.drawable.baseline_euro_24
                         },
                         surfaceUnit = NativeText.Argument(
-                            R.string.surface_unit_in_n,
+                            R.string.surface_area_unit_in_n,
                             getSurfaceUnitUseCase.invoke().symbol,
                         ),
                         propertyCreationDate = if (form.formType == FormType.EDIT) {

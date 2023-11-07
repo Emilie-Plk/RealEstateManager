@@ -102,11 +102,11 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/form_price_textInputLayout"
         style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
         app:endIconMode="clear_text"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/form_surface_textInputLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/form_address_textInputLayout"
         app:startIconDrawable="@drawable/baseline_euro_24"
@@ -125,13 +125,13 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/form_surface_textInputLayout"
         style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
         app:endIconMode="clear_text"
+        app:layout_constraintBottom_toBottomOf="@+id/form_price_textInputLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/form_price_textInputLayout"
+        app:layout_constraintStart_toEndOf="@+id/form_price_textInputLayout"
+        app:layout_constraintTop_toTopOf="@+id/form_price_textInputLayout"
         app:startIconDrawable="@drawable/baseline_surface_24"
         tools:hint="Surface in m²">
 
@@ -211,6 +211,7 @@
         android:layout_marginTop="28dp"
         android:hint="Description"
         app:endIconMode="clear_text"
+        app:expandedHintEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/form_rooms_numberPicker"
@@ -220,7 +221,9 @@
             android:id="@+id/form_description_textInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="top|start"
             android:imeOptions="actionDone"
+            android:maxLines="5"
             android:inputType="textMultiLine|textCapSentences"
             android:lines="5" />
     </com.google.android.material.textfield.TextInputLayout>
