@@ -458,6 +458,10 @@ class AddOrEditPropertyViewModel @Inject constructor(
         }
     }
 
+    fun onAddressEditTextFocused(hasFocus: Boolean) {
+        setHasAddressFocusUseCase.invoke(hasFocus)
+    }
+
     fun onPriceChanged(price: BigDecimal) {
         if (price > BigDecimal.ZERO) {
             formMutableStateFlow.update {
@@ -527,8 +531,5 @@ class AddOrEditPropertyViewModel @Inject constructor(
         onCreateButtonClickedMutableSharedFlow.tryEmit(Unit)
     }
 
-    fun onAddressEditTextFocused(hasFocus: Boolean) {
-        setHasAddressFocusUseCase.invoke(hasFocus)
-    }
 }
 
