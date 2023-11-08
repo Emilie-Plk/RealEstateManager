@@ -4,6 +4,7 @@ import com.emplk.realestatemanager.data.property.PropertyIdWithLatLong
 import com.emplk.realestatemanager.domain.filter.PropertyMinMaxStatsEntity
 import kotlinx.coroutines.flow.Flow
 import java.math.BigDecimal
+import java.time.LocalDateTime
 
 interface PropertyRepository {
     suspend fun add(propertyEntity: PropertyEntity): Long?
@@ -18,7 +19,8 @@ interface PropertyRepository {
         maxPrice: BigDecimal?,
         minSurface: BigDecimal?,
         maxSurface: BigDecimal?,
-        entryDate: String?,
+        entryDateMin: LocalDateTime?,
+        entryDateMax: LocalDateTime?,
         isSold: Boolean?
     ): List<PropertyIdWithLatLong>
 

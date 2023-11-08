@@ -1,8 +1,11 @@
 package com.emplk.realestatemanager.domain.filter
 
+import android.util.Log
 import com.emplk.realestatemanager.domain.property.PropertyRepository
 import com.google.android.gms.maps.model.LatLng
+import kotlinx.coroutines.flow.Flow
 import java.math.BigDecimal
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 class GetFilteredPropertiesUseCase @Inject constructor(
@@ -15,9 +18,10 @@ class GetFilteredPropertiesUseCase @Inject constructor(
         maxPrice: BigDecimal?,
         minSurface: BigDecimal?,
         maxSurface: BigDecimal?,
-        entryDate: String?,
+        entryDateMin: LocalDateTime?,
+        entryDateMax: LocalDateTime?,
         isSold: Boolean?,
-        locationLatLong: LatLng,
+        locationLatLong: LatLng?,
         radiusInMiles: Int,
     ): List<Long> =
         propertyRepository.getFilteredProperties(
@@ -26,7 +30,8 @@ class GetFilteredPropertiesUseCase @Inject constructor(
             maxPrice,
             minSurface,
             maxSurface,
-            entryDate,
+            entryDateMin,
+            entryDateMax,
             isSold
         ).let { propertiesIds ->
             return filterPropertiesByDistanceUseCase.invoke(propertiesIds, locationLatLong, radiusInMiles)

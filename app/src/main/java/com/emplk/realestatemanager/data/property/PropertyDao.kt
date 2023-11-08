@@ -8,6 +8,7 @@ import androidx.room.Update
 import com.emplk.realestatemanager.domain.filter.PropertyMinMaxStatsEntity
 import kotlinx.coroutines.flow.Flow
 import java.math.BigDecimal
+import java.time.LocalDateTime
 
 @Dao
 interface PropertyDao {
@@ -45,7 +46,8 @@ interface PropertyDao {
                 "AND (:maxPrice IS NULL OR price <= :maxPrice) " +
                 "AND (:minSurface IS NULL OR surface >= :minSurface) " +
                 "AND (:maxSurface IS NULL OR surface <= :maxSurface) " +
-                "AND (:entryDate IS NULL OR entry_date = :entryDate) " +
+                "AND (:entryDateMin IS NULL OR entry_date >= :entryDateMin) " +
+                "AND (:entryDateMax IS NULL OR entry_date <= :entryDateMax) " +
                 "AND (:isSold IS NULL OR (:isSold = 1 AND sale_date IS NOT NULL) OR " +
                 "(:isSold = 0 AND sale_date IS NULL))"
     )
@@ -55,7 +57,8 @@ interface PropertyDao {
         maxPrice: BigDecimal?,
         minSurface: BigDecimal?,
         maxSurface: BigDecimal?,
-        entryDate: String?,
+        entryDateMin: LocalDateTime?,
+        entryDateMax: LocalDateTime?,
         isSold: Boolean?
     ): List<PropertyIdWithLatLong>
 

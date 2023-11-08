@@ -71,6 +71,30 @@ class FilterPropertiesFragment : DialogFragment(R.layout.filter_properties_fragm
                 "${value.toInt()} €" // unit
             }
 
+            binding.filterPropertyEntryDateChipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
+                checkedIds.forEach { id ->
+                    when (id) {
+                        R.id.filter_property_entry_more_than_6_months_chip -> viewModel.onEntryDateStatusChanged(
+                            EntryDateStatus.MORE_THAN_6_MONTHS
+                        )
+
+                        R.id.filter_property_entry_date_less_than_3_months_chip -> viewModel.onEntryDateStatusChanged(
+                            EntryDateStatus.LESS_THAN_3_MONTHS
+                        )
+
+                        R.id.filter_property_entry_date_less_than_1_month_chip -> viewModel.onEntryDateStatusChanged(
+                            EntryDateStatus.LESS_THAN_1_MONTH
+                        )
+
+                        R.id.filter_property_entry_date_less_than_1_week_chip -> viewModel.onEntryDateStatusChanged(
+                            EntryDateStatus.LESS_THAN_1_WEEK
+                        )
+
+                        else -> viewModel.onEntryDateStatusChanged(EntryDateStatus.NONE)
+                    }
+                }
+            }
+
             binding.filterPropertySurfaceRangeSlider.valueFrom = viewState.minSurface.toFloat()
             binding.filterPropertySurfaceRangeSlider.valueTo = viewState.maxSurface.toFloat()
             binding.filterPropertySurfaceRangeSlider.values = listOf(
@@ -81,6 +105,7 @@ class FilterPropertiesFragment : DialogFragment(R.layout.filter_properties_fragm
                 "${value.toInt()} sq ft"
             }
 
+            binding.filterPropertyFilterBtn.text = viewState.filterButtonText.toCharSequence(requireContext())
             binding.filterPropertyFilterBtn.setOnClickListener {
                 viewState.onFilterClicked()
             }

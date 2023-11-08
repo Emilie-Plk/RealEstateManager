@@ -180,7 +180,7 @@
             app:singleSelection="true">
 
             <com.google.android.material.chip.Chip
-                android:id="@+id/filter_property_more_than_6_months_radio"
+                android:id="@+id/filter_property_more_than_6_months_chip"
                 style="@style/Theme.RealEstateManager.ChipSingleSelection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -189,21 +189,21 @@
 
 
             <com.google.android.material.chip.Chip
-                android:id="@+id/filter_property_entry_date_less_than_6_months_radio"
+                android:id="@+id/filter_property_entry_date_less_than_6_months_chip"
                 style="@style/Theme.RealEstateManager.ChipSingleSelection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="&lt; 3mths" />
 
             <com.google.android.material.chip.Chip
-                android:id="@+id/filter_property_entry_date_less_than_1_month_radio"
+                android:id="@+id/filter_property_entry_date_less_than_1_month_chip"
                 style="@style/Theme.RealEstateManager.ChipSingleSelection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="&lt; 1mth" />
 
             <com.google.android.material.chip.Chip
-                android:id="@+id/filter_property_entry_date_less_than_1_week_radio"
+                android:id="@+id/filter_property_entry_date_less_than_1_week_chip"
                 style="@style/Theme.RealEstateManager.ChipSingleSelection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

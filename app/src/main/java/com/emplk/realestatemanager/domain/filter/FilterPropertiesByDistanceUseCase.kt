@@ -11,10 +11,12 @@ import kotlin.math.sqrt
 class FilterPropertiesByDistanceUseCase @Inject constructor() {
     fun invoke(
         propertyIdsWithLatLongs: List<PropertyIdWithLatLong>,
-        locationLatLong: LatLng,
+        locationLatLong: LatLng?,
         radiusInMiles: Int
     ): List<Long> =
-        buildList {
+        if (locationLatLong == null) {
+            propertyIdsWithLatLongs.map { it.id }
+        } else buildList {
             for (propertyIdWithLatLong in propertyIdsWithLatLongs) {
                 val propertyLatLong = LatLng(propertyIdWithLatLong.latitude, propertyIdWithLatLong.longitude)
                 if (haversineDistance(propertyLatLong, locationLatLong) <= radiusInMiles) {
