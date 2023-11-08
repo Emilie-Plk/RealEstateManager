@@ -6,24 +6,32 @@ import androidx.lifecycle.liveData
 import com.emplk.realestatemanager.domain.autocomplete.GetCurrentPredictionAddressesFlowWithDebounceUseCase
 import com.emplk.realestatemanager.domain.autocomplete.PredictionWrapper
 import com.emplk.realestatemanager.domain.connectivity.IsInternetEnabledFlowUseCase
-import com.emplk.realestatemanager.domain.filter.FilteredPropertyIdsRepository
 import com.emplk.realestatemanager.domain.filter.GetFilteredPropertiesUseCase
+import com.emplk.realestatemanager.domain.filter.GetMinMaxPriceAndSurfaceUseCase
+import com.emplk.realestatemanager.domain.property_draft.address.SetHasAddressFocusUseCase
+import com.emplk.realestatemanager.domain.property_draft.address.SetIsPredictionSelectedByUserUseCase
+import com.emplk.realestatemanager.domain.property_draft.address.SetSelectedAddressStateUseCase
 import com.emplk.realestatemanager.ui.add.address_predictions.PredictionViewState
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParam
 import com.emplk.realestatemanager.ui.utils.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import java.math.BigDecimal
+import java.math.RoundingMode
 import javax.inject.Inject
 
 @HiltViewModel
 class FilterPropertiesViewModel @Inject constructor(
     private val getFilteredPropertiesUseCase: GetFilteredPropertiesUseCase,
-    private val filteredPropertyIdsRepository: FilteredPropertyIdsRepository,
     private val getCurrentPredictionAddressesFlowWithDebounceUseCase: GetCurrentPredictionAddressesFlowWithDebounceUseCase,
+    private val setSelectedAddressStateUseCase: SetSelectedAddressStateUseCase,
+    private val setHasAddressFocusUseCase: SetHasAddressFocusUseCase,
+    private val setIsPredictionSelectedByUserUseCase: SetIsPredictionSelectedByUserUseCase,
+    private val getMinMaxPriceAndSurfaceUseCase: GetMinMaxPriceAndSurfaceUseCase,
     private val isInternetEnabledFlowUseCase: IsInternetEnabledFlowUseCase, // no internet = location search not available
 ) : ViewModel() {
 
@@ -34,56 +42,77 @@ class FilterPropertiesViewModel @Inject constructor(
             filterParamsMutableStateFlow,
             getCurrentPredictionAddressesFlowWithDebounceUseCase.invoke()
         ) { filterParams, predictionAddresses ->
+            val minMaxPriceAndSurface = getMinMaxPriceAndSurfaceUseCase.invoke()
             FilterViewState(
                 type = filterParams.type,
-                minPrice = filterParams.minPrice.toString(),
-                maxPrice = filterParams.maxPrice.toString(),
-                minSurface = filterParams.minSurface.toString(),
-                maxSurface = filterParams.maxSurface.toString(),
+                minPrice = minMaxPriceAndSurface.minPrice.setScale(0, RoundingMode.HALF_UP).intValueExact(),
+                maxPrice = minMaxPriceAndSurface.maxPrice.setScale(0, RoundingMode.HALF_UP).intValueExact(),
+                minSurface = minMaxPriceAndSurface.minSurface.setScale(0, RoundingMode.HALF_UP).intValueExact(),
+                maxSurface = minMaxPriceAndSurface.maxSurface.setScale(0, RoundingMode.HALF_UP).intValueExact(),
                 locationPredictions = mapPredictionsToViewState(predictionAddresses),
-                location = filterParams.address,
-                isRadiusEditTextVisible = filterParams.isAddressValid,
+                location = filterParams.location,
+                isRadiusEditTextVisible = filterParams.isLocationValid,
                 entryDate = filterParams.entryDate,
                 availableForSale = filterParams.isSold == false,
-                filterButtonText = if (filterParams.isSold == true) {
-                    NativeText.Simple("Filter available properties")
-                } else {
-                    NativeText.Simple("Filter available properties")
-                },
+                filterButtonText = NativeText.Simple("Filter"),
                 onCancelClicked = EquatableCallback { filterParamsMutableStateFlow.update { FilterParams() } },
-                onFilterClicked = EquatableCallback { }
+                onFilterClicked = EquatableCallback {
+                }
             )
-        }
+        }.collectLatest { emit(it) }
     }
 
 
-    private fun mapPredictionsToViewState(currentPredictionAddresses: PredictionWrapper?): List<PredictionViewState> {
-        return when (currentPredictionAddresses) {
+    private fun mapPredictionsToViewState(currentPredictionLocations: PredictionWrapper?): List<PredictionViewState> {
+        return when (currentPredictionLocations) {
             is PredictionWrapper.Success -> {
-                currentPredictionAddresses.predictions.map { prediction ->
+                currentPredictionLocations.predictions.map { prediction ->
                     PredictionViewState.Prediction(
                         address = prediction,
-                        onClickEvent = EquatableCallbackWithParam { selectedAddress ->
+                        onClickEvent = EquatableCallbackWithParam { selectedLocation ->
                             filterParamsMutableStateFlow.update {
                                 it.copy(
-                                    address = selectedAddress,
-                                    isAddressValid = true
+                                    location = selectedLocation,
+                                    isLocationValid = true,
                                 )
                             }
-                            //   selectedAddressStateRepository.setIsPredictionSelectedByUser(true)
+                            setIsPredictionSelectedByUserUseCase.invoke(true)
                         }
                     )
                 }
             }
 
             is PredictionWrapper.NoResult -> listOf(PredictionViewState.EmptyState)
-            is PredictionWrapper.Error -> emptyList<PredictionViewState>().also { println("Error: ${currentPredictionAddresses.error}") }
+            is PredictionWrapper.Error -> emptyList<PredictionViewState>().also { println("Error: ${currentPredictionLocations.error}") }
             is PredictionWrapper.Failure -> emptyList<PredictionViewState>().also {
-                println("Failure: ${currentPredictionAddresses.failure}")
+                println("Failure: ${currentPredictionLocations.failure}")
             }
 
             else -> emptyList()
         }
+    }
+
+    fun onLocationChanged(input: String?) {
+        if (filterParamsMutableStateFlow.value.isLocationValid && filterParamsMutableStateFlow.value.location != input) {
+            setIsPredictionSelectedByUserUseCase.invoke(false)
+            filterParamsMutableStateFlow.update {
+                it.copy(
+                    isLocationValid = false,
+                    location = input
+                )
+            }
+        } else {
+            filterParamsMutableStateFlow.update {
+                it.copy(
+                    location = input
+                )
+            }
+        }
+        setSelectedAddressStateUseCase.invoke(input)
+    }
+
+    fun onAddressEditTextFocused(hasFocus: Boolean) {
+        setHasAddressFocusUseCase.invoke(hasFocus)
     }
 }
 
@@ -93,8 +122,8 @@ data class FilterParams(
     val maxPrice: BigDecimal = BigDecimal.ZERO,
     val minSurface: BigDecimal = BigDecimal.ZERO,
     val maxSurface: BigDecimal = BigDecimal.ZERO,
-    val address: String? = null,
-    val isAddressValid: Boolean = false,
+    val location: String? = null,
+    val isLocationValid: Boolean = false,
     val radius: BigDecimal = BigDecimal.ZERO,
     val isSold: Boolean? = false,
     val entryDate: EntryDateStatus = EntryDateStatus.NONE,

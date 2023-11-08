@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.MapBottomSheetFragmentBinding
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
@@ -42,6 +43,7 @@ class MapBottomSheetFragment : BottomSheetDialogFragment(R.layout.map_bottom_she
 
             viewState.featuredPicture
                 .load(binding.mapBottomSheetPropertyImageView)
+                .transform(CenterCrop())
                 .error(R.drawable.baseline_villa_24)
                 .into(binding.mapBottomSheetPropertyImageView)
 
