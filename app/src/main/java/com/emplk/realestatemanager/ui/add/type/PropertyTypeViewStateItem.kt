@@ -1,6 +1,6 @@
 package com.emplk.realestatemanager.ui.add.type
 
-data class AddPropertyTypeViewStateItem(
+data class PropertyTypeViewStateItem(
     val id: Long,
     val name: String,
 )

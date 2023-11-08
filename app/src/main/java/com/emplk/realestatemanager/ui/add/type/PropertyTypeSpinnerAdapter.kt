@@ -10,9 +10,9 @@ import android.widget.Filterable
 import android.widget.ListAdapter
 import com.emplk.realestatemanager.databinding.AddPropertySpinnerItemBinding
 
-class AddPropertyTypeSpinnerAdapter : ListAdapter, Filterable {
+class PropertyTypeSpinnerAdapter : ListAdapter, Filterable {
     private val dataSetObservable = DataSetObservable()
-    private var items = emptyList<AddPropertyTypeViewStateItem>()
+    private var items = emptyList<PropertyTypeViewStateItem>()
 
 
     override fun registerDataSetObserver(observer: DataSetObserver?) {
@@ -25,7 +25,7 @@ class AddPropertyTypeSpinnerAdapter : ListAdapter, Filterable {
 
     override fun getCount(): Int = items.size
 
-    override fun getItem(position: Int): AddPropertyTypeViewStateItem? = items.getOrNull(position)
+    override fun getItem(position: Int): PropertyTypeViewStateItem? = items.getOrNull(position)
 
     override fun getItemId(position: Int): Long = getItem(position)?.id ?: -1L
 
@@ -57,10 +57,10 @@ class AddPropertyTypeSpinnerAdapter : ListAdapter, Filterable {
         override fun performFiltering(constraint: CharSequence) = FilterResults()
         override fun publishResults(constraint: CharSequence?, results: FilterResults?) = Unit
         override fun convertResultToString(resultValue: Any): CharSequence =
-            (resultValue as AddPropertyTypeViewStateItem).name
+            (resultValue as PropertyTypeViewStateItem).name
     }
 
-    fun setData(items: List<AddPropertyTypeViewStateItem>) {
+    fun setData(items: List<PropertyTypeViewStateItem>) {
         this.items = items
         dataSetObservable.notifyChanged()
     }

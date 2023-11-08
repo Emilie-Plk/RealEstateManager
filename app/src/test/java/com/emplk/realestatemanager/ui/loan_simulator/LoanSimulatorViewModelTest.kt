@@ -227,8 +227,8 @@ class LoanSimulatorViewModelTest {
         // Then
         loanSimulatorViewModel.viewState.observeForTesting(this) {
             assertThat(it.value).isEqualTo(testLoanSimulatorViewState)
-        } // called twice bc when launching it tis empty form!
-        verify(exactly = 1) { setLoanDataUseCase.invoke(any()) }
+        } // called twice bc launching with empty form
+        verify(exactly = 2) { setLoanDataUseCase.invoke(any()) }
     }
 
     private val testLoanDataEntity = LoanDataEntity(

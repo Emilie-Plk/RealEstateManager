@@ -13,6 +13,7 @@ import androidx.fragment.app.viewModels
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.FilterPropertiesFragmentBinding
 import com.emplk.realestatemanager.ui.add.address_predictions.PredictionListAdapter
+import com.emplk.realestatemanager.ui.add.type.PropertyTypeSpinnerAdapter
 import com.emplk.realestatemanager.ui.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -32,10 +33,15 @@ class FilterPropertiesFragment : DialogFragment(R.layout.filter_properties_fragm
         dialog?.window?.setLayout(width, height)
 
         val predictionsAdapter = PredictionListAdapter()
-        binding.filterLocationPredictionsRecyclerView.adapter = predictionsAdapter // why is it nullable??
+        binding.filterLocationPredictionsRecyclerView.adapter = predictionsAdapter
+
+        val propertyTypeAdapter = PropertyTypeSpinnerAdapter()
+        binding.filterPropertyTypeActv.setAdapter(propertyTypeAdapter)
 
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
             predictionsAdapter.submitList(viewState.locationPredictions)
+            propertyTypeAdapter.setData(viewState.propertyTypes)
+
 
             val currentLocation = binding.filterPropertyLocationEditText.text.toString()
 
