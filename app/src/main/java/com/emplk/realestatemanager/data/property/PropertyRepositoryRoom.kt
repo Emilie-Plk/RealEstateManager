@@ -1,6 +1,7 @@
 package com.emplk.realestatemanager.data.property
 
 import android.database.sqlite.SQLiteException
+import android.util.Log
 import com.emplk.realestatemanager.data.property.location.LocationDao
 import com.emplk.realestatemanager.data.property.location.LocationMapper
 import com.emplk.realestatemanager.data.property.picture.PictureDao
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.math.BigDecimal
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 class PropertyRepositoryRoom @Inject constructor(
@@ -93,9 +95,10 @@ class PropertyRepositoryRoom @Inject constructor(
             }
         } ?: throw IllegalStateException("Property with id $propertyId not found")
 
-    override suspend fun getMinMaxPricesAndSurfaces(): PropertyMinMaxStatsEntity = withContext(coroutineDispatcherProvider.io) {
-        propertyDao.getMinMaxPricesAndSurfaces()
-    }
+    override suspend fun getMinMaxPricesAndSurfaces(): PropertyMinMaxStatsEntity =
+        withContext(coroutineDispatcherProvider.io) {
+            propertyDao.getMinMaxPricesAndSurfaces()
+        }
 
     override suspend fun getFilteredProperties(
         propertyType: String?,
@@ -103,7 +106,8 @@ class PropertyRepositoryRoom @Inject constructor(
         maxPrice: BigDecimal?,
         minSurface: BigDecimal?,
         maxSurface: BigDecimal?,
-        entryDate: String?,
+        entryDateMin: LocalDateTime?,
+        entryDateMax: LocalDateTime?,
         isSold: Boolean?
     ): List<PropertyIdWithLatLong> = withContext(coroutineDispatcherProvider.io) {
         propertyDao.getFilteredPropertiesIds(
@@ -112,7 +116,8 @@ class PropertyRepositoryRoom @Inject constructor(
             maxPrice,
             minSurface,
             maxSurface,
-            entryDate,
+            entryDateMin,
+            entryDateMax,
             isSold
         )
     }
