@@ -13,7 +13,9 @@ import com.emplk.realestatemanager.domain.filter.GetMinMaxPriceAndSurfaceUseCase
 import com.emplk.realestatemanager.domain.property_draft.address.SetHasAddressFocusUseCase
 import com.emplk.realestatemanager.domain.property_draft.address.SetIsPredictionSelectedByUserUseCase
 import com.emplk.realestatemanager.domain.property_draft.address.SetSelectedAddressStateUseCase
+import com.emplk.realestatemanager.domain.property_type.GetPropertyTypeUseCase
 import com.emplk.realestatemanager.ui.add.address_predictions.PredictionViewState
+import com.emplk.realestatemanager.ui.add.type.PropertyTypeViewStateItem
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParam
 import com.emplk.realestatemanager.ui.utils.NativeText
@@ -37,6 +39,7 @@ class FilterPropertiesViewModel @Inject constructor(
     private val setIsPredictionSelectedByUserUseCase: SetIsPredictionSelectedByUserUseCase,
     private val getEntryDateByEntryDateStatusUseCase: GetEntryDateByEntryDateStatusUseCase,
     private val getMinMaxPriceAndSurfaceUseCase: GetMinMaxPriceAndSurfaceUseCase,
+    private val getPropertyTypeUseCase: GetPropertyTypeUseCase,
     private val isInternetEnabledFlowUseCase: IsInternetEnabledFlowUseCase, // no internet = location search not available
 ) : ViewModel() {
 
@@ -54,10 +57,11 @@ class FilterPropertiesViewModel @Inject constructor(
                     filteredPropertyIdsMutableStateFlow,
                 ) { filterParams, predictionAddresses, filteredIds ->
                     val minMaxPriceAndSurface = getMinMaxPriceAndSurfaceUseCase.invoke()
+                    val propertyTypes = getPropertyTypeUseCase.invoke()
 
                     filteredPropertyIdsMutableStateFlow.tryEmit(
                         getFilteredPropertiesUseCase.invoke(
-                            filterParamsMutableStateFlow.value.type,
+                            filterParamsMutableStateFlow.value.propertyType,
                             minPrice = filterParamsMutableStateFlow.value.minPrice,
                             maxPrice = filterParamsMutableStateFlow.value.maxPrice,
                             minSurface = filterParamsMutableStateFlow.value.minSurface,
@@ -70,15 +74,26 @@ class FilterPropertiesViewModel @Inject constructor(
                         )
                     )
 
-                    Log.d("COUCOU", "filteredPropertyIdsMutableStateFlow: ${filteredPropertyIdsMutableStateFlow.value} - ${getEntryDateByEntryDateStatusUseCase.invoke(filterParamsMutableStateFlow.value.entryDateStatus)?.first} - ${getEntryDateByEntryDateStatusUseCase.invoke(filterParamsMutableStateFlow.value.entryDateStatus)?.second}")
+                    Log.d(
+                        "COUCOU",
+                        "filteredPropertyIdsMutableStateFlow: ${filteredPropertyIdsMutableStateFlow.value} - ${
+                            getEntryDateByEntryDateStatusUseCase.invoke(filterParamsMutableStateFlow.value.entryDateStatus)?.first
+                        } - ${getEntryDateByEntryDateStatusUseCase.invoke(filterParamsMutableStateFlow.value.entryDateStatus)?.second}"
+                    )
 
 
                     FilterViewState(
-                        type = filterParams.type,
+                        type = filterParams.propertyType,
                         minPrice = minMaxPriceAndSurface.minPrice.setScale(0, RoundingMode.HALF_UP).intValueExact(),
                         maxPrice = minMaxPriceAndSurface.maxPrice.setScale(0, RoundingMode.HALF_UP).intValueExact(),
                         minSurface = minMaxPriceAndSurface.minSurface.setScale(0, RoundingMode.HALF_UP).intValueExact(),
                         maxSurface = minMaxPriceAndSurface.maxSurface.setScale(0, RoundingMode.HALF_UP).intValueExact(),
+                        propertyTypes = propertyTypes.map { propertyType ->
+                            PropertyTypeViewStateItem(
+                                id = propertyType.key,
+                                name = propertyType.value,
+                            )
+                        },
                         locationPredictions = mapPredictionsToViewState(predictionAddresses),
                         location = filterParams.location,
                         isRadiusEditTextVisible = filterParams.isLocationValid,
@@ -123,6 +138,12 @@ class FilterPropertiesViewModel @Inject constructor(
         }
     }
 
+    fun onPropertyTypeSelected(propertyType: String) {
+        filterParamsMutableStateFlow.update {
+            it.copy(propertyType = propertyType)
+        }
+    }
+
     fun onLocationChanged(input: String?) {
         if (filterParamsMutableStateFlow.value.isLocationValid && filterParamsMutableStateFlow.value.location != input) {
             setIsPredictionSelectedByUserUseCase.invoke(false)
@@ -156,7 +177,7 @@ class FilterPropertiesViewModel @Inject constructor(
 }
 
 data class FilterParams(
-    val type: String? = null,
+    val propertyType: String? = null,
     val minPrice: BigDecimal = BigDecimal.ZERO,
     val maxPrice: BigDecimal = BigDecimal.ZERO,
     val minSurface: BigDecimal = BigDecimal.ZERO,

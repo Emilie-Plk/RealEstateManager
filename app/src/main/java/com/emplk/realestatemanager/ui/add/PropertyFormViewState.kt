@@ -5,7 +5,7 @@ import com.emplk.realestatemanager.ui.add.address_predictions.PredictionViewStat
 import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem
 import com.emplk.realestatemanager.ui.add.amenity.AmenityViewState
 import com.emplk.realestatemanager.ui.add.picture_preview.PicturePreviewStateItem
-import com.emplk.realestatemanager.ui.add.type.AddPropertyTypeViewStateItem
+import com.emplk.realestatemanager.ui.add.type.PropertyTypeViewStateItem
 import com.emplk.realestatemanager.ui.utils.NativeText
 
 sealed class PropertyFormViewState(val type: Type) {
@@ -38,7 +38,7 @@ sealed class PropertyFormViewState(val type: Type) {
         val isSubmitButtonEnabled: Boolean,
         val submitButtonText: NativeText,
         val isProgressBarVisible: Boolean,
-        val propertyTypes: List<AddPropertyTypeViewStateItem>,
+        val propertyTypes: List<PropertyTypeViewStateItem>,
         val propertyCreationDate: NativeText?,
         val isSold: Boolean? = false,
         val soldDate: String? = null,

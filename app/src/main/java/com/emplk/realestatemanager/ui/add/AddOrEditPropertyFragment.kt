@@ -26,7 +26,7 @@ import com.emplk.realestatemanager.ui.add.address_predictions.PredictionListAdap
 import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentSpinnerAdapter
 import com.emplk.realestatemanager.ui.add.amenity.AmenityListAdapter
 import com.emplk.realestatemanager.ui.add.picture_preview.PropertyPicturePreviewListAdapter
-import com.emplk.realestatemanager.ui.add.type.AddPropertyTypeSpinnerAdapter
+import com.emplk.realestatemanager.ui.add.type.PropertyTypeSpinnerAdapter
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -55,7 +55,7 @@ class AddOrEditPropertyFragment : Fragment(R.layout.form_fragment) {
 
         initFormFieldsTextWatchers()
 
-        val typeAdapter = AddPropertyTypeSpinnerAdapter()
+        val typeAdapter = PropertyTypeSpinnerAdapter()
         val agentAdapter = AddPropertyAgentSpinnerAdapter()
         val picturePreviewAdapter = PropertyPicturePreviewListAdapter()
         val amenityAdapter = AmenityListAdapter()

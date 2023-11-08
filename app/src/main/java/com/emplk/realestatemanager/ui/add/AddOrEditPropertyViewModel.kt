@@ -38,12 +38,12 @@ import com.emplk.realestatemanager.domain.property_draft.picture_preview.Picture
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.SavePictureToLocalAppFilesAndToLocalDatabaseUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.UpdatePicturePreviewUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.id.PicturePreviewIdRepository
-import com.emplk.realestatemanager.domain.property_type.GetPropertyTypeFlowUseCase
+import com.emplk.realestatemanager.domain.property_type.GetPropertyTypeUseCase
 import com.emplk.realestatemanager.ui.add.address_predictions.PredictionViewState
 import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem
 import com.emplk.realestatemanager.ui.add.amenity.AmenityViewState
 import com.emplk.realestatemanager.ui.add.picture_preview.PicturePreviewStateItem
-import com.emplk.realestatemanager.ui.add.type.AddPropertyTypeViewStateItem
+import com.emplk.realestatemanager.ui.add.type.PropertyTypeViewStateItem
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParam
 import com.emplk.realestatemanager.ui.utils.Event
@@ -94,7 +94,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val getAmenityTypeUseCase: GetAmenityTypeUseCase,
     private val getCurrentPredictionAddressesFlowWithDebounceUseCase: GetCurrentPredictionAddressesFlowWithDebounceUseCase,
-    private val getPropertyTypeFlowUseCase: GetPropertyTypeFlowUseCase,
+    private val getPropertyTypeUseCase: GetPropertyTypeUseCase,
     private val isInternetEnabledFlowUseCase: IsInternetEnabledFlowUseCase,
 ) : ViewModel() {
 
@@ -171,7 +171,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                 ) { form, picturePreviews, predictionWrapper, isAddingInDatabase ->
                     val currencyType = getCurrencyTypeUseCase.invoke()
                     val amenityTypes = getAmenityTypeUseCase.invoke()
-                    val propertyTypes = getPropertyTypeFlowUseCase.invoke()
+                    val propertyTypes = getPropertyTypeUseCase.invoke()
                     val agents = getAgentsMapUseCase.invoke()
 
                     val isFormInProgress = !form.propertyType.isNullOrBlank() ||
@@ -247,7 +247,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                         isProgressBarVisible = isAddingInDatabase,
                         amenities = mapAmenityTypesToViewStates(amenityTypes),
                         propertyTypes = propertyTypes.map { propertyType ->
-                            AddPropertyTypeViewStateItem(
+                            PropertyTypeViewStateItem(
                                 id = propertyType.key,
                                 name = propertyType.value,
                             )

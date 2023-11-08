@@ -26,7 +26,6 @@ import java.time.LocalDateTime
 
 class CurrencyRateRepositoryFixerTest {
     companion object {
-        private const val USD_TO_EURO_RATE_FALLBACK = 0.95
         private val TEST_USD_TO_EUR_RATE_KEY = stringPreferencesKey("usd_to_eur_rate")
         private val TEST_LAST_RATE_DATE_KEY = stringPreferencesKey("last_rate_timestamp")
         private const val TEST_USD_TO_EUR_RATE = "1.07"
