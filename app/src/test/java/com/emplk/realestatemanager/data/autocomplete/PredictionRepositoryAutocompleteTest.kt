@@ -88,6 +88,7 @@ class PredictionRepositoryAutocompleteTest {
 
         // Then
         assertThat(result).isEqualTo(TEST_PREDICTION_WRAPPER_SUCCESS)
+
         verify(exactly = 1) { testPredictionLruCache.get(TEST_INPUT) }
         coVerify(exactly = 0) { googleApi.getAddressPredictions(TEST_INPUT, TEST_TYPE) }
         verify(exactly = 0) { testPredictionLruCache.put(TEST_INPUT, TEST_PREDICTION_WRAPPER_SUCCESS) }

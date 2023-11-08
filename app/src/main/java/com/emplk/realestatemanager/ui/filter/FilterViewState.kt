@@ -6,10 +6,10 @@ import com.emplk.realestatemanager.ui.utils.NativeText
 
 data class FilterViewState(
     val type: String?,
-    val minPrice: String,
-    val maxPrice: String,
-    val minSurface: String,
-    val maxSurface: String,
+    val minPrice: Int,
+    val maxPrice: Int,
+    val minSurface: Int,
+    val maxSurface: Int,
     val locationPredictions: List<PredictionViewState>,
     val location: String? = null,
     val isRadiusEditTextVisible: Boolean = false,

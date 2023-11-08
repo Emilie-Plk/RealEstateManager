@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
-
 plugins {
     id("com.android.application")
     kotlin("android")
@@ -23,12 +21,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["clearPackageData"] = "true"
-
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments["room.schemaLocation"] = "$projectDir/schemas"
-            }
-        }
     }
 
     buildFeatures {
@@ -146,8 +138,6 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kover-gradle-plugin:0.7.4")
     // mockk
     api("io.mockk:mockk:1.13.4")
-    // coroutines tests
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
 
     // Android tests
     androidTestImplementation("androidx.arch.core:core-testing:2.2.0") {

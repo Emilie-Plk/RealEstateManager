@@ -6,6 +6,7 @@ import com.emplk.realestatemanager.data.property.location.LocationMapper
 import com.emplk.realestatemanager.data.property.picture.PictureDao
 import com.emplk.realestatemanager.data.property.picture.PictureMapper
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
+import com.emplk.realestatemanager.domain.filter.PropertyMinMaxStatsEntity
 import com.emplk.realestatemanager.domain.property.PropertyEntity
 import com.emplk.realestatemanager.domain.property.PropertyRepository
 import kotlinx.coroutines.async
@@ -91,6 +92,10 @@ class PropertyRepositoryRoom @Inject constructor(
                 )
             }
         } ?: throw IllegalStateException("Property with id $propertyId not found")
+
+    override suspend fun getMinMaxPricesAndSurfaces(): PropertyMinMaxStatsEntity = withContext(coroutineDispatcherProvider.io) {
+        propertyDao.getMinMaxPricesAndSurfaces()
+    }
 
     override suspend fun getFilteredProperties(
         propertyType: String?,

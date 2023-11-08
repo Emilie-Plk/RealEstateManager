@@ -89,9 +89,7 @@
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toStartOf="@id/filter_property_surface_rangeSlider"
             app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@id/filter_property_price_tv"
-            tools:valueFrom="1"
-            tools:valueTo="100.0" />
+            app:layout_constraintTop_toBottomOf="@id/filter_property_price_tv" />
 
 
         <TextView
@@ -123,9 +121,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/filter_property_price_rangeSlider"
             app:layout_constraintEnd_toStartOf="@+id/guideline_2"
             app:layout_constraintStart_toEndOf="@+id/filter_property_price_rangeSlider"
-            app:layout_constraintTop_toTopOf="@+id/filter_property_price_rangeSlider"
-            tools:valueFrom="0"
-            tools:valueTo="100.0" />
+            app:layout_constraintTop_toTopOf="@+id/filter_property_price_rangeSlider" />
 
 
         <TextView
@@ -154,7 +150,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/filter_address_predictions_recyclerView"
+            android:id="@+id/filter_location_predictions_recycler_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

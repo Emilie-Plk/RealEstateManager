@@ -405,7 +405,6 @@ class AddOrEditPropertyViewModel @Inject constructor(
             is PredictionWrapper.Failure -> emptyList<PredictionViewState>().also {
                 println("Failure: ${currentPredictionAddresses.failure}")
             }
-
             else -> emptyList()
         }
     }
@@ -446,7 +445,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
     }
 
     fun onAddressChanged(input: String?) {
-        if (formMutableStateFlow.value.isAddressValid && formMutableStateFlow.value.address != input) { // TODO: NINO working but wtf looping?
+        if (formMutableStateFlow.value.isAddressValid && formMutableStateFlow.value.address != input) {
             viewModelScope.launch { updateOnAddressClickedUseCase.invoke(false, formMutableStateFlow.value.id) }
             formMutableStateFlow.update {
                 it.copy(isAddressValid = false)
@@ -530,6 +529,5 @@ class AddOrEditPropertyViewModel @Inject constructor(
     fun onAddPropertyClicked() {
         onCreateButtonClickedMutableSharedFlow.tryEmit(Unit)
     }
-
 }
 

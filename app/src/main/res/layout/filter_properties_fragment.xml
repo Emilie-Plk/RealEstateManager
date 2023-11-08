@@ -10,6 +10,8 @@
     android:layout_marginEnd="8dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
@@ -75,13 +77,12 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginStart="24dp"
+            app:labelBehavior="visible"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/filter_property_price_tv"
-            tools:valueFrom="1"
-            tools:valueTo="100.0" />
+            app:layout_constraintTop_toBottomOf="@id/filter_property_price_tv" />
 
 
         <TextView
@@ -109,13 +110,12 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginStart="24dp"
+            app:labelBehavior="visible"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/filter_property_surface_tv"
-            tools:valueFrom="0"
-            tools:valueTo="100.0" />
+            app:layout_constraintTop_toBottomOf="@id/filter_property_surface_tv" />
 
 
         <TextView
@@ -133,8 +133,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:imeOptions="actionDone"
-            tools:helperText="Specify a search radius (miles)"
+            app:helperText="Specify a search radius (miles)"
             android:hint="Address, neighborhood, city..."
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -144,21 +143,12 @@
                 android:id="@+id/filter_property_location_editText"
                 android:inputType="textMultiLine|textCapSentences"
                 android:maxLines="2"
+                android:imeOptions="actionDone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/filter_address_predictions_recyclerView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintEnd_toEndOf="@id/filter_property_location_textInputLayout"
-            app:layout_constraintStart_toStartOf="@id/filter_property_location_textInputLayout"
-            app:layout_constraintTop_toBottomOf="@id/filter_property_location_textInputLayout"
-            tools:itemCount="6"
-            tools:listitem="@layout/property_address_prediction_item"
-            tools:visibility="gone" />
+
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/filter_property_radius_textInputLayout"
@@ -207,7 +197,6 @@
                 style="@style/Theme.RealEstateManager.ChipSingleSelection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="true"
                 android:text="+ 6mths" />
 
 
@@ -280,6 +269,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/filter_property_cancel_btn"
             app:layout_constraintTop_toTopOf="@id/filter_property_cancel_btn" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/filter_location_predictions_recycler_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="@id/filter_property_location_textInputLayout"
+            app:layout_constraintStart_toStartOf="@id/filter_property_location_textInputLayout"
+            app:layout_constraintTop_toBottomOf="@id/filter_property_location_textInputLayout"
+            tools:itemCount="6"
+            tools:visibility="gone"
+            tools:listitem="@layout/property_address_prediction_item"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
