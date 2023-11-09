@@ -1,8 +1,7 @@
 package com.emplk.realestatemanager.domain.filter
 
-import android.util.Log
 import com.emplk.realestatemanager.domain.property.PropertyRepository
-import com.google.android.gms.maps.model.LatLng
+import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import kotlinx.coroutines.flow.Flow
 import java.math.BigDecimal
 import java.time.LocalDateTime
@@ -10,30 +9,37 @@ import javax.inject.Inject
 
 class GetFilteredPropertiesUseCase @Inject constructor(
     private val propertyRepository: PropertyRepository,
-    private val filterPropertiesByDistanceUseCase: FilterPropertiesByDistanceUseCase,
 ) {
-    suspend fun invoke(
+    fun invoke(
         propertyType: String?,
-        minPrice: BigDecimal?,
-        maxPrice: BigDecimal?,
-        minSurface: BigDecimal?,
-        maxSurface: BigDecimal?,
+        minPrice: BigDecimal,
+        maxPrice: BigDecimal,
+        minSurface: BigDecimal,
+        maxSurface: BigDecimal,
+        amenities: List<AmenityType>,
         entryDateMin: LocalDateTime?,
         entryDateMax: LocalDateTime?,
         isSold: Boolean?,
-        locationLatLong: LatLng?,
-        radiusInMiles: Int,
-    ): List<Long> =
-        propertyRepository.getFilteredProperties(
+    ): Flow<Int> {
+        return propertyRepository.getFilteredPropertiesCount(
             propertyType,
             minPrice,
             maxPrice,
             minSurface,
             maxSurface,
+            amenities.contains(AmenityType.SCHOOL),
+            amenities.contains(AmenityType.PARK),
+            amenities.contains(AmenityType.SHOPPING_MALL),
+            amenities.contains(AmenityType.RESTAURANT),
+            amenities.contains(AmenityType.CONCIERGE),
+            amenities.contains(AmenityType.GYM),
+            amenities.contains(AmenityType.PUBLIC_TRANSPORTATION),
+            amenities.contains(AmenityType.HOSPITAL),
+            amenities.contains(AmenityType.LIBRARY),
             entryDateMin,
             entryDateMax,
-            isSold
-        ).let { propertiesIds ->
-            return filterPropertiesByDistanceUseCase.invoke(propertiesIds, locationLatLong, radiusInMiles)
-        }
+            isSold,
+        )
+    }
+
 }

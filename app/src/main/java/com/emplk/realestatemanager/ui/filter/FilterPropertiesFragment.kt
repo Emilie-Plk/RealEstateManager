@@ -6,13 +6,11 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import androidx.core.view.isVisible
-import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.FilterPropertiesFragmentBinding
-import com.emplk.realestatemanager.ui.add.address_predictions.PredictionListAdapter
+import com.emplk.realestatemanager.ui.add.amenity.AmenityListAdapter
 import com.emplk.realestatemanager.ui.add.type.PropertyTypeSpinnerAdapter
 import com.emplk.realestatemanager.ui.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,40 +30,21 @@ class FilterPropertiesFragment : DialogFragment(R.layout.filter_properties_fragm
         val height = ViewGroup.LayoutParams.WRAP_CONTENT
         dialog?.window?.setLayout(width, height)
 
-        val predictionsAdapter = PredictionListAdapter()
-        binding.filterLocationPredictionsRecyclerView.adapter = predictionsAdapter
-
         val propertyTypeAdapter = PropertyTypeSpinnerAdapter()
         binding.filterPropertyTypeActv.setAdapter(propertyTypeAdapter)
 
+        val amenityAdapter = AmenityListAdapter()
+        binding.filterPropertyAmenitiesRecyclerView?.adapter = amenityAdapter
+
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
-            predictionsAdapter.submitList(viewState.locationPredictions)
             propertyTypeAdapter.setData(viewState.propertyTypes)
+            amenityAdapter.submitList(viewState.amenities)
 
-
-            val currentLocation = binding.filterPropertyLocationEditText.text.toString()
-
-            if (currentLocation != viewState.location && viewState.location != null) {
-                binding.filterPropertyLocationEditText.setText(viewState.location)
-            }
-
-            binding.filterPropertyLocationEditText.doAfterTextChanged {
-                binding.filterPropertyLocationEditText.setSelection(it.toString().length)
-                val newText = it?.toString() ?: ""
-                if (newText != viewState.location) {
-                    viewModel.onLocationChanged(newText)
+            binding.filterPropertyTypeActv.setOnItemClickListener { _, _, position, _ ->
+                propertyTypeAdapter.getItem(position)?.let {
+                    viewModel.onPropertyTypeSelected(it.name)
                 }
             }
-
-            binding.filterPropertyLocationEditText.setOnFocusChangeListener { _, hasFocus ->
-                viewModel.onAddressEditTextFocused(hasFocus)
-                if (!hasFocus) {
-                    hideKeyboard(binding.filterPropertyLocationEditText)
-                }
-            }
-
-            binding.filterPropertyRadiusTextInputLayout?.isVisible = viewState.isRadiusEditTextVisible
-            binding.filterPropertyLocationTextInputLayout.isHelperTextEnabled = viewState.isRadiusEditTextVisible
 
             binding.filterPropertyPriceRangeSlider.valueFrom = viewState.minPrice.toFloat()
             binding.filterPropertyPriceRangeSlider.valueTo = viewState.maxPrice.toFloat()
@@ -74,12 +53,12 @@ class FilterPropertiesFragment : DialogFragment(R.layout.filter_properties_fragm
                 viewState.maxPrice.toFloat()
             )
             binding.filterPropertyPriceRangeSlider.setLabelFormatter { value ->
-                "${value.toInt()} €" // unit
+                "$ ${value.toInt()}" // unit
             }
 
-            binding.filterPropertyEntryDateChipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
-                checkedIds.forEach { id ->
-                    when (id) {
+            binding.filterPropertyEntrySaleStateToggleGroup?.addOnButtonCheckedListener { _, checkedId, isChecked ->
+                if (isChecked) {
+                    when (checkedId) {
                         R.id.filter_property_entry_more_than_6_months_chip -> viewModel.onEntryDateStatusChanged(
                             EntryDateStatus.MORE_THAN_6_MONTHS
                         )
@@ -110,7 +89,7 @@ class FilterPropertiesFragment : DialogFragment(R.layout.filter_properties_fragm
             binding.filterPropertySurfaceRangeSlider.setLabelFormatter { value ->
                 "${value.toInt()} sq ft"
             }
-
+            
             binding.filterPropertyFilterBtn.text = viewState.filterButtonText.toCharSequence(requireContext())
             binding.filterPropertyFilterBtn.setOnClickListener {
                 viewState.onFilterClicked()

@@ -126,16 +126,5 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="Theme.RealEstateManager.ChipSingleSelection" parent="Widget.Material3.Chip.Filter">
-        <item name="android:padding">8dp</item>
-        <item name="android:textColor">@color/chip_text_color</item>
-        <item name="checkedIconEnabled">false</item>
-        <item name="checkedIcon">@null</item>
-        <item name="android:textSize">15sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="chipStrokeColor">@color/primary_light</item>
-        <item name="chipBackgroundColor">@color/chip_background</item>
-    </style>
-
 
 </resources>

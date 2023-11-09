@@ -24,7 +24,7 @@ class FormDraftMapper @Inject constructor(
             description = propertyForm.description,
             amenitySchool = propertyForm.amenities.contains(AmenityType.SCHOOL),
             amenityPark = propertyForm.amenities.contains(AmenityType.PARK),
-            amenityMall = propertyForm.amenities.contains(AmenityType.SHOPPING_MALL),
+            amenityShopping = propertyForm.amenities.contains(AmenityType.SHOPPING_MALL),
             amenityRestaurant = propertyForm.amenities.contains(AmenityType.RESTAURANT),
             amenityConcierge = propertyForm.amenities.contains(AmenityType.CONCIERGE),
             amenityGym = propertyForm.amenities.contains(AmenityType.GYM),
@@ -66,7 +66,7 @@ class FormDraftMapper @Inject constructor(
     private fun mapAmenities(formDraftDto: FormDraftDto): List<AmenityType> = buildList {
         if (formDraftDto.amenitySchool) add(AmenityType.SCHOOL)
         if (formDraftDto.amenityPark) add(AmenityType.PARK)
-        if (formDraftDto.amenityMall) add(AmenityType.SHOPPING_MALL)
+        if (formDraftDto.amenityShopping) add(AmenityType.SHOPPING_MALL)
         if (formDraftDto.amenityRestaurant) add(AmenityType.RESTAURANT)
         if (formDraftDto.amenityConcierge) add(AmenityType.CONCIERGE)
         if (formDraftDto.amenityGym) add(AmenityType.GYM)

@@ -25,8 +25,8 @@ data class PropertyDto(
     val amenitySchool: Boolean,
     @ColumnInfo(name = "amenity_park")
     val amenityPark: Boolean,
-    @ColumnInfo(name = "amenity_mall")
-    val amenityMall: Boolean,
+    @ColumnInfo(name = "amenity_shopping")
+    val amenityShopping: Boolean,
     @ColumnInfo(name = "amenity_restaurant")
     val amenityRestaurant: Boolean,
     @ColumnInfo(name = "amenity_concierge")
