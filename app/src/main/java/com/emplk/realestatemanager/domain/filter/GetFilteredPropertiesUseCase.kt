@@ -2,6 +2,7 @@ package com.emplk.realestatemanager.domain.filter
 
 import com.emplk.realestatemanager.domain.property.PropertyRepository
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
+import com.emplk.realestatemanager.ui.filter.PropertySaleState
 import kotlinx.coroutines.flow.Flow
 import java.math.BigDecimal
 import java.time.LocalDateTime
@@ -19,10 +20,10 @@ class GetFilteredPropertiesUseCase @Inject constructor(
         amenities: List<AmenityType>,
         entryDateMin: LocalDateTime?,
         entryDateMax: LocalDateTime?,
-        isSold: Boolean?,
+        propertySaleState: PropertySaleState,
     ): Flow<Int> {
         return propertyRepository.getFilteredPropertiesCount(
-            propertyType,
+            if (propertyType == "All") null else propertyType,
             minPrice,
             maxPrice,
             minSurface,
@@ -38,7 +39,11 @@ class GetFilteredPropertiesUseCase @Inject constructor(
             amenities.contains(AmenityType.LIBRARY),
             entryDateMin,
             entryDateMax,
-            isSold,
+            when (propertySaleState) {
+                PropertySaleState.SOLD -> true
+                PropertySaleState.FOR_SALE -> false
+                PropertySaleState.ALL -> null
+            },
         )
     }
 
