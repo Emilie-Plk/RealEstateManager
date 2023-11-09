@@ -56,26 +56,26 @@ class FilterPropertiesFragment : DialogFragment(R.layout.filter_properties_fragm
                 "$ ${value.toInt()}" // unit
             }
 
-            binding.filterPropertyEntrySaleStateToggleGroup?.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            binding.filterPropertyEntryDateToggleGroup?.addOnButtonCheckedListener { _, checkedId, isChecked ->
                 if (isChecked) {
                     when (checkedId) {
                         R.id.filter_property_entry_more_than_6_months_chip -> viewModel.onEntryDateStatusChanged(
-                            EntryDateStatus.MORE_THAN_6_MONTHS
+                            EntryDateState.MORE_THAN_6_MONTHS
                         )
 
                         R.id.filter_property_entry_date_less_than_3_months_chip -> viewModel.onEntryDateStatusChanged(
-                            EntryDateStatus.LESS_THAN_3_MONTHS
+                            EntryDateState.LESS_THAN_3_MONTHS
                         )
 
                         R.id.filter_property_entry_date_less_than_1_month_chip -> viewModel.onEntryDateStatusChanged(
-                            EntryDateStatus.LESS_THAN_1_MONTH
+                            EntryDateState.LESS_THAN_1_MONTH
                         )
 
                         R.id.filter_property_entry_date_less_than_1_week_chip -> viewModel.onEntryDateStatusChanged(
-                            EntryDateStatus.LESS_THAN_1_WEEK
+                            EntryDateState.LESS_THAN_1_WEEK
                         )
 
-                        else -> viewModel.onEntryDateStatusChanged(EntryDateStatus.NONE)
+                        else -> viewModel.onEntryDateStatusChanged(EntryDateState.NONE)
                     }
                 }
             }
@@ -89,7 +89,7 @@ class FilterPropertiesFragment : DialogFragment(R.layout.filter_properties_fragm
             binding.filterPropertySurfaceRangeSlider.setLabelFormatter { value ->
                 "${value.toInt()} sq ft"
             }
-            
+
             binding.filterPropertyFilterBtn.text = viewState.filterButtonText.toCharSequence(requireContext())
             binding.filterPropertyFilterBtn.setOnClickListener {
                 viewState.onFilterClicked()
@@ -99,6 +99,26 @@ class FilterPropertiesFragment : DialogFragment(R.layout.filter_properties_fragm
         binding.filterPropertyCancelBtn.setOnClickListener {
             dismiss()
             //viewModel.onCancelClicked()
+        }
+
+        binding.filterPropertyEntrySaleStateToggleGroup?.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (isChecked) {
+                when (checkedId) {
+                    R.id.filter_property_for_sale_btn -> viewModel.onPropertySaleStateChanged(
+                        PropertySaleState.FOR_SALE
+                    )
+
+                    R.id.filter_property_sold_btn -> viewModel.onPropertySaleStateChanged(
+                        PropertySaleState.SOLD
+                    )
+
+                    R.id.filter_property_all_btn -> viewModel.onPropertySaleStateChanged(
+                        PropertySaleState.ALL
+                    )
+
+                    else -> viewModel.onPropertySaleStateChanged(PropertySaleState.ALL)
+                }
+            }
         }
     }
 

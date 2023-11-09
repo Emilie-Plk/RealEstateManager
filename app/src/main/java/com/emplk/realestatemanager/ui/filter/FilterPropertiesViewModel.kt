@@ -7,9 +7,9 @@ import androidx.lifecycle.liveData
 import com.emplk.realestatemanager.domain.filter.GetEntryDateByEntryDateStatusUseCase
 import com.emplk.realestatemanager.domain.filter.GetFilteredPropertiesUseCase
 import com.emplk.realestatemanager.domain.filter.GetMinMaxPriceAndSurfaceUseCase
+import com.emplk.realestatemanager.domain.filter.GetPropertyTypeForFilterUseCase
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.amenity.type.GetAmenityTypeUseCase
-import com.emplk.realestatemanager.domain.property_type.GetPropertyTypeUseCase
 import com.emplk.realestatemanager.ui.add.amenity.AmenityViewState
 import com.emplk.realestatemanager.ui.add.type.PropertyTypeViewStateItem
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
@@ -19,7 +19,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
@@ -31,7 +31,7 @@ class FilterPropertiesViewModel @Inject constructor(
     private val getFilteredPropertiesUseCase: GetFilteredPropertiesUseCase,
     private val getEntryDateByEntryDateStatusUseCase: GetEntryDateByEntryDateStatusUseCase,
     private val getMinMaxPriceAndSurfaceUseCase: GetMinMaxPriceAndSurfaceUseCase,
-    private val getPropertyTypeUseCase: GetPropertyTypeUseCase,
+    private val getPropertyTypeForFilterUseCase: GetPropertyTypeForFilterUseCase,
     private val getAmenityTypeUseCase: GetAmenityTypeUseCase,
 ) : ViewModel() {
 
@@ -40,30 +40,27 @@ class FilterPropertiesViewModel @Inject constructor(
 
     val viewState: LiveData<FilterViewState> = liveData {
         coroutineScope {
-
-
             launch {
-                combine(
-                    filterParamsMutableStateFlow,
+                filterParamsMutableStateFlow.flatMapLatest { filterParams ->
                     getFilteredPropertiesUseCase.invoke(
-                        propertyType = filterParamsMutableStateFlow.value.propertyType,
-                        minPrice = filterParamsMutableStateFlow.value.minPrice,
-                        maxPrice = filterParamsMutableStateFlow.value.maxPrice,
-                        minSurface = filterParamsMutableStateFlow.value.minSurface,
-                        maxSurface = filterParamsMutableStateFlow.value.maxSurface,
-                        amenities = filterParamsMutableStateFlow.value.selectedAmenities,
+                        propertyType = filterParams.propertyType,
+                        minPrice = filterParams.minPrice,
+                        maxPrice = filterParams.maxPrice,
+                        minSurface = filterParams.minSurface,
+                        maxSurface = filterParams.maxSurface,
+                        amenities = filterParams.selectedAmenities,
                         entryDateMin = null,
                         entryDateMax = null,
-                        isSold = filterParamsMutableStateFlow.value.isSold
-                    ),
-                ) { filterParams, filterePropertiesCount ->
+                        propertySaleState = filterParams.saleState,
+                    )
+                }.collectLatest { filteredPropertiesCount ->
                     val minMaxPriceAndSurface = getMinMaxPriceAndSurfaceUseCase.invoke()
-                    val propertyTypes = getPropertyTypeUseCase.invoke()
+                    val propertyTypes = getPropertyTypeForFilterUseCase.invoke()
                     val amenityTypes = getAmenityTypeUseCase.invoke()
 
-                    Log.d("COUCOU", "filteredIds: $filterePropertiesCount")
-                    FilterViewState(
-                        type = filterParams.propertyType,
+                    Log.d("COUCOU", "filteredIds: $filteredPropertiesCount")
+                    emit(FilterViewState(
+                        type = filterParamsMutableStateFlow.value.propertyType,
                         minPrice = minMaxPriceAndSurface.minPrice.setScale(0, RoundingMode.HALF_UP).intValueExact(),
                         maxPrice = minMaxPriceAndSurface.maxPrice.setScale(0, RoundingMode.HALF_UP).intValueExact(),
                         minSurface = minMaxPriceAndSurface.minSurface.setScale(0, RoundingMode.HALF_UP)
@@ -77,19 +74,27 @@ class FilterPropertiesViewModel @Inject constructor(
                                 name = propertyType.value,
                             )
                         },
-                        entryDate = filterParams.entryDateStatus,
-                        availableForSale = filterParams.isSold == false,
-                        // if filteredIds count is 0, it means that the user didn't set any filter
-                        filterButtonText = if (filterePropertiesCount == 0) {
-                            NativeText.Simple("None")
-                        } else {
-                            NativeText.Simple("$filterePropertiesCount properties")
+                        entryDate = filterParamsMutableStateFlow.value.entryDateState,
+                        availableForSale = filterParamsMutableStateFlow.value.saleState,
+                        filterButtonText = when (filteredPropertiesCount) {
+                            0 -> {
+                                NativeText.Simple("None")
+                            }
+
+                            1 -> {
+                                NativeText.Simple("1 property")
+                            }
+
+                            else -> {
+                                NativeText.Simple("$filteredPropertiesCount properties")
+                            }
                         },
                         onCancelClicked = EquatableCallback { filterParamsMutableStateFlow.update { FilterParams() } },
                         onFilterClicked = EquatableCallback {
                         }
                     )
-                }.collectLatest { emit(it) }
+                    )
+                }
             }
         }
     }
@@ -116,7 +121,6 @@ class FilterPropertiesViewModel @Inject constructor(
             )
         }
 
-
     fun onPropertyTypeSelected(propertyType: String) {
         filterParamsMutableStateFlow.update {
             it.copy(propertyType = propertyType)
@@ -124,10 +128,18 @@ class FilterPropertiesViewModel @Inject constructor(
     }
 
 
-    fun onEntryDateStatusChanged(entryDateStatus: EntryDateStatus) {
+    fun onEntryDateStatusChanged(entryDateState: EntryDateState) {
         filterParamsMutableStateFlow.update {
             it.copy(
-                entryDateStatus = entryDateStatus
+                entryDateState = entryDateState
+            )
+        }
+    }
+
+    fun onPropertySaleStateChanged(propertySateState: PropertySaleState) {
+        filterParamsMutableStateFlow.update {
+            it.copy(
+                saleState = propertySateState
             )
         }
     }
@@ -140,6 +152,6 @@ data class FilterParams(
     val minSurface: BigDecimal = BigDecimal.ZERO,
     val maxSurface: BigDecimal = BigDecimal.ZERO,
     val selectedAmenities: List<AmenityType> = emptyList(),
-    val isSold: Boolean? = false,
-    val entryDateStatus: EntryDateStatus = EntryDateStatus.NONE,
+    val saleState: PropertySaleState = PropertySaleState.ALL,
+    val entryDateState: EntryDateState = EntryDateState.NONE,
 )
