@@ -24,7 +24,7 @@ class PropertyMapper @Inject constructor(
         description = property.description,
         amenitySchool = property.amenities.contains(AmenityType.SCHOOL),
         amenityPark = property.amenities.contains(AmenityType.PARK),
-        amenityMall = property.amenities.contains(AmenityType.SHOPPING_MALL),
+        amenityShopping = property.amenities.contains(AmenityType.SHOPPING_MALL),
         amenityRestaurant = property.amenities.contains(AmenityType.RESTAURANT),
         amenityConcierge = property.amenities.contains(AmenityType.CONCIERGE),
         amenityGym = property.amenities.contains(AmenityType.GYM),
@@ -64,7 +64,7 @@ class PropertyMapper @Inject constructor(
     private fun mapAmenities(propertyDto: PropertyDto): List<AmenityType> = buildList {
         if (propertyDto.amenitySchool) add(AmenityType.SCHOOL)
         if (propertyDto.amenityPark) add(AmenityType.PARK)
-        if (propertyDto.amenityMall) add(AmenityType.SHOPPING_MALL)
+        if (propertyDto.amenityShopping) add(AmenityType.SHOPPING_MALL)
         if (propertyDto.amenityRestaurant) add(AmenityType.RESTAURANT)
         if (propertyDto.amenityConcierge) add(AmenityType.CONCIERGE)
         if (propertyDto.amenityGym) add(AmenityType.GYM)

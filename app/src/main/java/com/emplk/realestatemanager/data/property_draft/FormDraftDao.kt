@@ -43,7 +43,7 @@ interface FormDraftDao {
                 " description = :newDescription," +
                 " amenity_school = :newAmenitySchool," +
                 " amenity_park = :newAmenityPark," +
-                " amenity_mall = :newAmenityMall," +
+                " amenity_shopping = :newAmenityShopping," +
                 " amenity_restaurant = :newAmenityRestaurant," +
                 " amenity_concierge = :newAmenityConcierge," +
                 " amenity_gym = :newAmenityGym," +
@@ -68,7 +68,7 @@ interface FormDraftDao {
         newDescription: String?,
         newAmenitySchool: Boolean,
         newAmenityPark: Boolean,
-        newAmenityMall: Boolean,
+        newAmenityShopping: Boolean,
         newAmenityRestaurant: Boolean,
         newAmenityConcierge: Boolean,
         newAmenityGym: Boolean,

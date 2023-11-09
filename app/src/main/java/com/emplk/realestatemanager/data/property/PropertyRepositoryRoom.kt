@@ -100,27 +100,50 @@ class PropertyRepositoryRoom @Inject constructor(
             propertyDao.getMinMaxPricesAndSurfaces()
         }
 
-    override suspend fun getFilteredProperties(
+    override fun getFilteredPropertiesCount(
         propertyType: String?,
-        minPrice: BigDecimal?,
-        maxPrice: BigDecimal?,
-        minSurface: BigDecimal?,
-        maxSurface: BigDecimal?,
+        minPrice: BigDecimal,
+        maxPrice: BigDecimal,
+        minSurface: BigDecimal,
+        maxSurface: BigDecimal,
+        amenitySchool: Boolean?,
+        amenityPark: Boolean?,
+        amenityShopping: Boolean?,
+        amenityRestaurant: Boolean?,
+        amenityConcierge: Boolean?,
+        amenityGym: Boolean?,
+        amenityTransport: Boolean?,
+        amenityHospital: Boolean?,
+        amenityLibrary: Boolean?,
         entryDateMin: LocalDateTime?,
         entryDateMax: LocalDateTime?,
         isSold: Boolean?
-    ): List<PropertyIdWithLatLong> = withContext(coroutineDispatcherProvider.io) {
-        propertyDao.getFilteredPropertiesIds(
+    ): Flow<Int> {
+        Log.d(
+            "COUCOU",
+            "getFilteredPropertiesCount: $propertyType, $minPrice, $maxPrice, $minSurface, $maxSurface, $amenitySchool, $amenityPark, $amenityShopping, $amenityRestaurant, $amenityConcierge, $amenityGym, $amenityTransport, $amenityHospital, $amenityLibrary, $entryDateMin, $entryDateMax, $isSold"
+        )
+        return propertyDao.getFilteredPropertiesCount(
             propertyType,
             minPrice,
             maxPrice,
             minSurface,
             maxSurface,
+            amenitySchool,
+            amenityPark,
+            amenityShopping,
+            amenityRestaurant,
+            amenityConcierge,
+            amenityGym,
+            amenityTransport,
+            amenityHospital,
+            amenityLibrary,
             entryDateMin,
             entryDateMax,
             isSold
         )
     }
+
 
     override suspend fun update(propertyEntity: PropertyEntity): Boolean =
         withContext(coroutineDispatcherProvider.io) {

@@ -102,7 +102,7 @@ class FormDraftDraftRepositoryRoom @Inject constructor(
                 propertyFormDto.description,
                 propertyFormDto.amenitySchool,
                 propertyFormDto.amenityPark,
-                propertyFormDto.amenityMall,
+                propertyFormDto.amenityShopping,
                 propertyFormDto.amenityRestaurant,
                 propertyFormDto.amenityConcierge,
                 propertyFormDto.amenityGym,

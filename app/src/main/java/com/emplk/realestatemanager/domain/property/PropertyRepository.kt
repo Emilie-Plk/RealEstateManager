@@ -1,6 +1,5 @@
 package com.emplk.realestatemanager.domain.property
 
-import com.emplk.realestatemanager.data.property.PropertyIdWithLatLong
 import com.emplk.realestatemanager.domain.filter.PropertyMinMaxStatsEntity
 import kotlinx.coroutines.flow.Flow
 import java.math.BigDecimal
@@ -13,16 +12,25 @@ interface PropertyRepository {
     fun getPropertyByIdAsFlow(propertyId: Long): Flow<PropertyEntity?>
     suspend fun getPropertyById(propertyId: Long): PropertyEntity
     suspend fun getMinMaxPricesAndSurfaces(): PropertyMinMaxStatsEntity
-    suspend fun getFilteredProperties(
+    fun getFilteredPropertiesCount(
         propertyType: String?,
-        minPrice: BigDecimal?,
-        maxPrice: BigDecimal?,
-        minSurface: BigDecimal?,
-        maxSurface: BigDecimal?,
+        minPrice: BigDecimal,
+        maxPrice: BigDecimal,
+        minSurface: BigDecimal,
+        maxSurface: BigDecimal,
+        amenitySchool: Boolean?,
+        amenityPark: Boolean?,
+        amenityShopping: Boolean?,
+        amenityRestaurant: Boolean?,
+        amenityConcierge: Boolean?,
+        amenityGym: Boolean?,
+        amenityTransport: Boolean?,
+        amenityHospital: Boolean?,
+        amenityLibrary: Boolean?,
         entryDateMin: LocalDateTime?,
         entryDateMax: LocalDateTime?,
         isSold: Boolean?
-    ): List<PropertyIdWithLatLong>
+    ): Flow<Int>
 
     suspend fun update(propertyEntity: PropertyEntity): Boolean
 }
