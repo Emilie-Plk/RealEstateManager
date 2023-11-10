@@ -22,6 +22,7 @@ data class FormDraftEntity(
     val amenities: List<AmenityType> = emptyList(),
     val isSold: Boolean,
     val entryDate: LocalDateTime?,
+    val entryDateEpoch: Long?,
     val saleDate: LocalDateTime?,
     val lastEditionDate: LocalDateTime?,
 )

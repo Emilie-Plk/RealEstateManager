@@ -21,6 +21,7 @@ data class PropertyEntity(
     val agentName: String,
     val isSold: Boolean,
     val entryDate: LocalDateTime,
+    val entryDateEpoch: Long,
     val lastEditionDate: LocalDateTime?,
     val saleDate: LocalDateTime?,
 )

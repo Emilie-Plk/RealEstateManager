@@ -17,6 +17,7 @@ class ConvertToUsdDependingOnLocaleUseCase @Inject constructor(
      */
     suspend fun invoke(price: BigDecimal): BigDecimal {
         val locale = getLocaleUseCase.invoke()
+        if (price == BigDecimal.ZERO) return BigDecimal.ZERO
 
         return if (locale == Locale.FRANCE) {
             when (val currencyWrapper = currencyRateRepository.getCurrentCurrencyRate()) {

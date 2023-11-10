@@ -10,6 +10,6 @@ interface LocaleFormattingRepository {
     fun getLocaleSurfaceUnitFormatting(): SurfaceUnitType
     fun convertDollarToEuro(dollar: BigDecimal, currencyRate: BigDecimal): BigDecimal
     fun convertEuroToDollar(euro: BigDecimal, currencyRate: BigDecimal): BigDecimal
-    fun formatPrice(price: BigDecimal): String
+    fun formatPriceToHumanReadable(price: BigDecimal): String
     fun getLocaleCurrencyFormatting(): CurrencyType
 }

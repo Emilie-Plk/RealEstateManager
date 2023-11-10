@@ -6,7 +6,9 @@ import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.NativeText
 
 data class FilterViewState(
-    val type: String?,
+    val propertyType: String?,
+    val priceRange: List<Float>,
+  //  val priceStepSize: Float,
     val minPrice: Int,
     val maxPrice: Int,
     val minSurface: Int,

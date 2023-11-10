@@ -7,7 +7,7 @@ import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceByLocaleUseCase
 import com.emplk.realestatemanager.domain.currency_rate.GetLastUpdatedCurrencyRateDateUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceDependingOnLocaleUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceByLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceToHumanReadableUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetRoundedSurfaceWithSurfaceUnitUseCase
 import com.emplk.realestatemanager.domain.map_picture.GenerateMapUrlWithApiKeyUseCase
@@ -48,7 +48,7 @@ class DetailViewModelTest {
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private val getCurrentPropertyUseCase: GetCurrentPropertyUseCase = mockk()
-    private val formatPriceByLocaleUseCase: FormatPriceByLocaleUseCase = mockk()
+    private val formatPriceToHumanReadableUseCase: FormatPriceToHumanReadableUseCase = mockk()
     private val convertPriceByLocaleUseCase: ConvertPriceByLocaleUseCase = mockk()
     private val getLastUpdatedCurrencyRateDateUseCase: GetLastUpdatedCurrencyRateDateUseCase = mockk()
     private val getLocaleUseCase: GetLocaleUseCase = mockk()
@@ -65,7 +65,7 @@ class DetailViewModelTest {
         every { getCurrentPropertyUseCase.invoke() } returns flowOf(getTestPropertyEntity(TEST_PROPERTY_ID))
         every { getLocaleUseCase.invoke() } returns US
         coEvery { convertPriceByLocaleUseCase.invoke(BigDecimal(1000000)) } returns BigDecimal(1000000)
-        every { formatPriceByLocaleUseCase.invoke(BigDecimal(1000000)) } returns "$1,000,000"
+        every { formatPriceToHumanReadableUseCase.invoke(BigDecimal(1000000)) } returns "$1,000,000"
         coEvery { getLastUpdatedCurrencyRateDateUseCase.invoke() } coAnswers { null }
         every { getRoundedSurfaceWithSurfaceUnitUseCase.invoke(BigDecimal(500)) } returns "500 m²"
         coEvery { convertSurfaceDependingOnLocaleUseCase.invoke(BigDecimal(500)) } returns BigDecimal(500)
@@ -74,7 +74,7 @@ class DetailViewModelTest {
 
         detailViewModel = DetailViewModel(
             getCurrentPropertyUseCase = getCurrentPropertyUseCase,
-            formatPriceByLocaleUseCase = formatPriceByLocaleUseCase,
+            formatPriceToHumanReadableUseCase = formatPriceToHumanReadableUseCase,
             convertPriceByLocaleUseCase = convertPriceByLocaleUseCase,
             getLastUpdatedCurrencyRateDateUseCase = getLastUpdatedCurrencyRateDateUseCase,
             getLocaleUseCase = getLocaleUseCase,

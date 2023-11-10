@@ -24,6 +24,7 @@ import kotlinx.coroutines.coroutineScope
 import java.math.BigDecimal
 import java.time.Clock
 import java.time.LocalDateTime
+import java.time.ZoneId
 import javax.inject.Inject
 
 class AddOrEditPropertyUseCase @Inject constructor(
@@ -66,7 +67,7 @@ class AddOrEditPropertyUseCase @Inject constructor(
             if (doesPropertyExist) {
                 // region edit existing property
                 require(
-                    form.entryDate != null
+                    form.entryDate != null && form.entryDateEpoch != null
                 ) {
                     "Impossible case: entry date should not be null => form : $form"
                 }
@@ -100,6 +101,7 @@ class AddOrEditPropertyUseCase @Inject constructor(
                             }
                         },
                         entryDate = form.entryDate,
+                        entryDateEpoch = form.entryDateEpoch,
                         lastEditionDate = LocalDateTime.now(clock),
                         isSold = form.isSold,
                         saleDate = if (!form.isSold) null else form.soldDate ?: LocalDateTime.now(clock),
@@ -115,6 +117,7 @@ class AddOrEditPropertyUseCase @Inject constructor(
                 // endregion
             } else {
                 // region add new property
+                val now = LocalDateTime.now(clock)
                 val addSuccess = propertyRepository.addPropertyWithDetails(
                     PropertyEntity(
                         id = form.id,
@@ -138,7 +141,8 @@ class AddOrEditPropertyUseCase @Inject constructor(
                                 isFeatured = it.id == form.featuredPictureId,
                             )
                         },
-                        entryDate = LocalDateTime.now(clock),
+                        entryDate = now,
+                        entryDateEpoch = now.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
                         lastEditionDate = null,
                         isSold = false,
                         saleDate = null,

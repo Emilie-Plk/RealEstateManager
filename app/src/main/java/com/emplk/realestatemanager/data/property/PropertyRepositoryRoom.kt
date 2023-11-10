@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.math.BigDecimal
-import java.time.LocalDateTime
 import javax.inject.Inject
 
 class PropertyRepositoryRoom @Inject constructor(
@@ -115,13 +114,13 @@ class PropertyRepositoryRoom @Inject constructor(
         amenityTransport: Boolean?,
         amenityHospital: Boolean?,
         amenityLibrary: Boolean?,
-        entryDateMin: LocalDateTime?,
-        entryDateMax: LocalDateTime?,
+        entryDateEpochMin: Long?,
+        entryDateEpochMax: Long?,
         isSold: Boolean?
     ): Flow<Int> {
         Log.d(
             "COUCOU",
-            "getFilteredPropertiesCount: $propertyType, $minPrice, $maxPrice, $minSurface, $maxSurface, $amenitySchool, $amenityPark, $amenityShopping, $amenityRestaurant, $amenityConcierge, $amenityGym, $amenityTransport, $amenityHospital, $amenityLibrary, $entryDateMin, $entryDateMax, $isSold"
+            "getFilteredPropertiesCount: $propertyType, $minPrice, $maxPrice, $minSurface, $maxSurface, $amenitySchool, $amenityPark, $amenityShopping, $amenityRestaurant, $amenityConcierge, $amenityGym, $amenityTransport, $amenityHospital, $amenityLibrary, entryDateMin: $entryDateEpochMin, entrydateMax: $entryDateEpochMax, $isSold"
         )
         return propertyDao.getFilteredPropertiesCount(
             propertyType,
@@ -138,8 +137,8 @@ class PropertyRepositoryRoom @Inject constructor(
             amenityTransport,
             amenityHospital,
             amenityLibrary,
-            entryDateMin,
-            entryDateMax,
+            entryDateEpochMin,
+            entryDateEpochMax,
             isSold
         )
     }

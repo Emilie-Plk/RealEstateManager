@@ -8,7 +8,6 @@ import javax.inject.Inject
 
 class MapPropertyToDraftUseCase @Inject constructor(
     private val propertyRepository: PropertyRepository,
-    private val clock: Clock,
 ) {
     suspend fun invoke(propertyId: Long): FormDraftEntity {
         val propertyEntity = propertyRepository.getPropertyById(propertyId)
@@ -35,7 +34,8 @@ class MapPropertyToDraftUseCase @Inject constructor(
             },
             amenities = propertyEntity.amenities.map { it },
             isSold = propertyEntity.isSold,
-            entryDate = LocalDateTime.now(clock),
+            entryDate = propertyEntity.entryDate,
+            entryDateEpoch = propertyEntity.entryDateEpoch,
             saleDate = propertyEntity.saleDate,
             lastEditionDate = propertyEntity.lastEditionDate,
         )

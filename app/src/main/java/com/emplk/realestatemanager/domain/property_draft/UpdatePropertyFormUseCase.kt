@@ -37,6 +37,7 @@ class UpdatePropertyFormUseCase @Inject constructor(
                     amenities = form.selectedAmenities,
                     isSold = form.isSold,
                     entryDate = form.entryDate,
+                    entryDateEpoch = form.entryDateEpoch,
                     saleDate = form.soldDate,
                     lastEditionDate = LocalDateTime.now(clock),
                 )

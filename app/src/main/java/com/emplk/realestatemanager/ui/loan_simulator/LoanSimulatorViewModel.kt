@@ -10,7 +10,7 @@ import com.emplk.realestatemanager.domain.loan_simulator.GetLoanYearlyAndMonthly
 import com.emplk.realestatemanager.domain.loan_simulator.LoanParams
 import com.emplk.realestatemanager.domain.loan_simulator.ResetLoanDataUseCase
 import com.emplk.realestatemanager.domain.loan_simulator.SetLoanDataUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceByLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceToHumanReadableUseCase
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.Event
 import com.emplk.realestatemanager.ui.utils.NativeText
@@ -31,7 +31,7 @@ class LoanSimulatorViewModel @Inject constructor(
     private val setLoanDataUseCase: SetLoanDataUseCase,
     private val getLoanDataAsFlowUseCase: GetLoanDataAsFlowUseCase,
     private val getLoanYearlyAndMonthlyPaymentUseCase: GetLoanYearlyAndMonthlyPaymentUseCase,
-    private val formatPriceByLocaleUseCase: FormatPriceByLocaleUseCase,
+    private val formatPriceToHumanReadableUseCase: FormatPriceToHumanReadableUseCase,
     private val resetLoanDataUseCase: ResetLoanDataUseCase,
 ) : ViewModel() {
 
@@ -79,8 +79,8 @@ class LoanSimulatorViewModel @Inject constructor(
                             NativeText.Arguments(
                                 R.string.loan_simulator_payment_result,
                                 listOf(
-                                    formatPriceByLocaleUseCase.invoke(loanParams.yearlyPayment),
-                                    formatPriceByLocaleUseCase.invoke(loanParams.monthlyPayment),
+                                    formatPriceToHumanReadableUseCase.invoke(loanParams.yearlyPayment),
+                                    formatPriceToHumanReadableUseCase.invoke(loanParams.monthlyPayment),
                                 )
                             ),
                         onCalculateClicked = EquatableCallback {

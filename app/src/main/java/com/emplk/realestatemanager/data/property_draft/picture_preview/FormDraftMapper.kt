@@ -3,6 +3,7 @@ package com.emplk.realestatemanager.data.property_draft.picture_preview
 import com.emplk.realestatemanager.data.property_draft.FormDraftDto
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property_draft.FormDraftEntity
+import java.math.RoundingMode
 import javax.inject.Inject
 
 class FormDraftMapper @Inject constructor(
@@ -34,6 +35,7 @@ class FormDraftMapper @Inject constructor(
             agentName = propertyForm.agentName,
             isSold = propertyForm.isSold,
             entryDate = propertyForm.entryDate,
+            entryDateEpoch = propertyForm.entryDateEpoch,
             saleDate = propertyForm.saleDate,
             lastEditionDate = propertyForm.lastEditionDate,
         )
@@ -46,8 +48,8 @@ class FormDraftMapper @Inject constructor(
             id = formDraftDto.id,
             type = formDraftDto.type,
             title = formDraftDto.title,
-            price = formDraftDto.price,
-            surface = formDraftDto.surface,
+            price = formDraftDto.price.setScale(0, RoundingMode.HALF_UP),
+            surface = formDraftDto.surface.setScale(0, RoundingMode.HALF_UP),
             address = formDraftDto.address,
             isAddressValid = formDraftDto.isAddressValid,
             rooms = formDraftDto.rooms,
@@ -59,6 +61,7 @@ class FormDraftMapper @Inject constructor(
             amenities = mapAmenities(formDraftDto),
             isSold = formDraftDto.isSold,
             entryDate = formDraftDto.entryDate,
+            entryDateEpoch = formDraftDto.entryDateEpoch,
             saleDate = formDraftDto.saleDate,
             lastEditionDate = formDraftDto.lastEditionDate,
         )

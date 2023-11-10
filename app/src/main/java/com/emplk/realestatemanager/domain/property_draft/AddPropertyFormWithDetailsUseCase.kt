@@ -28,7 +28,8 @@ class AddPropertyFormWithDetailsUseCase @Inject constructor(
                     isAddressValid = false,
                     agentName = "",
                     isSold = false,
-                    entryDate = LocalDateTime.now(clock),
+                    entryDate = null,
+                    entryDateEpoch = null,
                     saleDate = null,
                     lastEditionDate = null,
                 )

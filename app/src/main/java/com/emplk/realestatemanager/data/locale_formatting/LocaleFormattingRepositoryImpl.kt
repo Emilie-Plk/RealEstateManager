@@ -24,14 +24,14 @@ class LocaleFormattingRepositoryImpl @Inject constructor(
         squareMeters.multiply(BigDecimal(SQUARE_FEET_TO_SQUARE_METERS)).setScale(0, RoundingMode.HALF_UP)
 
     override fun convertDollarToEuro(dollar: BigDecimal, currencyRate: BigDecimal): BigDecimal =
-        dollar.multiply(currencyRate).setScale(0, RoundingMode.HALF_UP)
+        dollar.divide(currencyRate, 0, RoundingMode.HALF_UP)
 
     override fun convertEuroToDollar(euro: BigDecimal, currencyRate: BigDecimal): BigDecimal =
-        euro.divide(currencyRate, 0, RoundingMode.HALF_UP)
+        euro.multiply(currencyRate).setScale(0, RoundingMode.HALF_UP)
 
     override fun getLocale(): Locale = locale
 
-    override fun formatPrice(price: BigDecimal): String {
+    override fun formatPriceToHumanReadable(price: BigDecimal): String {
         val roundedPrice = price.setScale(0, RoundingMode.HALF_UP)
 
         val numberFormat = NumberFormat.getCurrencyInstance(locale)

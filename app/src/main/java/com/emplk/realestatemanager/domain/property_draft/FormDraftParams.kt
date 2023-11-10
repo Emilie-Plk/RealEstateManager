@@ -27,6 +27,7 @@ data class FormDraftParams(
     val featuredPictureId: Long? = null,
     val isSold: Boolean = false,
     val entryDate: LocalDateTime? = null,
+    val entryDateEpoch: Long? = null,
     val soldDate: LocalDateTime? = null,
     val lastEditionDate: LocalDateTime? = null,
     val formType: FormType? = null,

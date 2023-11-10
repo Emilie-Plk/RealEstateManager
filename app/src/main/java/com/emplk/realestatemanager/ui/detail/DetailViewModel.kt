@@ -7,7 +7,7 @@ import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceByLocaleUseCase
 import com.emplk.realestatemanager.domain.currency_rate.GetLastUpdatedCurrencyRateDateUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceDependingOnLocaleUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceByLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceToHumanReadableUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetRoundedSurfaceWithSurfaceUnitUseCase
 import com.emplk.realestatemanager.domain.map_picture.GenerateMapUrlWithApiKeyUseCase
@@ -27,7 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailViewModel @Inject constructor(
     private val getCurrentPropertyUseCase: GetCurrentPropertyUseCase,
-    private val formatPriceByLocaleUseCase: FormatPriceByLocaleUseCase,
+    private val formatPriceToHumanReadableUseCase: FormatPriceToHumanReadableUseCase,
     private val convertPriceByLocaleUseCase: ConvertPriceByLocaleUseCase,
     private val getLastUpdatedCurrencyRateDateUseCase: GetLastUpdatedCurrencyRateDateUseCase,
     private val getLocaleUseCase: GetLocaleUseCase,
@@ -64,7 +64,7 @@ class DetailViewModel @Inject constructor(
                     )
                 ),
                 price =
-                formatPriceByLocaleUseCase.invoke(
+                formatPriceToHumanReadableUseCase.invoke(
                     convertPriceByLocaleUseCase.invoke(property.price)
                 ),
                 lastUpdatedCurrencyRateDate =
