@@ -10,7 +10,7 @@ import com.emplk.realestatemanager.domain.loan_simulator.GetLoanYearlyAndMonthly
 import com.emplk.realestatemanager.domain.loan_simulator.LoanDataEntity
 import com.emplk.realestatemanager.domain.loan_simulator.ResetLoanDataUseCase
 import com.emplk.realestatemanager.domain.loan_simulator.SetLoanDataUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceByLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceToHumanReadableUseCase
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.Event
 import com.emplk.realestatemanager.ui.utils.NativeText
@@ -41,7 +41,7 @@ class LoanSimulatorViewModelTest {
     private val setLoanDataUseCase: SetLoanDataUseCase = mockk()
     private val getLoanDataAsFlowUseCase: GetLoanDataAsFlowUseCase = mockk()
     private val getLoanYearlyAndMonthlyPaymentUseCase: GetLoanYearlyAndMonthlyPaymentUseCase = mockk()
-    private val formatPriceByLocaleUseCase: FormatPriceByLocaleUseCase = mockk()
+    private val formatPriceToHumanReadableUseCase: FormatPriceToHumanReadableUseCase = mockk()
     private val resetLoanDataUseCase: ResetLoanDataUseCase = mockk()
 
     private lateinit var loanSimulatorViewModel: LoanSimulatorViewModel
@@ -51,8 +51,8 @@ class LoanSimulatorViewModelTest {
         justRun { setLoanDataUseCase.invoke(any()) }
         justRun { resetLoanDataUseCase.invoke() }
         every { getLoanDataAsFlowUseCase.invoke() } returns flowOf(testLoanDataEntity)
-        every { formatPriceByLocaleUseCase.invoke(BigDecimal(600000)) } returns "$600,000"
-        every { formatPriceByLocaleUseCase.invoke(BigDecimal(5000)) } returns "$5,000"
+        every { formatPriceToHumanReadableUseCase.invoke(BigDecimal(600000)) } returns "$600,000"
+        every { formatPriceToHumanReadableUseCase.invoke(BigDecimal(5000)) } returns "$5,000"
         every {
             getLoanYearlyAndMonthlyPaymentUseCase.invoke(
                 loanAmount = any(),
@@ -68,7 +68,7 @@ class LoanSimulatorViewModelTest {
             setLoanDataUseCase = setLoanDataUseCase,
             getLoanDataAsFlowUseCase = getLoanDataAsFlowUseCase,
             getLoanYearlyAndMonthlyPaymentUseCase = getLoanYearlyAndMonthlyPaymentUseCase,
-            formatPriceByLocaleUseCase = formatPriceByLocaleUseCase,
+            formatPriceToHumanReadableUseCase = formatPriceToHumanReadableUseCase,
             resetLoanDataUseCase = resetLoanDataUseCase,
         )
     }

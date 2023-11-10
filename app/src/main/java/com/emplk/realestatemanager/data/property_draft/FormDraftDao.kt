@@ -19,7 +19,7 @@ interface FormDraftDao {
 
     @RewriteQueriesToDropUnusedColumns
     @Transaction
-    @Query("SELECT * FROM base_form_drafts")
+    @Query("SELECT * FROM base_form_drafts WHERE entry_date IS NULL")
     suspend fun getFormsWithFeaturedPicture(): List<FormWithTitleDateAndFeaturedPicture>
 
     @Query("SELECT COUNT(*) FROM base_form_drafts WHERE id NOT IN (SELECT id FROM properties)")

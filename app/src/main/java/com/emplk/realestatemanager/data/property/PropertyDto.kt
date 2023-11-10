@@ -45,6 +45,8 @@ data class PropertyDto(
     val isSold: Boolean,
     @ColumnInfo(name = "entry_date")
     val entryDate: LocalDateTime,
+    @ColumnInfo(name = "entry_date_epoch")
+    val entryDateEpoch: Long,
     @ColumnInfo(name = "sale_date")
     val saleDate: LocalDateTime?,
     @ColumnInfo(name = "last_edition_date")

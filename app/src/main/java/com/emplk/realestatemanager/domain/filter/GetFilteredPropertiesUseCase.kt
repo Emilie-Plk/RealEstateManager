@@ -18,8 +18,8 @@ class GetFilteredPropertiesUseCase @Inject constructor(
         minSurface: BigDecimal,
         maxSurface: BigDecimal,
         amenities: List<AmenityType>,
-        entryDateMin: LocalDateTime?,
-        entryDateMax: LocalDateTime?,
+        entryDateMin: Long?,
+        entryDateMax: Long?,
         propertySaleState: PropertySaleState,
     ): Flow<Int> {
         return propertyRepository.getFilteredPropertiesCount(
@@ -46,5 +46,4 @@ class GetFilteredPropertiesUseCase @Inject constructor(
             },
         )
     }
-
 }

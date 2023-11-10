@@ -7,7 +7,7 @@ import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceByLocaleUseCase
 import com.emplk.realestatemanager.domain.current_property.SetCurrentPropertyIdUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceDependingOnLocaleUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceByLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceToHumanReadableUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetRoundedSurfaceWithSurfaceUnitUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
@@ -25,7 +25,7 @@ class PropertiesViewModel @Inject constructor(
     private val convertSurfaceDependingOnLocaleUseCase: ConvertSurfaceDependingOnLocaleUseCase,
     private val convertPriceByLocaleUseCase: ConvertPriceByLocaleUseCase,
     private val getRoundedSurfaceWithSurfaceUnitUseCase: GetRoundedSurfaceWithSurfaceUnitUseCase,
-    private val formatPriceByLocaleUseCase: FormatPriceByLocaleUseCase,
+    private val formatPriceToHumanReadableUseCase: FormatPriceToHumanReadableUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
 ) : ViewModel() {
 
@@ -65,7 +65,7 @@ class PropertiesViewModel @Inject constructor(
                         propertyType = property.type,
                         featuredPicture = featuredPicture,
                         address = property.location.address,
-                        price = formatPriceByLocaleUseCase.invoke(property.price),
+                        price = formatPriceToHumanReadableUseCase.invoke(property.price),
                         isSold = property.isSold,
                         room = NativeText.Argument(R.string.rooms_nb_short_version, property.rooms),
                         bathroom = NativeText.Argument(R.string.bathrooms_nb_short_version, property.bathrooms),

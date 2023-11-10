@@ -8,7 +8,6 @@ import androidx.room.Update
 import com.emplk.realestatemanager.domain.filter.PropertyMinMaxStatsEntity
 import kotlinx.coroutines.flow.Flow
 import java.math.BigDecimal
-import java.time.LocalDateTime
 
 @Dao
 interface PropertyDao {
@@ -38,24 +37,21 @@ interface PropertyDao {
     )
     suspend fun getMinMaxPricesAndSurfaces(): PropertyMinMaxStatsEntity
 
-    // I want to select price if it is in the range of minPrice and maxPrice
-    // if minPrice is 0, it means that the user didn't set any value
     @Query(
         "SELECT COUNT(*) FROM properties WHERE " +
                 "(:propertyType IS NULL OR type = :propertyType) AND " +
-                "(price BETWEEN (SELECT MIN(price) FROM properties) AND (SELECT MAX(price) FROM properties) OR (:minPrice = 0 AND :maxPrice = 0)) AND " +
-                "(surface BETWEEN (SELECT MIN(surface) FROM properties) AND (SELECT MAX(surface) FROM properties) OR (:minSurface = 0 AND :maxSurface = 0)) AND " +
-                "(:amenitySchool IS NULL OR :amenitySchool = 0 OR amenity_school = :amenitySchool) AND " +
-                "(:amenityPark IS NULL OR :amenityPark = 0 OR amenity_park = :amenityPark) AND " +
-                "(:amenityShopping IS NULL OR :amenityShopping = 0 OR amenity_shopping = :amenityShopping) AND " +
-                "(:amenityRestaurant IS NULL OR :amenityRestaurant = 0 OR amenity_restaurant = :amenityRestaurant) AND " +
-                "(:amenityConcierge IS NULL OR :amenityConcierge = 0 OR amenity_concierge = :amenityConcierge) AND " +
-                "(:amenityGym IS NULL OR :amenityGym = 0 OR amenity_gym = :amenityGym) AND " +
-                "(:amenityTransportation IS NULL OR :amenityTransportation = 0 OR amenity_transportation = :amenityTransportation) AND " +
-                "(:amenityHospital IS NULL OR :amenityHospital = 0 OR amenity_hospital = :amenityHospital) AND " +
-                "(:amenityLibrary IS NULL OR :amenityLibrary = 0 OR amenity_library = :amenityLibrary) AND " +
-                "(:entryDateMin IS NULL OR entry_date >= :entryDateMin) AND " +
-                "(:entryDateMax IS NULL OR entry_date <= :entryDateMax) AND " +
+                "(:minPrice IS 0 OR :maxPrice IS 0 OR ((price >= :minPrice) AND (price <= :maxPrice))) AND " +
+                "(:minSurface IS 0 OR :maxSurface IS 0 OR ((price >= :minSurface) AND (price <= :maxSurface))) AND " +
+                "(:amenitySchool IS NULL OR :amenitySchool = 0 OR amenity_school = 1) AND " +
+                "(:amenityPark IS NULL OR :amenityPark = 0 OR amenity_park = 1) AND " +
+                "(:amenityShopping IS NULL OR :amenityShopping = 0 OR amenity_shopping = 1) AND " +
+                "(:amenityRestaurant IS NULL OR :amenityRestaurant = 0 OR amenity_restaurant = 1) AND " +
+                "(:amenityConcierge IS NULL OR :amenityConcierge = 0 OR amenity_concierge = 1) AND " +
+                "(:amenityGym IS NULL OR :amenityGym = 0 OR amenity_gym = 1) AND " +
+                "(:amenityTransportation IS NULL OR :amenityTransportation = 0 OR amenity_transportation = 1) AND " +
+                "(:amenityHospital IS NULL OR :amenityHospital = 0 OR amenity_hospital = 1) AND " +
+                "(:amenityLibrary IS NULL OR :amenityLibrary = 0 OR amenity_library = 1) AND " +
+                "((:entryDateMin IS NULL OR entry_date_epoch >= :entryDateMin) AND (:entryDateMax IS NULL OR entry_date_epoch <= :entryDateMax)) AND " +
                 "(:isSold IS NULL OR is_sold = :isSold)"
     )
     fun getFilteredPropertiesCount(
@@ -73,8 +69,8 @@ interface PropertyDao {
         amenityTransportation: Boolean?,
         amenityHospital: Boolean?,
         amenityLibrary: Boolean?,
-        entryDateMin: LocalDateTime?,
-        entryDateMax: LocalDateTime?,
+        entryDateMin: Long?,
+        entryDateMax: Long?,
         isSold: Boolean?
     ): Flow<Int>
 

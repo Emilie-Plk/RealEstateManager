@@ -3,7 +3,6 @@ package com.emplk.realestatemanager.domain.property
 import com.emplk.realestatemanager.domain.filter.PropertyMinMaxStatsEntity
 import kotlinx.coroutines.flow.Flow
 import java.math.BigDecimal
-import java.time.LocalDateTime
 
 interface PropertyRepository {
     suspend fun add(propertyEntity: PropertyEntity): Long?
@@ -27,8 +26,8 @@ interface PropertyRepository {
         amenityTransport: Boolean?,
         amenityHospital: Boolean?,
         amenityLibrary: Boolean?,
-        entryDateMin: LocalDateTime?,
-        entryDateMax: LocalDateTime?,
+        entryDateEpochMin: Long?,
+        entryDateEpochMax: Long?,
         isSold: Boolean?
     ): Flow<Int>
 

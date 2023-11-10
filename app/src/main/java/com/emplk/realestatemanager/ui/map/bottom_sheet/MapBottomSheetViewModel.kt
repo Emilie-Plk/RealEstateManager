@@ -6,7 +6,7 @@ import androidx.lifecycle.liveData
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceByLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceDependingOnLocaleUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceByLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceToHumanReadableUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetRoundedSurfaceWithSurfaceUnitUseCase
 import com.emplk.realestatemanager.domain.property.GetCurrentPropertyUseCase
 import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
@@ -28,7 +28,7 @@ class MapBottomSheetViewModel @Inject constructor(
     private val convertSurfaceDependingOnLocaleUseCase: ConvertSurfaceDependingOnLocaleUseCase,
     private val convertPriceByLocaleUseCase: ConvertPriceByLocaleUseCase,
     private val getRoundedSurfaceWithSurfaceUnitUseCase: GetRoundedSurfaceWithSurfaceUnitUseCase,
-    private val formatPriceByLocaleUseCase: FormatPriceByLocaleUseCase,
+    private val formatPriceToHumanReadableUseCase: FormatPriceToHumanReadableUseCase,
 ) : ViewModel() {
 
     private val onActionClickedMutableSharedFlow: MutableSharedFlow<String> = MutableSharedFlow(extraBufferCapacity = 1)
@@ -50,7 +50,7 @@ class MapBottomSheetViewModel @Inject constructor(
                 PropertyMapBottomSheetViewState(
                     propertyId = propertyWithConvertedPriceAndSurface.id,
                     type = propertyWithConvertedPriceAndSurface.type,
-                    price = formatPriceByLocaleUseCase.invoke(propertyWithConvertedPriceAndSurface.price),
+                    price = formatPriceToHumanReadableUseCase.invoke(propertyWithConvertedPriceAndSurface.price),
                     surface = getRoundedSurfaceWithSurfaceUnitUseCase.invoke(propertyWithConvertedPriceAndSurface.surface),
                     featuredPicture = NativePhoto.Uri(getFeaturedPictureUri(propertyWithConvertedPriceAndSurface.pictures)),
                     onDetailClick = EquatableCallbackWithParam { fragmentTag ->

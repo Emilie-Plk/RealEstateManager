@@ -13,6 +13,7 @@ import com.emplk.realestatemanager.databinding.FilterPropertiesFragmentBinding
 import com.emplk.realestatemanager.ui.add.amenity.AmenityListAdapter
 import com.emplk.realestatemanager.ui.add.type.PropertyTypeSpinnerAdapter
 import com.emplk.realestatemanager.ui.utils.viewBinding
+import com.google.android.material.slider.LabelFormatter.LABEL_VISIBLE
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -46,21 +47,48 @@ class FilterPropertiesFragment : DialogFragment(R.layout.filter_properties_fragm
                 }
             }
 
-            binding.filterPropertyPriceRangeSlider.valueFrom = viewState.minPrice.toFloat()
-            binding.filterPropertyPriceRangeSlider.valueTo = viewState.maxPrice.toFloat()
+            binding.filterPropertyTypeActv.setText(viewState.propertyType, false)
+
             binding.filterPropertyPriceRangeSlider.values = listOf(
                 viewState.minPrice.toFloat(),
-                viewState.maxPrice.toFloat()
+                viewState.maxPrice.toFloat(),
             )
+
+            binding.filterPropertyPriceRangeSlider.valueFrom = viewState.priceRange[0]
+            binding.filterPropertyPriceRangeSlider.valueTo = viewState.priceRange[1]
+
             binding.filterPropertyPriceRangeSlider.setLabelFormatter { value ->
                 "$ ${value.toInt()}" // unit
             }
 
-            binding.filterPropertyEntryDateToggleGroup?.addOnButtonCheckedListener { _, checkedId, isChecked ->
-                if (isChecked) {
+            binding.filterPropertyPriceRangeSlider.addOnChangeListener { slider, _, _ ->
+                viewModel.onPriceRangeChanged(
+                    slider.values[0].toInt(),
+                    slider.values[1].toInt()
+                )
+            }
+
+            binding.filterPropertySurfaceRangeSlider.valueFrom = viewState.minSurface.toFloat()
+            binding.filterPropertySurfaceRangeSlider.valueTo = viewState.maxSurface.toFloat()
+            binding.filterPropertySurfaceRangeSlider.values = listOf(
+                viewState.minSurface.toFloat(),
+                viewState.maxSurface.toFloat()
+            )
+
+            binding.filterPropertySurfaceRangeSlider.setLabelFormatter { value ->
+                "${value.toInt()} sq ft"
+            }
+
+
+            binding.filterPropertyEntryDateChipGroup.setOnCheckedStateChangeListener { _, checkedIds ->
+                checkedIds.forEach { checkedId ->
                     when (checkedId) {
-                        R.id.filter_property_entry_more_than_6_months_chip -> viewModel.onEntryDateStatusChanged(
-                            EntryDateState.MORE_THAN_6_MONTHS
+                        R.id.filter_property_entry_less_than_1_year_chip -> viewModel.onEntryDateStatusChanged(
+                            EntryDateState.LESS_THAN_1_YEAR
+                        )
+
+                        R.id.filter_property_entry_less_than_6_months_chip -> viewModel.onEntryDateStatusChanged(
+                            EntryDateState.LESS_THAN_6_MONTHS
                         )
 
                         R.id.filter_property_entry_date_less_than_3_months_chip -> viewModel.onEntryDateStatusChanged(
@@ -75,20 +103,15 @@ class FilterPropertiesFragment : DialogFragment(R.layout.filter_properties_fragm
                             EntryDateState.LESS_THAN_1_WEEK
                         )
 
+                        R.id.filter_property_entry_date_all_chip -> viewModel.onEntryDateStatusChanged(
+                            EntryDateState.NONE
+                        )
+
                         else -> viewModel.onEntryDateStatusChanged(EntryDateState.NONE)
                     }
                 }
             }
 
-            binding.filterPropertySurfaceRangeSlider.valueFrom = viewState.minSurface.toFloat()
-            binding.filterPropertySurfaceRangeSlider.valueTo = viewState.maxSurface.toFloat()
-            binding.filterPropertySurfaceRangeSlider.values = listOf(
-                viewState.minSurface.toFloat(),
-                viewState.maxSurface.toFloat()
-            )
-            binding.filterPropertySurfaceRangeSlider.setLabelFormatter { value ->
-                "${value.toInt()} sq ft"
-            }
 
             binding.filterPropertyFilterBtn.text = viewState.filterButtonText.toCharSequence(requireContext())
             binding.filterPropertyFilterBtn.setOnClickListener {
@@ -98,7 +121,10 @@ class FilterPropertiesFragment : DialogFragment(R.layout.filter_properties_fragm
 
         binding.filterPropertyCancelBtn.setOnClickListener {
             dismiss()
-            //viewModel.onCancelClicked()
+        }
+
+        binding.filterPropertyResetBtn?.setOnClickListener {
+            viewModel.onResetFilters()
         }
 
         binding.filterPropertyEntrySaleStateToggleGroup?.addOnButtonCheckedListener { _, checkedId, isChecked ->
