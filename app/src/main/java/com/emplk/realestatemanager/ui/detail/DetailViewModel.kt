@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.emplk.realestatemanager.R
-import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceByLocaleUseCase
+import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.currency_rate.GetLastUpdatedCurrencyRateDateUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceToHumanReadableUseCase
@@ -28,7 +28,7 @@ import javax.inject.Inject
 class DetailViewModel @Inject constructor(
     private val getCurrentPropertyUseCase: GetCurrentPropertyUseCase,
     private val formatPriceToHumanReadableUseCase: FormatPriceToHumanReadableUseCase,
-    private val convertPriceByLocaleUseCase: ConvertPriceByLocaleUseCase,
+    private val convertPriceDependingOnLocaleUseCase: ConvertPriceDependingOnLocaleUseCase,
     private val getLastUpdatedCurrencyRateDateUseCase: GetLastUpdatedCurrencyRateDateUseCase,
     private val getLocaleUseCase: GetLocaleUseCase,
     private val getRoundedSurfaceWithSurfaceUnitUseCase: GetRoundedSurfaceWithSurfaceUnitUseCase,
@@ -65,7 +65,7 @@ class DetailViewModel @Inject constructor(
                 ),
                 price =
                 formatPriceToHumanReadableUseCase.invoke(
-                    convertPriceByLocaleUseCase.invoke(property.price)
+                    convertPriceDependingOnLocaleUseCase.invoke(property.price)
                 ),
                 lastUpdatedCurrencyRateDate =
                 getLastUpdatedCurrencyRateDateUseCase.invoke()?.let {

@@ -10,17 +10,10 @@
     android:padding="8dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:focusable="true"
         android:focusableInTouchMode="true">
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.72" />
 
         <TextView
             android:id="@+id/filter_property_type_tv"
@@ -51,70 +44,100 @@
                 android:inputType="none" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:id="@+id/filter_property_price_tv"
-            style="@style/Theme.RealEstateManager.FilterPropertySubtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Price"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/filter_property_type_textInputLayout" />
 
         <TextView
-            android:id="@+id/filter_property_price_unit_tv"
+            android:id="@+id/filter_property_price_range_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="2dp"
-            android:text="@string/price_currency_in_n"
-            app:layout_constraintBottom_toBottomOf="@+id/filter_property_price_tv"
-            app:layout_constraintStart_toEndOf="@+id/filter_property_price_tv"
-            app:layout_constraintTop_toTopOf="@+id/filter_property_price_tv"
-            tools:text="(in $)" />
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="@+id/filter_property_max_price_textInputLayout"
+            app:layout_constraintTop_toBottomOf="@+id/filter_property_type_textInputLayout"
+            tools:text="Results from $1,000,000 to $8,500,000" />
 
-
-        <com.google.android.material.slider.RangeSlider
-            android:id="@+id/filter_property_price_rangeSlider"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginStart="24dp"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/filter_property_min_price_textInputLayout"
+            style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Min price"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="24dp"
+            app:endIconMode="clear_text"
+            app:layout_constraintEnd_toStartOf="@id/filter_property_max_price_textInputLayout"
+            app:layout_constraintStart_toStartOf="@+id/filter_property_type_textInputLayout"
+            app:layout_constraintTop_toBottomOf="@+id/filter_property_price_range_tv">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/filter_property_min_price_editText"
+                android:layout_width="match_parent"
+                android:inputType="number"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/filter_property_max_price_textInputLayout"
+            style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Max price"
+            app:endIconMode="clear_text"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/filter_property_price_tv" />
+            app:layout_constraintStart_toEndOf="@+id/filter_property_min_price_textInputLayout"
+            app:layout_constraintTop_toTopOf="@+id/filter_property_min_price_textInputLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/filter_property_max_price_editText"
+                android:layout_width="match_parent"
+                android:inputType="number"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
 
 
-        <TextView
-            android:id="@+id/filter_property_surface_tv"
-            style="@style/Theme.RealEstateManager.FilterPropertySubtitle"
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/filter_property_min_surface_textInputLayout"
+            style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Surface"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/filter_property_price_rangeSlider" />
-
-        <TextView
-            android:id="@+id/filter_property_surface_unit_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="@string/surface_area_unit_in_n"
-            app:layout_constraintBottom_toBottomOf="@id/filter_property_surface_tv"
-            app:layout_constraintStart_toEndOf="@id/filter_property_surface_tv"
-            app:layout_constraintTop_toTopOf="@id/filter_property_surface_tv"
-            tools:text="(in sq ft)" />
-
-        <com.google.android.material.slider.RangeSlider
-            android:id="@+id/filter_property_surface_rangeSlider"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="24dp"
+            android:hint="Min surface"
+            app:endIconMode="clear_text"
+            app:layout_constraintEnd_toStartOf="@id/filter_property_max_surface_textInputLayout"
+            app:layout_constraintStart_toStartOf="@+id/filter_property_type_textInputLayout"
+            app:layout_constraintTop_toBottomOf="@+id/filter_property_surface_range_tv">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/filter_property_min_surface_editText"
+                android:layout_width="match_parent"
+                android:inputType="number"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/filter_property_max_surface_textInputLayout"
+            style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Max surface"
+            app:endIconMode="clear_text"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/filter_property_surface_tv" />
+            app:layout_constraintStart_toEndOf="@+id/filter_property_min_surface_textInputLayout"
+            app:layout_constraintTop_toTopOf="@+id/filter_property_min_surface_textInputLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/filter_property_max_surface_editText"
+                android:layout_width="match_parent"
+                android:inputType="number"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <TextView
+            android:id="@+id/filter_property_surface_range_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="@+id/filter_property_max_price_textInputLayout"
+            app:layout_constraintTop_toBottomOf="@+id/filter_property_max_price_textInputLayout"
+            tools:text="Results from 500 sq ft - 800sq ft" />
 
         <TextView
             android:id="@+id/filter_property_amenities_tv"
@@ -123,7 +146,7 @@
             android:layout_height="wrap_content"
             android:text="Amenities"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/filter_property_surface_rangeSlider" />
+            app:layout_constraintTop_toBottomOf="@+id/filter_property_min_surface_textInputLayout" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/filter_property_amenities_recyclerView"
@@ -256,12 +279,12 @@
 
         <Button
             android:id="@+id/filter_property_reset_btn"
-           style="@style/Theme.RealEstateManager.OutlinedButton"
+            style="@style/Theme.RealEstateManager.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            app:icon="@drawable/baseline_reset_24"
             android:text="Reset"
+            app:icon="@drawable/baseline_reset_24"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/filter_property_entry_sale_state_toggleGroup" />

@@ -46,6 +46,7 @@ fun getTestPropertyDto(id: Long) = PropertyDto(
     saleDate = null,
     lastEditionDate = LocalDateTime.of(2023, 1, 1, 12, 0),
     entryDate = LocalDateTime.of(2023, 1, 1, 12, 0),
+    entryDateEpoch = 1698758555,
 )
 
 
@@ -101,6 +102,7 @@ fun getTestPropertyEntity(id: Long) = PropertyEntity(
     saleDate = null,
     lastEditionDate = LocalDateTime.of(2023, 1, 1, 12, 0),
     entryDate = LocalDateTime.of(2023, 1, 1, 12, 0),
+    entryDateEpoch = 1698758555,
 )
 // endregion PropertyEntity
 
@@ -175,6 +177,7 @@ fun mapPropertyEntityToDto(property: PropertyEntity) = PropertyDto(
     agentName = property.agentName,
     isSold = property.isSold,
     entryDate = property.entryDate,
+    entryDateEpoch = property.entryDateEpoch,
     saleDate = property.saleDate,
     lastEditionDate = property.lastEditionDate,
 )

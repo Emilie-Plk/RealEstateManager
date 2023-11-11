@@ -4,7 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.emplk.realestatemanager.R
-import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceByLocaleUseCase
+import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.currency_rate.GetLastUpdatedCurrencyRateDateUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceToHumanReadableUseCase
@@ -49,7 +49,7 @@ class DetailViewModelTest {
 
     private val getCurrentPropertyUseCase: GetCurrentPropertyUseCase = mockk()
     private val formatPriceToHumanReadableUseCase: FormatPriceToHumanReadableUseCase = mockk()
-    private val convertPriceByLocaleUseCase: ConvertPriceByLocaleUseCase = mockk()
+    private val convertPriceDependingOnLocaleUseCase: ConvertPriceDependingOnLocaleUseCase = mockk()
     private val getLastUpdatedCurrencyRateDateUseCase: GetLastUpdatedCurrencyRateDateUseCase = mockk()
     private val getLocaleUseCase: GetLocaleUseCase = mockk()
     private val getRoundedSurfaceWithSurfaceUnitUseCase: GetRoundedSurfaceWithSurfaceUnitUseCase = mockk()
@@ -64,7 +64,7 @@ class DetailViewModelTest {
         Locale.setDefault(US)
         every { getCurrentPropertyUseCase.invoke() } returns flowOf(getTestPropertyEntity(TEST_PROPERTY_ID))
         every { getLocaleUseCase.invoke() } returns US
-        coEvery { convertPriceByLocaleUseCase.invoke(BigDecimal(1000000)) } returns BigDecimal(1000000)
+        coEvery { convertPriceDependingOnLocaleUseCase.invoke(BigDecimal(1000000)) } returns BigDecimal(1000000)
         every { formatPriceToHumanReadableUseCase.invoke(BigDecimal(1000000)) } returns "$1,000,000"
         coEvery { getLastUpdatedCurrencyRateDateUseCase.invoke() } coAnswers { null }
         every { getRoundedSurfaceWithSurfaceUnitUseCase.invoke(BigDecimal(500)) } returns "500 m²"
@@ -75,7 +75,7 @@ class DetailViewModelTest {
         detailViewModel = DetailViewModel(
             getCurrentPropertyUseCase = getCurrentPropertyUseCase,
             formatPriceToHumanReadableUseCase = formatPriceToHumanReadableUseCase,
-            convertPriceByLocaleUseCase = convertPriceByLocaleUseCase,
+            convertPriceDependingOnLocaleUseCase = convertPriceDependingOnLocaleUseCase,
             getLastUpdatedCurrencyRateDateUseCase = getLastUpdatedCurrencyRateDateUseCase,
             getLocaleUseCase = getLocaleUseCase,
             getRoundedSurfaceWithSurfaceUnitUseCase = getRoundedSurfaceWithSurfaceUnitUseCase,
