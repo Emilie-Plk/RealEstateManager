@@ -5,7 +5,7 @@ import java.math.BigDecimal
 import java.util.Locale
 import javax.inject.Inject
 
-class ConvertPriceByLocaleUseCase @Inject constructor(
+class ConvertPriceDependingOnLocaleUseCase @Inject constructor(
     private val getCurrencyRateUseCase: GetCurrencyRateUseCase,
     private val convertDollarToEuroUseCase: ConvertDollarToEuroUseCase,
     private val getLocaleUseCase: GetLocaleUseCase,

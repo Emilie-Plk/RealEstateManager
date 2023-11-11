@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.emplk.realestatemanager.R
-import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceByLocaleUseCase
+import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceToHumanReadableUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetRoundedSurfaceWithSurfaceUnitUseCase
@@ -26,8 +26,8 @@ import javax.inject.Inject
 class MapBottomSheetViewModel @Inject constructor(
     private val getCurrentPropertyUseCase: GetCurrentPropertyUseCase,
     private val convertSurfaceDependingOnLocaleUseCase: ConvertSurfaceDependingOnLocaleUseCase,
-    private val convertPriceByLocaleUseCase: ConvertPriceByLocaleUseCase,
-    private val getRoundedSurfaceWithSurfaceUnitUseCase: GetRoundedSurfaceWithSurfaceUnitUseCase,
+    private val convertPriceDependingOnLocaleUseCase: ConvertPriceDependingOnLocaleUseCase,
+    private val getRoundedSurfaceWithUnitHumanReadableUseCase: GetRoundedSurfaceWithSurfaceUnitUseCase,
     private val formatPriceToHumanReadableUseCase: FormatPriceToHumanReadableUseCase,
 ) : ViewModel() {
 
@@ -42,7 +42,7 @@ class MapBottomSheetViewModel @Inject constructor(
             isProgressBarVisibleMutableLiveData.tryEmit(false)
 
             val propertyWithConvertedPriceAndSurface = property.copy(
-                price = convertPriceByLocaleUseCase.invoke(property.price),
+                price = convertPriceDependingOnLocaleUseCase.invoke(property.price),
                 surface = convertSurfaceDependingOnLocaleUseCase.invoke(property.surface)
             )
 
@@ -51,7 +51,7 @@ class MapBottomSheetViewModel @Inject constructor(
                     propertyId = propertyWithConvertedPriceAndSurface.id,
                     type = propertyWithConvertedPriceAndSurface.type,
                     price = formatPriceToHumanReadableUseCase.invoke(propertyWithConvertedPriceAndSurface.price),
-                    surface = getRoundedSurfaceWithSurfaceUnitUseCase.invoke(propertyWithConvertedPriceAndSurface.surface),
+                    surface = getRoundedSurfaceWithUnitHumanReadableUseCase.invoke(propertyWithConvertedPriceAndSurface.surface),
                     featuredPicture = NativePhoto.Uri(getFeaturedPictureUri(propertyWithConvertedPriceAndSurface.pictures)),
                     onDetailClick = EquatableCallbackWithParam { fragmentTag ->
                         onActionClickedMutableSharedFlow.tryEmit(fragmentTag)

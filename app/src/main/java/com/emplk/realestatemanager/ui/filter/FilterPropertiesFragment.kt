@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.emplk.realestatemanager.R
@@ -13,7 +14,6 @@ import com.emplk.realestatemanager.databinding.FilterPropertiesFragmentBinding
 import com.emplk.realestatemanager.ui.add.amenity.AmenityListAdapter
 import com.emplk.realestatemanager.ui.add.type.PropertyTypeSpinnerAdapter
 import com.emplk.realestatemanager.ui.utils.viewBinding
-import com.google.android.material.slider.LabelFormatter.LABEL_VISIBLE
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -49,34 +49,22 @@ class FilterPropertiesFragment : DialogFragment(R.layout.filter_properties_fragm
 
             binding.filterPropertyTypeActv.setText(viewState.propertyType, false)
 
-            binding.filterPropertyPriceRangeSlider.values = listOf(
-                viewState.minPrice.toFloat(),
-                viewState.maxPrice.toFloat(),
-            )
-
-            binding.filterPropertyPriceRangeSlider.valueFrom = viewState.priceRange[0]
-            binding.filterPropertyPriceRangeSlider.valueTo = viewState.priceRange[1]
-
-            binding.filterPropertyPriceRangeSlider.setLabelFormatter { value ->
-                "$ ${value.toInt()}" // unit
+            binding.filterPropertyPriceRangeTv?.text = viewState.priceRange.toCharSequence(requireContext())
+            binding.filterPropertyMinPriceEditText?.doAfterTextChanged {
+                viewModel.onMinPriceChanged(it?.toString() ?: "")
             }
 
-            binding.filterPropertyPriceRangeSlider.addOnChangeListener { slider, _, _ ->
-                viewModel.onPriceRangeChanged(
-                    slider.values[0].toInt(),
-                    slider.values[1].toInt()
-                )
+            binding.filterPropertyMaxPriceEditText?.doAfterTextChanged {
+                viewModel.onMaxPriceChanged(it?.toString() ?: "")
             }
 
-            binding.filterPropertySurfaceRangeSlider.valueFrom = viewState.minSurface.toFloat()
-            binding.filterPropertySurfaceRangeSlider.valueTo = viewState.maxSurface.toFloat()
-            binding.filterPropertySurfaceRangeSlider.values = listOf(
-                viewState.minSurface.toFloat(),
-                viewState.maxSurface.toFloat()
-            )
+            binding.filterPropertySurfaceRangeTv?.text = viewState.surfaceRange.toCharSequence(requireContext())
+            binding.filterPropertyMinSurfaceEditText?.doAfterTextChanged {
+                viewModel.onMinSurfaceChanged(it?.toString() ?: "")
+            }
 
-            binding.filterPropertySurfaceRangeSlider.setLabelFormatter { value ->
-                "${value.toInt()} sq ft"
+            binding.filterPropertyMaxSurfaceEditText?.doAfterTextChanged {
+                viewModel.onMaxSurfaceChanged(it?.toString() ?: "")
             }
 
 

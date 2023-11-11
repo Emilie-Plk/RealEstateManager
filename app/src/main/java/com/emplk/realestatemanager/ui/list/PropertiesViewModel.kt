@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.emplk.realestatemanager.R
-import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceByLocaleUseCase
+import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.current_property.SetCurrentPropertyIdUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceToHumanReadableUseCase
@@ -23,7 +23,7 @@ class PropertiesViewModel @Inject constructor(
     private val getPropertiesAsFlowUseCase: GetPropertiesAsFlowUseCase,
     private val setCurrentPropertyIdUseCase: SetCurrentPropertyIdUseCase,
     private val convertSurfaceDependingOnLocaleUseCase: ConvertSurfaceDependingOnLocaleUseCase,
-    private val convertPriceByLocaleUseCase: ConvertPriceByLocaleUseCase,
+    private val convertPriceDependingOnLocaleUseCase: ConvertPriceDependingOnLocaleUseCase,
     private val getRoundedSurfaceWithSurfaceUnitUseCase: GetRoundedSurfaceWithSurfaceUnitUseCase,
     private val formatPriceToHumanReadableUseCase: FormatPriceToHumanReadableUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
@@ -45,7 +45,7 @@ class PropertiesViewModel @Inject constructor(
             }
 
             val propertiesWithConvertedPriceAndSurface = properties.map { property ->
-                val convertedPrice = convertPriceByLocaleUseCase.invoke(property.price)
+                val convertedPrice = convertPriceDependingOnLocaleUseCase.invoke(property.price)
                 val convertedSurface = convertSurfaceDependingOnLocaleUseCase.invoke(property.surface)
                 property.copy(
                     price = convertedPrice,

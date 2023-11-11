@@ -17,6 +17,8 @@ class LocaleFormattingRepositoryImpl @Inject constructor(
         private const val SQUARE_FEET_TO_SQUARE_METERS = 10.764
     }
 
+    override fun getLocale(): Locale = locale
+
     override fun convertSquareFeetToSquareMeters(squareFeet: BigDecimal): BigDecimal =
         squareFeet.divide(BigDecimal(SQUARE_FEET_TO_SQUARE_METERS), 0, RoundingMode.HALF_UP)
 
@@ -29,7 +31,6 @@ class LocaleFormattingRepositoryImpl @Inject constructor(
     override fun convertEuroToDollar(euro: BigDecimal, currencyRate: BigDecimal): BigDecimal =
         euro.multiply(currencyRate).setScale(0, RoundingMode.HALF_UP)
 
-    override fun getLocale(): Locale = locale
 
     override fun formatPriceToHumanReadable(price: BigDecimal): String {
         val roundedPrice = price.setScale(0, RoundingMode.HALF_UP)

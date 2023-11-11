@@ -40,8 +40,14 @@ interface PropertyDao {
     @Query(
         "SELECT COUNT(*) FROM properties WHERE " +
                 "(:propertyType IS NULL OR type = :propertyType) AND " +
-                "(:minPrice IS 0 OR :maxPrice IS 0 OR ((price >= :minPrice) AND (price <= :maxPrice))) AND " +
-                "(:minSurface IS 0 OR :maxSurface IS 0 OR ((price >= :minSurface) AND (price <= :maxSurface))) AND " +
+                "((:minPrice = 0 AND :maxPrice = 0) OR " +
+                "(:minPrice > 0 AND :maxPrice = 0 AND price >= :minPrice) OR " +
+                "(:minPrice = 0 AND :maxPrice > 0 AND price <= :maxPrice) OR " +
+                "(:minPrice > 0 AND :maxPrice > 0 AND price BETWEEN :minPrice AND :maxPrice)) AND " +
+                "((:minSurface = 0 AND :maxSurface = 0) OR " +  // No filter on price
+                "(:minSurface > 0 AND :maxSurface = 0 AND surface >= :minSurface) OR " +
+                "(:minSurface = 0 AND :maxSurface > 0 AND surface <= :maxSurface) OR " +
+                "(:minSurface > 0 AND :maxSurface > 0 AND surface BETWEEN :minSurface AND :maxSurface)) AND " +  // Both
                 "(:amenitySchool IS NULL OR :amenitySchool = 0 OR amenity_school = 1) AND " +
                 "(:amenityPark IS NULL OR :amenityPark = 0 OR amenity_park = 1) AND " +
                 "(:amenityShopping IS NULL OR :amenityShopping = 0 OR amenity_shopping = 1) AND " +

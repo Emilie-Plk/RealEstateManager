@@ -9,7 +9,7 @@ import com.emplk.realestatemanager.domain.agent.GetAgentsMapUseCase
 import com.emplk.realestatemanager.domain.autocomplete.GetCurrentPredictionAddressesFlowWithDebounceUseCase
 import com.emplk.realestatemanager.domain.autocomplete.PredictionWrapper
 import com.emplk.realestatemanager.domain.connectivity.IsInternetEnabledFlowUseCase
-import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceByLocaleUseCase
+import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdFlowUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
@@ -83,7 +83,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
     private val getPicturePreviewsAsFlowUseCase: GetPicturePreviewsAsFlowUseCase,
     private val deletePicturePreviewUseCase: DeletePicturePreviewUseCase,
     private val getAgentsMapUseCase: GetAgentsMapUseCase,
-    private val convertPriceByLocaleUseCase: ConvertPriceByLocaleUseCase,
+    private val convertPriceDependingOnLocaleUseCase: ConvertPriceDependingOnLocaleUseCase,
     private val convertSurfaceDependingOnLocaleUseCase: ConvertSurfaceDependingOnLocaleUseCase,
     private val getFormTitleUseCase: GetFormTitleAsFlowUseCase,
     private val setFormTitleUseCase: SetFormTitleUseCase,
@@ -141,7 +141,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                     draftTitle = formWithType.formDraftEntity.title,
                     address = formWithType.formDraftEntity.address,
                     isAddressValid = formWithType.formDraftEntity.isAddressValid,
-                    price = convertPriceByLocaleUseCase.invoke(formWithType.formDraftEntity.price),  // TODO: voir si pas trop appelé
+                    price = convertPriceDependingOnLocaleUseCase.invoke(formWithType.formDraftEntity.price),  // TODO: voir si pas trop appelé
                     surface = convertSurfaceDependingOnLocaleUseCase.invoke(formWithType.formDraftEntity.surface),
                     description = formWithType.formDraftEntity.description,
                     nbRooms = formWithType.formDraftEntity.rooms ?: 0,

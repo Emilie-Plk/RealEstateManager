@@ -68,4 +68,5 @@
     <string name="menu_loan_simulator">Loan simulator</string>
     <string name="loan_simulator_payment_result">%1s per year\n%2s per month</string>
     <string name="loan_simulator_calculate_button_error_message">Please enter a value</string>
+    <string name="surface_or_price_range">Results from %1s to %2s</string>
 </resources>
