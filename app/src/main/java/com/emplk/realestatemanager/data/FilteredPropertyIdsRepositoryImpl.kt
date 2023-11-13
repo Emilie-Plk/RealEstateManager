@@ -1,10 +1,10 @@
 package com.emplk.realestatemanager.data
 
-import com.emplk.realestatemanager.domain.filter.FilteredPropertyIdsRepository
+import com.emplk.realestatemanager.domain.filter.PropertiesFilter
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
-class FilteredPropertyIdsRepositoryImpl @Inject constructor() : FilteredPropertyIdsRepository {
+class FilteredPropertyIdsRepositoryImpl @Inject constructor() : PropertiesFilter {
     private val propertiesIdsMutableStateFlow = MutableStateFlow<List<Long>>(emptyList())
 
     override suspend fun getFilteredPropertyIds(): List<Long> = propertiesIdsMutableStateFlow.value

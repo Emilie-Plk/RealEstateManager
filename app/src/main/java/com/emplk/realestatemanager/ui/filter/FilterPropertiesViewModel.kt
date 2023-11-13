@@ -4,12 +4,14 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.filter.GetEntryDateByEntryDateStatusUseCase
 import com.emplk.realestatemanager.domain.filter.GetFilteredPropertiesUseCase
 import com.emplk.realestatemanager.domain.filter.GetMinMaxPriceAndSurfaceUseCase
 import com.emplk.realestatemanager.domain.filter.GetPropertyTypeForFilterUseCase
+import com.emplk.realestatemanager.domain.filter.SetPropertiesFilterUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceToSquareFeetDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.ConvertToUsdDependingOnLocaleUseCase
@@ -28,6 +30,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.math.RoundingMode
 import javax.inject.Inject
@@ -46,6 +49,7 @@ class FilterPropertiesViewModel @Inject constructor(
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
     private val getPropertyTypeForFilterUseCase: GetPropertyTypeForFilterUseCase,
     private val getAmenityTypeUseCase: GetAmenityTypeUseCase,
+    private val setPropertiesFilterUseCase: SetPropertiesFilterUseCase,
 ) : ViewModel() {
 
     private val filterParamsMutableStateFlow = MutableStateFlow(FilterParams())
@@ -70,11 +74,19 @@ class FilterPropertiesViewModel @Inject constructor(
             val propertyTypes = getPropertyTypeForFilterUseCase.invoke()
             val amenityTypes = getAmenityTypeUseCase.invoke()
 
-            Log.d("COUCOU", "viewState: $filteredPropertiesCount")
-            Log.d("COUCOU", "minSurface converted: ${convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(filterParamsMutableStateFlow.value.minSurface)}" +
-                    "maxSurface converted: ${convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(filterParamsMutableStateFlow.value.maxSurface)}" +
-            "surface converted: min ${convertSurfaceDependingOnLocaleUseCase.invoke(minMaxPriceAndSurface.minSurface)}" +
-                    "max ${convertSurfaceDependingOnLocaleUseCase.invoke(minMaxPriceAndSurface.maxSurface)}")
+            Log.d(
+                "COUCOU",
+                "minSurface converted: ${
+                    convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(filterParamsMutableStateFlow.value.minSurface)
+                }" +
+                        "maxSurface converted: ${
+                            convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(
+                                filterParamsMutableStateFlow.value.maxSurface
+                            )
+                        }" +
+                        "surface converted: min ${convertSurfaceDependingOnLocaleUseCase.invoke(minMaxPriceAndSurface.minSurface)}" +
+                        "max ${convertSurfaceDependingOnLocaleUseCase.invoke(minMaxPriceAndSurface.maxSurface)}"
+            )
             emit(FilterViewState(
                 propertyType = filterParamsMutableStateFlow.value.propertyType,
                 priceRange = NativeText.Arguments(
@@ -233,6 +245,22 @@ class FilterPropertiesViewModel @Inject constructor(
                 it.copy(maxSurface = BigDecimal(maxSurface))
             }
     }
+
+    fun onFilterClicked() {
+        viewModelScope.launch {
+            setPropertiesFilterUseCase.invoke(
+                filterParamsMutableStateFlow.value.propertyType,
+                convertToUsdDependingOnLocaleUseCase.invoke(filterParamsMutableStateFlow.value.minPrice),
+                convertToUsdDependingOnLocaleUseCase.invoke(filterParamsMutableStateFlow.value.maxPrice),
+                convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(filterParamsMutableStateFlow.value.minSurface),
+                convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(filterParamsMutableStateFlow.value.maxSurface),
+                filterParamsMutableStateFlow.value.selectedAmenities,
+                filterParamsMutableStateFlow.value.saleState,
+                filterParamsMutableStateFlow.value.entryDateState,
+            )
+        }
+
+    }
 }
 
 data class FilterParams(
@@ -243,5 +271,5 @@ data class FilterParams(
     val maxSurface: BigDecimal = BigDecimal.ZERO,
     val selectedAmenities: List<AmenityType> = emptyList(),
     val saleState: PropertySaleState = PropertySaleState.ALL,
-    val entryDateState: EntryDateState = EntryDateState.NONE,
+    val entryDateState: EntryDateState = EntryDateState.ALL,
 )

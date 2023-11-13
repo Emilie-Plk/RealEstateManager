@@ -4,7 +4,6 @@ import com.emplk.realestatemanager.ui.add.amenity.AmenityViewState
 import com.emplk.realestatemanager.ui.add.type.PropertyTypeViewStateItem
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.NativeText
-import java.math.BigDecimal
 
 data class FilterViewState(
     val propertyType: String?,
@@ -16,7 +15,7 @@ data class FilterViewState(
     val maxSurface: String,
     val amenities: List<AmenityViewState>,
     val propertyTypes: List<PropertyTypeViewStateItem>,
-    val entryDate: EntryDateState = EntryDateState.NONE,
+    val entryDate: EntryDateState = EntryDateState.ALL,
     val availableForSale: PropertySaleState = PropertySaleState.ALL,
     val filterButtonText: NativeText,
     val isFilterButtonEnabled: Boolean,

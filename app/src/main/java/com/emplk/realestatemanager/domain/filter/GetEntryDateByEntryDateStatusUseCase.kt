@@ -36,7 +36,7 @@ class GetEntryDateByEntryDateStatusUseCase @Inject constructor(private val clock
                 now.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
             )
 
-            EntryDateState.NONE -> null
+            EntryDateState.ALL -> null
         }
     }
 }
