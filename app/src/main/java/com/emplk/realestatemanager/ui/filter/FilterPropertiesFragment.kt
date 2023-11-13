@@ -92,10 +92,10 @@ class FilterPropertiesFragment : DialogFragment(R.layout.filter_properties_fragm
                         )
 
                         R.id.filter_property_entry_date_all_chip -> viewModel.onEntryDateStatusChanged(
-                            EntryDateState.NONE
+                            EntryDateState.ALL
                         )
 
-                        else -> viewModel.onEntryDateStatusChanged(EntryDateState.NONE)
+                        else -> viewModel.onEntryDateStatusChanged(EntryDateState.ALL)
                     }
                 }
             }
@@ -113,6 +113,10 @@ class FilterPropertiesFragment : DialogFragment(R.layout.filter_properties_fragm
 
         binding.filterPropertyResetBtn?.setOnClickListener {
             viewModel.onResetFilters()
+        }
+
+        binding.filterPropertyFilterBtn.setOnClickListener {
+            viewModel.onFilterClicked()
         }
 
         binding.filterPropertyEntrySaleStateToggleGroup?.addOnButtonCheckedListener { _, checkedId, isChecked ->
