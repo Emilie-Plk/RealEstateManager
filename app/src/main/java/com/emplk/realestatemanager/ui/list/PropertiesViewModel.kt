@@ -1,15 +1,17 @@
 package com.emplk.realestatemanager.ui.list
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.current_property.SetCurrentPropertyIdUseCase
 import com.emplk.realestatemanager.domain.filter.GetPropertiesFilterFlowUseCase
 import com.emplk.realestatemanager.domain.filter.IsPropertyMatchingFiltersUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceDependingOnLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceToSquareFeetDependingOnLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.ConvertToUsdDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceToHumanReadableUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetRoundedSurfaceWithSurfaceUnitUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
@@ -19,9 +21,10 @@ import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.NativePhoto
 import com.emplk.realestatemanager.ui.utils.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
-import java.time.Clock
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,7 +38,6 @@ class PropertiesViewModel @Inject constructor(
     private val getPropertiesFilterFlowUseCase: GetPropertiesFilterFlowUseCase,
     private val isPropertyMatchingFiltersUseCase: IsPropertyMatchingFiltersUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
-    private val clock: Clock,
 ) : ViewModel() {
 
     val viewState: LiveData<List<PropertiesViewState>> = liveData {
@@ -72,7 +74,6 @@ class PropertiesViewModel @Inject constructor(
                     val featuredPicture = photoUrl?.let { NativePhoto.Uri(it) }
                         ?: NativePhoto.Resource(R.drawable.baseline_villa_24)
 
-                    // tout
                     PropertiesViewState.Properties(
                         id = property.id,
                         propertyType = property.type,
@@ -96,26 +97,16 @@ class PropertiesViewModel @Inject constructor(
                 }
                 .sortedBy { it.isSold }
                 .filter { property ->
-                    Log.d(
-                        "COUCOU",
-                        "PropertiesViewModel viewState: propertiesFilter is null? ${propertiesFilter == null}")
                     if (propertiesFilter == null) return@filter true
-                    val isMatching = isPropertyMatchingFiltersUseCase.invoke(
-                        property.propertyType,
-                        property.price,
-                        property.surface,
-                        property.amenities,
-                        property.entryDate,
-                        property.isSold,
-                        propertiesFilter
-                    )
-
-                    Log.d(
-                        "COUCOU",
-                        "PropertiesViewModel viewState: property ${property.id} is matching $isMatching"
-                    )
-
-                    isMatching
+                        isPropertyMatchingFiltersUseCase.invoke(
+                            property.propertyType,
+                            property.price,
+                            property.surface,
+                            property.amenities,
+                            property.entryDate,
+                            property.isSold,
+                            propertiesFilter
+                        )
                 }
                 .toList()
             )

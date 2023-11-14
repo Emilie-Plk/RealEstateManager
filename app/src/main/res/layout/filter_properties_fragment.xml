@@ -1,281 +1,308 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="8dp"
     android:layout_marginTop="8dp"
-    android:layout_marginEnd="8dp"
-    android:padding="8dp">
+    android:layout_marginEnd="8dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
+        android:id="@+id/filter_property_scrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:focusable="true"
-        android:focusableInTouchMode="true">
+        android:padding="8dp">
 
-        <TextView
-            android:id="@+id/filter_property_type_tv"
-            style="@style/Theme.RealEstateManager.FilterPropertySubtitle"
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
+
+            <TextView
+                android:id="@+id/filter_property_type_tv"
+                style="@style/Theme.RealEstateManager.FilterPropertySubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Type"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/filter_property_type_textInputLayout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/filter_property_type_tv">
+
+                <AutoCompleteTextView
+                    android:id="@+id/filter_property_type_actv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Type"
+                    android:inputType="none" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <TextView
+                android:id="@+id/filter_property_price_range_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="@+id/filter_property_max_price_textInputLayout"
+                app:layout_constraintTop_toBottomOf="@+id/filter_property_type_textInputLayout"
+                tools:text="Results from $1,000,000 to $8,500,000" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/filter_property_min_price_textInputLayout"
+                style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Min price"
+                app:endIconMode="clear_text"
+                app:layout_constraintEnd_toStartOf="@id/filter_property_max_price_textInputLayout"
+                app:layout_constraintStart_toStartOf="@+id/filter_property_type_textInputLayout"
+                app:layout_constraintTop_toBottomOf="@+id/filter_property_price_range_tv">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/filter_property_min_price_editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/filter_property_max_price_textInputLayout"
+                style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="Max price"
+                app:endIconMode="clear_text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/filter_property_min_price_textInputLayout"
+                app:layout_constraintTop_toTopOf="@+id/filter_property_min_price_textInputLayout">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/filter_property_max_price_editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/filter_property_min_surface_textInputLayout"
+                style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Min surface"
+                app:endIconMode="clear_text"
+                app:layout_constraintEnd_toStartOf="@id/filter_property_max_surface_textInputLayout"
+                app:layout_constraintStart_toStartOf="@+id/filter_property_type_textInputLayout"
+                app:layout_constraintTop_toBottomOf="@+id/filter_property_surface_range_tv">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/filter_property_min_surface_editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/filter_property_max_surface_textInputLayout"
+                style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="Max surface"
+                app:endIconMode="clear_text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/filter_property_min_surface_textInputLayout"
+                app:layout_constraintTop_toTopOf="@+id/filter_property_min_surface_textInputLayout">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/filter_property_max_surface_editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <TextView
+                android:id="@+id/filter_property_surface_range_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="@+id/filter_property_max_price_textInputLayout"
+                app:layout_constraintTop_toBottomOf="@+id/filter_property_max_price_textInputLayout"
+                tools:text="Results from 500 sq ft - 800sq ft" />
+
+            <TextView
+                android:id="@+id/filter_property_amenities_tv"
+                style="@style/Theme.RealEstateManager.AddPropertySubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Amenities"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/filter_property_min_surface_textInputLayout" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/filter_property_amenities_recyclerView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                app:flexDirection="row"
+                app:justifyContent="center"
+                app:layoutManager="com.google.android.flexbox.FlexboxLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/filter_property_amenities_tv"
+                tools:itemCount="9"
+                tools:listitem="@layout/amenity_checkbox_item" />
+
+            <TextView
+                android:id="@+id/filter_property_entry_date_tv"
+                style="@style/Theme.RealEstateManager.FilterPropertySubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Entry date"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/filter_property_amenities_recyclerView" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/filter_property_entry_date_chipGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/filter_property_entry_date_tv"
+                app:singleSelection="true">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/filter_property_entry_less_than_1_year_chip"
+                    style="@style/Widget.Material3.Chip.Filter.Elevated"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:text="&lt; 1year" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/filter_property_entry_less_than_6_months_chip"
+                    style="@style/Widget.Material3.Chip.Filter.Elevated"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:text="&lt; 6 months" />
+
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/filter_property_entry_date_less_than_3_months_chip"
+                    style="@style/Widget.Material3.Chip.Filter.Elevated"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:text="&lt; 3 months" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/filter_property_entry_date_less_than_1_month_chip"
+                    style="@style/Widget.Material3.Chip.Filter.Elevated"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:text="&lt; 1 month" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/filter_property_entry_date_less_than_1_week_chip"
+                    style="@style/Widget.Material3.Chip.Filter.Elevated"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:text="&lt; 1 week" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/filter_property_entry_date_all_chip"
+                    style="@style/Widget.Material3.Chip.Filter.Elevated"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:text="Any"
+                    android:textAlignment="center" />
+
+            </com.google.android.material.chip.ChipGroup>
+
+            <TextView
+                android:id="@+id/filter_property_entry_sale_state_tv"
+                style="@style/Theme.RealEstateManager.FilterPropertySubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Available for sale"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/filter_property_entry_date_chipGroup" />
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/filter_property_entry_sale_state_toggleGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/filter_property_entry_sale_state_tv"
+                app:singleSelection="true">
+
+                <Button
+                    android:id="@+id/filter_property_for_sale_btn"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="For sale" />
+
+                <Button
+                    android:id="@+id/filter_property_sold_btn"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sold" />
+
+                <Button
+                    android:id="@+id/filter_property_all_btn"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="All" />
+
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/almost_white"
+        android:orientation="horizontal"
+        app:layout_anchor="@id/filter_property_scrollView"
+        app:layout_anchorGravity="bottom">
+
+        <Button
+            android:id="@+id/filter_property_cancel_btn"
+            style="@style/Widget.Material3.Button.IconButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Type"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/filter_property_type_textInputLayout"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/filter_property_type_tv">
-
-            <AutoCompleteTextView
-                android:id="@+id/filter_property_type_actv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Type"
-                android:inputType="none" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-        <TextView
-            android:id="@+id/filter_property_price_range_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="@+id/filter_property_max_price_textInputLayout"
-            app:layout_constraintTop_toBottomOf="@+id/filter_property_type_textInputLayout"
-            tools:text="Results from $1,000,000 to $8,500,000" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/filter_property_min_price_textInputLayout"
-            style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="Min price"
-            android:layout_marginTop="8dp"
-            app:endIconMode="clear_text"
-            app:layout_constraintEnd_toStartOf="@id/filter_property_max_price_textInputLayout"
-            app:layout_constraintStart_toStartOf="@+id/filter_property_type_textInputLayout"
-            app:layout_constraintTop_toBottomOf="@+id/filter_property_price_range_tv">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/filter_property_min_price_editText"
-                android:layout_width="match_parent"
-                android:inputType="number"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/filter_property_max_price_textInputLayout"
-            style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="Max price"
-            app:endIconMode="clear_text"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/filter_property_min_price_textInputLayout"
-            app:layout_constraintTop_toTopOf="@+id/filter_property_min_price_textInputLayout">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/filter_property_max_price_editText"
-                android:layout_width="match_parent"
-                android:inputType="number"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/filter_property_min_surface_textInputLayout"
-            style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="Min surface"
-            app:endIconMode="clear_text"
-            app:layout_constraintEnd_toStartOf="@id/filter_property_max_surface_textInputLayout"
-            app:layout_constraintStart_toStartOf="@+id/filter_property_type_textInputLayout"
-            app:layout_constraintTop_toBottomOf="@+id/filter_property_surface_range_tv">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/filter_property_min_surface_editText"
-                android:layout_width="match_parent"
-                android:inputType="number"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/filter_property_max_surface_textInputLayout"
-            style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="Max surface"
-            app:endIconMode="clear_text"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/filter_property_min_surface_textInputLayout"
-            app:layout_constraintTop_toTopOf="@+id/filter_property_min_surface_textInputLayout">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/filter_property_max_surface_editText"
-                android:layout_width="match_parent"
-                android:inputType="number"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-        <TextView
-            android:id="@+id/filter_property_surface_range_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="@+id/filter_property_max_price_textInputLayout"
-            app:layout_constraintTop_toBottomOf="@+id/filter_property_max_price_textInputLayout"
-            tools:text="Results from 500 sq ft - 800sq ft" />
-
-        <TextView
-            android:id="@+id/filter_property_amenities_tv"
-            style="@style/Theme.RealEstateManager.AddPropertySubtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Amenities"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/filter_property_min_surface_textInputLayout" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/filter_property_amenities_recyclerView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal"
-            app:flexDirection="row"
-            app:justifyContent="center"
-            app:layoutManager="com.google.android.flexbox.FlexboxLayoutManager"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/filter_property_amenities_tv"
-            tools:itemCount="9"
-            tools:listitem="@layout/amenity_checkbox_item" />
-
-        <TextView
-            android:id="@+id/filter_property_entry_date_tv"
-            style="@style/Theme.RealEstateManager.FilterPropertySubtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Entry date"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/filter_property_amenities_recyclerView" />
-
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/filter_property_entry_date_chipGroup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/filter_property_entry_date_tv"
-            app:singleSelection="true">
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/filter_property_entry_less_than_1_year_chip"
-                style="@style/Widget.Material3.Chip.Filter.Elevated"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:text="&lt; 1year" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/filter_property_entry_less_than_6_months_chip"
-                style="@style/Widget.Material3.Chip.Filter.Elevated"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:text="&lt; 6 months" />
-
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/filter_property_entry_date_less_than_3_months_chip"
-                style="@style/Widget.Material3.Chip.Filter.Elevated"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:text="&lt; 3 months" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/filter_property_entry_date_less_than_1_month_chip"
-                style="@style/Widget.Material3.Chip.Filter.Elevated"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:text="&lt; 1 month" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/filter_property_entry_date_less_than_1_week_chip"
-                style="@style/Widget.Material3.Chip.Filter.Elevated"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:text="&lt; 1 week" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/filter_property_entry_date_all_chip"
-                style="@style/Widget.Material3.Chip.Filter.Elevated"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:text="Any"
-                android:textAlignment="center" />
-
-        </com.google.android.material.chip.ChipGroup>
-
-        <TextView
-            android:id="@+id/filter_property_entry_sale_state_tv"
-            style="@style/Theme.RealEstateManager.FilterPropertySubtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Available for sale"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/filter_property_entry_date_chipGroup" />
-
-        <com.google.android.material.button.MaterialButtonToggleGroup
-            android:id="@+id/filter_property_entry_sale_state_toggleGroup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/filter_property_entry_sale_state_tv"
-            app:singleSelection="true">
-
-            <Button
-                android:id="@+id/filter_property_for_sale_btn"
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="For sale" />
-
-            <Button
-                android:id="@+id/filter_property_sold_btn"
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Sold" />
-
-            <Button
-                android:id="@+id/filter_property_all_btn"
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="All" />
-
-        </com.google.android.material.button.MaterialButtonToggleGroup>
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:layout_weight="1"
+            android:text="Cancel" />
 
         <Button
             android:id="@+id/filter_property_reset_btn"
@@ -283,6 +310,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
+            android:layout_weight="1"
             android:text="Reset"
             app:icon="@drawable/baseline_reset_24"
             app:layout_constraintEnd_toEndOf="parent"
@@ -290,28 +318,15 @@
             app:layout_constraintTop_toBottomOf="@+id/filter_property_entry_sale_state_toggleGroup" />
 
         <Button
-            android:id="@+id/filter_property_cancel_btn"
-            style="@style/Widget.Material3.Button.IconButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"
-            android:text="Cancel"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/filter_property_filter_btn"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/filter_property_reset_btn" />
-
-        <Button
             android:id="@+id/filter_property_filter_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
             android:backgroundTint="@color/secondary"
-            android:text="View 24 results"
-            app:layout_constraintBottom_toBottomOf="@+id/filter_property_cancel_btn"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/filter_property_cancel_btn"
-            app:layout_constraintTop_toTopOf="@id/filter_property_cancel_btn" />
+            android:maxLines="2"
+            android:text="View 24 results" />
+    </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

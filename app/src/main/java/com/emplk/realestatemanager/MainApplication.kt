@@ -19,9 +19,6 @@ class MainApplication : Application(), Configuration.Provider, Application.Activ
     @Inject
     lateinit var setScreenWidthTypeFlowUseCase: SetScreenWidthTypeUseCase
 
-    @Inject
-    lateinit var internetConnectivityRepositoryBroadcastReceiver: InternetConnectivityRepositoryBroadcastReceiver
-
     override fun getWorkManagerConfiguration() = Configuration.Builder()
         .setWorkerFactory(workerFactory)
         .build()

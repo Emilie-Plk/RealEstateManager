@@ -6,6 +6,7 @@ import androidx.lifecycle.liveData
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdFlowUseCase
 import com.emplk.realestatemanager.domain.current_property.ResetCurrentPropertyIdUseCase
+import com.emplk.realestatemanager.domain.filter.GetPropertiesFilterFlowUseCase
 import com.emplk.realestatemanager.domain.filter.ResetPropertiesFilterUseCase
 import com.emplk.realestatemanager.domain.navigation.GetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.navigation.GetToolbarSubtitleUseCase
@@ -39,6 +40,7 @@ class MainViewModel @Inject constructor(
     private val resetCurrentPropertyIdUseCase: ResetCurrentPropertyIdUseCase,
     private val getDraftsCountUseCase: GetDraftsCountUseCase,
     private val resetPropertiesFilterUseCase: ResetPropertiesFilterUseCase,
+    private val getPropertiesFilterFlowUseCase: GetPropertiesFilterFlowUseCase,
     private val getCurrentPropertyIdFlowUseCase: GetCurrentPropertyIdFlowUseCase,
     coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : ViewModel() {
@@ -50,14 +52,15 @@ class MainViewModel @Inject constructor(
             isTabletMutableStateFlow.asStateFlow(),
             getNavigationTypeUseCase.invoke(),
             getToolbarSubtitleUseCase.invoke(),
-        ) { isTablet, navigationType, toolbarSubtitle ->
+            getPropertiesFilterFlowUseCase.invoke(),
+        ) { isTablet, navigationType, toolbarSubtitle, filter ->
             when (navigationType) {
                 LIST_FRAGMENT -> if (!isTablet) {
                     emit(
                         MainViewState(
                             isAddFabVisible = true,
-                            isFilterAppBarButtonVisible = true,
-                            isResetFilterAppBarButtonVisible = false,
+                            isFilterAppBarButtonVisible = filter == null,
+                            isResetFilterAppBarButtonVisible = filter != null,
                             isAddAppBarButtonVisible = true,
                             subtitle = toolbarSubtitle
                         )
@@ -66,8 +69,8 @@ class MainViewModel @Inject constructor(
                     emit(
                         MainViewState(
                             isAddFabVisible = false,
-                            isFilterAppBarButtonVisible = true,
-                            isResetFilterAppBarButtonVisible = false,
+                            isFilterAppBarButtonVisible = filter == null,
+                            isResetFilterAppBarButtonVisible = filter != null,
                             isAddAppBarButtonVisible = true,
                             subtitle = null
                         )
@@ -78,8 +81,8 @@ class MainViewModel @Inject constructor(
                     emit(
                         MainViewState(
                             false,
-                            isFilterAppBarButtonVisible = false,
-                            isResetFilterAppBarButtonVisible = true,
+                            isFilterAppBarButtonVisible = filter == null,
+                            isResetFilterAppBarButtonVisible = filter != null,
                             isAddAppBarButtonVisible = false,
                             subtitle = toolbarSubtitle
                         )
@@ -88,8 +91,8 @@ class MainViewModel @Inject constructor(
                     emit(
                         MainViewState(
                             isAddFabVisible = false,
-                            isFilterAppBarButtonVisible = false,
-                            isResetFilterAppBarButtonVisible = true,
+                            isFilterAppBarButtonVisible = filter == null,
+                            isResetFilterAppBarButtonVisible = filter != null,
                             isAddAppBarButtonVisible = true,
                             subtitle = null
                         )
@@ -112,7 +115,7 @@ class MainViewModel @Inject constructor(
                     emit(
                         MainViewState(
                             false,
-                            isFilterAppBarButtonVisible = true,
+                            isFilterAppBarButtonVisible = false,
                             isResetFilterAppBarButtonVisible = false,
                             isAddAppBarButtonVisible = true,
                             subtitle = null
