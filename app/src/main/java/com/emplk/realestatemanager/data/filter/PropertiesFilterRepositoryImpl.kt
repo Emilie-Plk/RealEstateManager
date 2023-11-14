@@ -7,16 +7,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 class PropertiesFilterRepositoryImpl @Inject constructor() : PropertiesFilterRepository {
-    private val propertiesIdsMutableStateFlow: MutableStateFlow<PropertiesFilterEntity> =
-        MutableStateFlow(PropertiesFilterEntity())
+    private val propertiesIdsMutableStateFlow: MutableStateFlow<PropertiesFilterEntity?> =
+        MutableStateFlow(null)
 
     override fun setPropertiesFilter(propertiesFilterEntity: PropertiesFilterEntity) {
         propertiesIdsMutableStateFlow.tryEmit(propertiesFilterEntity)
     }
 
-    override fun getPropertiesFilter(): Flow<PropertiesFilterEntity> = propertiesIdsMutableStateFlow
+    override fun getPropertiesFilter(): Flow<PropertiesFilterEntity?> = propertiesIdsMutableStateFlow
 
     override fun resetPropertiesFilter() {
-        propertiesIdsMutableStateFlow.tryEmit(PropertiesFilterEntity())
+        propertiesIdsMutableStateFlow.tryEmit(null)
     }
 }

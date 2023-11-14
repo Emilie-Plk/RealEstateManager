@@ -3,6 +3,7 @@ package com.emplk.realestatemanager.ui.filter
 import android.content.Context
 import android.content.res.Resources
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
@@ -36,6 +37,14 @@ class FilterPropertiesFragment : DialogFragment(R.layout.filter_properties_fragm
 
         val amenityAdapter = AmenityListAdapter()
         binding.filterPropertyAmenitiesRecyclerView?.adapter = amenityAdapter
+
+        binding.filterPropertyCancelBtn.setOnClickListener {
+            dismiss()
+        }
+
+        binding.filterPropertyResetBtn?.setOnClickListener {
+            viewModel.onResetFilters()
+        }
 
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
             propertyTypeAdapter.setData(viewState.propertyTypes)
@@ -107,17 +116,7 @@ class FilterPropertiesFragment : DialogFragment(R.layout.filter_properties_fragm
             }
         }
 
-        binding.filterPropertyCancelBtn.setOnClickListener {
-            dismiss()
-        }
 
-        binding.filterPropertyResetBtn?.setOnClickListener {
-            viewModel.onResetFilters()
-        }
-
-        binding.filterPropertyFilterBtn.setOnClickListener {
-            viewModel.onFilterClicked()
-        }
 
         binding.filterPropertyEntrySaleStateToggleGroup?.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if (isChecked) {

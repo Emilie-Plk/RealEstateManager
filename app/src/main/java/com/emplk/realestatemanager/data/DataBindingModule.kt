@@ -6,6 +6,7 @@ import com.emplk.realestatemanager.data.connectivity.InternetConnectivityReposit
 import com.emplk.realestatemanager.data.content_resolver.PictureFileRepositoryContentResolver
 import com.emplk.realestatemanager.data.currency_rate.CurrencyRateRepositoryFixer
 import com.emplk.realestatemanager.data.current_property.CurrentPropertyRepositoryImpl
+import com.emplk.realestatemanager.data.filter.PropertiesFilterRepositoryImpl
 import com.emplk.realestatemanager.data.geocoding.GeocodingRepositoryGoogle
 import com.emplk.realestatemanager.data.loan_simulator.LoanSimulatorRepositoryImpl
 import com.emplk.realestatemanager.data.locale_formatting.LocaleFormattingRepositoryImpl
@@ -28,7 +29,6 @@ import com.emplk.realestatemanager.domain.connectivity.InternetConnectivityRepos
 import com.emplk.realestatemanager.domain.content_resolver.PictureFileRepository
 import com.emplk.realestatemanager.domain.currency_rate.CurrencyRateRepository
 import com.emplk.realestatemanager.domain.current_property.CurrentPropertyRepository
-import com.emplk.realestatemanager.domain.filter.PropertiesFilter
 import com.emplk.realestatemanager.domain.filter.PropertiesFilterRepository
 import com.emplk.realestatemanager.domain.geocoding.GeocodingRepository
 import com.emplk.realestatemanager.domain.loan_simulator.LoanSimulatorRepository
@@ -148,5 +148,5 @@ abstract class DataBindingModule {
 
     @Singleton
     @Binds
-    abstract fun bindPropertiesFilteredRepository(implementation: FilteredPropertyIdsRepositoryImpl): PropertiesFilterRepository
+    abstract fun bindPropertiesFilteredRepository(implementation: PropertiesFilterRepositoryImpl): PropertiesFilterRepository
 }

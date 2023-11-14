@@ -57,13 +57,12 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
         setSupportActionBar(binding.mainToolbar)
         val fragmentName = intent.getStringExtra(KEY_FRAGMENT_TAG)
-        Log.d("COUCOU", "MainActivity onCreate: with $fragmentName")
+
         if (savedInstanceState == null) {
             if (fragmentName != null) {
                 when (fragmentName) {
                     NavigationFragmentType.DETAIL_FRAGMENT.name -> {
                         supportFragmentManager.commit {
-                            Log.d("COUCOU", "MainActivity onCreate detail: 58 ")
                             add(
                                 binding.mainFrameLayoutContainerProperties.id,
                                 DetailFragment.newInstance(),
@@ -74,7 +73,6 @@ class MainActivity : AppCompatActivity() {
 
                     NavigationFragmentType.LIST_FRAGMENT.name -> {
                         supportFragmentManager.commit {
-                            Log.d("COUCOU", "MainActivity onCreate list: 67 ")
                             add(
                                 binding.mainFrameLayoutContainerProperties.id,
                                 PropertiesFragment.newInstance(),
@@ -107,6 +105,9 @@ class MainActivity : AppCompatActivity() {
             }
             binding.mainToolbar.menu.findItem(R.id.main_menu_form)?.let {
                 it.isVisible = mainViewState.isAddAppBarButtonVisible
+            }
+            binding.mainToolbar.menu.findItem(R.id.main_menu_property_reset_filter)?.let {
+                it.isVisible = mainViewState.isResetFilterAppBarButtonVisible
             }
         }
 
@@ -192,6 +193,11 @@ class MainActivity : AppCompatActivity() {
 
             R.id.main_menu_property_filter -> {
                 viewModel.onFilterPropertiesClicked()
+                true
+            }
+
+            R.id.main_menu_property_reset_filter -> {
+                viewModel.onResetFiltersClicked()
                 true
             }
 

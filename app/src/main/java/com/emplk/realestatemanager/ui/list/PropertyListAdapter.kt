@@ -54,11 +54,11 @@ class PropertyListAdapter :
                 binding.root.setOnClickListener { item.onClickEvent.invoke() }
                 binding.propertyItemTypeTextView.text = item.propertyType
                 binding.propertyItemLocationTextView.text = item.address
-                binding.propertyItemPriceTextView.text = item.price
+                binding.propertyItemPriceTextView.text = item.humanReadablePrice
                 binding.propertyItemRoomTextView?.text = item.room.toCharSequence(binding.root.context)
                 binding.propertyItemBathroomTextView?.text = item.bathroom.toCharSequence(binding.root.context)
                 binding.propertyItemBedroomTextView?.text = item.bedroom.toCharSequence(binding.root.context)
-                binding.propertyItemSurfaceTextView?.text = item.surface
+                binding.propertyItemSurfaceTextView?.text = item.humanReadableSurface
                 when (item.isSold) {
                     true -> {
                         binding.propertyItemSoldShade.isVisible = true

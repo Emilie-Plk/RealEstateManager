@@ -38,7 +38,7 @@ import javax.inject.Inject
 @HiltViewModel
 class FilterPropertiesViewModel @Inject constructor(
     private val getFilteredPropertiesUseCase: GetFilteredPropertiesUseCase,
-    private val getEntryDateByEntryDateStatusUseCase: GetEntryDateByEntryDateStatusUseCase,
+    private val getEntryDateMinToEpochUseCase: GetEntryDateByEntryDateStatusUseCase,
     private val getMinMaxPriceAndSurfaceUseCase: GetMinMaxPriceAndSurfaceUseCase,
     private val formatPriceToHumanReadableUseCase: FormatPriceToHumanReadableUseCase,
     private val getRoundedSurfaceWithSurfaceUnitUseCase: GetRoundedSurfaceWithSurfaceUnitUseCase,
@@ -64,8 +64,7 @@ class FilterPropertiesViewModel @Inject constructor(
                 minSurface = convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(filterParams.minSurface),
                 maxSurface = convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(filterParams.maxSurface),
                 amenities = filterParams.selectedAmenities,
-                entryDateMin = getEntryDateByEntryDateStatusUseCase.invoke(filterParams.entryDateState)?.first,
-                entryDateMax = getEntryDateByEntryDateStatusUseCase.invoke(filterParams.entryDateState)?.second,
+                entryDateMin = getEntryDateMinToEpochUseCase.invoke(filterParams.entryDateState),
                 propertySaleState = filterParams.saleState,
             )
         }.collectLatest { filteredPropertiesCount ->
@@ -150,6 +149,19 @@ class FilterPropertiesViewModel @Inject constructor(
                 onCancelClicked = EquatableCallback { filterParamsMutableStateFlow.update { FilterParams() } },
                 isFilterButtonEnabled = filterParamsMutableStateFlow.value != FilterParams() || filteredPropertiesCount != 0,
                 onFilterClicked = EquatableCallback {
+                    viewModelScope.launch {
+                        setPropertiesFilterUseCase.invoke(
+                            filterParamsMutableStateFlow.value.propertyType,
+                            convertToUsdDependingOnLocaleUseCase.invoke(filterParamsMutableStateFlow.value.minPrice),
+                            convertToUsdDependingOnLocaleUseCase.invoke(filterParamsMutableStateFlow.value.maxPrice),
+                            convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(filterParamsMutableStateFlow.value.minSurface),
+                            convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(filterParamsMutableStateFlow.value.maxSurface),
+                            filterParamsMutableStateFlow.value.selectedAmenities,
+                            filterParamsMutableStateFlow.value.saleState,
+                            filterParamsMutableStateFlow.value.entryDateState,
+                        )
+                    }
+
                 }
             )
             )
@@ -244,22 +256,6 @@ class FilterPropertiesViewModel @Inject constructor(
             filterParamsMutableStateFlow.update {
                 it.copy(maxSurface = BigDecimal(maxSurface))
             }
-    }
-
-    fun onFilterClicked() {
-        viewModelScope.launch {
-            setPropertiesFilterUseCase.invoke(
-                filterParamsMutableStateFlow.value.propertyType,
-                convertToUsdDependingOnLocaleUseCase.invoke(filterParamsMutableStateFlow.value.minPrice),
-                convertToUsdDependingOnLocaleUseCase.invoke(filterParamsMutableStateFlow.value.maxPrice),
-                convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(filterParamsMutableStateFlow.value.minSurface),
-                convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(filterParamsMutableStateFlow.value.maxSurface),
-                filterParamsMutableStateFlow.value.selectedAmenities,
-                filterParamsMutableStateFlow.value.saleState,
-                filterParamsMutableStateFlow.value.entryDateState,
-            )
-        }
-
     }
 }
 

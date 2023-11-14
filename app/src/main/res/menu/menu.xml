@@ -10,6 +10,12 @@
         app:showAsAction="ifRoom"
         android:title="@string/menu_filter_property" />
     <item
+        android:id="@+id/main_menu_property_reset_filter"
+        android:icon="@drawable/baseline_filter_list_reset_24"
+        android:orderInCategory="1"
+        app:showAsAction="ifRoom"
+        android:title="@string/menu_filter_property" />
+    <item
         android:id="@+id/main_menu_map_view"
         android:icon="@drawable/baseline_map_24"
         android:orderInCategory="2"

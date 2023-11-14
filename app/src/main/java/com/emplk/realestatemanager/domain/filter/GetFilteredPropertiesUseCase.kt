@@ -5,11 +5,14 @@ import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.ui.filter.PropertySaleState
 import kotlinx.coroutines.flow.Flow
 import java.math.BigDecimal
+import java.time.Clock
 import java.time.LocalDateTime
+import java.time.ZoneId
 import javax.inject.Inject
 
 class GetFilteredPropertiesUseCase @Inject constructor(
     private val propertyRepository: PropertyRepository,
+    private val clock: Clock,
 ) {
     fun invoke(
         propertyType: String?,
@@ -19,9 +22,9 @@ class GetFilteredPropertiesUseCase @Inject constructor(
         maxSurface: BigDecimal,
         amenities: List<AmenityType>,
         entryDateMin: Long?,
-        entryDateMax: Long?,
         propertySaleState: PropertySaleState,
     ): Flow<Int> {
+        val now = LocalDateTime.now(clock).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
         return propertyRepository.getFilteredPropertiesCount(
             if (propertyType == "All") null else propertyType,
             minPrice,
@@ -38,7 +41,7 @@ class GetFilteredPropertiesUseCase @Inject constructor(
             amenities.contains(AmenityType.HOSPITAL),
             amenities.contains(AmenityType.LIBRARY),
             entryDateMin,
-            entryDateMax,
+            now,
             when (propertySaleState) {
                 PropertySaleState.SOLD -> true
                 PropertySaleState.FOR_SALE -> false
