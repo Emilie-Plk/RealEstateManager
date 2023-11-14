@@ -3,7 +3,6 @@ package com.emplk.realestatemanager.ui.filter
 import android.content.Context
 import android.content.res.Resources
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
@@ -14,6 +13,7 @@ import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.FilterPropertiesFragmentBinding
 import com.emplk.realestatemanager.ui.add.amenity.AmenityListAdapter
 import com.emplk.realestatemanager.ui.add.type.PropertyTypeSpinnerAdapter
+import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -46,6 +46,10 @@ class FilterPropertiesFragment : DialogFragment(R.layout.filter_properties_fragm
             viewModel.onResetFilters()
         }
 
+        viewModel.viewEvent.observeEvent(viewLifecycleOwner) {
+            dismiss()
+        }
+
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
             propertyTypeAdapter.setData(viewState.propertyTypes)
             amenityAdapter.submitList(viewState.amenities)
@@ -75,7 +79,6 @@ class FilterPropertiesFragment : DialogFragment(R.layout.filter_properties_fragm
             binding.filterPropertyMaxSurfaceEditText?.doAfterTextChanged {
                 viewModel.onMaxSurfaceChanged(it?.toString() ?: "")
             }
-
 
             binding.filterPropertyEntryDateChipGroup.setOnCheckedStateChangeListener { _, checkedIds ->
                 checkedIds.forEach { checkedId ->

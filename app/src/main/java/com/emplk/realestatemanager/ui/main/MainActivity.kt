@@ -56,8 +56,9 @@ class MainActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
         setSupportActionBar(binding.mainToolbar)
-        val fragmentName = intent.getStringExtra(KEY_FRAGMENT_TAG)
+        onBackPress()
 
+        val fragmentName = intent.getStringExtra(KEY_FRAGMENT_TAG)
         if (savedInstanceState == null) {
             if (fragmentName != null) {
                 when (fragmentName) {
@@ -91,8 +92,6 @@ class MainActivity : AppCompatActivity() {
                 }
         }
 
-        onBackPress()
-
         binding.mainAddPropertyFab?.setOnClickListener {
             viewModel.onAddPropertyClicked()
         }
@@ -114,6 +113,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.viewEventLiveData.observeEvent(this) { event ->
             when (event) {
                 MainViewEvent.PropertyList -> {
+                    if (supportFragmentManager.findFragmentByTag(PROPERTIES_FRAGMENT_TAG) == null)
                     supportFragmentManager.commit {
                         replace(
                             binding.mainFrameLayoutContainerProperties.id,
@@ -124,7 +124,6 @@ class MainActivity : AppCompatActivity() {
 
                 is MainViewEvent.DetailOnPhone -> {
                     supportFragmentManager.commit {
-                        Log.d("COUCOU", "MainActivity onCreate: DisplayDetailFragmentOnPhone ")
                         replace(
                             binding.mainFrameLayoutContainerProperties.id,
                             DetailFragment.newInstance(),

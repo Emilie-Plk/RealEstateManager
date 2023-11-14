@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.emplk.realestatemanager.R
-import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.filter.GetEntryDateByEntryDateStatusUseCase
 import com.emplk.realestatemanager.domain.filter.GetFilteredPropertiesUseCase
 import com.emplk.realestatemanager.domain.filter.GetMinMaxPriceAndSurfaceUseCase
@@ -16,16 +15,18 @@ import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceDepend
 import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceToSquareFeetDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.ConvertToUsdDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceToHumanReadableUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.GetRoundedSurfaceWithSurfaceUnitUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
+import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
+import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.amenity.type.GetAmenityTypeUseCase
 import com.emplk.realestatemanager.ui.add.amenity.AmenityViewState
 import com.emplk.realestatemanager.ui.add.type.PropertyTypeViewStateItem
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParam
+import com.emplk.realestatemanager.ui.utils.Event
 import com.emplk.realestatemanager.ui.utils.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flatMapLatest
@@ -41,21 +42,19 @@ class FilterPropertiesViewModel @Inject constructor(
     private val getEntryDateMinToEpochUseCase: GetEntryDateByEntryDateStatusUseCase,
     private val getMinMaxPriceAndSurfaceUseCase: GetMinMaxPriceAndSurfaceUseCase,
     private val formatPriceToHumanReadableUseCase: FormatPriceToHumanReadableUseCase,
-    private val getRoundedSurfaceWithSurfaceUnitUseCase: GetRoundedSurfaceWithSurfaceUnitUseCase,
     private val convertSurfaceDependingOnLocaleUseCase: ConvertSurfaceDependingOnLocaleUseCase,
-    private val convertPriceDependingOnLocaleUseCase: ConvertPriceDependingOnLocaleUseCase,
     private val convertToUsdDependingOnLocaleUseCase: ConvertToUsdDependingOnLocaleUseCase,
     private val convertSurfaceToSquareFeetDependingOnLocaleUseCase: ConvertSurfaceToSquareFeetDependingOnLocaleUseCase,
-    private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
     private val getPropertyTypeForFilterUseCase: GetPropertyTypeForFilterUseCase,
     private val getAmenityTypeUseCase: GetAmenityTypeUseCase,
     private val setPropertiesFilterUseCase: SetPropertiesFilterUseCase,
+    private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
 ) : ViewModel() {
 
     private val filterParamsMutableStateFlow = MutableStateFlow(FilterParams())
+    private val onFilterClickMutableSharedFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
 
     val viewState: LiveData<FilterViewState> = liveData {
-
         filterParamsMutableStateFlow.flatMapLatest { filterParams ->
             getFilteredPropertiesUseCase.invoke(
                 propertyType = filterParams.propertyType,
@@ -146,7 +145,10 @@ class FilterPropertiesViewModel @Inject constructor(
                         NativeText.Simple("$filteredPropertiesCount properties")
                     }
                 },
-                onCancelClicked = EquatableCallback { filterParamsMutableStateFlow.update { FilterParams() } },
+                onCancelClicked = EquatableCallback {
+                    filterParamsMutableStateFlow.update { FilterParams() }
+                    onFilterClickMutableSharedFlow.tryEmit(Unit)
+                },
                 isFilterButtonEnabled = filterParamsMutableStateFlow.value != FilterParams() || filteredPropertiesCount != 0,
                 onFilterClicked = EquatableCallback {
                     viewModelScope.launch {
@@ -161,11 +163,18 @@ class FilterPropertiesViewModel @Inject constructor(
                             filterParamsMutableStateFlow.value.entryDateState,
                         )
                     }
-
+                    setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
+                    onFilterClickMutableSharedFlow.tryEmit(Unit)
                 }
             )
             )
             Log.d("COUCOU", "viewState: ${filterParamsMutableStateFlow.value}")
+        }
+    }
+
+    val viewEvent: LiveData<Event<Unit>> = liveData {
+        onFilterClickMutableSharedFlow.collectLatest {
+            emit(Event(Unit))
         }
     }
 

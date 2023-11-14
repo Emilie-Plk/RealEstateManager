@@ -19,7 +19,7 @@ class GetLastUpdatedCurrencyRateDateUseCase @Inject constructor(
             return when (val currencyRateWrapper = getCurrencyRateUseCase.invoke()) {
                 is CurrencyRateWrapper.Success -> {
                     currencyRateWrapper.currencyRateEntity.lastUpdatedDate.format(
-                        DateTimeFormatter.ofLocalizedDate(
+                        DateTimeFormatter.ofLocalizedDateTime(
                             FormatStyle.SHORT
                         )
                     )
