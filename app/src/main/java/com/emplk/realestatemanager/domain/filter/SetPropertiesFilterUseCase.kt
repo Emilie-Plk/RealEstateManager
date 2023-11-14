@@ -20,7 +20,7 @@ class SetPropertiesFilterUseCase @Inject constructor(
         entryDateState: EntryDateState,
     ) = propertiesFilterRepository.setPropertiesFilter(
             PropertiesFilterEntity(
-                propertyType = propertyType,
+                propertyType = if (propertyType == "All") null else propertyType,
                 minMaxPrice = Pair(minPrice, maxPrice),
                 minMaxSurface = Pair(minSurface, maxSurface),
                 entryDate = entryDateState,

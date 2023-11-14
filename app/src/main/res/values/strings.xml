@@ -27,6 +27,7 @@
     <string name="detail_entry_date_tv">Entry date: %s</string>
     <string name="menu_map_view">Map view</string>
     <string name="menu_filter_property">Filter properties</string>
+    <string name="menu_reset_filter_property">Reset filters</string>
     <string name="logo_slogan_tv">Where dreams\nfind their address</string>
     <string name="realestatemanager_logo_a11y">RealEstateManager logo</string>
     <string name="checkbox_amenity_restaurant">Restaurant</string>

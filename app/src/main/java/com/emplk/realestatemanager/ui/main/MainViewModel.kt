@@ -6,6 +6,7 @@ import androidx.lifecycle.liveData
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdFlowUseCase
 import com.emplk.realestatemanager.domain.current_property.ResetCurrentPropertyIdUseCase
+import com.emplk.realestatemanager.domain.filter.ResetPropertiesFilterUseCase
 import com.emplk.realestatemanager.domain.navigation.GetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.navigation.GetToolbarSubtitleUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
@@ -37,6 +38,7 @@ class MainViewModel @Inject constructor(
     private val getToolbarSubtitleUseCase: GetToolbarSubtitleUseCase,
     private val resetCurrentPropertyIdUseCase: ResetCurrentPropertyIdUseCase,
     private val getDraftsCountUseCase: GetDraftsCountUseCase,
+    private val resetPropertiesFilterUseCase: ResetPropertiesFilterUseCase,
     private val getCurrentPropertyIdFlowUseCase: GetCurrentPropertyIdFlowUseCase,
     coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : ViewModel() {
@@ -55,6 +57,7 @@ class MainViewModel @Inject constructor(
                         MainViewState(
                             isAddFabVisible = true,
                             isFilterAppBarButtonVisible = true,
+                            isResetFilterAppBarButtonVisible = false,
                             isAddAppBarButtonVisible = true,
                             subtitle = toolbarSubtitle
                         )
@@ -64,19 +67,19 @@ class MainViewModel @Inject constructor(
                         MainViewState(
                             isAddFabVisible = false,
                             isFilterAppBarButtonVisible = true,
+                            isResetFilterAppBarButtonVisible = false,
                             isAddAppBarButtonVisible = true,
                             subtitle = null
                         )
                     )
                 }
 
-                EDIT_FRAGMENT -> Unit
-
                 FILTER_DIALOG_FRAGMENT -> if (!isTablet) {
                     emit(
                         MainViewState(
                             false,
                             isFilterAppBarButtonVisible = false,
+                            isResetFilterAppBarButtonVisible = true,
                             isAddAppBarButtonVisible = false,
                             subtitle = toolbarSubtitle
                         )
@@ -86,6 +89,7 @@ class MainViewModel @Inject constructor(
                         MainViewState(
                             isAddFabVisible = false,
                             isFilterAppBarButtonVisible = false,
+                            isResetFilterAppBarButtonVisible = true,
                             isAddAppBarButtonVisible = true,
                             subtitle = null
                         )
@@ -99,6 +103,7 @@ class MainViewModel @Inject constructor(
                         MainViewState(
                             false,
                             isFilterAppBarButtonVisible = false,
+                            isResetFilterAppBarButtonVisible = false,
                             isAddAppBarButtonVisible = false,
                             subtitle = toolbarSubtitle
                         )
@@ -108,12 +113,14 @@ class MainViewModel @Inject constructor(
                         MainViewState(
                             false,
                             isFilterAppBarButtonVisible = true,
+                            isResetFilterAppBarButtonVisible = false,
                             isAddAppBarButtonVisible = true,
                             subtitle = null
                         )
                     )
                 }
 
+                EDIT_FRAGMENT,
                 LOAN_SIMULATOR_DIALOG_FRAGMENT,
                 DRAFT_DIALOG_FRAGMENT,
                 MAP_FRAGMENT,
@@ -165,6 +172,10 @@ class MainViewModel @Inject constructor(
 
     fun onFilterPropertiesClicked() {
         setNavigationTypeUseCase.invoke(FILTER_DIALOG_FRAGMENT)
+    }
+
+    fun onResetFiltersClicked() {
+        resetPropertiesFilterUseCase.invoke()
     }
 
     fun onMapClicked() {
