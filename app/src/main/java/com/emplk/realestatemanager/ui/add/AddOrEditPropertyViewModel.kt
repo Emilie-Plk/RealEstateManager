@@ -37,6 +37,7 @@ import com.emplk.realestatemanager.domain.property_draft.picture_preview.GetPict
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.PicturePreviewEntity
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.SavePictureToLocalAppFilesAndToLocalDatabaseUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.UpdatePicturePreviewUseCase
+import com.emplk.realestatemanager.domain.property_draft.picture_preview.id.AddAllPicturePreviewsIdsUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.id.PicturePreviewIdRepository
 import com.emplk.realestatemanager.domain.property_type.GetPropertyTypeUseCase
 import com.emplk.realestatemanager.ui.add.address_predictions.PredictionViewState
@@ -74,9 +75,9 @@ class AddOrEditPropertyViewModel @Inject constructor(
     private val getClearPropertyFormNavigationEventUseCase: GetClearPropertyFormNavigationEventUseCase,
     private val clearPropertyFormUseCase: ClearPropertyFormUseCase,
     private val updatePicturePreviewUseCase: UpdatePicturePreviewUseCase,
-    private val picturePreviewIdRepository: PicturePreviewIdRepository,
+    private val addAllPicturePreviewsIdsUseCase: AddAllPicturePreviewsIdsUseCase,
     private val savePictureToLocalAppFilesAndToLocalDatabaseUseCase: SavePictureToLocalAppFilesAndToLocalDatabaseUseCase,
-    private val updatePropertyFormUseCase: UpdatePropertyFormUseCase, // à refacto si chui une ouf
+    private val updatePropertyFormUseCase: UpdatePropertyFormUseCase,
     private val initPropertyFormUseCase: InitPropertyFormUseCase,
     private val getCurrencyTypeUseCase: GetCurrencyTypeUseCase,
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
@@ -159,8 +160,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
             }
             if (formWithType.formType == FormType.ADD) setFormTitleUseCase.invoke(formWithType.formType, null)
 
-
-            picturePreviewIdRepository.addAll(formMutableStateFlow.value.pictureIds)
+            addAllPicturePreviewsIdsUseCase.invoke(formMutableStateFlow.value.pictureIds)
             setFormTitleUseCase.invoke(formWithType.formType, formWithType.formDraftEntity.title)
 
             launch {

@@ -104,6 +104,12 @@ fun getTestPropertyEntity(id: Long) = PropertyEntity(
     entryDate = LocalDateTime.of(2023, 1, 1, 12, 0),
     entryDateEpoch = 1698758555,
 )
+
+fun getPropertyEntities(n: Long) = buildList {
+    for (i in 1..n) {
+        add(getTestPropertyEntity(i))
+    }
+}
 // endregion PropertyEntity
 
 // region PropertyWithDetail
@@ -211,6 +217,7 @@ fun getTestFormDraftParams(id: Long) = FormDraftParams(
     featuredPictureId = 1L,
     isSold = false,
     entryDate = LocalDateTime.of(2023, 1, 1, 12, 0),
+    entryDateEpoch = 1698758555,
     soldDate = null,
     lastEditionDate = LocalDateTime.of(2023, 1, 1, 12, 0),
     formType = null,

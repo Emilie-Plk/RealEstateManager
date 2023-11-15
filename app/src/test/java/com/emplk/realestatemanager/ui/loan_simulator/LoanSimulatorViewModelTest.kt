@@ -146,8 +146,8 @@ class LoanSimulatorViewModelTest {
     @Test
     fun `on calculate clicked with missing interest rate - should trigger event`() = testCoroutineRule.runTest {
         // Given
-        loanSimulatorViewModel.onInterestRateReset()
         loanSimulatorViewModel.viewState.observeForTesting(this) { viewState ->
+            loanSimulatorViewModel.onInterestRateReset()
             loanSimulatorViewModel.viewEvent.observeForTesting(this) { event ->
                 // When
                 viewState.value!!.onCalculateClicked.invoke()
