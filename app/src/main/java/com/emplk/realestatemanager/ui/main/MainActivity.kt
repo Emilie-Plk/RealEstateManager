@@ -48,7 +48,6 @@ class MainActivity : AppCompatActivity() {
     private val binding by viewBinding { MainActivityBinding.inflate(it) }
     private val viewModel by viewModels<MainViewModel>()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
@@ -82,7 +81,10 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 }
-            } else
+            } else {
+                binding.mainToolbar.menu.findItem(R.id.main_menu_property_reset_filter)?.let {
+                    it.isVisible = false
+                }
                 supportFragmentManager.commit {
                     add(
                         binding.mainFrameLayoutContainerProperties.id,
@@ -90,6 +92,7 @@ class MainActivity : AppCompatActivity() {
                         PROPERTIES_FRAGMENT_TAG
                     )
                 }
+            }
         }
 
         binding.mainAddPropertyFab?.setOnClickListener {
@@ -99,27 +102,25 @@ class MainActivity : AppCompatActivity() {
         viewModel.mainViewState.observe(this) { mainViewState ->
             binding.mainToolbar.subtitle = mainViewState.subtitle
             binding.mainAddPropertyFab?.isVisible = mainViewState.isAddFabVisible
-            binding.mainToolbar.menu.findItem(R.id.main_menu_property_filter)?.let {
-                it.isVisible = mainViewState.isFilterAppBarButtonVisible
-            }
-            binding.mainToolbar.menu.findItem(R.id.main_menu_form)?.let {
-                it.isVisible = mainViewState.isAddAppBarButtonVisible
-            }
-            binding.mainToolbar.menu.findItem(R.id.main_menu_property_reset_filter)?.let {
-                it.isVisible = mainViewState.isResetFilterAppBarButtonVisible
-            }
+            binding.mainToolbar.menu.findItem(R.id.main_menu_property_filter)?.isVisible =
+                mainViewState.isFilterAppBarButtonVisible
+
+            binding.mainToolbar.menu.findItem(R.id.main_menu_form)?.isVisible = mainViewState.isAddAppBarButtonVisible
+
+            binding.mainToolbar.menu.findItem(R.id.main_menu_property_reset_filter)?.isVisible =
+                mainViewState.isResetFilterAppBarButtonVisible
         }
 
         viewModel.viewEventLiveData.observeEvent(this) { event ->
             when (event) {
                 MainViewEvent.PropertyList -> {
                     if (supportFragmentManager.findFragmentByTag(PROPERTIES_FRAGMENT_TAG) == null)
-                    supportFragmentManager.commit {
-                        replace(
-                            binding.mainFrameLayoutContainerProperties.id,
-                            PropertiesFragment.newInstance()
-                        ).addToBackStack(null)
-                    }
+                        supportFragmentManager.commit {
+                            replace(
+                                binding.mainFrameLayoutContainerProperties.id,
+                                PropertiesFragment.newInstance()
+                            ).addToBackStack(null)
+                        }
                 }
 
                 is MainViewEvent.DetailOnPhone -> {
@@ -171,11 +172,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu, menu)
-        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -230,6 +226,17 @@ class MainActivity : AppCompatActivity() {
         viewModel.onResume(resources.getBoolean(R.bool.isTablet))
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        return true
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        val resetFilterItem = menu?.findItem(R.id.main_menu_property_reset_filter)
+        resetFilterItem?.isVisible = false
+        return super.onPrepareOptionsMenu(menu)
+    }
+
     private fun hideKeyboard(view: View?) {
         if (view != null) {
             val inputMethodManager =
@@ -244,5 +251,9 @@ class MainActivity : AppCompatActivity() {
             currentFocus!!.clearFocus()
         }
         return super.dispatchTouchEvent(event)
+    }
+
+    fun setFilterAppBarButtonVisibility(isVisible: Boolean) {
+        binding.mainToolbar.menu.findItem(R.id.main_menu_property_filter)?.isVisible = isVisible
     }
 }

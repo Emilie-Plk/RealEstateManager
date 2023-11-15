@@ -8,6 +8,7 @@ interface PropertyRepository {
     suspend fun add(propertyEntity: PropertyEntity): Long?
     suspend fun addPropertyWithDetails(propertyEntity: PropertyEntity): Boolean
     fun getPropertiesAsFlow(): Flow<List<PropertyEntity>>
+    fun getPropertiesCountAsFlow(): Flow<Int>
     fun getPropertyByIdAsFlow(propertyId: Long): Flow<PropertyEntity?>
     suspend fun getPropertyById(propertyId: Long): PropertyEntity
     suspend fun getMinMaxPricesAndSurfaces(): PropertyMinMaxStatsEntity

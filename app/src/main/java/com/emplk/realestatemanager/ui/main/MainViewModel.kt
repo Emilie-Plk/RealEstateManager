@@ -21,6 +21,7 @@ import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.LIST
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.LOAN_SIMULATOR_DIALOG_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.MAP_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
+import com.emplk.realestatemanager.domain.property.GetPropertiesCountUseCase
 import com.emplk.realestatemanager.domain.property_draft.GetDraftsCountUseCase
 import com.emplk.realestatemanager.domain.screen_width.SetScreenWidthTypeUseCase
 import com.emplk.realestatemanager.ui.utils.Event
@@ -42,6 +43,7 @@ class MainViewModel @Inject constructor(
     private val resetPropertiesFilterUseCase: ResetPropertiesFilterUseCase,
     private val getPropertiesFilterFlowUseCase: GetPropertiesFilterFlowUseCase,
     private val getCurrentPropertyIdFlowUseCase: GetCurrentPropertyIdFlowUseCase,
+    private val getPropertiesCountUseCase: GetPropertiesCountUseCase,
     coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : ViewModel() {
 
@@ -53,13 +55,14 @@ class MainViewModel @Inject constructor(
             getNavigationTypeUseCase.invoke(),
             getToolbarSubtitleUseCase.invoke(),
             getPropertiesFilterFlowUseCase.invoke(),
-        ) { isTablet, navigationType, toolbarSubtitle, filter ->
+            getPropertiesCountUseCase.invoke(),
+        ) { isTablet, navigationType, toolbarSubtitle, filter, propertiesCount ->
             when (navigationType) {
                 LIST_FRAGMENT -> if (!isTablet) {
                     emit(
                         MainViewState(
                             isAddFabVisible = true,
-                            isFilterAppBarButtonVisible = filter == null,
+                            isFilterAppBarButtonVisible = filter == null && propertiesCount > 1,
                             isResetFilterAppBarButtonVisible = filter != null,
                             isAddAppBarButtonVisible = true,
                             subtitle = toolbarSubtitle
@@ -69,7 +72,7 @@ class MainViewModel @Inject constructor(
                     emit(
                         MainViewState(
                             isAddFabVisible = false,
-                            isFilterAppBarButtonVisible = filter == null,
+                            isFilterAppBarButtonVisible = filter == null && propertiesCount > 1,
                             isResetFilterAppBarButtonVisible = filter != null,
                             isAddAppBarButtonVisible = true,
                             subtitle = null
@@ -81,7 +84,7 @@ class MainViewModel @Inject constructor(
                     emit(
                         MainViewState(
                             false,
-                            isFilterAppBarButtonVisible = filter == null,
+                            isFilterAppBarButtonVisible = filter == null && propertiesCount > 1,
                             isResetFilterAppBarButtonVisible = filter != null,
                             isAddAppBarButtonVisible = false,
                             subtitle = toolbarSubtitle
@@ -91,7 +94,7 @@ class MainViewModel @Inject constructor(
                     emit(
                         MainViewState(
                             isAddFabVisible = false,
-                            isFilterAppBarButtonVisible = filter == null,
+                            isFilterAppBarButtonVisible = filter == null && propertiesCount > 1,
                             isResetFilterAppBarButtonVisible = filter != null,
                             isAddAppBarButtonVisible = true,
                             subtitle = null
@@ -193,7 +196,6 @@ class MainViewModel @Inject constructor(
         isTabletMutableStateFlow.value = isTablet
         setScreenWidthTypeUseCase.invoke(isTablet)
     }
-
-    fun onNavigationChanged(navigationFragmentTypeString: String) =
-        setNavigationTypeUseCase.invoke(NavigationFragmentType.valueOf(navigationFragmentTypeString))
 }
+
+

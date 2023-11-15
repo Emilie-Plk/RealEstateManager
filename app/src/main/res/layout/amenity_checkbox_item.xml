@@ -9,6 +9,7 @@
         android:id="@+id/form_amenities_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:drawablePadding="8dp"
         android:layout_margin="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:layout_marginStart="8dp"
     android:layout_marginTop="8dp"
     android:layout_marginEnd="8dp">
@@ -11,10 +11,11 @@
     <ScrollView
         android:id="@+id/filter_property_scrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:fillViewport="true"
-        android:padding="8dp">
-
+        android:padding="8dp"
+        app:layout_constraintBottom_toTopOf="@id/filter_buttons_bottom_banner"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -191,50 +192,51 @@
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/filter_property_entry_less_than_1_year_chip"
-                    style="@style/Widget.Material3.Chip.Filter.Elevated"
-                    android:layout_width="wrap_content"
+                    style="@style/Theme.RealEstateManager.ChipFilter"                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    app:backgroundTint="@color/button_group_color"
                     android:layout_margin="4dp"
                     android:text="&lt; 1year" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/filter_property_entry_less_than_6_months_chip"
-                    style="@style/Widget.Material3.Chip.Filter.Elevated"
-                    android:layout_width="wrap_content"
+                    style="@style/Theme.RealEstateManager.ChipFilter"                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    app:backgroundTint="@color/button_group_color"
                     android:layout_margin="4dp"
                     android:text="&lt; 6 months" />
 
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/filter_property_entry_date_less_than_3_months_chip"
-                    style="@style/Widget.Material3.Chip.Filter.Elevated"
-                    android:layout_width="wrap_content"
+                    style="@style/Theme.RealEstateManager.ChipFilter"                    android:layout_width="wrap_content"
+                    app:backgroundTint="@color/button_group_color"
                     android:layout_height="wrap_content"
                     android:layout_margin="4dp"
                     android:text="&lt; 3 months" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/filter_property_entry_date_less_than_1_month_chip"
-                    style="@style/Widget.Material3.Chip.Filter.Elevated"
-                    android:layout_width="wrap_content"
+                    style="@style/Theme.RealEstateManager.ChipFilter"                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    app:backgroundTint="@color/button_group_color"
                     android:layout_margin="4dp"
                     android:text="&lt; 1 month" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/filter_property_entry_date_less_than_1_week_chip"
-                    style="@style/Widget.Material3.Chip.Filter.Elevated"
-                    android:layout_width="wrap_content"
+                    style="@style/Theme.RealEstateManager.ChipFilter"                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    app:backgroundTint="@color/button_group_color"
                     android:layout_margin="4dp"
                     android:text="&lt; 1 week" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/filter_property_entry_date_all_chip"
-                    style="@style/Widget.Material3.Chip.Filter.Elevated"
+                    style="@style/Theme.RealEstateManager.ChipFilter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    app:backgroundTint="@color/button_group_color"
                     android:layout_margin="4dp"
                     android:text="Any"
                     android:textAlignment="center" />
@@ -256,7 +258,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:backgroundTint="@color/button_group_color"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/filter_property_entry_sale_state_tv"
@@ -264,21 +266,21 @@
 
                 <Button
                     android:id="@+id/filter_property_for_sale_btn"
-                    style="?attr/materialButtonOutlinedStyle"
+                    style="@style/Theme.RealEstateManager.ButtonGroup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="For sale" />
 
                 <Button
                     android:id="@+id/filter_property_sold_btn"
-                    style="?attr/materialButtonOutlinedStyle"
+                    style="@style/Theme.RealEstateManager.ButtonGroup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Sold" />
 
                 <Button
                     android:id="@+id/filter_property_all_btn"
-                    style="?attr/materialButtonOutlinedStyle"
+                    style="@style/Theme.RealEstateManager.ButtonGroup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="All" />
@@ -288,12 +290,14 @@
     </ScrollView>
 
     <LinearLayout
+        android:id="@+id/filter_buttons_bottom_banner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/almost_white"
         android:orientation="horizontal"
-        app:layout_anchor="@id/filter_property_scrollView"
-        app:layout_anchorGravity="bottom|center">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <Button
             android:id="@+id/filter_property_cancel_btn"
@@ -312,7 +316,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-
             android:maxLines="2"
             android:text="Reset"
             app:icon="@drawable/baseline_reset_24"
@@ -321,15 +324,15 @@
             app:layout_constraintTop_toBottomOf="@+id/filter_property_entry_sale_state_toggleGroup" />
 
         <Button
+            style="@style/Theme.RealEstateManager.Button"
             android:id="@+id/filter_property_filter_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|center_vertical"
             android:layout_margin="8dp"
             android:layout_weight="2"
-            android:backgroundTint="@color/secondary"
             android:maxLines="2"
-            android:text="View 24 results" />
+            tools:text="View 24 results"
+            />
     </LinearLayout>
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

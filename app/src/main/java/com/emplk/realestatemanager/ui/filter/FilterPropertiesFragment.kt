@@ -29,7 +29,7 @@ class FilterPropertiesFragment : DialogFragment(R.layout.filter_properties_fragm
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val width = (Resources.getSystem().displayMetrics.widthPixels * 0.98).toInt()
-        val height = ViewGroup.LayoutParams.WRAP_CONTENT
+        val height = ViewGroup.LayoutParams.MATCH_PARENT
         dialog?.window?.setLayout(width, height)
 
         val propertyTypeAdapter = PropertyTypeSpinnerAdapter()
@@ -62,21 +62,21 @@ class FilterPropertiesFragment : DialogFragment(R.layout.filter_properties_fragm
 
             binding.filterPropertyTypeActv.setText(viewState.propertyType, false)
 
-            binding.filterPropertyPriceRangeTv?.text = viewState.priceRange.toCharSequence(requireContext())
-            binding.filterPropertyMinPriceEditText?.doAfterTextChanged {
+            binding.filterPropertyPriceRangeTv.text = viewState.priceRange.toCharSequence(requireContext())
+            binding.filterPropertyMinPriceEditText.doAfterTextChanged {
                 viewModel.onMinPriceChanged(it?.toString() ?: "")
             }
 
-            binding.filterPropertyMaxPriceEditText?.doAfterTextChanged {
+            binding.filterPropertyMaxPriceEditText.doAfterTextChanged {
                 viewModel.onMaxPriceChanged(it?.toString() ?: "")
             }
 
-            binding.filterPropertySurfaceRangeTv?.text = viewState.surfaceRange.toCharSequence(requireContext())
-            binding.filterPropertyMinSurfaceEditText?.doAfterTextChanged {
+            binding.filterPropertySurfaceRangeTv.text = viewState.surfaceRange.toCharSequence(requireContext())
+            binding.filterPropertyMinSurfaceEditText.doAfterTextChanged {
                 viewModel.onMinSurfaceChanged(it?.toString() ?: "")
             }
 
-            binding.filterPropertyMaxSurfaceEditText?.doAfterTextChanged {
+            binding.filterPropertyMaxSurfaceEditText.doAfterTextChanged {
                 viewModel.onMaxSurfaceChanged(it?.toString() ?: "")
             }
 
@@ -112,16 +112,14 @@ class FilterPropertiesFragment : DialogFragment(R.layout.filter_properties_fragm
                 }
             }
 
-
+            binding.filterPropertyFilterBtn.isEnabled = viewState.isFilterButtonEnabled
             binding.filterPropertyFilterBtn.text = viewState.filterButtonText.toCharSequence(requireContext())
             binding.filterPropertyFilterBtn.setOnClickListener {
                 viewState.onFilterClicked()
             }
         }
 
-
-
-        binding.filterPropertyEntrySaleStateToggleGroup?.addOnButtonCheckedListener { _, checkedId, isChecked ->
+        binding.filterPropertyEntrySaleStateToggleGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if (isChecked) {
                 when (checkedId) {
                     R.id.filter_property_for_sale_btn -> viewModel.onPropertySaleStateChanged(

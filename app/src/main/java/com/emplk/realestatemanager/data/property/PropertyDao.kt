@@ -27,6 +27,9 @@ interface PropertyDao {
     @Query("SELECT * FROM properties")
     fun getPropertiesWithDetailsAsFlow(): Flow<List<PropertyWithDetails>>
 
+    @Query("SELECT COUNT(*) FROM properties")
+    fun getPropertiesCountAsFlow(): Flow<Int>
+
     @Query(
         "SELECT " +
                 "MIN(price) AS minPrice, " +

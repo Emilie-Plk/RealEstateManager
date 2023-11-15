@@ -11,6 +11,7 @@
     <color name="primary">#384260</color>
     <color name="primary_dark">#2d3246</color>
     <color name="primary_light">#677491</color>
+    <color name="primary_lighter">#C897A2BA</color>
     <color name="primary_translucent">#6A677491</color>
     <color name="secondary">#fcb332</color>
     <color name="secondary_translucent">#11FCB332</color>
