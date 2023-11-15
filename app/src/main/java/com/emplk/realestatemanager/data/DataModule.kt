@@ -4,8 +4,10 @@ import android.app.Application
 import android.content.ContentResolver
 import android.content.Context
 import android.content.res.Resources
+import android.net.ConnectivityManager
 import android.os.Build
 import android.util.LruCache
+import androidx.core.content.getSystemService
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
@@ -222,6 +224,10 @@ class DataModule {
     @Singleton
     @Provides
     fun provideClock(): Clock = Clock.systemDefaultZone()
+
+    @Singleton
+    @Provides
+    fun provideConnectivityManager(application: Application): ConnectivityManager? = application.getSystemService()
 
     @Qualifier
     @Retention(AnnotationRetention.BINARY)

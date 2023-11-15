@@ -20,9 +20,8 @@ import javax.inject.Singleton
 @Singleton  // thread safe
 class InternetConnectivityRepositoryBroadcastReceiver @Inject constructor(
     private val application: Application,
+    private val connectivityManager: ConnectivityManager?, // we have to set it to null because... weird Android stuff (Android without internet?..)
 ) : InternetConnectivityRepository {
-
-    private val connectivityManager = application.getSystemService<ConnectivityManager>()
 
     override fun isInternetEnabledAsFlow(): Flow<Boolean> = callbackFlow {
         trySend(hasInternetConnection())
