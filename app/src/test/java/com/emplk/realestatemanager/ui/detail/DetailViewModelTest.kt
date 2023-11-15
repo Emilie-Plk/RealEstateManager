@@ -6,7 +6,7 @@ import assertk.assertions.isEqualTo
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.currency_rate.GetLastUpdatedCurrencyRateDateUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceDependingOnLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.ConvertToSquareFeetDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceToHumanReadableUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetRoundedSurfaceWithSurfaceUnitUseCase
@@ -53,7 +53,7 @@ class DetailViewModelTest {
     private val getLastUpdatedCurrencyRateDateUseCase: GetLastUpdatedCurrencyRateDateUseCase = mockk()
     private val getLocaleUseCase: GetLocaleUseCase = mockk()
     private val getRoundedSurfaceWithSurfaceUnitUseCase: GetRoundedSurfaceWithSurfaceUnitUseCase = mockk()
-    private val convertSurfaceDependingOnLocaleUseCase: ConvertSurfaceDependingOnLocaleUseCase = mockk()
+    private val convertToSquareFeetDependingOnLocaleUseCase: ConvertToSquareFeetDependingOnLocaleUseCase = mockk()
     private val generateMapUrlWithApiKeyUseCase: GenerateMapUrlWithApiKeyUseCase = mockk()
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase = mockk()
 
@@ -68,7 +68,7 @@ class DetailViewModelTest {
         every { formatPriceToHumanReadableUseCase.invoke(BigDecimal(1000000)) } returns "$1,000,000"
         coEvery { getLastUpdatedCurrencyRateDateUseCase.invoke() } coAnswers { null }
         every { getRoundedSurfaceWithSurfaceUnitUseCase.invoke(BigDecimal(500)) } returns "500 m²"
-        coEvery { convertSurfaceDependingOnLocaleUseCase.invoke(BigDecimal(500)) } returns BigDecimal(500)
+        coEvery { convertToSquareFeetDependingOnLocaleUseCase.invoke(BigDecimal(500)) } returns BigDecimal(500)
         every { generateMapUrlWithApiKeyUseCase.invoke(any()) } returns "https://www.google.com/maps/123456789"
         justRun { setNavigationTypeUseCase.invoke(any()) }
 
@@ -79,7 +79,7 @@ class DetailViewModelTest {
             getLastUpdatedCurrencyRateDateUseCase = getLastUpdatedCurrencyRateDateUseCase,
             getLocaleUseCase = getLocaleUseCase,
             getRoundedSurfaceWithSurfaceUnitUseCase = getRoundedSurfaceWithSurfaceUnitUseCase,
-            convertSurfaceDependingOnLocaleUseCase = convertSurfaceDependingOnLocaleUseCase,
+            convertToSquareFeetDependingOnLocaleUseCase = convertToSquareFeetDependingOnLocaleUseCase,
             generateMapUrlWithApiKeyUseCase = generateMapUrlWithApiKeyUseCase,
             setNavigationTypeUseCase = setNavigationTypeUseCase,
         )

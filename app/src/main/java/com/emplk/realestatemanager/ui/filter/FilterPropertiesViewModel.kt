@@ -1,13 +1,12 @@
 package com.emplk.realestatemanager.ui.filter
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.filter.GetEntryDateByEntryDateStatusUseCase
-import com.emplk.realestatemanager.domain.filter.GetFilteredPropertiesUseCase
+import com.emplk.realestatemanager.domain.filter.GetFilteredPropertiesCountAsFlowUseCase
 import com.emplk.realestatemanager.domain.filter.GetMinMaxPriceAndSurfaceUseCase
 import com.emplk.realestatemanager.domain.filter.GetPropertyTypeForFilterUseCase
 import com.emplk.realestatemanager.domain.filter.SetPropertiesFilterUseCase
@@ -38,8 +37,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FilterPropertiesViewModel @Inject constructor(
-    private val getFilteredPropertiesUseCase: GetFilteredPropertiesUseCase,
-    private val getEntryDateMinToEpochUseCase: GetEntryDateByEntryDateStatusUseCase,
+    private val getFilteredPropertiesCountAsFlowUseCase: GetFilteredPropertiesCountAsFlowUseCase,
+    private val getEntryDateByEntryDateStatusUseCase: GetEntryDateByEntryDateStatusUseCase,
     private val getMinMaxPriceAndSurfaceUseCase: GetMinMaxPriceAndSurfaceUseCase,
     private val formatPriceToHumanReadableUseCase: FormatPriceToHumanReadableUseCase,
     private val convertSurfaceDependingOnLocaleUseCase: ConvertSurfaceDependingOnLocaleUseCase,
@@ -56,14 +55,14 @@ class FilterPropertiesViewModel @Inject constructor(
 
     val viewState: LiveData<FilterViewState> = liveData {
         filterParamsMutableStateFlow.flatMapLatest { filterParams ->
-            getFilteredPropertiesUseCase.invoke(
+            getFilteredPropertiesCountAsFlowUseCase.invoke(
                 propertyType = filterParams.propertyType,
                 minPrice = convertToUsdDependingOnLocaleUseCase.invoke(filterParams.minPrice),
                 maxPrice = convertToUsdDependingOnLocaleUseCase.invoke(filterParams.maxPrice),
                 minSurface = convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(filterParams.minSurface),
                 maxSurface = convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(filterParams.maxSurface),
                 amenities = filterParams.selectedAmenities,
-                entryDateMin = getEntryDateMinToEpochUseCase.invoke(filterParams.entryDateState),
+                entryDateMin = getEntryDateByEntryDateStatusUseCase.invoke(filterParams.entryDateState),
                 propertySaleState = filterParams.saleState,
             )
         }.collectLatest { filteredPropertiesCount ->
@@ -72,19 +71,6 @@ class FilterPropertiesViewModel @Inject constructor(
             val propertyTypes = getPropertyTypeForFilterUseCase.invoke()
             val amenityTypes = getAmenityTypeUseCase.invoke()
 
-            Log.d(
-                "COUCOU",
-                "minSurface converted: ${
-                    convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(filterParamsMutableStateFlow.value.minSurface)
-                }" +
-                        "maxSurface converted: ${
-                            convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(
-                                filterParamsMutableStateFlow.value.maxSurface
-                            )
-                        }" +
-                        "surface converted: min ${convertSurfaceDependingOnLocaleUseCase.invoke(minMaxPriceAndSurface.minSurface)}" +
-                        "max ${convertSurfaceDependingOnLocaleUseCase.invoke(minMaxPriceAndSurface.maxSurface)}"
-            )
             emit(FilterViewState(
                 propertyType = filterParamsMutableStateFlow.value.propertyType,
                 priceRange = NativeText.Arguments(
@@ -134,41 +120,49 @@ class FilterPropertiesViewModel @Inject constructor(
                 availableForSale = filterParamsMutableStateFlow.value.saleState,
                 filterButtonText = when (filteredPropertiesCount) {
                     0 -> {
-                        NativeText.Simple("None")
+                        NativeText.Resource(R.string.filter_button_none)
                     }
 
                     1 -> {
-                        NativeText.Simple("1 property")
+                        NativeText.Resource(R.string.filter_button_one)
                     }
 
                     else -> {
-                        NativeText.Simple("$filteredPropertiesCount properties")
+                        NativeText.Arguments(
+                            R.string.filter_button_nb_properties,
+                            listOf(filteredPropertiesCount.toString())
+                        )
                     }
                 },
+                isFilterButtonEnabled = filteredPropertiesCount != 0,
                 onCancelClicked = EquatableCallback {
                     filterParamsMutableStateFlow.update { FilterParams() }
                     onFilterClickMutableSharedFlow.tryEmit(Unit)
                 },
-                isFilterButtonEnabled = filterParamsMutableStateFlow.value != FilterParams() || filteredPropertiesCount != 0,
                 onFilterClicked = EquatableCallback {
-                    viewModelScope.launch {
-                        setPropertiesFilterUseCase.invoke(
-                            filterParamsMutableStateFlow.value.propertyType,
-                            convertToUsdDependingOnLocaleUseCase.invoke(filterParamsMutableStateFlow.value.minPrice),
-                            convertToUsdDependingOnLocaleUseCase.invoke(filterParamsMutableStateFlow.value.maxPrice),
-                            convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(filterParamsMutableStateFlow.value.minSurface),
-                            convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(filterParamsMutableStateFlow.value.maxSurface),
-                            filterParamsMutableStateFlow.value.selectedAmenities,
-                            filterParamsMutableStateFlow.value.saleState,
-                            filterParamsMutableStateFlow.value.entryDateState,
-                        )
+                    if (filterParamsMutableStateFlow.value != FilterParams()) {
+                        viewModelScope.launch {
+                            setPropertiesFilterUseCase.invoke(
+                                filterParamsMutableStateFlow.value.propertyType,
+                                convertToUsdDependingOnLocaleUseCase.invoke(filterParamsMutableStateFlow.value.minPrice),
+                                convertToUsdDependingOnLocaleUseCase.invoke(filterParamsMutableStateFlow.value.maxPrice),
+                                convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(
+                                    filterParamsMutableStateFlow.value.minSurface
+                                ),
+                                convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(
+                                    filterParamsMutableStateFlow.value.maxSurface
+                                ),
+                                filterParamsMutableStateFlow.value.selectedAmenities,
+                                filterParamsMutableStateFlow.value.saleState,
+                                filterParamsMutableStateFlow.value.entryDateState,
+                            )
+                        }
                     }
                     setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
                     onFilterClickMutableSharedFlow.tryEmit(Unit)
                 }
             )
             )
-            Log.d("COUCOU", "viewState: ${filterParamsMutableStateFlow.value}")
         }
     }
 

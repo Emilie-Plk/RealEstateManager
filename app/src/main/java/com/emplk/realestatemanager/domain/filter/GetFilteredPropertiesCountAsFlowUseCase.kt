@@ -10,7 +10,7 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import javax.inject.Inject
 
-class GetFilteredPropertiesUseCase @Inject constructor(
+class GetFilteredPropertiesCountAsFlowUseCase @Inject constructor(
     private val propertyRepository: PropertyRepository,
     private val clock: Clock,
 ) {

@@ -1,11 +1,13 @@
 package com.emplk.realestatemanager.ui.list
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.PropertiesFragmentBinding
+import com.emplk.realestatemanager.ui.main.MainActivity
 import com.emplk.realestatemanager.ui.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -22,6 +24,7 @@ class PropertiesFragment : Fragment(R.layout.properties_fragment) {
 
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
             adapter.submitList(viewState)
+            (activity as? MainActivity)?.setFilterAppBarButtonVisibility(viewState.size > 1)
         }
     }
 

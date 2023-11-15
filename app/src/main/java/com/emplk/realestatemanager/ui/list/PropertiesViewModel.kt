@@ -3,15 +3,12 @@ package com.emplk.realestatemanager.ui.list
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
-import androidx.lifecycle.viewModelScope
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.current_property.SetCurrentPropertyIdUseCase
 import com.emplk.realestatemanager.domain.filter.GetPropertiesFilterFlowUseCase
 import com.emplk.realestatemanager.domain.filter.IsPropertyMatchingFiltersUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceDependingOnLocaleUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceToSquareFeetDependingOnLocaleUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.ConvertToUsdDependingOnLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.ConvertToSquareFeetDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceToHumanReadableUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetRoundedSurfaceWithSurfaceUnitUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
@@ -21,17 +18,15 @@ import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.NativePhoto
 import com.emplk.realestatemanager.ui.utils.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PropertiesViewModel @Inject constructor(
     private val getPropertiesAsFlowUseCase: GetPropertiesAsFlowUseCase,
     private val setCurrentPropertyIdUseCase: SetCurrentPropertyIdUseCase,
-    private val convertSurfaceDependingOnLocaleUseCase: ConvertSurfaceDependingOnLocaleUseCase,
+    private val convertToSquareFeetDependingOnLocaleUseCase: ConvertToSquareFeetDependingOnLocaleUseCase,
     private val convertPriceDependingOnLocaleUseCase: ConvertPriceDependingOnLocaleUseCase,
     private val getRoundedHumanReadableSurfaceUseCase: GetRoundedSurfaceWithSurfaceUnitUseCase,
     private val formatPriceToHumanReadableUseCase: FormatPriceToHumanReadableUseCase,
@@ -57,11 +52,10 @@ class PropertiesViewModel @Inject constructor(
                                 setNavigationTypeUseCase.invoke(NavigationFragmentType.ADD_FRAGMENT)
                             }
                         )))
-            }
-
+            } else {
             val propertiesWithConvertedPriceAndSurface = properties.map { property ->
                 val convertedPrice = convertPriceDependingOnLocaleUseCase.invoke(property.price)
-                val convertedSurface = convertSurfaceDependingOnLocaleUseCase.invoke(property.surface)
+                val convertedSurface = convertToSquareFeetDependingOnLocaleUseCase.invoke(property.surface)
                 property.copy(
                     price = convertedPrice,
                     surface = convertedSurface
@@ -110,6 +104,7 @@ class PropertiesViewModel @Inject constructor(
                 }
                 .toList()
             )
+            }
         }.collect()
     }
 }

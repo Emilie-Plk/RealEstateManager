@@ -6,7 +6,7 @@ import androidx.lifecycle.liveData
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.currency_rate.GetLastUpdatedCurrencyRateDateUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceDependingOnLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.ConvertToSquareFeetDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceToHumanReadableUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetRoundedSurfaceWithSurfaceUnitUseCase
@@ -32,7 +32,7 @@ class DetailViewModel @Inject constructor(
     private val getLastUpdatedCurrencyRateDateUseCase: GetLastUpdatedCurrencyRateDateUseCase,
     private val getLocaleUseCase: GetLocaleUseCase,
     private val getRoundedSurfaceWithSurfaceUnitUseCase: GetRoundedSurfaceWithSurfaceUnitUseCase,
-    private val convertSurfaceDependingOnLocaleUseCase: ConvertSurfaceDependingOnLocaleUseCase,
+    private val convertToSquareFeetDependingOnLocaleUseCase: ConvertToSquareFeetDependingOnLocaleUseCase,
     private val generateMapUrlWithApiKeyUseCase: GenerateMapUrlWithApiKeyUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
 ) : ViewModel() {
@@ -80,7 +80,7 @@ class DetailViewModel @Inject constructor(
                     else -> false
                 },
                 surface = getRoundedSurfaceWithSurfaceUnitUseCase.invoke(
-                    convertSurfaceDependingOnLocaleUseCase.invoke(property.surface)
+                    convertToSquareFeetDependingOnLocaleUseCase.invoke(property.surface)
                 ),
                 rooms = NativeText.Argument(
                     R.string.detail_number_of_room_textview,

@@ -70,6 +70,8 @@ class PropertyRepositoryRoom @Inject constructor(
         }
         .flowOn(coroutineDispatcherProvider.io)
 
+    override fun getPropertiesCountAsFlow(): Flow<Int> = propertyDao.getPropertiesCountAsFlow()
+
     override fun getPropertyByIdAsFlow(propertyId: Long): Flow<PropertyEntity?> = propertyDao
         .getPropertyByIdAsFlow(propertyId)
         .map {
