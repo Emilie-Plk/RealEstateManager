@@ -1,7 +1,6 @@
 package com.emplk.realestatemanager.ui.list
 
 import android.os.Bundle
-import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels

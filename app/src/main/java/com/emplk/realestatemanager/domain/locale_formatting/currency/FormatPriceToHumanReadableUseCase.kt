@@ -1,5 +1,6 @@
-package com.emplk.realestatemanager.domain.locale_formatting
+package com.emplk.realestatemanager.domain.locale_formatting.currency
 
+import com.emplk.realestatemanager.domain.locale_formatting.LocaleFormattingRepository
 import java.math.BigDecimal
 import javax.inject.Inject
 

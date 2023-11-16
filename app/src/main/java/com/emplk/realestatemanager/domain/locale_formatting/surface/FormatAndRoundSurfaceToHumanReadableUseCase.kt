@@ -1,10 +1,10 @@
-package com.emplk.realestatemanager.domain.locale_formatting
+package com.emplk.realestatemanager.domain.locale_formatting.surface
 
 import java.math.BigDecimal
 import java.math.RoundingMode
 import javax.inject.Inject
 
-class GetRoundedSurfaceWithSurfaceUnitUseCase @Inject constructor(
+class FormatAndRoundSurfaceToHumanReadableUseCase @Inject constructor(
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
 ) {
     fun invoke(surface: BigDecimal): String {

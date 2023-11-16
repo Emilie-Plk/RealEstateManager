@@ -5,15 +5,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.emplk.realestatemanager.R
-import com.emplk.realestatemanager.domain.filter.GetEntryDateByEntryDateStatusUseCase
+import com.emplk.realestatemanager.domain.filter.ConvertEntryDateStateToEpochMilliUseCase
+import com.emplk.realestatemanager.domain.filter.EntryDateState
 import com.emplk.realestatemanager.domain.filter.GetFilteredPropertiesCountAsFlowUseCase
 import com.emplk.realestatemanager.domain.filter.GetMinMaxPriceAndSurfaceUseCase
 import com.emplk.realestatemanager.domain.filter.GetPropertyTypeForFilterUseCase
 import com.emplk.realestatemanager.domain.filter.SetPropertiesFilterUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceDependingOnLocaleUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceToSquareFeetDependingOnLocaleUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.ConvertToUsdDependingOnLocaleUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceToHumanReadableUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.currency.FormatPriceToHumanReadableUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertSurfaceDependingOnLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertSurfaceToSquareFeetDependingOnLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertToUsdDependingOnLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.surface.FormatAndRoundSurfaceToHumanReadableUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
@@ -38,10 +40,11 @@ import javax.inject.Inject
 @HiltViewModel
 class FilterPropertiesViewModel @Inject constructor(
     private val getFilteredPropertiesCountAsFlowUseCase: GetFilteredPropertiesCountAsFlowUseCase,
-    private val getEntryDateByEntryDateStatusUseCase: GetEntryDateByEntryDateStatusUseCase,
+    private val convertEntryDateStateToEpochMilliUseCase: ConvertEntryDateStateToEpochMilliUseCase,
     private val getMinMaxPriceAndSurfaceUseCase: GetMinMaxPriceAndSurfaceUseCase,
     private val formatPriceToHumanReadableUseCase: FormatPriceToHumanReadableUseCase,
     private val convertSurfaceDependingOnLocaleUseCase: ConvertSurfaceDependingOnLocaleUseCase,
+    private val formatAndRoundSurfaceToHumanReadableUseCase: FormatAndRoundSurfaceToHumanReadableUseCase,
     private val convertToUsdDependingOnLocaleUseCase: ConvertToUsdDependingOnLocaleUseCase,
     private val convertSurfaceToSquareFeetDependingOnLocaleUseCase: ConvertSurfaceToSquareFeetDependingOnLocaleUseCase,
     private val getPropertyTypeForFilterUseCase: GetPropertyTypeForFilterUseCase,
@@ -62,7 +65,7 @@ class FilterPropertiesViewModel @Inject constructor(
                 minSurface = convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(filterParams.minSurface),
                 maxSurface = convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(filterParams.maxSurface),
                 amenities = filterParams.selectedAmenities,
-                entryDateMin = getEntryDateByEntryDateStatusUseCase.invoke(filterParams.entryDateState),
+                entryDateMin = convertEntryDateStateToEpochMilliUseCase.invoke(filterParams.entryDateState),
                 propertySaleState = filterParams.saleState,
             )
         }.collectLatest { filteredPropertiesCount ->
@@ -93,10 +96,16 @@ class FilterPropertiesViewModel @Inject constructor(
                 surfaceRange = NativeText.Arguments(
                     R.string.surface_or_price_range,
                     listOf(
-                        convertSurfaceDependingOnLocaleUseCase.invoke(minMaxPriceAndSurface.minSurface)
-                            .setScale(0, RoundingMode.HALF_UP).intValueExact(),
-                        convertSurfaceDependingOnLocaleUseCase.invoke(minMaxPriceAndSurface.maxSurface)
-                            .setScale(0, RoundingMode.HALF_UP).intValueExact(),
+                        formatAndRoundSurfaceToHumanReadableUseCase.invoke(
+                            convertSurfaceDependingOnLocaleUseCase.invoke(
+                                minMaxPriceAndSurface.minSurface
+                            )
+                        ),
+                        formatAndRoundSurfaceToHumanReadableUseCase.invoke(
+                            convertSurfaceDependingOnLocaleUseCase.invoke(
+                                minMaxPriceAndSurface.maxSurface
+                            )
+                        ),
                     )
                 ),
                 minSurface = if (filterParamsMutableStateFlow.value.minSurface == BigDecimal.ZERO) ""
@@ -119,20 +128,14 @@ class FilterPropertiesViewModel @Inject constructor(
                 entryDate = filterParamsMutableStateFlow.value.entryDateState,
                 availableForSale = filterParamsMutableStateFlow.value.saleState,
                 filterButtonText = when (filteredPropertiesCount) {
-                    0 -> {
-                        NativeText.Resource(R.string.filter_button_none)
-                    }
+                    0 -> NativeText.Resource(R.string.filter_button_none)
 
-                    1 -> {
-                        NativeText.Resource(R.string.filter_button_one)
-                    }
+                    1 -> NativeText.Resource(R.string.filter_button_one)
 
-                    else -> {
-                        NativeText.Arguments(
-                            R.string.filter_button_nb_properties,
-                            listOf(filteredPropertiesCount.toString())
-                        )
-                    }
+                    else -> NativeText.Arguments(
+                        R.string.filter_button_nb_properties,
+                        listOf(filteredPropertiesCount.toString())
+                    )
                 },
                 isFilterButtonEnabled = filteredPropertiesCount != 0,
                 onCancelClicked = EquatableCallback {

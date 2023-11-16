@@ -1,7 +1,9 @@
-package com.emplk.realestatemanager.domain.locale_formatting
+package com.emplk.realestatemanager.domain.locale_formatting.surface
 
 import com.emplk.realestatemanager.domain.currency_rate.CurrencyRateRepository
 import com.emplk.realestatemanager.domain.currency_rate.CurrencyRateWrapper
+import com.emplk.realestatemanager.domain.locale_formatting.GetLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.LocaleFormattingRepository
 import java.math.BigDecimal
 import java.util.Locale
 import javax.inject.Inject

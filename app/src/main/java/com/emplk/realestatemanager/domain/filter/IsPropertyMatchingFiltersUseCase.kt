@@ -1,7 +1,6 @@
 package com.emplk.realestatemanager.domain.filter
 
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
-import com.emplk.realestatemanager.ui.filter.EntryDateState
 import com.emplk.realestatemanager.ui.filter.PropertySaleState
 import java.math.BigDecimal
 import java.time.Clock
@@ -18,8 +17,9 @@ class IsPropertyMatchingFiltersUseCase @Inject constructor(
         amenities: List<AmenityType>,
         entryDate: LocalDateTime,
         isSold: Boolean,
-        propertiesFilter: PropertiesFilterEntity
-    ): Boolean = doesMatchPropertyTypeFilter(propertyType, propertiesFilter) &&
+        propertiesFilter: PropertiesFilterEntity?
+    ): Boolean = propertiesFilter == null ||
+            doesMatchPropertyTypeFilter(propertyType, propertiesFilter) &&
             doesMatchPriceFilter(price, propertiesFilter) &&
             doesMatchSurfaceFilter(surface, propertiesFilter) &&
             doesMatchEntryDateFilter(entryDate, propertiesFilter) &&
@@ -44,16 +44,8 @@ class IsPropertyMatchingFiltersUseCase @Inject constructor(
                 filter.minMaxSurface.second == BigDecimal.ZERO && surface >= filter.minMaxSurface.first
 
     private fun doesMatchEntryDateFilter(entryDate: LocalDateTime, filter: PropertiesFilterEntity): Boolean {
-        if (filter.entryDate == EntryDateState.ALL) return true
-        val now = LocalDateTime.now(clock)
-        val entryDateMin = when (filter.entryDate) {
-            EntryDateState.LESS_THAN_1_YEAR -> now.minusYears(1)
-            EntryDateState.LESS_THAN_6_MONTHS -> now.minusMonths(6)
-            EntryDateState.LESS_THAN_3_MONTHS -> now.minusMonths(3)
-            EntryDateState.LESS_THAN_1_MONTH -> now.minusMonths(1)
-            EntryDateState.LESS_THAN_1_WEEK -> now.minusWeeks(1)
-            else -> null
-        }
+        if (filter.entryDate == EntryDateState.ALL) return true  // Bouger ça ?
+        val entryDateMin = filter.entryDate.entryDateLambda.invoke(clock)
         return entryDateMin == null || entryDate.isAfter(entryDateMin)
     }
 

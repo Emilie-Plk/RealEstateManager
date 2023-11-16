@@ -4,7 +4,6 @@ import android.text.InputFilter
 import android.text.Spanned
 
 
-
 class InputFilterIntMinMax(min: Int, max: Int) : InputFilter {
     private var min: Int = 0
     private var max: Int = 0

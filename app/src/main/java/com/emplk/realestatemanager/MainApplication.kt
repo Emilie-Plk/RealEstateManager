@@ -5,7 +5,6 @@ import android.app.Application
 import android.os.Bundle
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
-import com.emplk.realestatemanager.data.connectivity.InternetConnectivityRepositoryBroadcastReceiver
 import com.emplk.realestatemanager.domain.screen_width.SetScreenWidthTypeUseCase
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject

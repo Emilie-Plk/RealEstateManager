@@ -1,20 +1,19 @@
 package com.emplk.realestatemanager.ui.filter
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import assertk.assertThat
-import assertk.assertions.isEqualTo
-import assertk.assertions.isNotNull
 import com.emplk.realestatemanager.R
-import com.emplk.realestatemanager.domain.filter.GetEntryDateByEntryDateStatusUseCase
+import com.emplk.realestatemanager.domain.filter.ConvertEntryDateStateToEpochMilliUseCase
+import com.emplk.realestatemanager.domain.filter.EntryDateState
 import com.emplk.realestatemanager.domain.filter.GetFilteredPropertiesCountAsFlowUseCase
 import com.emplk.realestatemanager.domain.filter.GetMinMaxPriceAndSurfaceUseCase
 import com.emplk.realestatemanager.domain.filter.GetPropertyTypeForFilterUseCase
 import com.emplk.realestatemanager.domain.filter.PropertyMinMaxStatsEntity
 import com.emplk.realestatemanager.domain.filter.SetPropertiesFilterUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceDependingOnLocaleUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceToSquareFeetDependingOnLocaleUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.ConvertToUsdDependingOnLocaleUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceToHumanReadableUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.currency.FormatPriceToHumanReadableUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertSurfaceDependingOnLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertSurfaceToSquareFeetDependingOnLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertToUsdDependingOnLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.surface.FormatAndRoundSurfaceToHumanReadableUseCase
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.amenity.type.GetAmenityTypeUseCase
@@ -30,6 +29,7 @@ import io.mockk.every
 import io.mockk.justRun
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -44,10 +44,11 @@ class FilterPropertiesViewModelTest {
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private val getFilteredPropertiesCountAsFlowUseCase: GetFilteredPropertiesCountAsFlowUseCase = mockk()
-    private val getEntryDateByEntryDateStatusUseCase: GetEntryDateByEntryDateStatusUseCase = mockk()
+    private val convertEntryDateStateToEpochMilliUseCase: ConvertEntryDateStateToEpochMilliUseCase = mockk()
     private val getMinMaxPriceAndSurfaceUseCase: GetMinMaxPriceAndSurfaceUseCase = mockk()
     private val formatPriceToHumanReadableUseCase: FormatPriceToHumanReadableUseCase = mockk()
     private val convertSurfaceDependingOnLocaleUseCase: ConvertSurfaceDependingOnLocaleUseCase = mockk()
+    private val formatAndRoundSurfaceToHumanReadableUseCase: FormatAndRoundSurfaceToHumanReadableUseCase = mockk()
     private val convertToUsdDependingOnLocaleUseCase: ConvertToUsdDependingOnLocaleUseCase = mockk()
     private val convertSurfaceToSquareFeetDependingOnLocaleUseCase: ConvertSurfaceToSquareFeetDependingOnLocaleUseCase =
         mockk()
@@ -55,7 +56,6 @@ class FilterPropertiesViewModelTest {
     private val getAmenityTypeUseCase: GetAmenityTypeUseCase = mockk()
     private val setPropertiesFilterUseCase: SetPropertiesFilterUseCase = mockk()
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase = mockk()
-
     private lateinit var filterPropertiesViewModel: FilterPropertiesViewModel
 
     @Before
@@ -72,13 +72,15 @@ class FilterPropertiesViewModelTest {
                 any()
             )
         } returns flowOf(3)
-        every { getEntryDateByEntryDateStatusUseCase.invoke(any()) } returns 1698758555
+        every { convertEntryDateStateToEpochMilliUseCase.invoke(any()) } returns 1698758555
         coEvery { getMinMaxPriceAndSurfaceUseCase.invoke() } returns minMaxPriceAndSurface
         every { formatPriceToHumanReadableUseCase.invoke(minMaxPriceAndSurface.minPrice) } returns "$100000"
         every { formatPriceToHumanReadableUseCase.invoke(minMaxPriceAndSurface.maxPrice) } returns "$200000"
         every { convertSurfaceDependingOnLocaleUseCase.invoke(minMaxPriceAndSurface.minSurface) } returns BigDecimal(100)
         every { convertSurfaceDependingOnLocaleUseCase.invoke(minMaxPriceAndSurface.maxSurface) } returns BigDecimal(200)
         every { convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(any()) } returns BigDecimal(100)
+        every { formatAndRoundSurfaceToHumanReadableUseCase.invoke(minMaxPriceAndSurface.minSurface) } returns "100 sq ft"
+        every { formatAndRoundSurfaceToHumanReadableUseCase.invoke(minMaxPriceAndSurface.maxSurface) } returns "200 sq ft"
         coEvery { convertToUsdDependingOnLocaleUseCase.invoke(any()) } returns BigDecimal(100000)
         every { getPropertyTypeForFilterUseCase.invoke() } returns propertyTypeMap
         every { getAmenityTypeUseCase.invoke() } returns amenityTypes
@@ -87,10 +89,11 @@ class FilterPropertiesViewModelTest {
 
         filterPropertiesViewModel = FilterPropertiesViewModel(
             getFilteredPropertiesCountAsFlowUseCase,
-            getEntryDateByEntryDateStatusUseCase,
+            convertEntryDateStateToEpochMilliUseCase,
             getMinMaxPriceAndSurfaceUseCase,
             formatPriceToHumanReadableUseCase,
             convertSurfaceDependingOnLocaleUseCase,
+            formatAndRoundSurfaceToHumanReadableUseCase,
             convertToUsdDependingOnLocaleUseCase,
             convertSurfaceToSquareFeetDependingOnLocaleUseCase,
             getPropertyTypeForFilterUseCase,
@@ -101,9 +104,9 @@ class FilterPropertiesViewModelTest {
     }
 
     @Test
-    fun `initial case`() = testCoroutineRule.runTest {
+    fun `nominal case`() = testCoroutineRule.runTest {
         // Given
-     /*   coEvery {
+        coEvery {
             getFilteredPropertiesCountAsFlowUseCase.invoke(
                 any(),
                 any(),
@@ -126,14 +129,42 @@ class FilterPropertiesViewModelTest {
         // When
         filterPropertiesViewModel.viewState.observeForTesting(this) {
 
-          //  (filterViewState.value!!.amenities[0] as AmenityViewState.AmenityCheckbox).onCheckBoxClicked(true)
-
-
-            // TODO: NINO error 'expected:<...leCallback@7a49ccdb)[]> but was:<...leCallback@7a49ccdb)[]>'
             // Then
-            assertThat(it.value).isEqualTo(testFilterViewState)*/
-      //  }
+            assertEquals(testFilterViewState, it.value)
+        }
     }
+
+    @Test
+    fun `on reset filter`() = testCoroutineRule.runTest {
+        // Given
+        filterPropertiesViewModel.onPropertyTypeSelected("House")
+        filterPropertiesViewModel.onMinPriceChanged("100000")
+        filterPropertiesViewModel.onMaxPriceChanged("200000")
+        filterPropertiesViewModel.onMinSurfaceChanged("100")
+        filterPropertiesViewModel.onMaxSurfaceChanged("200")
+        filterPropertiesViewModel.onEntryDateStatusChanged(EntryDateState.ALL)
+        filterPropertiesViewModel.onPropertySaleStateChanged(PropertySaleState.ALL)
+        coEvery {
+            getFilteredPropertiesCountAsFlowUseCase.invoke(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns flowOf(3)
+
+        // When
+        filterPropertiesViewModel.viewState.observeForTesting(this) {
+            filterPropertiesViewModel.onResetFilters()
+            // Then
+            assertEquals(testEmptyViewState, it.value)
+        }
+    }
+
 
     private val propertyTypeMap = mapOf(
         1L to "House",
@@ -166,8 +197,8 @@ class FilterPropertiesViewModelTest {
         surfaceRange = NativeText.Arguments(
             R.string.surface_or_price_range,
             listOf(
-                "100",
-                "200",
+                100,
+                200,
             )
         ),
         minSurface = "100",
@@ -198,9 +229,64 @@ class FilterPropertiesViewModelTest {
         },
         entryDate = EntryDateState.ALL,
         availableForSale = PropertySaleState.ALL,
-        filterButtonText =  NativeText.Arguments(
+        filterButtonText = NativeText.Arguments(
             R.string.filter_button_nb_properties,
-            listOf(3)
+            listOf("3")
+        ),
+        isFilterButtonEnabled = true,
+        onFilterClicked = EquatableCallback { },
+        onCancelClicked = EquatableCallback { },
+    )
+
+    private val testEmptyViewState: FilterViewState = FilterViewState(
+        propertyType = null,
+        priceRange = NativeText.Arguments(
+            R.string.surface_or_price_range,
+            listOf(
+                "$100000",
+                "$200000",
+            )
+        ),
+        minPrice = "",
+        maxPrice = "",
+        surfaceRange = NativeText.Arguments(
+            R.string.surface_or_price_range,
+            listOf(
+                "100 sq ft",
+                "200 sq ft",
+            )
+        ),
+        minSurface = "100",
+        maxSurface = "200",
+        amenities = buildList {
+            amenityTypes.forEach { amenityType ->
+                add(
+                    AmenityViewState.AmenityCheckbox(
+                        id = amenityType.id,
+                        name = amenityType.name,
+                        isChecked = false,
+                        onCheckBoxClicked = EquatableCallbackWithParam { },
+                        iconDrawable = amenityType.iconDrawable,
+                        stringRes = amenityType.stringRes,
+                    )
+                )
+            }
+        },
+        propertyTypes = buildList {
+            propertyTypeMap.forEach { (id, name) ->
+                add(
+                    PropertyTypeViewStateItem(
+                        id,
+                        name
+                    )
+                )
+            }
+        },
+        entryDate = EntryDateState.ALL,
+        availableForSale = PropertySaleState.ALL,
+        filterButtonText = NativeText.Arguments(
+            R.string.filter_button_nb_properties,
+            listOf("3")
         ),
         isFilterButtonEnabled = true,
         onFilterClicked = EquatableCallback { },

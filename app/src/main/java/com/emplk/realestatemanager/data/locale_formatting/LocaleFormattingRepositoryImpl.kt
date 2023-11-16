@@ -1,8 +1,8 @@
 package com.emplk.realestatemanager.data.locale_formatting
 
-import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.LocaleFormattingRepository
-import com.emplk.realestatemanager.domain.locale_formatting.SurfaceUnitType
+import com.emplk.realestatemanager.domain.locale_formatting.currency.CurrencyType
+import com.emplk.realestatemanager.domain.locale_formatting.surface.SurfaceUnitType
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.NumberFormat

@@ -9,9 +9,9 @@ import com.emplk.realestatemanager.domain.current_property.SetCurrentPropertyIdU
 import com.emplk.realestatemanager.domain.filter.GetPropertiesFilterFlowUseCase
 import com.emplk.realestatemanager.domain.filter.IsPropertyMatchingFiltersUseCase
 import com.emplk.realestatemanager.domain.filter.PropertiesFilterEntity
-import com.emplk.realestatemanager.domain.locale_formatting.ConvertToSquareFeetDependingOnLocaleUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceToHumanReadableUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.GetRoundedSurfaceWithSurfaceUnitUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.currency.FormatPriceToHumanReadableUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertToSquareFeetDependingOnLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.surface.FormatAndRoundSurfaceToHumanReadableUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.GetPropertiesAsFlowUseCase
@@ -43,7 +43,7 @@ class PropertiesViewModelTest {
     private val setCurrentPropertyIdUseCase: SetCurrentPropertyIdUseCase = mockk()
     private val convertToSquareFeetDependingOnLocaleUseCase: ConvertToSquareFeetDependingOnLocaleUseCase = mockk()
     private val convertPriceDependingOnLocaleUseCase: ConvertPriceDependingOnLocaleUseCase = mockk()
-    private val getRoundedHumanReadableSurfaceUseCase: GetRoundedSurfaceWithSurfaceUnitUseCase = mockk()
+    private val getRoundedHumanReadableSurfaceUseCase: FormatAndRoundSurfaceToHumanReadableUseCase = mockk()
     private val formatPriceToHumanReadableUseCase: FormatPriceToHumanReadableUseCase = mockk()
     private val getPropertiesFilterFlowUseCase: GetPropertiesFilterFlowUseCase = mockk()
     private val isPropertyMatchingFiltersUseCase: IsPropertyMatchingFiltersUseCase = mockk()
@@ -125,7 +125,7 @@ class PropertiesViewModelTest {
         } returns false andThen false andThen false andThen true
         propertiesViewModel.viewState.observeForTesting(this) {
             assertThat(it.value!!.size).isEqualTo(1)
-            assertThat((it.value!![0] as PropertiesViewState.Properties).price).isEqualTo(BigDecimal(2000000))
+            assertThat((it.value!![0] as PropertiesViewState.Properties).humanReadablePrice).isEqualTo("$2,000,000")
         }
     }
 
@@ -183,13 +183,11 @@ class PropertiesViewModelTest {
                     ?: NativePhoto.Resource(R.drawable.baseline_villa_24),
                 address = it.location.address,
                 humanReadablePrice = "$1,000,000",
-                price = BigDecimal(1000000),
                 isSold = false,
                 room = NativeText.Argument(R.string.rooms_nb_short_version, it.rooms),
                 bathroom = NativeText.Argument(R.string.bathrooms_nb_short_version, it.bathrooms),
                 bedroom = NativeText.Argument(R.string.bedrooms_nb_short_version, it.bedrooms),
                 humanReadableSurface = "500 sq ft",
-                surface = BigDecimal(500),
                 entryDate = it.entryDate,
                 amenities = it.amenities,
                 onClickEvent = EquatableCallback {},

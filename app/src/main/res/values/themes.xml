@@ -126,10 +126,10 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-<style name="Theme.RealEstateManager.ButtonGroup" parent="Widget.Material3.Button.OutlinedButton">
-    <item name="backgroundTint">@color/button_group_color</item>
-    <item name="android:textColor">@color/button_group_text_color</item>
-</style>
+    <style name="Theme.RealEstateManager.ButtonGroup" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="backgroundTint">@color/button_group_color</item>
+        <item name="android:textColor">@color/button_group_text_color</item>
+    </style>
 
 
     <style name="Theme.RealEstateManager.ChipFilter" parent="Widget.Material3.Chip.Filter.Elevated">
