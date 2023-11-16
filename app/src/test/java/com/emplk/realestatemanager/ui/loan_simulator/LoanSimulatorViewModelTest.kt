@@ -10,7 +10,7 @@ import com.emplk.realestatemanager.domain.loan_simulator.GetLoanYearlyAndMonthly
 import com.emplk.realestatemanager.domain.loan_simulator.LoanDataEntity
 import com.emplk.realestatemanager.domain.loan_simulator.ResetLoanDataUseCase
 import com.emplk.realestatemanager.domain.loan_simulator.SetLoanDataUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceToHumanReadableUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.currency.FormatPriceToHumanReadableUseCase
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.Event
 import com.emplk.realestatemanager.ui.utils.NativeText

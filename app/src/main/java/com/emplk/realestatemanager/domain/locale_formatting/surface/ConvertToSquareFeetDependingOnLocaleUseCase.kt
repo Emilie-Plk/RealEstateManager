@@ -1,11 +1,12 @@
-package com.emplk.realestatemanager.domain.locale_formatting
+package com.emplk.realestatemanager.domain.locale_formatting.surface
 
+import com.emplk.realestatemanager.domain.locale_formatting.GetLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.LocaleFormattingRepository
 import java.math.BigDecimal
 import java.util.Locale
 import javax.inject.Inject
 
-
-class ConvertSurfaceDependingOnLocaleUseCase @Inject constructor(
+class ConvertToSquareFeetDependingOnLocaleUseCase @Inject constructor(
     private val localeFormattingRepository: LocaleFormattingRepository,
     private val getLocaleUseCase: GetLocaleUseCase,
 ) {

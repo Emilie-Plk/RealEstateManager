@@ -28,6 +28,7 @@ class GetToolbarSubtitleUseCase @Inject constructor(
                     } else {
                         null
                     }
+
                     NavigationFragmentType.ADD_FRAGMENT -> "Add property"
                     NavigationFragmentType.DETAIL_FRAGMENT -> "Property details"
                     NavigationFragmentType.MAP_FRAGMENT -> "Map"

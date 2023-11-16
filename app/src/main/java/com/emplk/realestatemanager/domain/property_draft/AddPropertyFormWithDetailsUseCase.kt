@@ -2,7 +2,6 @@ package com.emplk.realestatemanager.domain.property_draft
 
 import java.math.BigDecimal
 import java.time.Clock
-import java.time.LocalDateTime
 import javax.inject.Inject
 
 class AddPropertyFormWithDetailsUseCase @Inject constructor(

@@ -6,10 +6,10 @@ import androidx.lifecycle.liveData
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.currency_rate.GetLastUpdatedCurrencyRateDateUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.ConvertToSquareFeetDependingOnLocaleUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceToHumanReadableUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetLocaleUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.GetRoundedSurfaceWithSurfaceUnitUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.currency.FormatPriceToHumanReadableUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertToSquareFeetDependingOnLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.surface.FormatAndRoundSurfaceToHumanReadableUseCase
 import com.emplk.realestatemanager.domain.map_picture.GenerateMapUrlWithApiKeyUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
@@ -31,7 +31,7 @@ class DetailViewModel @Inject constructor(
     private val convertPriceDependingOnLocaleUseCase: ConvertPriceDependingOnLocaleUseCase,
     private val getLastUpdatedCurrencyRateDateUseCase: GetLastUpdatedCurrencyRateDateUseCase,
     private val getLocaleUseCase: GetLocaleUseCase,
-    private val getRoundedSurfaceWithSurfaceUnitUseCase: GetRoundedSurfaceWithSurfaceUnitUseCase,
+    private val formatAndRoundSurfaceToHumanReadableUseCase: FormatAndRoundSurfaceToHumanReadableUseCase,
     private val convertToSquareFeetDependingOnLocaleUseCase: ConvertToSquareFeetDependingOnLocaleUseCase,
     private val generateMapUrlWithApiKeyUseCase: GenerateMapUrlWithApiKeyUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
@@ -79,7 +79,7 @@ class DetailViewModel @Inject constructor(
                     FRANCE -> true
                     else -> false
                 },
-                surface = getRoundedSurfaceWithSurfaceUnitUseCase.invoke(
+                surface = formatAndRoundSurfaceToHumanReadableUseCase.invoke(
                     convertToSquareFeetDependingOnLocaleUseCase.invoke(property.surface)
                 ),
                 rooms = NativeText.Argument(

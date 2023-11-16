@@ -2,8 +2,6 @@ package com.emplk.realestatemanager.domain.property_draft
 
 import com.emplk.realestatemanager.domain.property.PropertyRepository
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.PicturePreviewEntity
-import java.time.Clock
-import java.time.LocalDateTime
 import javax.inject.Inject
 
 class MapPropertyToDraftUseCase @Inject constructor(

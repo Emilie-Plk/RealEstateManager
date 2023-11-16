@@ -6,10 +6,10 @@ import assertk.assertions.isEqualTo
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.currency_rate.GetLastUpdatedCurrencyRateDateUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.ConvertToSquareFeetDependingOnLocaleUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceToHumanReadableUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.GetLocaleUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.GetRoundedSurfaceWithSurfaceUnitUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.currency.FormatPriceToHumanReadableUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertToSquareFeetDependingOnLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.surface.FormatAndRoundSurfaceToHumanReadableUseCase
 import com.emplk.realestatemanager.domain.map_picture.GenerateMapUrlWithApiKeyUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
@@ -52,7 +52,7 @@ class DetailViewModelTest {
     private val convertPriceDependingOnLocaleUseCase: ConvertPriceDependingOnLocaleUseCase = mockk()
     private val getLastUpdatedCurrencyRateDateUseCase: GetLastUpdatedCurrencyRateDateUseCase = mockk()
     private val getLocaleUseCase: GetLocaleUseCase = mockk()
-    private val getRoundedSurfaceWithSurfaceUnitUseCase: GetRoundedSurfaceWithSurfaceUnitUseCase = mockk()
+    private val formatAndRoundSurfaceToHumanReadableUseCase: FormatAndRoundSurfaceToHumanReadableUseCase = mockk()
     private val convertToSquareFeetDependingOnLocaleUseCase: ConvertToSquareFeetDependingOnLocaleUseCase = mockk()
     private val generateMapUrlWithApiKeyUseCase: GenerateMapUrlWithApiKeyUseCase = mockk()
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase = mockk()
@@ -67,7 +67,7 @@ class DetailViewModelTest {
         coEvery { convertPriceDependingOnLocaleUseCase.invoke(BigDecimal(1000000)) } returns BigDecimal(1000000)
         every { formatPriceToHumanReadableUseCase.invoke(BigDecimal(1000000)) } returns "$1,000,000"
         coEvery { getLastUpdatedCurrencyRateDateUseCase.invoke() } coAnswers { null }
-        every { getRoundedSurfaceWithSurfaceUnitUseCase.invoke(BigDecimal(500)) } returns "500 m²"
+        every { formatAndRoundSurfaceToHumanReadableUseCase.invoke(BigDecimal(500)) } returns "500 m²"
         coEvery { convertToSquareFeetDependingOnLocaleUseCase.invoke(BigDecimal(500)) } returns BigDecimal(500)
         every { generateMapUrlWithApiKeyUseCase.invoke(any()) } returns "https://www.google.com/maps/123456789"
         justRun { setNavigationTypeUseCase.invoke(any()) }
@@ -78,7 +78,7 @@ class DetailViewModelTest {
             convertPriceDependingOnLocaleUseCase = convertPriceDependingOnLocaleUseCase,
             getLastUpdatedCurrencyRateDateUseCase = getLastUpdatedCurrencyRateDateUseCase,
             getLocaleUseCase = getLocaleUseCase,
-            getRoundedSurfaceWithSurfaceUnitUseCase = getRoundedSurfaceWithSurfaceUnitUseCase,
+            formatAndRoundSurfaceToHumanReadableUseCase = formatAndRoundSurfaceToHumanReadableUseCase,
             convertToSquareFeetDependingOnLocaleUseCase = convertToSquareFeetDependingOnLocaleUseCase,
             generateMapUrlWithApiKeyUseCase = generateMapUrlWithApiKeyUseCase,
             setNavigationTypeUseCase = setNavigationTypeUseCase,

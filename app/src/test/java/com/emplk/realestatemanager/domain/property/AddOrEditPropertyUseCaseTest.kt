@@ -5,8 +5,8 @@ import assertk.assertThat
 import com.emplk.realestatemanager.domain.current_property.ResetCurrentPropertyIdUseCase
 import com.emplk.realestatemanager.domain.geocoding.GeocodingRepository
 import com.emplk.realestatemanager.domain.geocoding.GeocodingWrapper
-import com.emplk.realestatemanager.domain.locale_formatting.ConvertSurfaceToSquareFeetDependingOnLocaleUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.ConvertToUsdDependingOnLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertSurfaceToSquareFeetDependingOnLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertToUsdDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.map_picture.GenerateMapBaseUrlWithParamsUseCase
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.pictures.PictureRepository

@@ -1,6 +1,5 @@
 package com.emplk.realestatemanager.domain.property_draft.picture_preview.id
 
-import com.emplk.realestatemanager.domain.property_draft.picture_preview.PicturePreviewRepository
 import javax.inject.Inject
 
 class AddAllPicturePreviewsIdsUseCase @Inject constructor(

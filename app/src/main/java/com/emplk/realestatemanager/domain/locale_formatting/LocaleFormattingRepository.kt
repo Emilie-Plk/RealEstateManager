@@ -1,5 +1,7 @@
 package com.emplk.realestatemanager.domain.locale_formatting
 
+import com.emplk.realestatemanager.domain.locale_formatting.currency.CurrencyType
+import com.emplk.realestatemanager.domain.locale_formatting.surface.SurfaceUnitType
 import java.math.BigDecimal
 import java.util.Locale
 

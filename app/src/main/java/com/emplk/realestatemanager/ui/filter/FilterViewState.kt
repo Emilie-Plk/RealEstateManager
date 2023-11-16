@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.ui.filter
 
+import com.emplk.realestatemanager.domain.filter.EntryDateState
 import com.emplk.realestatemanager.ui.add.amenity.AmenityViewState
 import com.emplk.realestatemanager.ui.add.type.PropertyTypeViewStateItem
 import com.emplk.realestatemanager.ui.utils.EquatableCallback

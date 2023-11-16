@@ -1,7 +1,6 @@
 package com.emplk.realestatemanager.domain.filter
 
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
-import com.emplk.realestatemanager.ui.filter.EntryDateState
 import com.emplk.realestatemanager.ui.filter.PropertySaleState
 import java.math.BigDecimal
 import javax.inject.Inject
@@ -19,13 +18,13 @@ class SetPropertiesFilterUseCase @Inject constructor(
         saleState: PropertySaleState,
         entryDateState: EntryDateState,
     ) = propertiesFilterRepository.setPropertiesFilter(
-            PropertiesFilterEntity(
-                propertyType = if (propertyType == "All") null else propertyType,
-                minMaxPrice = Pair(minPrice, maxPrice),
-                minMaxSurface = Pair(minSurface, maxSurface),
-                entryDate = entryDateState,
-                availableForSale = saleState,
-                amenities = selectedAmenities,
-            )
+        PropertiesFilterEntity(
+            propertyType = if (propertyType == "All") null else propertyType,
+            minMaxPrice = Pair(minPrice, maxPrice),
+            minMaxSurface = Pair(minSurface, maxSurface),
+            entryDate = entryDateState,
+            availableForSale = saleState,
+            amenities = selectedAmenities,
         )
+    )
 }

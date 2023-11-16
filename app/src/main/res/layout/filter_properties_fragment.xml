@@ -192,7 +192,8 @@
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/filter_property_entry_less_than_1_year_chip"
-                    style="@style/Theme.RealEstateManager.ChipFilter"                    android:layout_width="wrap_content"
+                    style="@style/Theme.RealEstateManager.ChipFilter"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:backgroundTint="@color/button_group_color"
                     android:layout_margin="4dp"
@@ -200,7 +201,8 @@
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/filter_property_entry_less_than_6_months_chip"
-                    style="@style/Theme.RealEstateManager.ChipFilter"                    android:layout_width="wrap_content"
+                    style="@style/Theme.RealEstateManager.ChipFilter"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:backgroundTint="@color/button_group_color"
                     android:layout_margin="4dp"
@@ -209,7 +211,8 @@
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/filter_property_entry_date_less_than_3_months_chip"
-                    style="@style/Theme.RealEstateManager.ChipFilter"                    android:layout_width="wrap_content"
+                    style="@style/Theme.RealEstateManager.ChipFilter"
+                    android:layout_width="wrap_content"
                     app:backgroundTint="@color/button_group_color"
                     android:layout_height="wrap_content"
                     android:layout_margin="4dp"
@@ -217,7 +220,8 @@
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/filter_property_entry_date_less_than_1_month_chip"
-                    style="@style/Theme.RealEstateManager.ChipFilter"                    android:layout_width="wrap_content"
+                    style="@style/Theme.RealEstateManager.ChipFilter"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:backgroundTint="@color/button_group_color"
                     android:layout_margin="4dp"
@@ -225,7 +229,8 @@
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/filter_property_entry_date_less_than_1_week_chip"
-                    style="@style/Theme.RealEstateManager.ChipFilter"                    android:layout_width="wrap_content"
+                    style="@style/Theme.RealEstateManager.ChipFilter"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:backgroundTint="@color/button_group_color"
                     android:layout_margin="4dp"
@@ -332,7 +337,6 @@
             android:layout_margin="8dp"
             android:layout_weight="2"
             android:maxLines="2"
-            tools:text="View 24 results"
-            />
+            tools:text="View 24 results" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

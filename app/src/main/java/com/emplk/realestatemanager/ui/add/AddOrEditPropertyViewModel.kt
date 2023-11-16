@@ -11,10 +11,10 @@ import com.emplk.realestatemanager.domain.autocomplete.PredictionWrapper
 import com.emplk.realestatemanager.domain.connectivity.IsInternetEnabledFlowUseCase
 import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdFlowUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.ConvertToSquareFeetDependingOnLocaleUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.CurrencyType
-import com.emplk.realestatemanager.domain.locale_formatting.GetCurrencyTypeUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.GetSurfaceUnitUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.currency.CurrencyType
+import com.emplk.realestatemanager.domain.locale_formatting.currency.GetCurrencyTypeUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertToSquareFeetDependingOnLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.surface.GetSurfaceUnitUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.GetClearPropertyFormNavigationEventUseCase
@@ -38,7 +38,6 @@ import com.emplk.realestatemanager.domain.property_draft.picture_preview.Picture
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.SavePictureToLocalAppFilesAndToLocalDatabaseUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.UpdatePicturePreviewUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.id.AddAllPicturePreviewsIdsUseCase
-import com.emplk.realestatemanager.domain.property_draft.picture_preview.id.PicturePreviewIdRepository
 import com.emplk.realestatemanager.domain.property_type.GetPropertyTypeUseCase
 import com.emplk.realestatemanager.ui.add.address_predictions.PredictionViewState
 import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem

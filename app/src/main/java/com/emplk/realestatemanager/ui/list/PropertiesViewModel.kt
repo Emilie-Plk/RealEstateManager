@@ -8,9 +8,9 @@ import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceDependingOnL
 import com.emplk.realestatemanager.domain.current_property.SetCurrentPropertyIdUseCase
 import com.emplk.realestatemanager.domain.filter.GetPropertiesFilterFlowUseCase
 import com.emplk.realestatemanager.domain.filter.IsPropertyMatchingFiltersUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.ConvertToSquareFeetDependingOnLocaleUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceToHumanReadableUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.GetRoundedSurfaceWithSurfaceUnitUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.currency.FormatPriceToHumanReadableUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertToSquareFeetDependingOnLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.surface.FormatAndRoundSurfaceToHumanReadableUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.GetPropertiesAsFlowUseCase
@@ -28,7 +28,7 @@ class PropertiesViewModel @Inject constructor(
     private val setCurrentPropertyIdUseCase: SetCurrentPropertyIdUseCase,
     private val convertToSquareFeetDependingOnLocaleUseCase: ConvertToSquareFeetDependingOnLocaleUseCase,
     private val convertPriceDependingOnLocaleUseCase: ConvertPriceDependingOnLocaleUseCase,
-    private val getRoundedHumanReadableSurfaceUseCase: GetRoundedSurfaceWithSurfaceUnitUseCase,
+    private val getRoundedHumanReadableSurfaceUseCase: FormatAndRoundSurfaceToHumanReadableUseCase,
     private val formatPriceToHumanReadableUseCase: FormatPriceToHumanReadableUseCase,
     private val getPropertiesFilterFlowUseCase: GetPropertiesFilterFlowUseCase,
     private val isPropertyMatchingFiltersUseCase: IsPropertyMatchingFiltersUseCase,
@@ -53,47 +53,19 @@ class PropertiesViewModel @Inject constructor(
                             }
                         )))
             } else {
-            val propertiesWithConvertedPriceAndSurface = properties.map { property ->
-                val convertedPrice = convertPriceDependingOnLocaleUseCase.invoke(property.price)
-                val convertedSurface = convertToSquareFeetDependingOnLocaleUseCase.invoke(property.surface)
-                property.copy(
-                    price = convertedPrice,
-                    surface = convertedSurface
-                )
-            }
-            emit(propertiesWithConvertedPriceAndSurface
-                .asSequence()
-                .map { property ->
-                    val photoUrl = property.pictures.find { it.isFeatured }?.uri
-                    val featuredPicture = photoUrl?.let { NativePhoto.Uri(it) }
-                        ?: NativePhoto.Resource(R.drawable.baseline_villa_24)
-
-                    PropertiesViewState.Properties(
-                        id = property.id,
-                        propertyType = property.type,
-                        featuredPicture = featuredPicture,
-                        address = property.location.address,
-                        humanReadablePrice = formatPriceToHumanReadableUseCase.invoke(property.price),
-                        price = property.price,
-                        isSold = property.isSold,
-                        room = NativeText.Argument(R.string.rooms_nb_short_version, property.rooms),
-                        bathroom = NativeText.Argument(R.string.bathrooms_nb_short_version, property.bathrooms),
-                        bedroom = NativeText.Argument(R.string.bedrooms_nb_short_version, property.bedrooms),
-                        humanReadableSurface = getRoundedHumanReadableSurfaceUseCase.invoke(property.surface),
-                        surface = property.surface,
-                        entryDate = property.entryDate,
-                        amenities = property.amenities,
-                        onClickEvent = EquatableCallback {
-                            setCurrentPropertyIdUseCase.invoke(property.id)
-                            setNavigationTypeUseCase.invoke(NavigationFragmentType.DETAIL_FRAGMENT)
-                        },
+                val propertiesWithConvertedPriceAndSurface = properties.map { property ->
+                    val convertedPrice = convertPriceDependingOnLocaleUseCase.invoke(property.price)
+                    val convertedSurface = convertToSquareFeetDependingOnLocaleUseCase.invoke(property.surface)
+                    property.copy(
+                        price = convertedPrice,
+                        surface = convertedSurface
                     )
                 }
-                .sortedBy { it.isSold }
-                .filter { property ->
-                    if (propertiesFilter == null) return@filter true
+                emit(propertiesWithConvertedPriceAndSurface
+                    .asSequence()
+                    .filter { property ->
                         isPropertyMatchingFiltersUseCase.invoke(
-                            property.propertyType,
+                            property.type,
                             property.price,
                             property.surface,
                             property.amenities,
@@ -101,9 +73,33 @@ class PropertiesViewModel @Inject constructor(
                             property.isSold,
                             propertiesFilter
                         )
-                }
-                .toList()
-            )
+                    }
+                    .sortedBy { it.isSold }
+                    .map { property ->
+                        val photoUrl = property.pictures.find { it.isFeatured }?.uri
+                        val featuredPicture = photoUrl?.let { NativePhoto.Uri(it) }
+                            ?: NativePhoto.Resource(R.drawable.baseline_villa_24)
+                        PropertiesViewState.Properties(
+                            id = property.id,
+                            propertyType = property.type,
+                            featuredPicture = featuredPicture,
+                            address = property.location.address,
+                            humanReadablePrice = formatPriceToHumanReadableUseCase.invoke(property.price),
+                            isSold = property.isSold,
+                            room = NativeText.Argument(R.string.rooms_nb_short_version, property.rooms),
+                            bathroom = NativeText.Argument(R.string.bathrooms_nb_short_version, property.bathrooms),
+                            bedroom = NativeText.Argument(R.string.bedrooms_nb_short_version, property.bedrooms),
+                            humanReadableSurface = getRoundedHumanReadableSurfaceUseCase.invoke(property.surface),
+                            entryDate = property.entryDate,
+                            amenities = property.amenities,
+                            onClickEvent = EquatableCallback {
+                                setCurrentPropertyIdUseCase.invoke(property.id)
+                                setNavigationTypeUseCase.invoke(NavigationFragmentType.DETAIL_FRAGMENT)
+                            },
+                        )
+                    }
+                    .toList()
+                )
             }
         }.collect()
     }

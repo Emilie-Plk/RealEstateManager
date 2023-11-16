@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceDependingOnLocaleUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.ConvertToSquareFeetDependingOnLocaleUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.FormatPriceToHumanReadableUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.GetRoundedSurfaceWithSurfaceUnitUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.currency.FormatPriceToHumanReadableUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertToSquareFeetDependingOnLocaleUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.surface.FormatAndRoundSurfaceToHumanReadableUseCase
 import com.emplk.realestatemanager.domain.property.GetCurrentPropertyUseCase
 import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
 import com.emplk.realestatemanager.ui.map.bottom_sheet.MapBottomSheetFragment.Companion.DETAIL_PROPERTY_TAG
@@ -27,7 +27,7 @@ class MapBottomSheetViewModel @Inject constructor(
     private val getCurrentPropertyUseCase: GetCurrentPropertyUseCase,
     private val convertToSquareFeetDependingOnLocaleUseCase: ConvertToSquareFeetDependingOnLocaleUseCase,
     private val convertPriceDependingOnLocaleUseCase: ConvertPriceDependingOnLocaleUseCase,
-    private val getRoundedSurfaceWithUnitHumanReadableUseCase: GetRoundedSurfaceWithSurfaceUnitUseCase,
+    private val getRoundedSurfaceWithUnitHumanReadableUseCase: FormatAndRoundSurfaceToHumanReadableUseCase,
     private val formatPriceToHumanReadableUseCase: FormatPriceToHumanReadableUseCase,
 ) : ViewModel() {
 
