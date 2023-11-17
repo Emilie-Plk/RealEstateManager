@@ -1,11 +1,11 @@
 plugins {
     id("com.android.application")
     kotlin("android")
-    kotlin("kapt")
     id("com.google.devtools.ksp")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin") version "2.0.1"
     id("org.jetbrains.kotlinx.kover")
     id("dagger.hilt.android.plugin")
+    kotlin("kapt")
 }
 
 android {
@@ -97,6 +97,9 @@ dependencies {
 
     // CarouselRecyclerView
     implementation("com.github.sparrow007:carouselrecyclerview:1.2.6")
+
+    // FusedProviderClient
+    implementation("com.google.android.gms:play-services-location:21.0.1")
 
     // HILT
     implementation("com.google.dagger:hilt-android:2.48")
