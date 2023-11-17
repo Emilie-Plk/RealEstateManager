@@ -87,7 +87,7 @@ class CurrencyRateRepositoryFixerTest {
         )
         val currencyRateEntityChanged = getTestCurrencyRateEntity().copy(
             usdToEuroRate = BigDecimal("1.15"),
-            lastUpdatedDate = LocalDateTime.of(2023, 10, 31, 13, 22, 35),
+            lastUpdatedDate = LocalDateTime.now(testFixedClock),
         )
 
         coEvery { fixerApi.getLatestCurrencyRates() } returns currencyRateResponseChanged
@@ -105,12 +105,12 @@ class CurrencyRateRepositoryFixerTest {
         coEvery {
             testDataStore.edit { preferences ->
                 preferences[TEST_USD_TO_EUR_RATE_KEY] = "1.15"
-                preferences[TEST_LAST_RATE_DATE_KEY] = LocalDateTime.of(2023, 10, 31, 13, 22, 35).toString()
+                preferences[TEST_LAST_RATE_DATE_KEY] = LocalDateTime.now(testFixedClock).toString()
             }
         } returns mockedPreferencesChanged
 
         coEvery { mockedPreferencesChanged[TEST_USD_TO_EUR_RATE_KEY] } returns "1.15"
-        coEvery { mockedPreferencesChanged[TEST_LAST_RATE_DATE_KEY] } returns LocalDateTime.of(2023, 10, 31, 13, 22, 35)
+        coEvery { mockedPreferencesChanged[TEST_LAST_RATE_DATE_KEY] } returns LocalDateTime.now(testFixedClock)
             .toString()
 
 
@@ -120,8 +120,6 @@ class CurrencyRateRepositoryFixerTest {
         // Then
         assertThat(result).isEqualTo(CurrencyRateWrapper.Success(currencyRateEntityChanged))
     }
-
-
 }
 
 

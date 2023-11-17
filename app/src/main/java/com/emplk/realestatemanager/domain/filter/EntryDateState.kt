@@ -3,7 +3,7 @@ package com.emplk.realestatemanager.domain.filter
 import java.time.Clock
 import java.time.LocalDateTime
 
-enum class EntryDateState(  // TODO: modèle à tester
+enum class EntryDateState(
     val entryDateLambda: (Clock) -> LocalDateTime?
 ) {
     LESS_THAN_1_YEAR({ clock -> LocalDateTime.now(clock).minusYears(1) }),

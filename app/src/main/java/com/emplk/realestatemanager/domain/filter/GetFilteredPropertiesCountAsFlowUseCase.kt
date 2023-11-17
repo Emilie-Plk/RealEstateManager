@@ -22,7 +22,7 @@ class GetFilteredPropertiesCountAsFlowUseCase @Inject constructor(
         maxSurface: BigDecimal,
         amenities: List<AmenityType>,
         entryDateMin: Long?,
-        propertySaleState: PropertySaleState,
+        propertySaleState: PropertySaleState?,
     ): Flow<Int> {
         val now = LocalDateTime.now(clock).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
         return propertyRepository.getFilteredPropertiesCount(
@@ -46,6 +46,7 @@ class GetFilteredPropertiesCountAsFlowUseCase @Inject constructor(
                 PropertySaleState.SOLD -> true
                 PropertySaleState.FOR_SALE -> false
                 PropertySaleState.ALL -> null
+                else -> null
             },
         )
     }

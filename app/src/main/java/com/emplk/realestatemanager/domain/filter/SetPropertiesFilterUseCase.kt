@@ -15,15 +15,15 @@ class SetPropertiesFilterUseCase @Inject constructor(
         minSurface: BigDecimal,
         maxSurface: BigDecimal,
         selectedAmenities: List<AmenityType>,
-        saleState: PropertySaleState,
-        entryDateState: EntryDateState,
+        saleState: PropertySaleState?,
+        entryDateState: EntryDateState?,
     ) = propertiesFilterRepository.setPropertiesFilter(
         PropertiesFilterEntity(
             propertyType = if (propertyType == "All") null else propertyType,
             minMaxPrice = Pair(minPrice, maxPrice),
             minMaxSurface = Pair(minSurface, maxSurface),
-            entryDate = entryDateState,
-            availableForSale = saleState,
+            entryDate = entryDateState ?: EntryDateState.ALL,
+            availableForSale = saleState ?: PropertySaleState.ALL,
             amenities = selectedAmenities,
         )
     )
