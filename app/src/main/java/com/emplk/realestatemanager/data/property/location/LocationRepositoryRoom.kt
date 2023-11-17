@@ -1,11 +1,12 @@
 package com.emplk.realestatemanager.data.property.location
 
-import android.database.sqlite.SQLiteException
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
-import com.emplk.realestatemanager.domain.property.location.LocationEntity
 import com.emplk.realestatemanager.domain.property.location.LocationRepository
 import com.emplk.realestatemanager.domain.property.location.PropertyLatLongEntity
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import javax.inject.Inject
 
 class LocationRepositoryRoom @Inject constructor(
@@ -14,26 +15,10 @@ class LocationRepositoryRoom @Inject constructor(
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : LocationRepository {
 
-    override suspend fun add(locationEntity: LocationEntity, propertyId: Long): Boolean =
-        withContext(coroutineDispatcherProvider.io) {
-            try {
-                val locationDtoEntity = locationMapper.mapToDto(locationEntity, propertyId)
-                locationDao.insert(locationDtoEntity) == 1L
-            } catch (e: SQLiteException) {
-                e.printStackTrace()
-                false
+    override fun getAllPropertyLatLongAsFlow(): Flow<List<PropertyLatLongEntity>> = locationDao
+        .getAllPropertyLatLongAsFlow().map { propertyLatLongDtos ->
+            propertyLatLongDtos.mapNotNull { propertyLatLongDto ->
+                locationMapper.mapToPropertyLatLongEntity(propertyLatLongDto)
             }
-        }
-
-    override suspend fun getAllPropertyLatLong(): List<PropertyLatLongEntity> =
-        withContext(coroutineDispatcherProvider.io) {
-            try {
-                locationDao.getAllPropertyLatLong().mapNotNull { propertyLatLongDto ->
-                    locationMapper.mapToPropertyLatLongEntity(propertyLatLongDto)
-                }
-            } catch (e: SQLiteException) {
-                e.printStackTrace()
-                emptyList()
-            }
-        }
+        }.flowOn(coroutineDispatcherProvider.io)
 }

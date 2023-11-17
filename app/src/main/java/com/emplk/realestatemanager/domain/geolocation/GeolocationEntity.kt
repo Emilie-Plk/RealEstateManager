@@ -1,4 +1,4 @@
-package com.emplk.realestatemanager.domain.location
+package com.emplk.realestatemanager.domain.geolocation
 
 data class GeolocationEntity(
     val latitude: Double,

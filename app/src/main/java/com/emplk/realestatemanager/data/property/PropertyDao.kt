@@ -47,7 +47,7 @@ interface PropertyDao {
                 "(:minPrice > 0 AND :maxPrice = 0 AND price >= :minPrice) OR " +
                 "(:minPrice = 0 AND :maxPrice > 0 AND price <= :maxPrice) OR " +
                 "(:minPrice > 0 AND :maxPrice > 0 AND price BETWEEN :minPrice AND :maxPrice)) AND " +
-                "((:minSurface = 0 AND :maxSurface = 0) OR " +  // No filter on price
+                "((:minSurface = 0 AND :maxSurface = 0) OR " +
                 "(:minSurface > 0 AND :maxSurface = 0 AND surface >= :minSurface) OR " +
                 "(:minSurface = 0 AND :maxSurface > 0 AND surface <= :maxSurface) OR " +
                 "(:minSurface > 0 AND :maxSurface > 0 AND surface BETWEEN :minSurface AND :maxSurface)) AND " +  // Both

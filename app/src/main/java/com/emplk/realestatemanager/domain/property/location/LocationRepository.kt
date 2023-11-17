@@ -1,7 +1,7 @@
 package com.emplk.realestatemanager.domain.property.location
 
-interface LocationRepository {
-    suspend fun add(locationEntity: LocationEntity, propertyId: Long): Boolean
+import kotlinx.coroutines.flow.Flow
 
-    suspend fun getAllPropertyLatLong(): List<PropertyLatLongEntity>
+interface LocationRepository {
+    fun getAllPropertyLatLongAsFlow(): Flow<List<PropertyLatLongEntity>>
 }
