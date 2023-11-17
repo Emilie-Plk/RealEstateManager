@@ -23,6 +23,8 @@ import com.emplk.realestatemanager.data.property_draft.FormDraftDao
 import com.emplk.realestatemanager.data.property_draft.picture_preview.PicturePreviewDao
 import com.emplk.realestatemanager.domain.autocomplete.PredictionWrapper
 import com.emplk.realestatemanager.domain.geocoding.GeocodingWrapper
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -228,6 +230,11 @@ class DataModule {
     @Singleton
     @Provides
     fun provideConnectivityManager(application: Application): ConnectivityManager? = application.getSystemService()
+
+    @Singleton
+    @Provides
+    fun provideFusedLocationProviderClient(application: Application): FusedLocationProviderClient =
+        LocationServices.getFusedLocationProviderClient(application)
 
     @Qualifier
     @Retention(AnnotationRetention.BINARY)

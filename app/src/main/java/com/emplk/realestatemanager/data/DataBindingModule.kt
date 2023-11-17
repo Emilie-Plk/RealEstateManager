@@ -8,6 +8,7 @@ import com.emplk.realestatemanager.data.currency_rate.CurrencyRateRepositoryFixe
 import com.emplk.realestatemanager.data.current_property.CurrentPropertyRepositoryImpl
 import com.emplk.realestatemanager.data.filter.PropertiesFilterRepositoryImpl
 import com.emplk.realestatemanager.data.geocoding.GeocodingRepositoryGoogle
+import com.emplk.realestatemanager.data.geolocation.GeolocationRepositoryFusedLocationProvider
 import com.emplk.realestatemanager.data.loan_simulator.LoanSimulatorRepositoryImpl
 import com.emplk.realestatemanager.data.locale_formatting.LocaleFormattingRepositoryImpl
 import com.emplk.realestatemanager.data.navigation.NavigationDraftRepositoryImpl
@@ -33,6 +34,7 @@ import com.emplk.realestatemanager.domain.filter.PropertiesFilterRepository
 import com.emplk.realestatemanager.domain.geocoding.GeocodingRepository
 import com.emplk.realestatemanager.domain.loan_simulator.LoanSimulatorRepository
 import com.emplk.realestatemanager.domain.locale_formatting.LocaleFormattingRepository
+import com.emplk.realestatemanager.domain.location.GeolocationRepository
 import com.emplk.realestatemanager.domain.navigation.NavigationRepository
 import com.emplk.realestatemanager.domain.navigation.draft.NavigationDraftRepository
 import com.emplk.realestatemanager.domain.property.PropertyRepository
@@ -149,4 +151,8 @@ abstract class DataBindingModule {
     @Singleton
     @Binds
     abstract fun bindPropertiesFilteredRepository(implementation: PropertiesFilterRepositoryImpl): PropertiesFilterRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindGeolocationRepository(implementation: GeolocationRepositoryFusedLocationProvider): GeolocationRepository
 }
