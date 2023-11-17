@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.RewriteQueriesToDropUnusedColumns
 import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface LocationDao {
@@ -15,7 +16,7 @@ interface LocationDao {
 
     @RewriteQueriesToDropUnusedColumns
     @Query("SELECT * FROM locations")
-    suspend fun getAllPropertyLatLong(): List<PropertyLatLongDto>
+    fun getAllPropertyLatLongAsFlow(): Flow<List<PropertyLatLongDto>>
 
     @Update
     suspend fun update(locationDto: LocationDto): Int
