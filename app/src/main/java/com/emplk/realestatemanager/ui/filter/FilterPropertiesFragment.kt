@@ -43,8 +43,9 @@ class FilterPropertiesFragment : DialogFragment(R.layout.filter_properties_fragm
             dismiss()
         }
 
-        binding.filterPropertyResetBtn?.setOnClickListener {
+        binding.filterPropertyResetBtn.setOnClickListener {
             viewModel.onResetFilters()
+            hideKeyboard(it)
         }
 
         viewModel.viewEvent.observeEvent(viewLifecycleOwner) {
@@ -60,25 +61,41 @@ class FilterPropertiesFragment : DialogFragment(R.layout.filter_properties_fragm
                     viewModel.onPropertyTypeSelected(it.name)
                 }
             }
-
             binding.filterPropertyTypeActv.setText(viewState.propertyType, false)
 
             binding.filterPropertyPriceRangeTv.text = viewState.priceRange.toCharSequence(requireContext())
+
+            if (binding.filterPropertyMinPriceEditText.text.toString() != viewState.minPrice) {
+                binding.filterPropertyMinPriceEditText.setText(viewState.minPrice)
+            }
             binding.filterPropertyMinPriceEditText.doAfterTextChanged {
                 viewModel.onMinPriceChanged(it?.toString() ?: "")
+            }
+
+            if (binding.filterPropertyMaxPriceEditText.text.toString() != viewState.maxPrice) {
+                binding.filterPropertyMaxPriceEditText.setText(viewState.maxPrice)
             }
 
             binding.filterPropertyMaxPriceEditText.doAfterTextChanged {
                 viewModel.onMaxPriceChanged(it?.toString() ?: "")
             }
 
-            binding.filterPropertySurfaceRangeTv.text = viewState.surfaceRange.toCharSequence(requireContext())
+            if (binding.filterPropertyMinSurfaceEditText.text.toString() != viewState.minSurface) {
+                binding.filterPropertyMinSurfaceEditText.setText(viewState.minSurface)
+            }
             binding.filterPropertyMinSurfaceEditText.doAfterTextChanged {
                 viewModel.onMinSurfaceChanged(it?.toString() ?: "")
             }
 
+            if (binding.filterPropertyMaxSurfaceEditText.text.toString() != viewState.maxSurface) {
+                binding.filterPropertyMaxSurfaceEditText.setText(viewState.maxSurface)
+            }
             binding.filterPropertyMaxSurfaceEditText.doAfterTextChanged {
                 viewModel.onMaxSurfaceChanged(it?.toString() ?: "")
+            }
+
+            if (viewState.entryDate == null) {
+                binding.filterPropertyEntryDateChipGroup.clearCheck()
             }
 
             binding.filterPropertyEntryDateChipGroup.setOnCheckedStateChangeListener { _, checkedIds ->
@@ -111,6 +128,10 @@ class FilterPropertiesFragment : DialogFragment(R.layout.filter_properties_fragm
                         else -> viewModel.onEntryDateStatusChanged(EntryDateState.ALL)
                     }
                 }
+            }
+
+            if (viewState.availableForSale == null) {
+                binding.filterPropertyEntrySaleStateToggleGroup.clearChecked()
             }
 
             binding.filterPropertyFilterBtn.isEnabled = viewState.isFilterButtonEnabled

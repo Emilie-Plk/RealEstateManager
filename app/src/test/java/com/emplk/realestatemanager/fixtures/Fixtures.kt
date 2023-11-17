@@ -20,7 +20,8 @@ import java.time.ZoneOffset
  * A fixed clock that always returns 31 Oct 2023 13:22:35 GMT
  */
 val testFixedClock: Clock =
-    Clock.fixed(Instant.ofEpochSecond(1698758555), ZoneOffset.UTC)
+    Clock.fixed(Instant.ofEpochMilli(1698758555000L), ZoneOffset.UTC)
+
 // region PropertyDto
 
 fun getTestPropertyDto(id: Long) = PropertyDto(

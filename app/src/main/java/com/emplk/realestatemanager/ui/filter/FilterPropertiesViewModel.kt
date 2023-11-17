@@ -272,6 +272,6 @@ data class FilterParams(
     val minSurface: BigDecimal = BigDecimal.ZERO,
     val maxSurface: BigDecimal = BigDecimal.ZERO,
     val selectedAmenities: List<AmenityType> = emptyList(),
-    val saleState: PropertySaleState = PropertySaleState.ALL,
-    val entryDateState: EntryDateState = EntryDateState.ALL,
+    val saleState: PropertySaleState? = null,
+    val entryDateState: EntryDateState? = null,
 )

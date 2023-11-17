@@ -24,8 +24,7 @@ class IsPropertyMatchingFiltersUseCase @Inject constructor(
             doesMatchSurfaceFilter(surface, propertiesFilter) &&
             doesMatchEntryDateFilter(entryDate, propertiesFilter) &&
             doesMatchSaleStateFilter(isSold, propertiesFilter) &&
-            doesMatchAmenitiesFilter(amenities, propertiesFilter) &&
-            doesMatchEntryDateFilter(entryDate, propertiesFilter)
+            doesMatchAmenitiesFilter(amenities, propertiesFilter)
 
 
     private fun doesMatchPropertyTypeFilter(propertyType: String?, filter: PropertiesFilterEntity): Boolean =
@@ -44,7 +43,6 @@ class IsPropertyMatchingFiltersUseCase @Inject constructor(
                 filter.minMaxSurface.second == BigDecimal.ZERO && surface >= filter.minMaxSurface.first
 
     private fun doesMatchEntryDateFilter(entryDate: LocalDateTime, filter: PropertiesFilterEntity): Boolean {
-        if (filter.entryDate == EntryDateState.ALL) return true  // Bouger ça ?
         val entryDateMin = filter.entryDate.entryDateLambda.invoke(clock)
         return entryDateMin == null || entryDate.isAfter(entryDateMin)
     }
