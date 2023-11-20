@@ -1,6 +1,7 @@
 package com.emplk.realestatemanager.ui.map
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -26,6 +27,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import dagger.hilt.android.AndroidEntryPoint
 
+
 @AndroidEntryPoint
 class MapsFragment : SupportMapFragment(), OnMapReadyCallback {
 
@@ -35,21 +37,19 @@ class MapsFragment : SupportMapFragment(), OnMapReadyCallback {
 
     private val viewModel: MapViewModel by viewModels()
 
+
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-            if (permissions[android.Manifest.permission.ACCESS_FINE_LOCATION] == true &&
-                permissions[android.Manifest.permission.ACCESS_COARSE_LOCATION] == true
-            ) {
-
-                // Permission denied, handle accordingly
-            }
+            viewModel.hasPermissionBeenGranted(
+                permissions[android.Manifest.permission.ACCESS_FINE_LOCATION] == true &&
+                        permissions[android.Manifest.permission.ACCESS_COARSE_LOCATION] == true
+            )
         }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getMapAsync(this)
         requestPermissions()
+        getMapAsync(this)
     }
 
     @SuppressLint("PotentialBehaviorOverride")
@@ -57,17 +57,15 @@ class MapsFragment : SupportMapFragment(), OnMapReadyCallback {
         googleMap.uiSettings.isZoomControlsEnabled = true
         googleMap.uiSettings.isCompassEnabled = true
 
-
-        val googleHqCameraPosition = CameraPosition.Builder()
-            .target(LatLng(37.422131, -122.084801))
-            .zoom(12f)
-            .build()
-
-        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(googleHqCameraPosition))
-
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
-            // Clear existing markers
             googleMap.clear()
+
+            val cameraPosition = CameraPosition.Builder()
+                .target(viewState.userCurrentLocation ?: LatLng(37.422131, -122.084801))
+                .zoom(12f)
+                .build()
+
+            googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
 
             // User marker
             viewState.userCurrentLocation?.let { userCurrentLocation ->
@@ -77,10 +75,14 @@ class MapsFragment : SupportMapFragment(), OnMapReadyCallback {
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
 
                 googleMap.addMarker(marker)
+                googleMap.moveCamera(
+                    CameraUpdateFactory.newLatLng(userCurrentLocation)
+                )
+                googleMap.animateCamera(CameraUpdateFactory.zoomTo(12f))
+                googleMap.uiSettings.isMyLocationButtonEnabled = true
             }
 
             val customMarkerIcon = vectorToBitmap(requireContext(), R.drawable.baseline_house_pin_circle_24)
-
             viewState.propertyMarkers.forEach { markerViewState ->
                 val marker = MarkerOptions()
                     .position(markerViewState.latLng)
@@ -103,30 +105,57 @@ class MapsFragment : SupportMapFragment(), OnMapReadyCallback {
 
         viewModel.viewEvent.observeEvent(this) { event ->
             when (event) {
-                is MapEvent.OnMarkerClicked -> {
+                is MapEvent.OnMarkerClicked ->
                     MapBottomSheetFragment.newInstance().show(childFragmentManager, MapBottomSheetFragment.TAG)
-                }
             }
         }
     }
 
     private fun requestPermissions() {
-        val fineLocationGranted =
+        when {
+            // Permissions already granted
             ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) ==
-                    PackageManager.PERMISSION_GRANTED
+                    PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(
+                        requireContext(),
+                        android.Manifest.permission.ACCESS_COARSE_LOCATION
+                    ) ==
+                    PackageManager.PERMISSION_GRANTED ->
+                viewModel.hasPermissionBeenGranted(true)
 
-        val coarseLocationGranted =
-            ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) ==
-                    PackageManager.PERMISSION_GRANTED
 
-        if (!fineLocationGranted || !coarseLocationGranted) {
-            requestPermissionLauncher.launch(
-                arrayOf(
-                    android.Manifest.permission.ACCESS_FINE_LOCATION,
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION
+            // Permissions have been denied once - show rationale
+            shouldShowRequestPermissionRationale(android.Manifest.permission.ACCESS_FINE_LOCATION) ||
+                    shouldShowRequestPermissionRationale(android.Manifest.permission.ACCESS_COARSE_LOCATION) ->
+                showRequestPermissionRationale()
+
+            // Request permission
+            else ->
+                requestPermissionLauncher.launch(
+                    arrayOf(
+                        android.Manifest.permission.ACCESS_FINE_LOCATION,
+                        android.Manifest.permission.ACCESS_COARSE_LOCATION
+                    )
                 )
-            )
         }
+    }
+
+    private fun showRequestPermissionRationale() {
+        // rationale should be shown only once
+        AlertDialog.Builder(requireContext())
+            .setTitle("Location permission")
+            .setMessage("Location permission is needed to display properties on the map")
+            .setPositiveButton("OK") { dialogInterface, _ ->
+                // re-request permission
+                requestPermissionLauncher.launch(
+                    arrayOf(
+                        android.Manifest.permission.ACCESS_FINE_LOCATION,
+                        android.Manifest.permission.ACCESS_COARSE_LOCATION
+                    )
+                )
+                dialogInterface.dismiss()
+            }
+            .show()
     }
 
     private fun vectorToBitmap(context: Context, @DrawableRes vectorResourceId: Int): BitmapDescriptor {

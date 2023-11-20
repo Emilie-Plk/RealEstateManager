@@ -3,14 +3,13 @@ package com.emplk.realestatemanager.data.geolocation
 import android.util.Log
 import androidx.annotation.RequiresPermission
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
-import com.emplk.realestatemanager.domain.geolocation.GeolocationEntity
 import com.emplk.realestatemanager.domain.geolocation.GeolocationRepository
+import com.emplk.realestatemanager.domain.geolocation.GeolocationState
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.Priority
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.asExecutor
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -33,27 +32,26 @@ class GeolocationRepositoryFusedLocationProvider @Inject constructor(
     }
 
     @RequiresPermission(anyOf = ["android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"])
-    override fun getCurrentLocationAsFlow(): Flow<GeolocationEntity?> = callbackFlow {
-Log.d("COUCOU", "Requesting location updates")
-        trySend(null)
+    override fun getCurrentLocationAsFlow(): Flow<GeolocationState> = callbackFlow {
+        Log.d("COUCOU", "Requesting location updates")
+
         val locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 locationResult.lastLocation?.let {
                     trySend(
-                        GeolocationEntity(
+                        GeolocationState.Success(
                             it.latitude,
                             it.longitude
                         )
                     )
                     Log.d("COUCOU", "Location sent: ${it.latitude}, ${it.longitude}")
-                }
+                } ?: trySend(GeolocationState.NoLocationAvailable)
             }
         }
 
         fusedLocationProvideClient.requestLocationUpdates(
             LocationRequest.Builder(LOCATION_INTERVAL_DURATION.inWholeMilliseconds)
                 .setMinUpdateDistanceMeters(LOCATION_DISTANCE_THRESHOLD)
-                .setMaxUpdateDelayMillis(LOCATION_MAX_UPDATE_DELAY.inWholeMilliseconds)
                 .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
                 .build(),
             coroutineDispatcherProvider.io.asExecutor(),

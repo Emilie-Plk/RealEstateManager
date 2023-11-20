@@ -13,7 +13,6 @@ import com.emplk.realestatemanager.data.loan_simulator.LoanSimulatorRepositoryIm
 import com.emplk.realestatemanager.data.locale_formatting.LocaleFormattingRepositoryImpl
 import com.emplk.realestatemanager.data.navigation.NavigationDraftRepositoryImpl
 import com.emplk.realestatemanager.data.navigation.NavigationRepositoryImpl
-import com.emplk.realestatemanager.data.permission.PermissionRepositoryImpl
 import com.emplk.realestatemanager.data.property.PropertyRepositoryRoom
 import com.emplk.realestatemanager.data.property.amenity.AmenityTypeRepositoryImpl
 import com.emplk.realestatemanager.data.property.location.LocationRepositoryRoom
@@ -33,12 +32,11 @@ import com.emplk.realestatemanager.domain.currency_rate.CurrencyRateRepository
 import com.emplk.realestatemanager.domain.current_property.CurrentPropertyRepository
 import com.emplk.realestatemanager.domain.filter.PropertiesFilterRepository
 import com.emplk.realestatemanager.domain.geocoding.GeocodingRepository
+import com.emplk.realestatemanager.domain.geolocation.GeolocationRepository
 import com.emplk.realestatemanager.domain.loan_simulator.LoanSimulatorRepository
 import com.emplk.realestatemanager.domain.locale_formatting.LocaleFormattingRepository
-import com.emplk.realestatemanager.domain.geolocation.GeolocationRepository
 import com.emplk.realestatemanager.domain.navigation.NavigationRepository
 import com.emplk.realestatemanager.domain.navigation.draft.NavigationDraftRepository
-import com.emplk.realestatemanager.domain.permission.PermissionRepository
 import com.emplk.realestatemanager.domain.property.PropertyRepository
 import com.emplk.realestatemanager.domain.property.amenity.type.AmenityTypeRepository
 import com.emplk.realestatemanager.domain.property.location.LocationRepository
@@ -157,8 +155,4 @@ abstract class DataBindingModule {
     @Singleton
     @Binds
     abstract fun bindGeolocationRepository(implementation: GeolocationRepositoryFusedLocationProvider): GeolocationRepository
-
-    @Singleton
-    @Binds
-    abstract fun bindPermissionRepository(implementation: PermissionRepositoryImpl): PermissionRepository
 }

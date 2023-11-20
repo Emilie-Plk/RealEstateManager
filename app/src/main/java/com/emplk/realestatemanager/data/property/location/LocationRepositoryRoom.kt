@@ -6,7 +6,6 @@ import com.emplk.realestatemanager.domain.property.location.PropertyLatLongEntit
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapNotNull
 import javax.inject.Inject
 
 class LocationRepositoryRoom @Inject constructor(
