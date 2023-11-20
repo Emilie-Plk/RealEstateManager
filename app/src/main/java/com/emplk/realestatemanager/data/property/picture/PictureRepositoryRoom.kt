@@ -11,7 +11,7 @@ class PictureRepositoryRoom @Inject constructor(
 ) : PictureRepository {
 
     override suspend fun getPicturesIds(propertyId: Long): List<Long> = withContext(coroutineDispatcherProvider.io) {
-        pictureDao.getAllPicturesIds(propertyId)
+        pictureDao.getAllPicturesIdsFromProperty(propertyId)
     }
 
     override suspend fun delete(pictureId: Long) =

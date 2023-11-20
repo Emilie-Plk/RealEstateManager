@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.data.property.location
 
+import android.database.Cursor
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -17,6 +18,9 @@ interface LocationDao {
     @RewriteQueriesToDropUnusedColumns
     @Query("SELECT * FROM locations")
     fun getAllPropertyLatLongAsFlow(): Flow<List<PropertyLatLongDto>>
+
+    @Query("SELECT * FROM locations")
+    fun getAllLocationsWithCursor(): Cursor
 
     @Update
     suspend fun update(locationDto: LocationDto): Int

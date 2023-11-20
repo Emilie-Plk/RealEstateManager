@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.data.property
 
+import android.database.Cursor
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -82,6 +83,12 @@ interface PropertyDao {
         entryDateMax: Long?,
         isSold: Boolean?
     ): Flow<Int>
+
+    @Query("SELECT * FROM properties")
+    fun getAllPropertiesWithCursor(): Cursor
+
+    @Query("SELECT * FROM properties WHERE id = :propertyId")
+    fun getPropertyByIdWithCursor(propertyId: Long): Cursor
 
     @Update
     suspend fun update(propertyDto: PropertyDto): Int
