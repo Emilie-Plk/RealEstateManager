@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.data.property.picture
 
+import android.database.Cursor
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -13,7 +14,10 @@ interface PictureDao {
     suspend fun insert(pictureDto: PictureDto): Long?
 
     @Query("SELECT id FROM pictures WHERE property_id = :propertyId")
-    suspend fun getAllPicturesIds(propertyId: Long): List<Long>
+    suspend fun getAllPicturesIdsFromProperty(propertyId: Long): List<Long>
+
+    @Query("SELECT * FROM pictures")
+    fun getAllPicturesWithCursor(): Cursor
 
     @Upsert
     suspend fun upsert(pictureDto: PictureDto): Long
