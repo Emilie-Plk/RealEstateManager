@@ -7,26 +7,27 @@ import android.net.Uri
 import com.emplk.realestatemanager.data.property.PropertyDao
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Inject
 
-class ContentProvider
-    : ContentProvider() {
-
+class ContentProvider : ContentProvider() {
 
     @Inject
     lateinit var entryPoint: ContentProviderEntryPoint
     private lateinit var propertyDao: PropertyDao
 
-
-    @EntryPoint
+    @EntryPoint  // runtime dependency graph
     @InstallIn(SingletonComponent::class)
     interface ContentProviderEntryPoint {
         fun getPropertyDao(): PropertyDao
     }
 
     override fun onCreate(): Boolean {
-        TODO("Not yet implemented")
+        val appContext = context?.applicationContext ?: throw IllegalStateException("PropertyDao is null")
+        val hiltEntryPoint = EntryPointAccessors.fromApplication(appContext, ContentProviderEntryPoint::class.java)
+        propertyDao = hiltEntryPoint.getPropertyDao()
+        return true
     }
 
     override fun query(

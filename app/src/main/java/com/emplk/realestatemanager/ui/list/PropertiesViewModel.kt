@@ -42,7 +42,7 @@ class PropertiesViewModel @Inject constructor(
 
         combine(
             getPropertiesAsFlowUseCase.invoke(),
-            getPropertiesFilterFlowUseCase.invoke()
+            getPropertiesFilterFlowUseCase.invoke(),
         ) { properties, propertiesFilter ->
             if (properties.isEmpty()) {
                 emit(
@@ -51,7 +51,9 @@ class PropertiesViewModel @Inject constructor(
                             onAddClick = EquatableCallback {
                                 setNavigationTypeUseCase.invoke(NavigationFragmentType.ADD_FRAGMENT)
                             }
-                        )))
+                        )
+                    )
+                )
             } else {
                 val propertiesWithConvertedPriceAndSurface = properties.map { property ->
                     val convertedPrice = convertPriceDependingOnLocaleUseCase.invoke(property.price)
