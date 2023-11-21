@@ -43,7 +43,7 @@ class IsPropertyMatchingFiltersUseCase @Inject constructor(
                 filter.minMaxSurface.second == BigDecimal.ZERO && surface >= filter.minMaxSurface.first
 
     private fun doesMatchEntryDateFilter(entryDate: LocalDateTime, filter: PropertiesFilterEntity): Boolean {
-        val entryDateMin = filter.entryDate.entryDateLambda.invoke(clock)
+        val entryDateMin = filter.entryDate.searchedEntryDateLambda.invoke(clock)
         return entryDateMin == null || entryDate.isAfter(entryDateMin)
     }
 

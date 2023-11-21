@@ -2,9 +2,11 @@ package com.emplk.realestatemanager.data.geolocation
 
 import android.util.Log
 import androidx.annotation.RequiresPermission
+import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.geolocation.GeolocationRepository
 import com.emplk.realestatemanager.domain.geolocation.GeolocationState
+import com.emplk.realestatemanager.ui.utils.NativeText
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -21,7 +23,7 @@ import kotlin.time.Duration.Companion.seconds
 
 @Singleton
 class GeolocationRepositoryFusedLocationProvider @Inject constructor(
-    private val fusedLocationProvideClient: FusedLocationProviderClient,
+    private val fusedLocationProviderClient: FusedLocationProviderClient,
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : GeolocationRepository {
 
@@ -43,11 +45,11 @@ class GeolocationRepositoryFusedLocationProvider @Inject constructor(
                         )
                     )
                     Log.d("COUCOU", "Location sent: ${it.latitude}, ${it.longitude}")
-                } ?: trySend(GeolocationState.NoLocationAvailable)
+                } ?: trySend(GeolocationState.Error(NativeText.Resource(R.string.geolocation_error_no_location_found)))
             }
         }
 
-        fusedLocationProvideClient.requestLocationUpdates(
+        fusedLocationProviderClient.requestLocationUpdates(
             LocationRequest.Builder(LOCATION_INTERVAL_DURATION.inWholeMilliseconds)
                 .setMinUpdateDistanceMeters(LOCATION_DISTANCE_THRESHOLD)
                 .setMaxUpdateDelayMillis(LOCATION_MAX_UPDATE_DELAY.inWholeMilliseconds)
@@ -58,8 +60,7 @@ class GeolocationRepositoryFusedLocationProvider @Inject constructor(
         )
 
         awaitClose {
-            Log.d("COUCOU", "Removing location updates")
-            fusedLocationProvideClient.removeLocationUpdates(locationCallback)
+            fusedLocationProviderClient.removeLocationUpdates(locationCallback)
         }
     }.flowOn(coroutineDispatcherProvider.io)
 }

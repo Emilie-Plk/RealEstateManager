@@ -2,8 +2,8 @@ package com.emplk.realestatemanager.ui.filter
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.emplk.realestatemanager.R
-import com.emplk.realestatemanager.domain.filter.ConvertEntryDateStateToEpochMilliUseCase
-import com.emplk.realestatemanager.domain.filter.EntryDateState
+import com.emplk.realestatemanager.domain.filter.ConvertSearchedEntryDateRangeToEpochMilliUseCase
+import com.emplk.realestatemanager.domain.filter.SearchedEntryDateRange
 import com.emplk.realestatemanager.domain.filter.GetFilteredPropertiesCountAsFlowUseCase
 import com.emplk.realestatemanager.domain.filter.GetMinMaxPriceAndSurfaceUseCase
 import com.emplk.realestatemanager.domain.filter.GetPropertyTypeForFilterUseCase
@@ -44,7 +44,7 @@ class FilterPropertiesViewModelTest {
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private val getFilteredPropertiesCountAsFlowUseCase: GetFilteredPropertiesCountAsFlowUseCase = mockk()
-    private val convertEntryDateStateToEpochMilliUseCase: ConvertEntryDateStateToEpochMilliUseCase = mockk()
+    private val convertSearchedEntryDateRangeToEpochMilliUseCase: ConvertSearchedEntryDateRangeToEpochMilliUseCase = mockk()
     private val getMinMaxPriceAndSurfaceUseCase: GetMinMaxPriceAndSurfaceUseCase = mockk()
     private val formatPriceToHumanReadableUseCase: FormatPriceToHumanReadableUseCase = mockk()
     private val convertSurfaceDependingOnLocaleUseCase: ConvertSurfaceDependingOnLocaleUseCase = mockk()
@@ -72,7 +72,7 @@ class FilterPropertiesViewModelTest {
                 any()
             )
         } returns flowOf(3)
-        every { convertEntryDateStateToEpochMilliUseCase.invoke(any()) } returns 1698758555
+        every { convertSearchedEntryDateRangeToEpochMilliUseCase.invoke(any()) } returns 1698758555
         coEvery { getMinMaxPriceAndSurfaceUseCase.invoke() } returns minMaxPriceAndSurface
         every { formatPriceToHumanReadableUseCase.invoke(minMaxPriceAndSurface.minPrice) } returns "$100000"
         every { formatPriceToHumanReadableUseCase.invoke(minMaxPriceAndSurface.maxPrice) } returns "$200000"
@@ -89,7 +89,7 @@ class FilterPropertiesViewModelTest {
 
         filterPropertiesViewModel = FilterPropertiesViewModel(
             getFilteredPropertiesCountAsFlowUseCase,
-            convertEntryDateStateToEpochMilliUseCase,
+            convertSearchedEntryDateRangeToEpochMilliUseCase,
             getMinMaxPriceAndSurfaceUseCase,
             formatPriceToHumanReadableUseCase,
             convertSurfaceDependingOnLocaleUseCase,
@@ -123,7 +123,7 @@ class FilterPropertiesViewModelTest {
         filterPropertiesViewModel.onMaxPriceChanged("200000")
         filterPropertiesViewModel.onMinSurfaceChanged("100")
         filterPropertiesViewModel.onMaxSurfaceChanged("200")
-        filterPropertiesViewModel.onEntryDateStatusChanged(EntryDateState.ALL)
+        filterPropertiesViewModel.onEntryDateRangeStatusChanged(SearchedEntryDateRange.ALL)
         filterPropertiesViewModel.onPropertySaleStateChanged(PropertySaleState.ALL)
 
         // When
@@ -142,7 +142,7 @@ class FilterPropertiesViewModelTest {
         filterPropertiesViewModel.onMaxPriceChanged("200000")
         filterPropertiesViewModel.onMinSurfaceChanged("100")
         filterPropertiesViewModel.onMaxSurfaceChanged("200")
-        filterPropertiesViewModel.onEntryDateStatusChanged(EntryDateState.ALL)
+        filterPropertiesViewModel.onEntryDateRangeStatusChanged(SearchedEntryDateRange.ALL)
         filterPropertiesViewModel.onPropertySaleStateChanged(PropertySaleState.ALL)
         coEvery {
             getFilteredPropertiesCountAsFlowUseCase.invoke(
@@ -227,7 +227,7 @@ class FilterPropertiesViewModelTest {
                 )
             }
         },
-        entryDate = EntryDateState.ALL,
+        entryDate = SearchedEntryDateRange.ALL,
         availableForSale = PropertySaleState.ALL,
         filterButtonText = NativeText.Arguments(
             R.string.filter_button_nb_properties,
@@ -282,7 +282,7 @@ class FilterPropertiesViewModelTest {
                 )
             }
         },
-        entryDate = EntryDateState.ALL,
+        entryDate = SearchedEntryDateRange.ALL,
         availableForSale = PropertySaleState.ALL,
         filterButtonText = NativeText.Arguments(
             R.string.filter_button_nb_properties,

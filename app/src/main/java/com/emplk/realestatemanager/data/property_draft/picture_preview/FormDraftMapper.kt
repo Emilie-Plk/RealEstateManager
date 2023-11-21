@@ -35,7 +35,6 @@ class FormDraftMapper @Inject constructor(
             agentName = propertyForm.agentName,
             isSold = propertyForm.isSold,
             entryDate = propertyForm.entryDate,
-            entryDateEpoch = propertyForm.entryDateEpoch,
             saleDate = propertyForm.saleDate,
             lastEditionDate = propertyForm.lastEditionDate,
         )
@@ -61,7 +60,6 @@ class FormDraftMapper @Inject constructor(
             amenities = mapAmenities(formDraftDto),
             isSold = formDraftDto.isSold,
             entryDate = formDraftDto.entryDate,
-            entryDateEpoch = formDraftDto.entryDateEpoch,
             saleDate = formDraftDto.saleDate,
             lastEditionDate = formDraftDto.lastEditionDate,
         )

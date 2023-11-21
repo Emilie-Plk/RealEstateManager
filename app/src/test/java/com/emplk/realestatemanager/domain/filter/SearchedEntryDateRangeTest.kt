@@ -6,7 +6,7 @@ import java.time.Clock
 import java.time.LocalDateTime
 import java.time.ZoneId
 
-class EntryDateStateTest {
+class SearchedEntryDateRangeTest {
 
     companion object {
         private val clock = Clock.fixed(
@@ -19,24 +19,24 @@ class EntryDateStateTest {
     fun `nominal case`() {
         assertEquals(
             LocalDateTime.parse("2022-01-01T00:00:00"),
-            EntryDateState.LESS_THAN_1_YEAR.entryDateLambda(clock)?.withNano(0)
+            SearchedEntryDateRange.LESS_THAN_1_YEAR.searchedEntryDateLambda(clock)?.withNano(0)
         )
         assertEquals(
             LocalDateTime.parse("2022-07-01T00:00:00"),
-            EntryDateState.LESS_THAN_6_MONTHS.entryDateLambda(clock)?.withNano(0)
+            SearchedEntryDateRange.LESS_THAN_6_MONTHS.searchedEntryDateLambda(clock)?.withNano(0)
         )
         assertEquals(
             LocalDateTime.parse("2022-10-01T00:00:00"),
-            EntryDateState.LESS_THAN_3_MONTHS.entryDateLambda(clock)?.withNano(0)
+            SearchedEntryDateRange.LESS_THAN_3_MONTHS.searchedEntryDateLambda(clock)?.withNano(0)
         )
         assertEquals(
             LocalDateTime.parse("2022-12-01T00:00:00"),
-            EntryDateState.LESS_THAN_1_MONTH.entryDateLambda(clock)?.withNano(0)
+            SearchedEntryDateRange.LESS_THAN_1_MONTH.searchedEntryDateLambda(clock)?.withNano(0)
         )
         assertEquals(
             LocalDateTime.parse("2022-12-25T00:00:00"),
-            EntryDateState.LESS_THAN_1_WEEK.entryDateLambda(clock)?.withNano(0)
+            SearchedEntryDateRange.LESS_THAN_1_WEEK.searchedEntryDateLambda(clock)?.withNano(0)
         )
-        assertEquals(null, EntryDateState.ALL.entryDateLambda(clock))
+        assertEquals(null, SearchedEntryDateRange.ALL.searchedEntryDateLambda(clock))
     }
 }

@@ -28,7 +28,6 @@ class AddPropertyFormWithDetailsUseCase @Inject constructor(
                     agentName = "",
                     isSold = false,
                     entryDate = null,
-                    entryDateEpoch = null,
                     saleDate = null,
                     lastEditionDate = null,
                 )

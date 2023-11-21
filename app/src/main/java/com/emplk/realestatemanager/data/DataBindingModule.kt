@@ -2,6 +2,7 @@ package com.emplk.realestatemanager.data
 
 import com.emplk.realestatemanager.data.agent.RealEstateAgentRepositoryImpl
 import com.emplk.realestatemanager.data.autocomplete.PredictionRepositoryAutocomplete
+import com.emplk.realestatemanager.data.connectivity.GpsConnectivityRepositoryBroadcastReceiver
 import com.emplk.realestatemanager.data.connectivity.InternetConnectivityRepositoryBroadcastReceiver
 import com.emplk.realestatemanager.data.content_resolver.PictureFileRepositoryContentResolver
 import com.emplk.realestatemanager.data.currency_rate.CurrencyRateRepositoryFixer
@@ -26,6 +27,7 @@ import com.emplk.realestatemanager.data.property_type.PropertyTypeRepositoryImpl
 import com.emplk.realestatemanager.data.screen_width.ScreenWidthTypeRepositoryImpl
 import com.emplk.realestatemanager.domain.agent.RealEstateAgentRepository
 import com.emplk.realestatemanager.domain.autocomplete.PredictionRepository
+import com.emplk.realestatemanager.domain.connectivity.GpsConnectivityRepository
 import com.emplk.realestatemanager.domain.connectivity.InternetConnectivityRepository
 import com.emplk.realestatemanager.domain.content_resolver.PictureFileRepository
 import com.emplk.realestatemanager.domain.currency_rate.CurrencyRateRepository
@@ -122,7 +124,11 @@ abstract class DataBindingModule {
 
     @Singleton
     @Binds
-    abstract fun bindInternetConnectivityRepositoryRepository(implementation: InternetConnectivityRepositoryBroadcastReceiver): InternetConnectivityRepository
+    abstract fun bindInternetConnectivityRepository(implementation: InternetConnectivityRepositoryBroadcastReceiver): InternetConnectivityRepository
+
+    @Singleton
+    @Binds
+    abstract fun bingGpsConnectivityRepository(implementation: GpsConnectivityRepositoryBroadcastReceiver): GpsConnectivityRepository
 
     @Singleton
     @Binds
@@ -155,4 +161,5 @@ abstract class DataBindingModule {
     @Singleton
     @Binds
     abstract fun bindGeolocationRepository(implementation: GeolocationRepositoryFusedLocationProvider): GeolocationRepository
+
 }

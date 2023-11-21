@@ -13,7 +13,7 @@ import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
@@ -24,25 +24,48 @@ class MapViewModel @Inject constructor(
     private val getCurrentLocationUseCase: GetCurrentLocationUseCase,
 ) : ViewModel() {
 
+    companion object {
+        private val FALLBACK_LOCATION_GOOGLE_HG = LatLng(37.422131, -122.084801)
+    }
+
     private val eventMutableSharedFlow: MutableSharedFlow<MapEvent> = MutableSharedFlow(extraBufferCapacity = 1)
 
     private val hasPermissionBeenGrantedMutableStateFlow: MutableStateFlow<Boolean?> =
         MutableStateFlow(null)
 
     val viewState: LiveData<MarkerViewState> = liveData {
+        if (latestValue == null) {
+            emit(
+                MarkerViewState(
+                    userCurrentLocation = null,
+                    fallbackLocationGoogleHq = FALLBACK_LOCATION_GOOGLE_HG,
+                    propertyMarkers = emptyList()
+                )
+            )
+        }
+
         combine(
             getAllPropertiesLatLongUseCase.invoke(),
-            getCurrentLocationUseCase.invoke(hasPermissionBeenGrantedMutableStateFlow),
+            getCurrentLocationUseCase.invoke(hasPermissionBeenGrantedMutableStateFlow)
         ) { propertiesLatLong, geolocationState ->
-            emit(MarkerViewState(
+            MarkerViewState(
                 userCurrentLocation = when (geolocationState) {
                     is GeolocationState.Success -> LatLng(
                         geolocationState.latitude,
                         geolocationState.longitude
                     )
 
-                    else -> null
+                    is GeolocationState.Error -> {
+                        eventMutableSharedFlow.tryEmit(MapEvent.Toast(geolocationState.message))
+                        null
+                    }
+
+                    /*  is GeolocationState.LastKnownLocation -> LatLng(
+                          geolocationState.latitude,
+                          geolocationState.longitude
+                      )*/
                 },
+                fallbackLocationGoogleHq = FALLBACK_LOCATION_GOOGLE_HG,
                 propertyMarkers = if (propertiesLatLong.isEmpty()) emptyList() else
                     propertiesLatLong.map { propertyLatLong ->
                         PropertyMarkerViewState(
@@ -55,8 +78,7 @@ class MapViewModel @Inject constructor(
                         )
                     }
             )
-            )
-        }.collect()
+        }.collectLatest { emit(it) }
     }
 
     val viewEvent: LiveData<Event<MapEvent>> = liveData {

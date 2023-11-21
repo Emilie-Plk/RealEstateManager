@@ -7,7 +7,9 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
@@ -23,7 +25,6 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -33,6 +34,7 @@ class MapsFragment : SupportMapFragment(), OnMapReadyCallback {
 
     companion object {
         fun newInstance(): Fragment = MapsFragment()
+
     }
 
     private val viewModel: MapViewModel by viewModels()
@@ -61,7 +63,7 @@ class MapsFragment : SupportMapFragment(), OnMapReadyCallback {
             googleMap.clear()
 
             val cameraPosition = CameraPosition.Builder()
-                .target(viewState.userCurrentLocation ?: LatLng(37.422131, -122.084801))
+                .target(viewState.userCurrentLocation ?: viewState.fallbackLocationGoogleHq)
                 .zoom(12f)
                 .build()
 
@@ -69,19 +71,28 @@ class MapsFragment : SupportMapFragment(), OnMapReadyCallback {
 
             // User marker
             viewState.userCurrentLocation?.let { userCurrentLocation ->
-                val marker = MarkerOptions()
+                val userMarkerOptions = MarkerOptions()
                     .position(userCurrentLocation)
-                    .title("You are here")
+                    .title("Hello!")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
 
-                googleMap.addMarker(marker)
+                @SuppressLint("MissingPermission")
+                googleMap.isMyLocationEnabled = true
+                googleMap.uiSettings.isMyLocationButtonEnabled = true
+                googleMap.setOnMyLocationButtonClickListener {
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userCurrentLocation, 12f))
+                    true
+                }
+
+                googleMap.addMarker(userMarkerOptions)
+
                 googleMap.moveCamera(
                     CameraUpdateFactory.newLatLng(userCurrentLocation)
                 )
                 googleMap.animateCamera(CameraUpdateFactory.zoomTo(12f))
-                googleMap.uiSettings.isMyLocationButtonEnabled = true
             }
 
+            // Property markers
             val customMarkerIcon = vectorToBitmap(requireContext(), R.drawable.baseline_house_pin_circle_24)
             viewState.propertyMarkers.forEach { markerViewState ->
                 val marker = MarkerOptions()
@@ -89,9 +100,12 @@ class MapsFragment : SupportMapFragment(), OnMapReadyCallback {
                     .title(markerViewState.propertyId.toString())
                     .icon(customMarkerIcon)
 
-                val googleMarker = googleMap.addMarker(marker)
-                googleMarker?.tag = markerViewState.propertyId
+                val propertyMarker = googleMap.addMarker(marker)
+                propertyMarker?.tag = markerViewState.propertyId
+
                 googleMap.setOnMarkerClickListener {
+                    Log.d("COUCOU", "Marker clicked: ${it.tag}")
+                    if (it.tag == null) return@setOnMarkerClickListener false
                     markerViewState.onMarkerClicked.invoke(it.tag as Long)
                     googleMap.moveCamera(
                         CameraUpdateFactory.newLatLng(it.position)
@@ -102,11 +116,15 @@ class MapsFragment : SupportMapFragment(), OnMapReadyCallback {
             }
         }
 
-
         viewModel.viewEvent.observeEvent(this) { event ->
             when (event) {
                 is MapEvent.OnMarkerClicked ->
                     MapBottomSheetFragment.newInstance().show(childFragmentManager, MapBottomSheetFragment.TAG)
+
+                is MapEvent.Toast -> if (event.message != null) {
+                    Toast.makeText(requireContext(), event.message.toCharSequence(requireContext()), Toast.LENGTH_SHORT)
+                        .show()
+                }
             }
         }
     }
@@ -122,7 +140,6 @@ class MapsFragment : SupportMapFragment(), OnMapReadyCallback {
                     ) ==
                     PackageManager.PERMISSION_GRANTED ->
                 viewModel.hasPermissionBeenGranted(true)
-
 
             // Permissions have been denied once - show rationale
             shouldShowRequestPermissionRationale(android.Manifest.permission.ACCESS_FINE_LOCATION) ||
