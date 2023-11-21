@@ -152,7 +152,6 @@ class AddOrEditPropertyViewModel @Inject constructor(
                     pictureIds = formWithType.formDraftEntity.pictures.map { it.id },
                     featuredPictureId = formWithType.formDraftEntity.pictures.find { it.isFeatured }?.id,
                     entryDate = formWithType.formDraftEntity.entryDate,
-                    entryDateEpoch = formWithType.formDraftEntity.entryDateEpoch,
                     isSold = formWithType.formDraftEntity.isSold,
                     soldDate = formWithType.formDraftEntity.saleDate,
                 )

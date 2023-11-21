@@ -6,7 +6,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.time.Clock
 
-class ConvertEntryDateStateToEpochMilliUseCaseTest {
+class ConvertSearchedEntryDateRangeToEpochMilliUseCaseTest {
 
     companion object {
         private const val TEST_FIXED_EPOCH_MILLI_MINUS_1_YEAR = 1667222555000L //  Monday 31 October 2022 13:22:35
@@ -18,15 +18,15 @@ class ConvertEntryDateStateToEpochMilliUseCaseTest {
 
     private val clock: Clock = testFixedClock
 
-    private val convertEntryDateStateToEpochMilliUseCase = ConvertEntryDateStateToEpochMilliUseCase(clock)
+    private val convertSearchedEntryDateRangeToEpochMilliUseCase = ConvertSearchedEntryDateRangeToEpochMilliUseCase(clock)
 
     @Test
     fun `invoke() should return null when entryDateState is ALL`() {
         // Given
-        val entryDateState = EntryDateState.ALL
+        val searchedEntryDateRange = SearchedEntryDateRange.ALL
 
         // When
-        val result = convertEntryDateStateToEpochMilliUseCase.invoke(entryDateState)
+        val result = convertSearchedEntryDateRangeToEpochMilliUseCase.invoke(searchedEntryDateRange)
 
         // Then
         assertNull(result)
@@ -35,10 +35,10 @@ class ConvertEntryDateStateToEpochMilliUseCaseTest {
     @Test
     fun `invoke() should return epochMilli when entryDateState is LESS_THAN_1_YEAR`() {
         // Given
-        val entryDateState = EntryDateState.LESS_THAN_1_YEAR
+        val searchedEntryDateRange = SearchedEntryDateRange.LESS_THAN_1_YEAR
 
         // When
-        val result = convertEntryDateStateToEpochMilliUseCase.invoke(entryDateState)
+        val result = convertSearchedEntryDateRangeToEpochMilliUseCase.invoke(searchedEntryDateRange)
         // Then
         assertEquals(TEST_FIXED_EPOCH_MILLI_MINUS_1_YEAR, result)
     }
@@ -46,10 +46,10 @@ class ConvertEntryDateStateToEpochMilliUseCaseTest {
     @Test
     fun `invoke() should return epochMilli when entryDateState is LESS_THAN_6_MONTHS`() {
         // Given
-        val entryDateState = EntryDateState.LESS_THAN_6_MONTHS
+        val searchedEntryDateRange = SearchedEntryDateRange.LESS_THAN_6_MONTHS
 
         // When
-        val result = convertEntryDateStateToEpochMilliUseCase.invoke(entryDateState)
+        val result = convertSearchedEntryDateRangeToEpochMilliUseCase.invoke(searchedEntryDateRange)
 
         // Then
         assertEquals(TEST_FIXED_EPOCH_MILLI_MINUS_6_MONTHS, result)
@@ -58,10 +58,10 @@ class ConvertEntryDateStateToEpochMilliUseCaseTest {
     @Test
     fun `invoke() should return epochMilli when entryDateState is LESS_THAN_3_MONTHS`() {
         // Given
-        val entryDateState = EntryDateState.LESS_THAN_3_MONTHS
+        val searchedEntryDateRange = SearchedEntryDateRange.LESS_THAN_3_MONTHS
 
         // When
-        val result = convertEntryDateStateToEpochMilliUseCase.invoke(entryDateState)
+        val result = convertSearchedEntryDateRangeToEpochMilliUseCase.invoke(searchedEntryDateRange)
 
         // Then
         assertEquals(TEST_FIXED_EPOCH_MILLI_MINUS_3_MONTHS, result)
@@ -70,10 +70,10 @@ class ConvertEntryDateStateToEpochMilliUseCaseTest {
     @Test
     fun `invoke() should return epochMilli when entryDateState is LESS_THAN_1_MONTH`() {
         // Given
-        val entryDateState = EntryDateState.LESS_THAN_1_MONTH
+        val searchedEntryDateRange = SearchedEntryDateRange.LESS_THAN_1_MONTH
 
         // When
-        val result = convertEntryDateStateToEpochMilliUseCase.invoke(entryDateState)
+        val result = convertSearchedEntryDateRangeToEpochMilliUseCase.invoke(searchedEntryDateRange)
 
         // Then
         assertEquals(TEST_FIXED_EPOCH_MILLI_MINUS_1_MONTH, result)
@@ -82,10 +82,10 @@ class ConvertEntryDateStateToEpochMilliUseCaseTest {
     @Test
     fun `invoke() should return epochMilli when entryDateState is LESS_THAN_1_WEEK`() {
         // Given
-        val entryDateState = EntryDateState.LESS_THAN_1_WEEK
+        val searchedEntryDateRange = SearchedEntryDateRange.LESS_THAN_1_WEEK
 
         // When
-        val result = convertEntryDateStateToEpochMilliUseCase.invoke(entryDateState)
+        val result = convertSearchedEntryDateRangeToEpochMilliUseCase.invoke(searchedEntryDateRange)
 
         // Then
         assertEquals(TEST_FIXED_EPOCH_MILLI_MINUS_1_WEEK, result)

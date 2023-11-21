@@ -5,6 +5,7 @@ import com.google.android.gms.maps.model.LatLng
 
 data class MarkerViewState(
     val userCurrentLocation: LatLng?,
+    val fallbackLocationGoogleHq: LatLng,
     val propertyMarkers: List<PropertyMarkerViewState>,
 )
 

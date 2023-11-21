@@ -1,6 +1,6 @@
 package com.emplk.realestatemanager.ui.filter
 
-import com.emplk.realestatemanager.domain.filter.EntryDateState
+import com.emplk.realestatemanager.domain.filter.SearchedEntryDateRange
 import com.emplk.realestatemanager.ui.add.amenity.AmenityViewState
 import com.emplk.realestatemanager.ui.add.type.PropertyTypeViewStateItem
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
@@ -16,7 +16,7 @@ data class FilterViewState(
     val maxSurface: String,
     val amenities: List<AmenityViewState>,
     val propertyTypes: List<PropertyTypeViewStateItem>,
-    val entryDate: EntryDateState? = EntryDateState.ALL,
+    val entryDate: SearchedEntryDateRange? = SearchedEntryDateRange.ALL,
     val availableForSale: PropertySaleState? = PropertySaleState.ALL,
     val filterButtonText: NativeText,
     val isFilterButtonEnabled: Boolean,

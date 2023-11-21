@@ -208,7 +208,7 @@ class IsPropertyMatchingFiltersUseCaseTest(
                 PropertiesFilterEntity(
                     propertyType = "Villa",
                     minMaxPrice = Pair(BigDecimal(1000000), BigDecimal(2000000)),
-                    entryDate = EntryDateState.ALL
+                    entryDate = SearchedEntryDateRange.ALL
                 ),
                 false
             ),
@@ -222,7 +222,7 @@ class IsPropertyMatchingFiltersUseCaseTest(
                 PropertiesFilterEntity(
                     propertyType = "Villa",
                     minMaxPrice = Pair(BigDecimal(1000000), BigDecimal(2000000)),
-                    entryDate = EntryDateState.LESS_THAN_1_YEAR
+                    entryDate = SearchedEntryDateRange.LESS_THAN_1_YEAR
                 ),
                 false
             ),
@@ -236,7 +236,7 @@ class IsPropertyMatchingFiltersUseCaseTest(
                 PropertiesFilterEntity(
                     propertyType = "Villa",
                     minMaxPrice = Pair(BigDecimal(1000000), BigDecimal(2000000)),
-                    entryDate = EntryDateState.LESS_THAN_1_YEAR
+                    entryDate = SearchedEntryDateRange.LESS_THAN_1_YEAR
                 ),
                 false
             ),
@@ -250,7 +250,7 @@ class IsPropertyMatchingFiltersUseCaseTest(
                 PropertiesFilterEntity(
                     propertyType = "Villa",
                     minMaxPrice = Pair(BigDecimal(1000000), BigDecimal(2000000)),
-                    entryDate = EntryDateState.LESS_THAN_1_YEAR
+                    entryDate = SearchedEntryDateRange.LESS_THAN_1_YEAR
                 ),
                 false
             ),
@@ -265,7 +265,7 @@ class IsPropertyMatchingFiltersUseCaseTest(
                     propertyType = "Villa",
                     amenities = listOf(AmenityType.SCHOOL),
                     minMaxPrice = Pair(BigDecimal(1000000), BigDecimal(2000000)),
-                    entryDate = EntryDateState.LESS_THAN_1_YEAR
+                    entryDate = SearchedEntryDateRange.LESS_THAN_1_YEAR
                 ),
                 false
             ),
@@ -280,7 +280,7 @@ class IsPropertyMatchingFiltersUseCaseTest(
                     propertyType = "Villa",
                     amenities = listOf(AmenityType.GYM),
                     minMaxPrice = Pair(BigDecimal(1000000), BigDecimal(2000000)),
-                    entryDate = EntryDateState.LESS_THAN_1_YEAR
+                    entryDate = SearchedEntryDateRange.LESS_THAN_1_YEAR
                 ),
                 false
             ),
@@ -295,7 +295,7 @@ class IsPropertyMatchingFiltersUseCaseTest(
                     propertyType = "Villa",
                     amenities = listOf(AmenityType.PARK),
                     minMaxPrice = Pair(BigDecimal(1000000), BigDecimal(2000000)),
-                    entryDate = EntryDateState.LESS_THAN_1_YEAR
+                    entryDate = SearchedEntryDateRange.LESS_THAN_1_YEAR
                 ),
                 false
             ),
@@ -310,7 +310,7 @@ class IsPropertyMatchingFiltersUseCaseTest(
                     propertyType = "Villa",
                     amenities = listOf(AmenityType.SCHOOL),
                     minMaxPrice = Pair(BigDecimal(1200000), BigDecimal(2000000)),
-                    entryDate = EntryDateState.LESS_THAN_1_YEAR
+                    entryDate = SearchedEntryDateRange.LESS_THAN_1_YEAR
                 ),
                 false
             ),
@@ -340,7 +340,7 @@ class IsPropertyMatchingFiltersUseCaseTest(
                 PropertiesFilterEntity(
                     propertyType = "Villa",
                     amenities = listOf(AmenityType.SCHOOL),
-                    entryDate = EntryDateState.LESS_THAN_1_YEAR,
+                    entryDate = SearchedEntryDateRange.LESS_THAN_1_YEAR,
                     availableForSale = PropertySaleState.FOR_SALE
                 ),
                 false

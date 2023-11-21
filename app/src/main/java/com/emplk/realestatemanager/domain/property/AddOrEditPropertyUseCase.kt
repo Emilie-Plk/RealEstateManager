@@ -101,7 +101,6 @@ class AddOrEditPropertyUseCase @Inject constructor(
                             }
                         },
                         entryDate = form.entryDate,
-                        entryDateEpoch = form.entryDateEpoch,
                         lastEditionDate = LocalDateTime.now(clock),
                         isSold = form.isSold,
                         saleDate = if (!form.isSold) null else form.soldDate ?: LocalDateTime.now(clock),
@@ -142,7 +141,6 @@ class AddOrEditPropertyUseCase @Inject constructor(
                             )
                         },
                         entryDate = now,
-                        entryDateEpoch = now.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
                         lastEditionDate = null,
                         isSold = false,
                         saleDate = null,

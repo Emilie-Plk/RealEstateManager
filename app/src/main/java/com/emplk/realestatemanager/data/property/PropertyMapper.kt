@@ -7,6 +7,7 @@ import com.emplk.realestatemanager.data.property.picture.PictureMapper
 import com.emplk.realestatemanager.domain.property.PropertyEntity
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import java.math.RoundingMode
+import java.time.ZoneId
 import javax.inject.Inject
 
 class PropertyMapper @Inject constructor(
@@ -35,7 +36,7 @@ class PropertyMapper @Inject constructor(
         agentName = property.agentName,
         isSold = property.isSold,
         entryDate = property.entryDate,
-        entryDateEpoch = property.entryDateEpoch,
+        entryDateEpoch = property.entryDate.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
         saleDate = property.saleDate,
         lastEditionDate = property.lastEditionDate,
     )
@@ -59,7 +60,6 @@ class PropertyMapper @Inject constructor(
         agentName = propertyDto.agentName,
         isSold = propertyDto.isSold,
         entryDate = propertyDto.entryDate,
-        entryDateEpoch = propertyDto.entryDateEpoch,
         saleDate = propertyDto.saleDate,
         lastEditionDate = propertyDto.lastEditionDate,
     )

@@ -3,8 +3,8 @@ package com.emplk.realestatemanager.domain.filter
 import java.time.Clock
 import java.time.LocalDateTime
 
-enum class EntryDateState(
-    val entryDateLambda: (Clock) -> LocalDateTime?
+enum class SearchedEntryDateRange(
+    val searchedEntryDateLambda: (Clock) -> LocalDateTime?
 ) {
     LESS_THAN_1_YEAR({ clock -> LocalDateTime.now(clock).minusYears(1) }),
     LESS_THAN_6_MONTHS({ clock -> LocalDateTime.now(clock).minusMonths(6) }),

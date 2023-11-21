@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.ContentResolver
 import android.content.Context
 import android.content.res.Resources
+import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.os.Build
 import android.util.LruCache
@@ -235,6 +236,10 @@ class DataModule {
     @Provides
     fun provideFusedLocationProviderClient(application: Application): FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(application)
+
+    @Singleton
+    @Provides
+    fun provideLocationManager(application: Application): LocationManager? = application.getSystemService()
 
     @Qualifier
     @Retention(AnnotationRetention.BINARY)

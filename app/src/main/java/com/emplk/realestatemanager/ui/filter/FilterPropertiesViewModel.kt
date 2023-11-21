@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.emplk.realestatemanager.R
-import com.emplk.realestatemanager.domain.filter.ConvertEntryDateStateToEpochMilliUseCase
-import com.emplk.realestatemanager.domain.filter.EntryDateState
+import com.emplk.realestatemanager.domain.filter.ConvertSearchedEntryDateRangeToEpochMilliUseCase
+import com.emplk.realestatemanager.domain.filter.SearchedEntryDateRange
 import com.emplk.realestatemanager.domain.filter.GetFilteredPropertiesCountAsFlowUseCase
 import com.emplk.realestatemanager.domain.filter.GetMinMaxPriceAndSurfaceUseCase
 import com.emplk.realestatemanager.domain.filter.GetPropertyTypeForFilterUseCase
@@ -40,7 +40,7 @@ import javax.inject.Inject
 @HiltViewModel
 class FilterPropertiesViewModel @Inject constructor(
     private val getFilteredPropertiesCountAsFlowUseCase: GetFilteredPropertiesCountAsFlowUseCase,
-    private val convertEntryDateStateToEpochMilliUseCase: ConvertEntryDateStateToEpochMilliUseCase,
+    private val convertSearchedEntryDateRangeToEpochMilliUseCase: ConvertSearchedEntryDateRangeToEpochMilliUseCase,
     private val getMinMaxPriceAndSurfaceUseCase: GetMinMaxPriceAndSurfaceUseCase,
     private val formatPriceToHumanReadableUseCase: FormatPriceToHumanReadableUseCase,
     private val convertSurfaceDependingOnLocaleUseCase: ConvertSurfaceDependingOnLocaleUseCase,
@@ -65,7 +65,7 @@ class FilterPropertiesViewModel @Inject constructor(
                 minSurface = convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(filterParams.minSurface),
                 maxSurface = convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(filterParams.maxSurface),
                 amenities = filterParams.selectedAmenities,
-                entryDateMin = convertEntryDateStateToEpochMilliUseCase.invoke(filterParams.entryDateState),
+                entryDateMin = convertSearchedEntryDateRangeToEpochMilliUseCase.invoke(filterParams.searchedEntryDateRange),
                 propertySaleState = filterParams.saleState,
             )
         }.collectLatest { filteredPropertiesCount ->
@@ -125,7 +125,7 @@ class FilterPropertiesViewModel @Inject constructor(
                         name = propertyType.value,
                     )
                 },
-                entryDate = filterParamsMutableStateFlow.value.entryDateState,
+                entryDate = filterParamsMutableStateFlow.value.searchedEntryDateRange,
                 availableForSale = filterParamsMutableStateFlow.value.saleState,
                 filterButtonText = when (filteredPropertiesCount) {
                     0 -> NativeText.Resource(R.string.filter_button_none)
@@ -157,7 +157,7 @@ class FilterPropertiesViewModel @Inject constructor(
                                 ),
                                 filterParamsMutableStateFlow.value.selectedAmenities,
                                 filterParamsMutableStateFlow.value.saleState,
-                                filterParamsMutableStateFlow.value.entryDateState,
+                                filterParamsMutableStateFlow.value.searchedEntryDateRange,
                             )
                         }
                     }
@@ -204,9 +204,9 @@ class FilterPropertiesViewModel @Inject constructor(
     }
 
 
-    fun onEntryDateStatusChanged(entryDateState: EntryDateState) {
+    fun onEntryDateRangeStatusChanged(searchedEntryDateRange: SearchedEntryDateRange) {
         filterParamsMutableStateFlow.update {
-            it.copy(entryDateState = entryDateState)
+            it.copy(searchedEntryDateRange = searchedEntryDateRange)
         }
     }
 
@@ -273,5 +273,5 @@ data class FilterParams(
     val maxSurface: BigDecimal = BigDecimal.ZERO,
     val selectedAmenities: List<AmenityType> = emptyList(),
     val saleState: PropertySaleState? = null,
-    val entryDateState: EntryDateState? = null,
+    val searchedEntryDateRange: SearchedEntryDateRange? = null,
 )

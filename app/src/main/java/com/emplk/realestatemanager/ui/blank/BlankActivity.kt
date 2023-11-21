@@ -54,7 +54,6 @@ class BlankActivity : AppCompatActivity() {
         onBackPress()
 
         val fragmentTag = intent.getStringExtra(KEY_FRAGMENT_TAG)
-        val propertyId = intent.getLongExtra(PROPERTY_ID_KEY, 0L)
 
         if (savedInstanceState == null) {
             when (fragmentTag) {

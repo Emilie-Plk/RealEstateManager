@@ -73,4 +73,7 @@
     <string name="filter_button_none">None</string>
     <string name="filter_button_one">1 property</string>
     <string name="filter_button_nb_properties">%s properties</string>
+    <string name="geolocation_error_no_location_found">Can\'t find geolocation, try again later!</string>
+    <string name="geolocation_error_no_internet">Please check your internet connexion and try later!</string>
+    <string name="geolocation_error_no_gps">Please enable GPS and try again!</string>
 </resources>

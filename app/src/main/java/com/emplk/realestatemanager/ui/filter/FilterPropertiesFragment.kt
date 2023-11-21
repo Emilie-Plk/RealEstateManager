@@ -11,7 +11,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.FilterPropertiesFragmentBinding
-import com.emplk.realestatemanager.domain.filter.EntryDateState
+import com.emplk.realestatemanager.domain.filter.SearchedEntryDateRange
 import com.emplk.realestatemanager.ui.add.amenity.AmenityListAdapter
 import com.emplk.realestatemanager.ui.add.type.PropertyTypeSpinnerAdapter
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
@@ -80,6 +80,8 @@ class FilterPropertiesFragment : DialogFragment(R.layout.filter_properties_fragm
                 viewModel.onMaxPriceChanged(it?.toString() ?: "")
             }
 
+            binding.filterPropertySurfaceRangeTv.text = viewState.surfaceRange.toCharSequence(requireContext())
+
             if (binding.filterPropertyMinSurfaceEditText.text.toString() != viewState.minSurface) {
                 binding.filterPropertyMinSurfaceEditText.setText(viewState.minSurface)
             }
@@ -101,31 +103,31 @@ class FilterPropertiesFragment : DialogFragment(R.layout.filter_properties_fragm
             binding.filterPropertyEntryDateChipGroup.setOnCheckedStateChangeListener { _, checkedIds ->
                 checkedIds.forEach { checkedId ->
                     when (checkedId) {
-                        R.id.filter_property_entry_less_than_1_year_chip -> viewModel.onEntryDateStatusChanged(
-                            EntryDateState.LESS_THAN_1_YEAR
+                        R.id.filter_property_entry_less_than_1_year_chip -> viewModel.onEntryDateRangeStatusChanged(
+                            SearchedEntryDateRange.LESS_THAN_1_YEAR
                         )
 
-                        R.id.filter_property_entry_less_than_6_months_chip -> viewModel.onEntryDateStatusChanged(
-                            EntryDateState.LESS_THAN_6_MONTHS
+                        R.id.filter_property_entry_less_than_6_months_chip -> viewModel.onEntryDateRangeStatusChanged(
+                            SearchedEntryDateRange.LESS_THAN_6_MONTHS
                         )
 
-                        R.id.filter_property_entry_date_less_than_3_months_chip -> viewModel.onEntryDateStatusChanged(
-                            EntryDateState.LESS_THAN_3_MONTHS
+                        R.id.filter_property_entry_date_less_than_3_months_chip -> viewModel.onEntryDateRangeStatusChanged(
+                            SearchedEntryDateRange.LESS_THAN_3_MONTHS
                         )
 
-                        R.id.filter_property_entry_date_less_than_1_month_chip -> viewModel.onEntryDateStatusChanged(
-                            EntryDateState.LESS_THAN_1_MONTH
+                        R.id.filter_property_entry_date_less_than_1_month_chip -> viewModel.onEntryDateRangeStatusChanged(
+                            SearchedEntryDateRange.LESS_THAN_1_MONTH
                         )
 
-                        R.id.filter_property_entry_date_less_than_1_week_chip -> viewModel.onEntryDateStatusChanged(
-                            EntryDateState.LESS_THAN_1_WEEK
+                        R.id.filter_property_entry_date_less_than_1_week_chip -> viewModel.onEntryDateRangeStatusChanged(
+                            SearchedEntryDateRange.LESS_THAN_1_WEEK
                         )
 
-                        R.id.filter_property_entry_date_all_chip -> viewModel.onEntryDateStatusChanged(
-                            EntryDateState.ALL
+                        R.id.filter_property_entry_date_all_chip -> viewModel.onEntryDateRangeStatusChanged(
+                            SearchedEntryDateRange.ALL
                         )
 
-                        else -> viewModel.onEntryDateStatusChanged(EntryDateState.ALL)
+                        else -> viewModel.onEntryDateRangeStatusChanged(SearchedEntryDateRange.ALL)
                     }
                 }
             }
