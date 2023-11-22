@@ -4,11 +4,11 @@ import com.emplk.realestatemanager.domain.current_property.ResetCurrentPropertyI
 import javax.inject.Inject
 
 class SaveDraftNavigationUseCase @Inject constructor(
-    private val navigationDraftRepository: NavigationDraftRepository,
+    private val formRepository: FormRepository,
     private val resetCurrentPropertyIdUseCase: ResetCurrentPropertyIdUseCase,
 ) {
     fun invoke() {
-        navigationDraftRepository.savePropertyDraftEvent()
+        formRepository.savePropertyDraftEvent()
         resetCurrentPropertyIdUseCase.invoke()
     }
 }

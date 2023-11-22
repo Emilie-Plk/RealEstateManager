@@ -12,14 +12,13 @@ import com.emplk.realestatemanager.data.geocoding.GeocodingRepositoryGoogle
 import com.emplk.realestatemanager.data.geolocation.GeolocationRepositoryFusedLocationProvider
 import com.emplk.realestatemanager.data.loan_simulator.LoanSimulatorRepositoryImpl
 import com.emplk.realestatemanager.data.locale_formatting.LocaleFormattingRepositoryImpl
-import com.emplk.realestatemanager.data.navigation.NavigationDraftRepositoryImpl
+import com.emplk.realestatemanager.data.navigation.FormRepositoryImpl
 import com.emplk.realestatemanager.data.navigation.NavigationRepositoryImpl
 import com.emplk.realestatemanager.data.property.PropertyRepositoryRoom
 import com.emplk.realestatemanager.data.property.amenity.AmenityTypeRepositoryImpl
 import com.emplk.realestatemanager.data.property.location.LocationRepositoryRoom
 import com.emplk.realestatemanager.data.property.picture.PictureRepositoryRoom
-import com.emplk.realestatemanager.data.property_draft.FormDraftDraftRepositoryRoom
-import com.emplk.realestatemanager.data.property_draft.PropertyFormParamsRepositoryImpl
+import com.emplk.realestatemanager.data.property_draft.FormDraftRepositoryRoom
 import com.emplk.realestatemanager.data.property_draft.address.SelectedAddressStateRepositoryImpl
 import com.emplk.realestatemanager.data.property_draft.picture_preview.PicturePreviewRepositoryRoom
 import com.emplk.realestatemanager.data.property_draft.picture_preview.id.PicturePreviewIdRepositoryImpl
@@ -38,13 +37,12 @@ import com.emplk.realestatemanager.domain.geolocation.GeolocationRepository
 import com.emplk.realestatemanager.domain.loan_simulator.LoanSimulatorRepository
 import com.emplk.realestatemanager.domain.locale_formatting.LocaleFormattingRepository
 import com.emplk.realestatemanager.domain.navigation.NavigationRepository
-import com.emplk.realestatemanager.domain.navigation.draft.NavigationDraftRepository
+import com.emplk.realestatemanager.domain.navigation.draft.FormRepository
 import com.emplk.realestatemanager.domain.property.PropertyRepository
 import com.emplk.realestatemanager.domain.property.amenity.type.AmenityTypeRepository
 import com.emplk.realestatemanager.domain.property.location.LocationRepository
 import com.emplk.realestatemanager.domain.property.pictures.PictureRepository
 import com.emplk.realestatemanager.domain.property_draft.FormDraftRepository
-import com.emplk.realestatemanager.domain.property_draft.PropertyFormParamsRepository
 import com.emplk.realestatemanager.domain.property_draft.address.SelectedAddressStateRepository
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.PicturePreviewRepository
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.id.PicturePreviewIdRepository
@@ -82,7 +80,7 @@ abstract class DataBindingModule {
 
     @Singleton
     @Binds
-    abstract fun bindNavigationDraftRepository(implementation: NavigationDraftRepositoryImpl): NavigationDraftRepository
+    abstract fun bindNavigationDraftRepository(implementation: FormRepositoryImpl): FormRepository
 
     @Singleton
     @Binds
@@ -99,7 +97,7 @@ abstract class DataBindingModule {
 
     @Singleton
     @Binds
-    abstract fun bindPropertyFormRepository(implementation: FormDraftDraftRepositoryRoom): FormDraftRepository
+    abstract fun bindPropertyFormRepository(implementation: FormDraftRepositoryRoom): FormDraftRepository
 
     @Singleton
     @Binds
@@ -148,10 +146,6 @@ abstract class DataBindingModule {
 
     @Singleton
     @Binds
-    abstract fun bindPropertyFormParamsRepository(implementation: PropertyFormParamsRepositoryImpl): PropertyFormParamsRepository
-
-    @Singleton
-    @Binds
     abstract fun bindLoanSimulatorRepository(implementation: LoanSimulatorRepositoryImpl): LoanSimulatorRepository
 
     @Singleton
@@ -161,5 +155,4 @@ abstract class DataBindingModule {
     @Singleton
     @Binds
     abstract fun bindGeolocationRepository(implementation: GeolocationRepositoryFusedLocationProvider): GeolocationRepository
-
 }

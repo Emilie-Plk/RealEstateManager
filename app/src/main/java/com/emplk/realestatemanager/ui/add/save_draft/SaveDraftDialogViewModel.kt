@@ -9,8 +9,9 @@ import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.ClearPropertyFormNavigationUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.SaveDraftNavigationUseCase
-import com.emplk.realestatemanager.domain.property_draft.ClearPropertyFormProgressUseCase
-import com.emplk.realestatemanager.domain.property_draft.GetFormTitleAsFlowUseCase
+import com.emplk.realestatemanager.domain.property_draft.GetFormTypeAndTitleAsFlowUseCase
+import com.emplk.realestatemanager.domain.property_draft.ResetFormParamsUseCase
+import com.emplk.realestatemanager.domain.property_draft.ResetPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.SetFormTitleUseCase
 import com.emplk.realestatemanager.ui.add.FormType
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
@@ -26,8 +27,8 @@ class SaveDraftDialogViewModel @Inject constructor(
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val saveDraftNavigationUseCase: SaveDraftNavigationUseCase,
     private val setFormTitleUseCase: SetFormTitleUseCase,
-    private val getFormTitleAsFlowUseCase: GetFormTitleAsFlowUseCase,
-    private val clearPropertyFormProgressUseCase: ClearPropertyFormProgressUseCase,
+    private val getFormTypeAndTitleAsFlowUseCase: GetFormTypeAndTitleAsFlowUseCase,
+    private val resetFormParamsUseCase: ResetFormParamsUseCase,
     private val clearPropertyFormNavigationUseCase: ClearPropertyFormNavigationUseCase,
     private val resources: Resources,
 ) : ViewModel() {
@@ -38,7 +39,7 @@ class SaveDraftDialogViewModel @Inject constructor(
 
     val viewState: LiveData<SaveDraftViewState> = liveData {
         combine(
-            getFormTitleAsFlowUseCase.invoke(),
+            getFormTypeAndTitleAsFlowUseCase.invoke(),
             isTitleMissingMutableStateFlow,
             hasSaveButtonBeingClicked
         ) { formTypeAndTitle, isTitleMissing, hasSaveButtonClicked ->
@@ -49,7 +50,7 @@ class SaveDraftDialogViewModel @Inject constructor(
                         if (formTypeAndTitle.formType == FormType.EDIT || (formTypeAndTitle.formType == FormType.ADD && formTypeAndTitle.title != null)) {
                             setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
                             saveDraftNavigationUseCase.invoke()
-                            clearPropertyFormProgressUseCase.invoke()
+                            resetFormParamsUseCase.invoke()
                         } else {
                             hasSaveButtonBeingClicked.tryEmit(true)
                             isTitleMissingMutableStateFlow.tryEmit(true)
@@ -61,7 +62,7 @@ class SaveDraftDialogViewModel @Inject constructor(
                             formTypeAndTitle.formType,
                             resources.getString(R.string.form_title_untitled)
                         ) else setFormTitleUseCase.invoke(formTypeAndTitle.formType, title)
-                        clearPropertyFormProgressUseCase.invoke()
+                        resetFormParamsUseCase.invoke()
                         setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
                     },
                     discardEvent = EquatableCallback {

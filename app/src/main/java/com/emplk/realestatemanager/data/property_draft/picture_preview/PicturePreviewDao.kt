@@ -19,7 +19,7 @@ interface PicturePreviewDao {
     suspend fun getAll(propertyFormId: Long): List<PicturePreviewDto>
 
     @Query("UPDATE picture_previews SET is_featured = :newIsFeatured, description = :newDescription WHERE id = :picturePreviewId")
-    suspend fun update(picturePreviewId: Long, newIsFeatured: Boolean?, newDescription: String?): Int
+    suspend fun update(picturePreviewId: Long, newIsFeatured: Boolean?, newDescription: String?)
 
     @Query("UPDATE picture_previews SET is_featured = 0 WHERE is_featured = 1")
     suspend fun clearFeaturedPicture(): Int

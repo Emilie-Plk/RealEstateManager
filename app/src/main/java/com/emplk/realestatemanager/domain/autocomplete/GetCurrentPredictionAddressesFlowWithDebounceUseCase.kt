@@ -14,7 +14,7 @@ class GetCurrentPredictionAddressesFlowWithDebounceUseCase @Inject constructor(
     private val getIsPredictionSelectedByUserUseCase: GetIsPredictionSelectedByUserUseCase, // maybe a flag ?
 ) {
 
-    suspend fun invoke(): Flow<PredictionWrapper?> {
+    fun invoke(): Flow<PredictionWrapper?> {
         val currentInputFlow = selectedAddressStateRepository.getCurrentAddressInput()
         val hasAddressFocusFlow = selectedAddressStateRepository.getHasAddressFocus()
         val isPredictionSelectedByUserFlow = getIsPredictionSelectedByUserUseCase.invoke()

@@ -99,7 +99,7 @@ class MapViewModelTest {
     fun `when NoLocationAvailable - userCurrentLocation should be null`() = testCoroutineRule.runTest {
         // Given
         coEvery { getCurrentLocationUseCase.invoke(any()) } returns flowOf(
-            GeolocationState.NoLocationAvailable
+            GeolocationState.Error(null)
         )
         // When
         mapViewModel.viewState.observeForTesting(this) { viewState ->
@@ -113,7 +113,7 @@ class MapViewModelTest {
     fun `when NoLocationWithMissingPermission - userCurrentLocation should be null`() = testCoroutineRule.runTest {
         // Given
         coEvery { getCurrentLocationUseCase.invoke(any()) } returns flowOf(
-            GeolocationState.NoLocationWithMissingPermission
+            GeolocationState.Error(null)
         )
         // When
         mapViewModel.viewState.observeForTesting(this) { viewState ->
@@ -128,7 +128,7 @@ class MapViewModelTest {
         testCoroutineRule.runTest {
             // Given
             every { getCurrentLocationUseCase.invoke(any()) } returns flowOf(
-                GeolocationState.NoLocationWithMissingPermission
+                GeolocationState.Error(null)
             )
 
             // ...and...
@@ -169,8 +169,10 @@ class MapViewModelTest {
 
             // Then
             assertThat(viewState.value!!.propertyMarkers).isEqualTo(emptyList())
-            coVerify(exactly = 1) { getAllPropertiesLatLongUseCase.invoke()
-            getAllPropertiesLatLongUseCase.invoke() }
+            coVerify(exactly = 1) {
+                getAllPropertiesLatLongUseCase.invoke()
+                getAllPropertiesLatLongUseCase.invoke()
+            }
             confirmVerified(getAllPropertiesLatLongUseCase)
         }
     }

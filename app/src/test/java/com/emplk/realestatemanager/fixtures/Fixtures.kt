@@ -103,7 +103,6 @@ fun getTestPropertyEntity(id: Long) = PropertyEntity(
     saleDate = null,
     lastEditionDate = LocalDateTime.of(2023, 1, 1, 12, 0),
     entryDate = LocalDateTime.of(2023, 1, 1, 12, 0),
-    entryDateEpoch = 1698758555,
 )
 
 fun getPropertyEntities(n: Long) = buildList {
@@ -184,7 +183,7 @@ fun mapPropertyEntityToDto(property: PropertyEntity) = PropertyDto(
     agentName = property.agentName,
     isSold = property.isSold,
     entryDate = property.entryDate,
-    entryDateEpoch = property.entryDateEpoch,
+    entryDateEpoch = property.entryDate.toEpochSecond(ZoneOffset.UTC),
     saleDate = property.saleDate,
     lastEditionDate = property.lastEditionDate,
 )
@@ -224,4 +223,23 @@ fun getTestFormDraftParams(id: Long) = FormDraftParams(
     formType = null,
 )
 // endregion FormDraftParams
+
+fun getTestAgentsMap() = mapOf(
+    1L to "John Doe",
+    2L to "Jane Doe",
+    3L to "John Smith",
+    4L to "Jane Smith",
+    5L to "John Wayne",
+    6L to "Jane Wayne",
+)
+
+fun getTestPropertyTypesMap() = mapOf(
+    1L to "House",
+    2L to "Flat",
+    3L to "Duplex",
+    4L to "Penthouse",
+    5L to "Villa",
+    6L to "Manor",
+    7L to "Other",
+)
 

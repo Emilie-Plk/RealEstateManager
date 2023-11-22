@@ -10,7 +10,7 @@ import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertToUsd
 import com.emplk.realestatemanager.domain.map_picture.GenerateMapBaseUrlWithParamsUseCase
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.pictures.PictureRepository
-import com.emplk.realestatemanager.domain.property_draft.ClearPropertyFormUseCase
+import com.emplk.realestatemanager.domain.property_draft.ResetPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.FormDraftRepository
 import com.emplk.realestatemanager.domain.property_draft.UpdatePropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.GetPicturePreviewsUseCase
@@ -55,7 +55,7 @@ class AddOrEditPropertyUseCaseTest {
     private val convertSurfaceToSquareFeetDependingOnLocaleUseCase: ConvertSurfaceToSquareFeetDependingOnLocaleUseCase =
         mockk()
     private val updatePropertyFormUseCase: UpdatePropertyFormUseCase = mockk()
-    private val clearPropertyFormUseCase: ClearPropertyFormUseCase = mockk()
+    private val resetPropertyFormUseCase: ResetPropertyFormUseCase = mockk()
     private val resetCurrentPropertyIdUseCase: ResetCurrentPropertyIdUseCase = mockk()
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase = mockk()
 
@@ -69,7 +69,7 @@ class AddOrEditPropertyUseCaseTest {
         getPicturePreviewsUseCase,
         convertSurfaceToSquareFeetDependingOnLocaleUseCase,
         updatePropertyFormUseCase,
-        clearPropertyFormUseCase,
+        resetPropertyFormUseCase,
         resetCurrentPropertyIdUseCase,
         setNavigationTypeUseCase,
         testFixedClock
@@ -95,7 +95,7 @@ class AddOrEditPropertyUseCaseTest {
 
         justRun { resetCurrentPropertyIdUseCase.invoke() }
 
-        coJustRun { clearPropertyFormUseCase.invoke(any()) }
+        coJustRun { resetPropertyFormUseCase.invoke(any()) }
 
         justRun { setNavigationTypeUseCase.invoke(any()) }
 
