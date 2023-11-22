@@ -38,7 +38,7 @@ class PicturePreviewRepositoryRoom @Inject constructor(
             }
         }
 
-    override suspend fun update(picturePreviewId: Long, isFeatured: Boolean?, description: String?): Boolean =
+    override suspend fun update(picturePreviewId: Long, isFeatured: Boolean?, description: String?) =
         withContext(coroutineDispatcherProvider.io) {
             if (isFeatured != null && isFeatured) {
                 picturePreviewDao.clearFeaturedPicture()
@@ -48,7 +48,7 @@ class PicturePreviewRepositoryRoom @Inject constructor(
                 picturePreviewId,
                 isFeatured,
                 description
-            ) == 1
+            )
         }
 
 

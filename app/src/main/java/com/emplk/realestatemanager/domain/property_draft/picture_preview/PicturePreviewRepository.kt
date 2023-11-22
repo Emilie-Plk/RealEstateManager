@@ -9,7 +9,7 @@ interface PicturePreviewRepository {
 
     suspend fun getAll(propertyFormId: Long): List<PicturePreviewEntity>
 
-    suspend fun update(picturePreviewId: Long, isFeatured: Boolean?, description: String?): Boolean
+    suspend fun update(picturePreviewId: Long, isFeatured: Boolean?, description: String?)
 
     suspend fun delete(picturePreviewId: Long): Boolean
 

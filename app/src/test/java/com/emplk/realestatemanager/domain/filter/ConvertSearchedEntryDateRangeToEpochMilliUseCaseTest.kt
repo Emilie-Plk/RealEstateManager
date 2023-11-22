@@ -18,7 +18,8 @@ class ConvertSearchedEntryDateRangeToEpochMilliUseCaseTest {
 
     private val clock: Clock = testFixedClock
 
-    private val convertSearchedEntryDateRangeToEpochMilliUseCase = ConvertSearchedEntryDateRangeToEpochMilliUseCase(clock)
+    private val convertSearchedEntryDateRangeToEpochMilliUseCase =
+        ConvertSearchedEntryDateRangeToEpochMilliUseCase(clock)
 
     @Test
     fun `invoke() should return null when entryDateState is ALL`() {

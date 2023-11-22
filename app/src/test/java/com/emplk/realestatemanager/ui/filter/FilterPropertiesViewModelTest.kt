@@ -3,11 +3,11 @@ package com.emplk.realestatemanager.ui.filter
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.filter.ConvertSearchedEntryDateRangeToEpochMilliUseCase
-import com.emplk.realestatemanager.domain.filter.SearchedEntryDateRange
 import com.emplk.realestatemanager.domain.filter.GetFilteredPropertiesCountAsFlowUseCase
 import com.emplk.realestatemanager.domain.filter.GetMinMaxPriceAndSurfaceUseCase
 import com.emplk.realestatemanager.domain.filter.GetPropertyTypeForFilterUseCase
 import com.emplk.realestatemanager.domain.filter.PropertyMinMaxStatsEntity
+import com.emplk.realestatemanager.domain.filter.SearchedEntryDateRange
 import com.emplk.realestatemanager.domain.filter.SetPropertiesFilterUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.currency.FormatPriceToHumanReadableUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertSurfaceDependingOnLocaleUseCase
@@ -44,7 +44,8 @@ class FilterPropertiesViewModelTest {
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private val getFilteredPropertiesCountAsFlowUseCase: GetFilteredPropertiesCountAsFlowUseCase = mockk()
-    private val convertSearchedEntryDateRangeToEpochMilliUseCase: ConvertSearchedEntryDateRangeToEpochMilliUseCase = mockk()
+    private val convertSearchedEntryDateRangeToEpochMilliUseCase: ConvertSearchedEntryDateRangeToEpochMilliUseCase =
+        mockk()
     private val getMinMaxPriceAndSurfaceUseCase: GetMinMaxPriceAndSurfaceUseCase = mockk()
     private val formatPriceToHumanReadableUseCase: FormatPriceToHumanReadableUseCase = mockk()
     private val convertSurfaceDependingOnLocaleUseCase: ConvertSurfaceDependingOnLocaleUseCase = mockk()
@@ -135,7 +136,7 @@ class FilterPropertiesViewModelTest {
     }
 
     @Test
-    fun `on reset filter`() = testCoroutineRule.runTest {
+    fun `on reset filter - should reset viewState`() = testCoroutineRule.runTest {
         // Given
         filterPropertiesViewModel.onPropertyTypeSelected("House")
         filterPropertiesViewModel.onMinPriceChanged("100000")
@@ -158,8 +159,8 @@ class FilterPropertiesViewModelTest {
         } returns flowOf(3)
 
         // When
+        filterPropertiesViewModel.onResetFilters()
         filterPropertiesViewModel.viewState.observeForTesting(this) {
-            filterPropertiesViewModel.onResetFilters()
             // Then
             assertEquals(testEmptyViewState, it.value)
         }
@@ -197,35 +198,28 @@ class FilterPropertiesViewModelTest {
         surfaceRange = NativeText.Arguments(
             R.string.surface_or_price_range,
             listOf(
-                100,
-                200,
+                "100 sq ft",
+                "200 sq ft",
             )
         ),
         minSurface = "100",
         maxSurface = "200",
-        amenities = buildList {
-            amenityTypes.forEach { amenityType ->
-                add(
-                    AmenityViewState.AmenityCheckbox(
-                        id = amenityType.id,
-                        name = amenityType.name,
-                        isChecked = false,
-                        onCheckBoxClicked = EquatableCallbackWithParam { },
-                        iconDrawable = amenityType.iconDrawable,
-                        stringRes = amenityType.stringRes,
-                    )
-                )
-            }
+        amenities =
+        amenityTypes.map { amenityType ->
+            AmenityViewState.AmenityCheckbox(
+                id = amenityType.id,
+                name = amenityType.name,
+                isChecked = false,
+                onCheckBoxClicked = EquatableCallbackWithParam { },
+                iconDrawable = amenityType.iconDrawable,
+                stringRes = amenityType.stringRes,
+            )
         },
-        propertyTypes = buildList {
-            propertyTypeMap.forEach { (id, name) ->
-                add(
-                    PropertyTypeViewStateItem(
-                        id,
-                        name
-                    )
-                )
-            }
+        propertyTypes = propertyTypeMap.map {
+            PropertyTypeViewStateItem(
+                it.key,
+                it.value
+            )
         },
         entryDate = SearchedEntryDateRange.ALL,
         availableForSale = PropertySaleState.ALL,
@@ -256,34 +250,27 @@ class FilterPropertiesViewModelTest {
                 "200 sq ft",
             )
         ),
-        minSurface = "100",
-        maxSurface = "200",
-        amenities = buildList {
-            amenityTypes.forEach { amenityType ->
-                add(
-                    AmenityViewState.AmenityCheckbox(
-                        id = amenityType.id,
-                        name = amenityType.name,
-                        isChecked = false,
-                        onCheckBoxClicked = EquatableCallbackWithParam { },
-                        iconDrawable = amenityType.iconDrawable,
-                        stringRes = amenityType.stringRes,
-                    )
-                )
-            }
+        minSurface = "",
+        maxSurface = "",
+        amenities = amenityTypes.map { amenityType ->
+            AmenityViewState.AmenityCheckbox(
+                id = amenityType.id,
+                name = amenityType.name,
+                isChecked = false,
+                onCheckBoxClicked = EquatableCallbackWithParam { },
+                iconDrawable = amenityType.iconDrawable,
+                stringRes = amenityType.stringRes,
+            )
         },
-        propertyTypes = buildList {
-            propertyTypeMap.forEach { (id, name) ->
-                add(
-                    PropertyTypeViewStateItem(
-                        id,
-                        name
-                    )
-                )
-            }
+        propertyTypes =
+        propertyTypeMap.map { (id, name) ->
+            PropertyTypeViewStateItem(
+                id,
+                name
+            )
         },
-        entryDate = SearchedEntryDateRange.ALL,
-        availableForSale = PropertySaleState.ALL,
+        entryDate = null,
+        availableForSale = null,
         filterButtonText = NativeText.Arguments(
             R.string.filter_button_nb_properties,
             listOf("3")

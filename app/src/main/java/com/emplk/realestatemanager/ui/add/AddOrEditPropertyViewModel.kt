@@ -17,14 +17,16 @@ import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertToSqu
 import com.emplk.realestatemanager.domain.locale_formatting.surface.GetSurfaceUnitUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
-import com.emplk.realestatemanager.domain.navigation.draft.GetClearPropertyFormNavigationEventUseCase
+import com.emplk.realestatemanager.domain.navigation.draft.GetClearPropertyFormNavigationEventAsFlowUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.GetDraftNavigationUseCase
+import com.emplk.realestatemanager.domain.navigation.draft.IsFormCompletedAsFlowUseCase
+import com.emplk.realestatemanager.domain.navigation.draft.SetFormCompletionUseCase
 import com.emplk.realestatemanager.domain.property.AddOrEditPropertyUseCase
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.amenity.type.GetAmenityTypeUseCase
-import com.emplk.realestatemanager.domain.property_draft.ClearPropertyFormUseCase
+import com.emplk.realestatemanager.domain.property_draft.ResetPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.FormDraftParams
-import com.emplk.realestatemanager.domain.property_draft.GetFormTitleAsFlowUseCase
+import com.emplk.realestatemanager.domain.property_draft.GetFormTypeAndTitleAsFlowUseCase
 import com.emplk.realestatemanager.domain.property_draft.InitPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.SetFormTitleUseCase
 import com.emplk.realestatemanager.domain.property_draft.SetPropertyFormProgressUseCase
@@ -69,14 +71,16 @@ import kotlin.time.Duration.Companion.seconds
 @HiltViewModel
 class AddOrEditPropertyViewModel @Inject constructor(
     private val addOrEditPropertyUseCase: AddOrEditPropertyUseCase,
+    private val initPropertyFormUseCase: InitPropertyFormUseCase,
     private val getCurrentPropertyIdFlowUseCase: GetCurrentPropertyIdFlowUseCase,
-    private val clearPropertyFormUseCase: ClearPropertyFormUseCase,
+    private val resetPropertyFormUseCase: ResetPropertyFormUseCase,
     private val setPropertyFormProgressUseCase: SetPropertyFormProgressUseCase,
     private val updatePropertyFormUseCase: UpdatePropertyFormUseCase,
+    private val isFormCompletedAsFlowUseCase: IsFormCompletedAsFlowUseCase,
+    private val setFormCompletionUseCase: SetFormCompletionUseCase,
     private val updatePicturePreviewUseCase: UpdatePicturePreviewUseCase,
     private val addAllPicturePreviewsIdsUseCase: AddAllPicturePreviewsIdsUseCase,
     private val savePictureToLocalAppFilesAndToLocalDatabaseUseCase: SavePictureToLocalAppFilesAndToLocalDatabaseUseCase,
-    private val initPropertyFormUseCase: InitPropertyFormUseCase,
     private val getPicturePreviewsAsFlowUseCase: GetPicturePreviewsAsFlowUseCase,
     private val deletePicturePreviewUseCase: DeletePicturePreviewUseCase,
     private val getAgentsMapUseCase: GetAgentsMapUseCase,
@@ -84,7 +88,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
     private val convertPriceDependingOnLocaleUseCase: ConvertPriceDependingOnLocaleUseCase,
     private val convertToSquareFeetDependingOnLocaleUseCase: ConvertToSquareFeetDependingOnLocaleUseCase,
     private val getSurfaceUnitUseCase: GetSurfaceUnitUseCase,
-    private val getFormTitleUseCase: GetFormTitleAsFlowUseCase,
+    private val getFormTypeAndTitleAsFlowUseCase: GetFormTypeAndTitleAsFlowUseCase,
     private val setFormTitleUseCase: SetFormTitleUseCase,
     private val setSelectedAddressStateUseCase: SetSelectedAddressStateUseCase,
     private val updateOnAddressClickedUseCase: UpdateOnAddressClickedUseCase,
@@ -95,12 +99,11 @@ class AddOrEditPropertyViewModel @Inject constructor(
     private val isInternetEnabledFlowUseCase: IsInternetEnabledFlowUseCase,
     private val getDraftNavigationUseCase: GetDraftNavigationUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
-    private val getClearPropertyFormNavigationEventUseCase: GetClearPropertyFormNavigationEventUseCase,
+    private val getClearPropertyFormNavigationEventAsFlowUseCase: GetClearPropertyFormNavigationEventAsFlowUseCase,
 ) : ViewModel() {
 
     private val formMutableStateFlow = MutableStateFlow(FormDraftParams())
 
-    private val isFormValidMutableStateFlow = MutableStateFlow(false)
     private val isAddingPropertyInDatabaseMutableStateFlow = MutableStateFlow(false)
     private val onCreateButtonClickedMutableSharedFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
 
@@ -167,28 +170,30 @@ class AddOrEditPropertyViewModel @Inject constructor(
                     getPicturePreviewsAsFlowUseCase.invoke(formMutableStateFlow.value.id),
                     getCurrentPredictionAddressesFlowWithDebounceUseCase.invoke(),
                     isAddingPropertyInDatabaseMutableStateFlow,
-                ) { form, picturePreviews, predictionWrapper, isAddingInDatabase ->
+                    isFormCompletedAsFlowUseCase.invoke(),
+                ) { form, picturePreviews, predictionWrapper, isAddingInDatabase, isFormCompleted ->
                     val currencyType = getCurrencyTypeUseCase.invoke()
                     val amenityTypes = getAmenityTypeUseCase.invoke()
                     val propertyTypes = getPropertyTypeUseCase.invoke()
                     val agents = getAgentsMapUseCase.invoke()
 
-                    val isFormInProgress = !form.propertyType.isNullOrBlank() ||
-                            !form.address.isNullOrBlank() ||
-                            form.price > BigDecimal.ZERO ||
-                            form.surface > BigDecimal.ZERO ||
-                            !form.description.isNullOrBlank() ||
-                            form.nbRooms > 0 ||
-                            form.nbBathrooms > 0 ||
-                            form.nbBedrooms > 0 ||
-                            !form.agent.isNullOrBlank() ||
-                            form.selectedAmenities.isNotEmpty() ||
-                            form.pictureIds.isNotEmpty() ||
-                            form.featuredPictureId != null
 
-                    setPropertyFormProgressUseCase.invoke(isFormInProgress)
+                    setPropertyFormProgressUseCase.invoke(
+                        !form.propertyType.isNullOrBlank() ||
+                                !form.address.isNullOrBlank() ||
+                                form.price > BigDecimal.ZERO ||
+                                form.surface > BigDecimal.ZERO ||
+                                !form.description.isNullOrBlank() ||
+                                form.nbRooms > 0 ||
+                                form.nbBathrooms > 0 ||
+                                form.nbBedrooms > 0 ||
+                                !form.agent.isNullOrBlank() ||
+                                form.selectedAmenities.isNotEmpty() ||
+                                form.pictureIds.isNotEmpty() ||
+                                form.featuredPictureId != null
+                    )
 
-                    isFormValidMutableStateFlow.tryEmit(
+                    setFormCompletionUseCase.invoke(
                         form.propertyType != null &&
                                 form.address != null &&
                                 form.isAddressValid &&
@@ -240,7 +245,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                                 )
                             }
                         } else null,
-                        isSubmitButtonEnabled = isFormValidMutableStateFlow.value,
+                        isSubmitButtonEnabled = isFormCompleted ?: false,
                         submitButtonText = if (form.formType == FormType.ADD) NativeText.Resource(R.string.form_create_button)
                         else NativeText.Resource(R.string.form_edit_button),
                         isProgressBarVisible = isAddingInDatabase,
@@ -284,7 +289,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
 
 // Save draft when title is set (case when FormType.ADD and when title is null)
             launch {
-                getFormTitleUseCase.invoke().collect { formTypeAndTitle ->
+                getFormTypeAndTitleAsFlowUseCase.invoke().collect { formTypeAndTitle ->
                     if (formTypeAndTitle.formType == FormType.ADD && formMutableStateFlow.value.draftTitle == null) {
                         formMutableStateFlow.update {
                             it.copy(draftTitle = formTypeAndTitle.title)
@@ -303,8 +308,8 @@ class AddOrEditPropertyViewModel @Inject constructor(
 
 // Clear draft when navigating away
             launch {
-                getClearPropertyFormNavigationEventUseCase.invoke().collect {
-                    clearPropertyFormUseCase.invoke(formMutableStateFlow.value.id)
+                getClearPropertyFormNavigationEventAsFlowUseCase.invoke().collect {
+                    resetPropertyFormUseCase.invoke(formMutableStateFlow.value.id)
                 }
             }
         }

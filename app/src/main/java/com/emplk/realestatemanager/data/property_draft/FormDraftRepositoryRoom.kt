@@ -13,7 +13,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class FormDraftDraftRepositoryRoom @Inject constructor(
+class FormDraftRepositoryRoom @Inject constructor(
     private val formDraftDao: FormDraftDao,
     private val picturePreviewDao: PicturePreviewDao,
     private val formDraftMapper: FormDraftMapper,

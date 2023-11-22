@@ -12,7 +12,7 @@ import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.location.LocationEntity
 import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
 import com.emplk.realestatemanager.domain.property.pictures.PictureRepository
-import com.emplk.realestatemanager.domain.property_draft.ClearPropertyFormUseCase
+import com.emplk.realestatemanager.domain.property_draft.ResetPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.FormDraftParams
 import com.emplk.realestatemanager.domain.property_draft.FormDraftRepository
 import com.emplk.realestatemanager.domain.property_draft.UpdatePropertyFormUseCase
@@ -24,7 +24,6 @@ import kotlinx.coroutines.coroutineScope
 import java.math.BigDecimal
 import java.time.Clock
 import java.time.LocalDateTime
-import java.time.ZoneId
 import javax.inject.Inject
 
 class AddOrEditPropertyUseCase @Inject constructor(
@@ -37,7 +36,7 @@ class AddOrEditPropertyUseCase @Inject constructor(
     private val getPicturePreviewsUseCase: GetPicturePreviewsUseCase,
     private val convertSurfaceToSquareFeetDependingOnLocaleUseCase: ConvertSurfaceToSquareFeetDependingOnLocaleUseCase,
     private val updatePropertyFormUseCase: UpdatePropertyFormUseCase,
-    private val clearPropertyFormUseCase: ClearPropertyFormUseCase,
+    private val resetPropertyFormUseCase: ResetPropertyFormUseCase,
     private val resetCurrentPropertyIdUseCase: ResetCurrentPropertyIdUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val clock: Clock,
@@ -158,7 +157,7 @@ class AddOrEditPropertyUseCase @Inject constructor(
         // endregion edit existing property
         return when (addOrEditPropertyWrapper) {
             is AddOrEditPropertyWrapper.Success -> {
-                clearPropertyFormUseCase.invoke(form.id)
+                resetPropertyFormUseCase.invoke(form.id)
                 setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
                 FormEvent.Toast(addOrEditPropertyWrapper.text)
             }

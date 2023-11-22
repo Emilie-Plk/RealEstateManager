@@ -1,11 +1,11 @@
 package com.emplk.realestatemanager.domain.property_draft
 
-import com.emplk.realestatemanager.domain.navigation.draft.NavigationDraftRepository
+import com.emplk.realestatemanager.domain.navigation.draft.FormRepository
 import javax.inject.Inject
 
 class SetPropertyFormProgressUseCase @Inject constructor(
-    private val navigationDraftRepository: NavigationDraftRepository,
+    private val formRepository: FormRepository,
 ) {
     fun invoke(isPropertyFormInProgress: Boolean) =
-        navigationDraftRepository.setPropertyFormProgress(isPropertyFormInProgress)
+        formRepository.setPropertyFormProgress(isPropertyFormInProgress)
 }
