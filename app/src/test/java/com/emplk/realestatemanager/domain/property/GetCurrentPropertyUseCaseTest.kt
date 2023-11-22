@@ -46,10 +46,10 @@ class GetCurrentPropertyUseCaseTest {
     fun `invoke - nominal case`() = testCoroutineRule.runTest {
         // When
         getCurrentPropertyUseCase.invoke().test {
-            awaitItem().let { capturedPropertyEntity ->
-                assertThat(capturedPropertyEntity).isEqualTo(getTestPropertyEntity(TEST_PROPERTY_ID))
-                assertThat(capturedPropertyEntity.id).isEqualTo(TEST_PROPERTY_ID)
-            }
+            val capturedPropertyEntity = awaitItem()
+            assertThat(capturedPropertyEntity).isEqualTo(getTestPropertyEntity(TEST_PROPERTY_ID))
+            assertThat(capturedPropertyEntity.id).isEqualTo(TEST_PROPERTY_ID)
+
             awaitComplete()
             ensureAllEventsConsumed()
         }
@@ -82,7 +82,7 @@ class GetCurrentPropertyUseCaseTest {
 
               // When
               getCurrentPropertyUseCase.invoke().test {
-                  // TODO Nino: how to "test" that flow is... non-existent?
+
               }
               // Then
               coVerify(exactly = 1) { getCurrentPropertyIdFlowUseCase.invoke() }

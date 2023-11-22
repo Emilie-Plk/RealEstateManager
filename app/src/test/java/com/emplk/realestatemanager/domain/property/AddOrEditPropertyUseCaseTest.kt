@@ -10,8 +10,8 @@ import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertToUsd
 import com.emplk.realestatemanager.domain.map_picture.GenerateMapBaseUrlWithParamsUseCase
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.pictures.PictureRepository
-import com.emplk.realestatemanager.domain.property_draft.ResetPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.FormDraftRepository
+import com.emplk.realestatemanager.domain.property_draft.ResetPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.UpdatePropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.GetPicturePreviewsUseCase
 import com.emplk.realestatemanager.fixtures.getTestFormDraftParams
@@ -91,7 +91,7 @@ class AddOrEditPropertyUseCaseTest {
 
         coEvery { getPicturePreviewsUseCase.invoke(any()) } returns emptyList()
 
-        coEvery { pictureRepository.delete(TEST_PROPERTY_ID) }
+        coJustRun { pictureRepository.delete(TEST_PROPERTY_ID) }
 
         justRun { resetCurrentPropertyIdUseCase.invoke() }
 

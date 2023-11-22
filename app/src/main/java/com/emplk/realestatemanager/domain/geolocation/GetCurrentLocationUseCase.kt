@@ -7,6 +7,7 @@ import com.emplk.realestatemanager.ui.utils.NativeText
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
@@ -33,8 +34,7 @@ class GetCurrentLocationUseCase @Inject constructor(
                         NativeText.Resource(R.string.geolocation_error_no_internet),
                     )
                 )
-                /*           }
-                       }*/
+
             } else if (!isGpsEnabled) {
                 flowOf(
                     GeolocationState.Error(
@@ -44,5 +44,5 @@ class GetCurrentLocationUseCase @Inject constructor(
             } else {
                 flowOf(GeolocationState.Error(null))
             }
-        }.flatMapLatest { it }
+        }.flatMapLatest { it } // TODO: NINO .flatMapMerge { it } difference?..
 }
