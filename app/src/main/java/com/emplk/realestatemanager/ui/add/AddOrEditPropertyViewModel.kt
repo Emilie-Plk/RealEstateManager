@@ -24,10 +24,10 @@ import com.emplk.realestatemanager.domain.navigation.draft.SetFormCompletionUseC
 import com.emplk.realestatemanager.domain.property.AddOrEditPropertyUseCase
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.amenity.type.GetAmenityTypeUseCase
-import com.emplk.realestatemanager.domain.property_draft.ResetPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.FormDraftParams
 import com.emplk.realestatemanager.domain.property_draft.GetFormTypeAndTitleAsFlowUseCase
 import com.emplk.realestatemanager.domain.property_draft.InitPropertyFormUseCase
+import com.emplk.realestatemanager.domain.property_draft.ResetPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.SetFormTitleUseCase
 import com.emplk.realestatemanager.domain.property_draft.SetPropertyFormProgressUseCase
 import com.emplk.realestatemanager.domain.property_draft.UpdatePropertyFormUseCase

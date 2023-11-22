@@ -243,3 +243,15 @@ fun getTestPropertyTypesMap() = mapOf(
     7L to "Other",
 )
 
+fun getTestAmenities() = listOf(
+    AmenityType.SCHOOL,
+    AmenityType.PARK,
+    AmenityType.SHOPPING_MALL,
+    AmenityType.RESTAURANT,
+    AmenityType.CONCIERGE,
+    AmenityType.GYM,
+    AmenityType.PUBLIC_TRANSPORTATION,
+    AmenityType.HOSPITAL,
+    AmenityType.LIBRARY,
+)
+

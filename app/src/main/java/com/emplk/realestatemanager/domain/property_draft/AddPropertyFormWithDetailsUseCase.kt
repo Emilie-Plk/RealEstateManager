@@ -1,13 +1,11 @@
 package com.emplk.realestatemanager.domain.property_draft
 
 import java.math.BigDecimal
-import java.time.Clock
 import javax.inject.Inject
 
 class AddPropertyFormWithDetailsUseCase @Inject constructor(
     private val formDraftRepository: FormDraftRepository,
     private val mapPropertyToDraftUseCase: MapPropertyToDraftUseCase,
-    private val clock: Clock,
 ) {
     suspend fun invoke(id: Long?): Long =
         if (id == null || id == 0L) {

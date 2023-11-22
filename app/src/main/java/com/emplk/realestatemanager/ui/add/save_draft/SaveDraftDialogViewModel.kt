@@ -11,7 +11,6 @@ import com.emplk.realestatemanager.domain.navigation.draft.ClearPropertyFormNavi
 import com.emplk.realestatemanager.domain.navigation.draft.SaveDraftNavigationUseCase
 import com.emplk.realestatemanager.domain.property_draft.GetFormTypeAndTitleAsFlowUseCase
 import com.emplk.realestatemanager.domain.property_draft.ResetFormParamsUseCase
-import com.emplk.realestatemanager.domain.property_draft.ResetPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.SetFormTitleUseCase
 import com.emplk.realestatemanager.ui.add.FormType
 import com.emplk.realestatemanager.ui.utils.EquatableCallback

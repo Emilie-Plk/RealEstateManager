@@ -1,6 +1,7 @@
 package com.emplk.realestatemanager.ui.add
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.data.property_draft.FormTypeAndTitleEntity
 import com.emplk.realestatemanager.domain.agent.GetAgentsMapUseCase
 import com.emplk.realestatemanager.domain.autocomplete.GetCurrentPredictionAddressesFlowWithDebounceUseCase
@@ -16,12 +17,15 @@ import com.emplk.realestatemanager.domain.locale_formatting.surface.SurfaceUnitT
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.GetClearPropertyFormNavigationEventAsFlowUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.GetDraftNavigationUseCase
+import com.emplk.realestatemanager.domain.navigation.draft.IsFormCompletedAsFlowUseCase
+import com.emplk.realestatemanager.domain.navigation.draft.SetFormCompletionUseCase
 import com.emplk.realestatemanager.domain.property.AddOrEditPropertyUseCase
 import com.emplk.realestatemanager.domain.property.amenity.type.GetAmenityTypeUseCase
-import com.emplk.realestatemanager.domain.property_draft.ResetPropertyFormUseCase
+import com.emplk.realestatemanager.domain.property_draft.FormDraftEntity
 import com.emplk.realestatemanager.domain.property_draft.FormWithTypeEntity
 import com.emplk.realestatemanager.domain.property_draft.GetFormTypeAndTitleAsFlowUseCase
 import com.emplk.realestatemanager.domain.property_draft.InitPropertyFormUseCase
+import com.emplk.realestatemanager.domain.property_draft.ResetPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.SetFormTitleUseCase
 import com.emplk.realestatemanager.domain.property_draft.SetPropertyFormProgressUseCase
 import com.emplk.realestatemanager.domain.property_draft.UpdatePropertyFormUseCase
@@ -35,8 +39,16 @@ import com.emplk.realestatemanager.domain.property_draft.picture_preview.UpdateP
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.id.AddAllPicturePreviewsIdsUseCase
 import com.emplk.realestatemanager.domain.property_type.GetPropertyTypeUseCase
 import com.emplk.realestatemanager.fixtures.getTestAgentsMap
+import com.emplk.realestatemanager.fixtures.getTestAmenities
 import com.emplk.realestatemanager.fixtures.getTestPropertyTypesMap
+import com.emplk.realestatemanager.ui.add.address_predictions.PredictionViewState
+import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem
+import com.emplk.realestatemanager.ui.add.amenity.AmenityViewState
+import com.emplk.realestatemanager.ui.add.type.PropertyTypeViewStateItem
+import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParam
+import com.emplk.realestatemanager.ui.utils.NativeText
 import com.emplk.utils.TestCoroutineRule
+import com.emplk.utils.observeForTesting
 import io.mockk.coEvery
 import io.mockk.coJustRun
 import io.mockk.every
@@ -44,6 +56,7 @@ import io.mockk.justRun
 import io.mockk.mockk
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -62,15 +75,17 @@ class AddOrEditPropertyViewModelTest {
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private val addOrEditPropertyUseCase: AddOrEditPropertyUseCase = mockk()
+    private val initPropertyFormUseCase: InitPropertyFormUseCase = mockk()
     private val getCurrentPropertyIdFlowUseCase: GetCurrentPropertyIdFlowUseCase = mockk()
     private val resetPropertyFormUseCase: ResetPropertyFormUseCase = mockk()
     private val setPropertyFormProgressUseCase: SetPropertyFormProgressUseCase = mockk()
     private val updatePropertyFormUseCase: UpdatePropertyFormUseCase = mockk()
+    private val isFormCompletedAsFlowUseCase: IsFormCompletedAsFlowUseCase = mockk()
+    private val setFormCompletionUseCase: SetFormCompletionUseCase = mockk()
     private val updatePicturePreviewUseCase: UpdatePicturePreviewUseCase = mockk()
     private val addAllPicturePreviewsIdsUseCase: AddAllPicturePreviewsIdsUseCase = mockk()
     private val savePictureToLocalAppFilesAndToLocalDatabaseUseCase: SavePictureToLocalAppFilesAndToLocalDatabaseUseCase =
         mockk()
-    private val initPropertyFormUseCase: InitPropertyFormUseCase = mockk()
     private val getPicturePreviewsAsFlowUseCase: GetPicturePreviewsAsFlowUseCase = mockk()
     private val deletePicturePreviewUseCase: DeletePicturePreviewUseCase = mockk()
     private val getAgentsMapUseCase: GetAgentsMapUseCase = mockk()
@@ -99,21 +114,24 @@ class AddOrEditPropertyViewModelTest {
     fun setUp() {
 
         coJustRun { addOrEditPropertyUseCase.invoke(any()) }
+        coEvery { initPropertyFormUseCase.invoke(any()) } returns testFormTypeEntity
         coEvery { getCurrentPropertyIdFlowUseCase.invoke() } returns flowOf(TEST_PROPERTY_ID)
         coJustRun { resetPropertyFormUseCase.invoke(any()) }
         justRun { setPropertyFormProgressUseCase.invoke(any()) }
         coJustRun { updatePropertyFormUseCase.invoke(any()) }
+        coEvery { isFormCompletedAsFlowUseCase.invoke() } returns flowOf(false)
+        justRun { setFormCompletionUseCase.invoke(false) }
         coEvery { updatePicturePreviewUseCase.invoke(any(), any(), any()) }
         justRun { addAllPicturePreviewsIdsUseCase.invoke(any()) }
         coEvery { savePictureToLocalAppFilesAndToLocalDatabaseUseCase.invoke(any(), any(), any()) } returns 1L
-        coEvery { initPropertyFormUseCase.invoke(any()) } returns testFormTypeEntity
         coEvery { getPicturePreviewsAsFlowUseCase.invoke(any()) } returns flowOf(listOf())
         coJustRun { deletePicturePreviewUseCase.invoke(any(), any()) }
         every { getAgentsMapUseCase.invoke() } returns getTestAgentsMap()
         every { getCurrencyTypeUseCase.invoke() } returns CurrencyType.DOLLAR
-        coEvery { convertPriceDependingOnLocaleUseCase.invoke(any()) } returns BigDecimal(1000000)
-        every { convertToSquareFeetDependingOnLocaleUseCase.invoke(any()) } returns BigDecimal(500)
+        coEvery { convertPriceDependingOnLocaleUseCase.invoke(any()) } returns BigDecimal.ZERO
+        every { convertToSquareFeetDependingOnLocaleUseCase.invoke(any()) } returns BigDecimal.ZERO
         every { getSurfaceUnitUseCase.invoke() } returns SurfaceUnitType.SQUARE_FOOT
+        justRun { setFormTitleUseCase.invoke(FormType.ADD, null) }
         coEvery { getFormTitleUseCase.invoke() } returns flowOf(
             FormTypeAndTitleEntity(
                 formType = FormType.ADD,
@@ -126,6 +144,7 @@ class AddOrEditPropertyViewModelTest {
         coEvery { getCurrentPredictionAddressesFlowWithDebounceUseCase.invoke() } returns flowOf(
             testPredictionSuccessWrapper
         )
+        every { getAmenityTypeUseCase.invoke() } returns getTestAmenities()
         coEvery { isInternetEnabledFlowUseCase.invoke() } returns flowOf(true)
         coEvery { getDraftNavigationUseCase.invoke() } returns emptyFlow()
         justRun { setNavigationTypeUseCase.invoke(any()) }
@@ -138,6 +157,8 @@ class AddOrEditPropertyViewModelTest {
             resetPropertyFormUseCase,
             setPropertyFormProgressUseCase,
             updatePropertyFormUseCase,
+            isFormCompletedAsFlowUseCase,
+            setFormCompletionUseCase,
             updatePicturePreviewUseCase,
             addAllPicturePreviewsIdsUseCase,
             savePictureToLocalAppFilesAndToLocalDatabaseUseCase,
@@ -165,12 +186,33 @@ class AddOrEditPropertyViewModelTest {
 
     @Test
     fun `initial case`() = testCoroutineRule.runTest {
+        addOrEditPropertyViewModel.viewStateLiveData.observeForTesting(this) {
+            assertEquals(testPropertyFormViewState, it.value)
 
+        }
     }
 
     private val testFormTypeEntity = FormWithTypeEntity(
-        formDraftEntity = mockk(),
-        formType = mockk()
+        formDraftEntity = FormDraftEntity(
+            id = 0L,
+            type = null,
+            title = null,
+            price = BigDecimal.ZERO,
+            surface = BigDecimal.ZERO,
+            rooms = 0,
+            bedrooms = 0,
+            bathrooms = 0,
+            description = "",
+            amenities = emptyList(),
+            address = null,
+            isAddressValid = false,
+            agentName = null,
+            isSold = false,
+            entryDate = null,
+            saleDate = null,
+            lastEditionDate = null,
+        ),
+        formType = FormType.ADD,
     )
 
     private val testPredictionSuccessWrapper = PredictionWrapper.Success(
@@ -181,5 +223,68 @@ class AddOrEditPropertyViewModelTest {
             "4th, Dummy Street, 12345, Dummy City",
             "5th, Dummy Street, 12345, Dummy City",
         )
+    )
+
+    private val testPropertyFormViewStateLoading = PropertyFormViewState.LoadingState
+
+    private val testPropertyFormViewState = PropertyFormViewState.PropertyForm(
+        propertyType = null,
+        addressPredictions = listOf(
+            PredictionViewState.Prediction(
+                address = "1st, Dummy Street, 12345, Dummy City",
+                onClickEvent = EquatableCallbackWithParam { }
+            ),
+            PredictionViewState.Prediction(
+                address = "2nd, Dummy Street, 12345, Dummy City",
+                onClickEvent = EquatableCallbackWithParam { }
+            ),
+            PredictionViewState.Prediction(
+                address = "3rd, Dummy Street, 12345, Dummy City",
+                onClickEvent = EquatableCallbackWithParam { }
+            ),
+            PredictionViewState.Prediction(
+                address = "4th, Dummy Street, 12345, Dummy City",
+                onClickEvent = EquatableCallbackWithParam { }
+            ),
+            PredictionViewState.Prediction(
+                address = "5th, Dummy Street, 12345, Dummy City",
+                onClickEvent = EquatableCallbackWithParam { }
+            ),
+        ),
+        isAddressValid = false,
+        address = null,
+        price = "",
+        surface = "",
+        description = "",
+        nbRooms = 0,
+        nbBathrooms = 0,
+        nbBedrooms = 0,
+        pictures = listOf(),
+        agents = getTestAgentsMap().map { AddPropertyAgentViewStateItem(it.key, it.value) },
+        selectedAgent = null,
+        priceCurrencyHint = NativeText.Resource(R.string.price_in_dollar),
+        currencyDrawableRes = R.drawable.baseline_dollar_24,
+        surfaceUnit = NativeText.Argument(
+            R.string.surface_area_unit_in_n,
+            "sq ft",
+        ),
+        propertyCreationDate = null,
+        isSubmitButtonEnabled = false,
+        submitButtonText = NativeText.Resource(R.string.form_create_button),
+        isProgressBarVisible = false,
+        amenities = getTestAmenities().map {
+            AmenityViewState.AmenityCheckbox(
+                id = it.id,
+                name = it.name,
+                isChecked = false,
+                onCheckBoxClicked = EquatableCallbackWithParam { },
+                iconDrawable = it.iconDrawable,
+                stringRes = it.stringRes,
+            )
+        },
+        propertyTypes = getTestPropertyTypesMap().map { PropertyTypeViewStateItem(it.key, it.value) },
+        isSold = false,
+        soldDate = null,
+        areEditItemsVisible = false,
     )
 }
