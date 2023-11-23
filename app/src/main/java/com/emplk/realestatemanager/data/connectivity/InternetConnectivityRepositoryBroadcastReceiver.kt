@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.data.connectivity
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -8,6 +9,8 @@ import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import androidx.annotation.RequiresApi
+import com.emplk.realestatemanager.data.DataModule
 import com.emplk.realestatemanager.domain.connectivity.InternetConnectivityRepository
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -20,6 +23,7 @@ import javax.inject.Singleton
 class InternetConnectivityRepositoryBroadcastReceiver @Inject constructor(
     private val application: Application,
     private val connectivityManager: ConnectivityManager?, // we have to set it to null because... weird Android stuff (Android without internet?..)
+    @DataModule.CurrentVersionCode private val currentVersion: Int,
 ) : InternetConnectivityRepository {
 
     override fun isInternetEnabledAsFlow(): Flow<Boolean> = callbackFlow {
@@ -39,8 +43,10 @@ class InternetConnectivityRepositoryBroadcastReceiver @Inject constructor(
         }
     }.distinctUntilChanged()
 
+
+    @SuppressLint("NewApi")
     private fun hasInternetConnection(): Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        return if (currentVersion >= Build.VERSION_CODES.M) {
             if (connectivityManager?.activeNetwork == null) {
                 false
             } else {

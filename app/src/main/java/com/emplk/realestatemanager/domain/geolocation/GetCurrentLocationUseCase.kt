@@ -3,11 +3,11 @@ package com.emplk.realestatemanager.domain.geolocation
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.connectivity.GpsConnectivityRepository
 import com.emplk.realestatemanager.domain.connectivity.IsInternetEnabledFlowUseCase
+import com.emplk.realestatemanager.domain.permission.HasLocationPermissionFlowUseCase
 import com.emplk.realestatemanager.ui.utils.NativeText
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
@@ -15,10 +15,11 @@ class GetCurrentLocationUseCase @Inject constructor(
     private val geolocationRepository: GeolocationRepository,
     private val gpsConnectivityRepository: GpsConnectivityRepository,
     private val isInternetEnabledFlowUseCase: IsInternetEnabledFlowUseCase,
+    private val hasLocationPermissionFlowUseCase: HasLocationPermissionFlowUseCase,
 ) {
-    fun invoke(isPermissionGrantedFlow: Flow<Boolean?>): Flow<GeolocationState> =
+    fun invoke(): Flow<GeolocationState> =
         combine(
-            isPermissionGrantedFlow,
+            hasLocationPermissionFlowUseCase.invoke(),
             isInternetEnabledFlowUseCase.invoke(),
             gpsConnectivityRepository.isGpsEnabledAsFlow(),
         ) { isPermissionGranted, isInternetEnabled, isGpsEnabled ->
@@ -44,5 +45,5 @@ class GetCurrentLocationUseCase @Inject constructor(
             } else {
                 flowOf(GeolocationState.Error(null))
             }
-        }.flatMapLatest { it } // TODO: NINO .flatMapMerge { it } difference?..
+        }.flatMapLatest { it }
 }

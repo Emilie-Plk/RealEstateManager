@@ -241,6 +241,11 @@ class DataModule {
     @Provides
     fun provideLocationManager(application: Application): LocationManager? = application.getSystemService()
 
+    @Singleton
+    @Provides
+    @CurrentVersionCode
+    fun provideCurrentVersion(): Int = Build.VERSION.SDK_INT
+
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
     annotation class LruCachePredictions
@@ -268,4 +273,8 @@ class DataModule {
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
     annotation class FixerApiDataStore
+
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class CurrentVersionCode
 }

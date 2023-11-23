@@ -43,5 +43,6 @@ sealed class PropertyFormViewState(val type: Type) {
         val isSold: Boolean? = false,
         val soldDate: String? = null,
         val areEditItemsVisible: Boolean,
+        val isInternetEnabled : Boolean,
     ) : PropertyFormViewState(Type.FORM)
 }
