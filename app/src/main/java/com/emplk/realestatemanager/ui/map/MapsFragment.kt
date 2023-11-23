@@ -3,10 +3,13 @@ package com.emplk.realestatemanager.ui.map
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -26,6 +29,7 @@ import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -159,10 +163,10 @@ class MapsFragment : SupportMapFragment(), OnMapReadyCallback {
 
     private fun showRequestPermissionRationale() {
         // rationale should be shown only once
-        AlertDialog.Builder(requireContext())
-            .setTitle("Location permission")
-            .setMessage("Location permission is needed to display properties on the map")
-            .setPositiveButton("OK") { dialogInterface, _ ->
+        val show = AlertDialog.Builder(requireContext())
+            .setTitle(getString(R.string.permission_rationale_title))
+            .setMessage(getString(R.string.permission_rationale_message))
+            .setPositiveButton(getString(R.string.permission_rationale_ok_btn)) { dialogInterface, _ ->
                 // re-request permission
                 requestPermissionLauncher.launch(
                     arrayOf(

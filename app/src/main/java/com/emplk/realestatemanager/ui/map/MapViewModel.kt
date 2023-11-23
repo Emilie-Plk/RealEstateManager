@@ -7,6 +7,8 @@ import com.emplk.realestatemanager.domain.current_property.SetCurrentPropertyIdU
 import com.emplk.realestatemanager.domain.geolocation.GeolocationState
 import com.emplk.realestatemanager.domain.geolocation.GetCurrentLocationUseCase
 import com.emplk.realestatemanager.domain.map.GetAllPropertiesLatLongUseCase
+import com.emplk.realestatemanager.domain.permission.HasLocationPermissionFlowUseCase
+import com.emplk.realestatemanager.domain.permission.SetLocationPermissionUseCase
 import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParam
 import com.emplk.realestatemanager.ui.utils.Event
 import com.google.android.gms.maps.model.LatLng
@@ -22,23 +24,24 @@ class MapViewModel @Inject constructor(
     private val getAllPropertiesLatLongUseCase: GetAllPropertiesLatLongUseCase,
     private val setCurrentPropertyIdUseCase: SetCurrentPropertyIdUseCase,
     private val getCurrentLocationUseCase: GetCurrentLocationUseCase,
-) : ViewModel() {
+    private val setLocationPermissionUseCase: SetLocationPermissionUseCase,
+    ) : ViewModel() {
 
     companion object {
-        private val FALLBACK_LOCATION_GOOGLE_HG = LatLng(37.422131, -122.084801)
+        /**
+         * Default is Google HQ location, could be changed to user's last known location or any other chosen location
+         */
+        private val FALLBACK_LOCATION = LatLng(37.422131, -122.084801)
     }
 
     private val eventMutableSharedFlow: MutableSharedFlow<MapEvent> = MutableSharedFlow(extraBufferCapacity = 1)
-
-    private val hasPermissionBeenGrantedMutableStateFlow: MutableStateFlow<Boolean?> =
-        MutableStateFlow(null)
 
     val viewState: LiveData<MarkerViewState> = liveData {
         if (latestValue == null) {
             emit(
                 MarkerViewState(
                     userCurrentLocation = null,
-                    fallbackLocationGoogleHq = FALLBACK_LOCATION_GOOGLE_HG,
+                    fallbackLocationGoogleHq = FALLBACK_LOCATION,
                     propertyMarkers = emptyList()
                 )
             )
@@ -46,7 +49,7 @@ class MapViewModel @Inject constructor(
 
         combine(
             getAllPropertiesLatLongUseCase.invoke(),
-            getCurrentLocationUseCase.invoke(hasPermissionBeenGrantedMutableStateFlow)
+            getCurrentLocationUseCase.invoke()
         ) { propertiesLatLong, geolocationState ->
             MarkerViewState(
                 userCurrentLocation = when (geolocationState) {
@@ -65,7 +68,7 @@ class MapViewModel @Inject constructor(
                           geolocationState.longitude
                       )*/
                 },
-                fallbackLocationGoogleHq = FALLBACK_LOCATION_GOOGLE_HG,
+                fallbackLocationGoogleHq = FALLBACK_LOCATION,
                 propertyMarkers = if (propertiesLatLong.isEmpty()) emptyList() else
                     propertiesLatLong.map { propertyLatLong ->
                         PropertyMarkerViewState(
@@ -88,6 +91,6 @@ class MapViewModel @Inject constructor(
     }
 
     fun hasPermissionBeenGranted(isPermissionGranted: Boolean?) {
-        hasPermissionBeenGrantedMutableStateFlow.tryEmit(isPermissionGranted)
+        setLocationPermissionUseCase.invoke(isPermissionGranted ?: false)
     }
 }

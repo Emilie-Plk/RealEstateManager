@@ -8,6 +8,7 @@ import com.emplk.realestatemanager.domain.current_property.SetCurrentPropertyIdU
 import com.emplk.realestatemanager.domain.geolocation.GeolocationState
 import com.emplk.realestatemanager.domain.geolocation.GetCurrentLocationUseCase
 import com.emplk.realestatemanager.domain.map.GetAllPropertiesLatLongUseCase
+import com.emplk.realestatemanager.domain.permission.SetLocationPermissionUseCase
 import com.emplk.realestatemanager.domain.property.location.PropertyLatLongEntity
 import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParam
 import com.emplk.realestatemanager.ui.utils.Event
@@ -18,6 +19,7 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.confirmVerified
 import io.mockk.every
+import io.mockk.justRun
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runCurrent
@@ -41,14 +43,15 @@ class MapViewModelTest {
     private val getAllPropertiesLatLongUseCase: GetAllPropertiesLatLongUseCase = mockk()
     private val setCurrentPropertyIdUseCase: SetCurrentPropertyIdUseCase = mockk()
     private val getCurrentLocationUseCase: GetCurrentLocationUseCase = mockk()
+    private val setLocationPermissionUseCase: SetLocationPermissionUseCase = mockk()
 
     private lateinit var mapViewModel: MapViewModel
 
     @Before
     fun setUp() {
         coEvery { getAllPropertiesLatLongUseCase.invoke() } returns flowOf(testPropertiesLatLongEntities)
-        every { setCurrentPropertyIdUseCase.invoke(any()) } returns Unit
-        coEvery { getCurrentLocationUseCase.invoke(any()) } returns flowOf(
+        justRun { setCurrentPropertyIdUseCase.invoke(any()) }
+        coEvery { getCurrentLocationUseCase.invoke() } returns flowOf(
             GeolocationState.Success(
                 TEST_USER_LOCATION.latitude, TEST_USER_LOCATION.longitude
             )
@@ -56,7 +59,8 @@ class MapViewModelTest {
         mapViewModel = MapViewModel(
             getAllPropertiesLatLongUseCase,
             setCurrentPropertyIdUseCase,
-            getCurrentLocationUseCase
+            getCurrentLocationUseCase,
+            setLocationPermissionUseCase,
         )
     }
 
@@ -98,7 +102,7 @@ class MapViewModelTest {
     @Test
     fun `when NoLocationAvailable - userCurrentLocation should be null`() = testCoroutineRule.runTest {
         // Given
-        coEvery { getCurrentLocationUseCase.invoke(any()) } returns flowOf(
+        coEvery { getCurrentLocationUseCase.invoke() } returns flowOf(
             GeolocationState.Error(null)
         )
         // When
@@ -112,7 +116,7 @@ class MapViewModelTest {
     @Test
     fun `when NoLocationWithMissingPermission - userCurrentLocation should be null`() = testCoroutineRule.runTest {
         // Given
-        coEvery { getCurrentLocationUseCase.invoke(any()) } returns flowOf(
+        coEvery { getCurrentLocationUseCase.invoke() } returns flowOf(
             GeolocationState.Error(null)
         )
         // When
@@ -127,18 +131,18 @@ class MapViewModelTest {
     fun `when NoLocationWithMissingPermission - location is found and permission granted - userCurrentLocation should not be null`() =
         testCoroutineRule.runTest {
             // Given
-            every { getCurrentLocationUseCase.invoke(any()) } returns flowOf(
+            every { getCurrentLocationUseCase.invoke() } returns flowOf(
                 GeolocationState.Error(null)
             )
 
             // ...and...
-            every { getCurrentLocationUseCase.invoke(any()) } returns flowOf(
+            every { getCurrentLocationUseCase.invoke() } returns flowOf(
                 GeolocationState.Success(
                     TEST_USER_LOCATION.latitude, TEST_USER_LOCATION.longitude
                 )
             )
 
-            getCurrentLocationUseCase.invoke(flowOf()).test {
+            getCurrentLocationUseCase.invoke().test {
                 val capturedGeolocationState = awaitItem()
                 assertThat(capturedGeolocationState).isEqualTo(
                     GeolocationState.Success(

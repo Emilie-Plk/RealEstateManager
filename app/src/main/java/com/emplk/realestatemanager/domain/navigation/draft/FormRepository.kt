@@ -20,7 +20,11 @@ interface FormRepository {
     // PropertyDraft completion
     fun setPropertyFormCompletion(isPropertyFormCompleted: Boolean)
     fun isPropertyFormCompletedAsFlow(): Flow<Boolean?>
-    fun resetPropertyFormCompletion() // TODO: use it where it needs to be
+    fun resetPropertyFormCompletion()
+
+    // Property Added in DB
+    fun setPropertyAddedInDatabase(isPropertyAddedInDB: Boolean)
+    fun isPropertyAddedInDatabaseAsFlow(): Flow<Boolean?>
 
     // FormTypeAndTitle
     fun setFormTypeAndTitle(formTypeAndDraftTitle: FormTypeAndTitleEntity)

@@ -15,11 +15,11 @@ import com.emplk.realestatemanager.domain.locale_formatting.currency.CurrencyTyp
 import com.emplk.realestatemanager.domain.locale_formatting.currency.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertToSquareFeetDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.surface.GetSurfaceUnitUseCase
-import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.GetClearPropertyFormNavigationEventAsFlowUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.GetDraftNavigationUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.IsFormCompletedAsFlowUseCase
+import com.emplk.realestatemanager.domain.navigation.draft.IsPropertyInsertingInDatabaseFlowUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.SetFormCompletionUseCase
 import com.emplk.realestatemanager.domain.property.AddOrEditPropertyUseCase
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
@@ -50,15 +50,16 @@ import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParam
 import com.emplk.realestatemanager.ui.utils.Event
 import com.emplk.realestatemanager.ui.utils.NativeText
+import com.emplk.realestatemanager.ui.utils.combine
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
+
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -78,6 +79,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
     private val updatePropertyFormUseCase: UpdatePropertyFormUseCase,
     private val isFormCompletedAsFlowUseCase: IsFormCompletedAsFlowUseCase,
     private val setFormCompletionUseCase: SetFormCompletionUseCase,
+    private val isPropertyInsertingInDatabaseFlowUseCase: IsPropertyInsertingInDatabaseFlowUseCase,
     private val updatePicturePreviewUseCase: UpdatePicturePreviewUseCase,
     private val addAllPicturePreviewsIdsUseCase: AddAllPicturePreviewsIdsUseCase,
     private val savePictureToLocalAppFilesAndToLocalDatabaseUseCase: SavePictureToLocalAppFilesAndToLocalDatabaseUseCase,
@@ -98,32 +100,15 @@ class AddOrEditPropertyViewModel @Inject constructor(
     private val getCurrentPredictionAddressesFlowWithDebounceUseCase: GetCurrentPredictionAddressesFlowWithDebounceUseCase,
     private val isInternetEnabledFlowUseCase: IsInternetEnabledFlowUseCase,
     private val getDraftNavigationUseCase: GetDraftNavigationUseCase,
-    private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val getClearPropertyFormNavigationEventAsFlowUseCase: GetClearPropertyFormNavigationEventAsFlowUseCase,
 ) : ViewModel() {
-
     private val formMutableStateFlow = MutableStateFlow(FormDraftParams())
 
-    private val isAddingPropertyInDatabaseMutableStateFlow = MutableStateFlow(false)
-    private val onCreateButtonClickedMutableSharedFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+    private val onSubmitButtonClickedMutableSharedFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
 
     val viewEventLiveData: LiveData<Event<FormEvent>> = liveData {
-        onCreateButtonClickedMutableSharedFlow.collect {
-            combine(
-                formMutableStateFlow,
-                isInternetEnabledFlowUseCase.invoke()
-            ) { form, isInternetEnabled ->
-                if (isInternetEnabled) {
-                    isAddingPropertyInDatabaseMutableStateFlow.tryEmit(true)
-                    val resultEvent = addOrEditPropertyUseCase.invoke(form)
-                    emit(Event(resultEvent))
-                    isAddingPropertyInDatabaseMutableStateFlow.tryEmit(false)
-                } else {
-                    updatePropertyFormUseCase.invoke(form)
-                    setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
-                    emit(Event(FormEvent.Toast(NativeText.Resource(R.string.no_internet_connection_draft_saved))))
-                }
-            }.collect()
+        onSubmitButtonClickedMutableSharedFlow.collectLatest {
+            emit(Event(addOrEditPropertyUseCase.invoke(formMutableStateFlow.value)))
         }
     }
 
@@ -144,7 +129,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                     draftTitle = formWithType.formDraftEntity.title,
                     address = formWithType.formDraftEntity.address,
                     isAddressValid = formWithType.formDraftEntity.isAddressValid,
-                    price = convertPriceDependingOnLocaleUseCase.invoke(formWithType.formDraftEntity.price),  // TODO: voir si pas trop appelé
+                    price = convertPriceDependingOnLocaleUseCase.invoke(formWithType.formDraftEntity.price),
                     surface = convertToSquareFeetDependingOnLocaleUseCase.invoke(formWithType.formDraftEntity.surface),
                     description = formWithType.formDraftEntity.description,
                     nbRooms = formWithType.formDraftEntity.rooms ?: 0,
@@ -169,14 +154,14 @@ class AddOrEditPropertyViewModel @Inject constructor(
                     formMutableStateFlow,
                     getPicturePreviewsAsFlowUseCase.invoke(formMutableStateFlow.value.id),
                     getCurrentPredictionAddressesFlowWithDebounceUseCase.invoke(),
-                    isAddingPropertyInDatabaseMutableStateFlow,
+                    isPropertyInsertingInDatabaseFlowUseCase.invoke().onStart { emit(null) },
                     isFormCompletedAsFlowUseCase.invoke(),
-                ) { form, picturePreviews, predictionWrapper, isAddingInDatabase, isFormCompleted ->
+                    isInternetEnabledFlowUseCase.invoke(),
+                ) { form, picturePreviews, predictionWrapper, isAddingInDatabase, isFormCompleted, isInternetEnabled ->
                     val currencyType = getCurrencyTypeUseCase.invoke()
                     val amenityTypes = getAmenityTypeUseCase.invoke()
                     val propertyTypes = getPropertyTypeUseCase.invoke()
                     val agents = getAgentsMapUseCase.invoke()
-
 
                     setPropertyFormProgressUseCase.invoke(
                         !form.propertyType.isNullOrBlank() ||
@@ -196,7 +181,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                     setFormCompletionUseCase.invoke(
                         form.propertyType != null &&
                                 form.address != null &&
-                                form.isAddressValid &&
+                                (isInternetEnabled && form.isAddressValid || !isInternetEnabled) &&
                                 form.price > BigDecimal.ZERO &&
                                 form.surface > BigDecimal.ZERO &&
                                 form.description != null &&
@@ -248,7 +233,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                         isSubmitButtonEnabled = isFormCompleted ?: false,
                         submitButtonText = if (form.formType == FormType.ADD) NativeText.Resource(R.string.form_create_button)
                         else NativeText.Resource(R.string.form_edit_button),
-                        isProgressBarVisible = isAddingInDatabase,
+                        isProgressBarVisible = isAddingInDatabase == true,
                         amenities = mapAmenityTypesToViewStates(amenityTypes),
                         propertyTypes = propertyTypes.map { propertyType ->
                             PropertyTypeViewStateItem(
@@ -262,15 +247,16 @@ class AddOrEditPropertyViewModel @Inject constructor(
                                 name = agent.value
                             )
                         },
-                        addressPredictions = mapPredictionsToViewState(predictionWrapper),
+                        addressPredictions = mapPredictionsToViewState(predictionWrapper, isInternetEnabled),
                         isSold = form.isSold,
                         soldDate = form.soldDate?.format(
                             DateTimeFormatter.ofLocalizedDate(
                                 FormatStyle.SHORT
                             )
                         ),
-                        isAddressValid = form.isAddressValid,
+                        isAddressValid = if (isInternetEnabled) form.isAddressValid else false,
                         areEditItemsVisible = form.formType == FormType.EDIT,
+                        isInternetEnabled = isInternetEnabled,
                     )
                 }.collectLatest {
                     emit(it)
@@ -380,40 +366,50 @@ class AddOrEditPropertyViewModel @Inject constructor(
             )
         }
 
-    private fun mapPredictionsToViewState(currentPredictionAddresses: PredictionWrapper?): List<PredictionViewState> {
-        return when (currentPredictionAddresses) {
-            is PredictionWrapper.Success -> {
-                currentPredictionAddresses.predictions.map { prediction ->
-                    PredictionViewState.Prediction(
-                        address = prediction,
-                        onClickEvent = EquatableCallbackWithParam { selectedAddress ->
-                            formMutableStateFlow.update {
-                                it.copy(
-                                    address = selectedAddress,
-                                    isAddressValid = true
-                                )
+    private fun mapPredictionsToViewState(
+        currentPredictionAddresses: PredictionWrapper?,
+        isInternetEnabled: Boolean
+    ): List<PredictionViewState> =
+        if (isInternetEnabled) {
+            when (currentPredictionAddresses) {
+                is PredictionWrapper.Success -> {
+                    currentPredictionAddresses.predictions.map { prediction ->
+                        PredictionViewState.Prediction(
+                            address = prediction,
+                            onClickEvent = EquatableCallbackWithParam { selectedAddress ->
+                                formMutableStateFlow.update {
+                                    it.copy(
+                                        address = selectedAddress,
+                                        isAddressValid = true
+                                    )
+                                }
+                                viewModelScope.launch {
+                                    updateOnAddressClickedUseCase.invoke(
+                                        true,
+                                        formMutableStateFlow.value.id
+                                    )
+                                } // TODO: why tf if I put it above formMutableStateFlow.update it doesn't work
                             }
-                            viewModelScope.launch {
-                                updateOnAddressClickedUseCase.invoke(
-                                    true,
-                                    formMutableStateFlow.value.id
-                                )
-                            } // TODO: why tf if I put it above formMutableStateFlow.update it doesn't work
-                        }
-                    )
+                        )
+                    }
                 }
-            }
 
-            is PredictionWrapper.NoResult -> listOf(PredictionViewState.EmptyState)
-            is PredictionWrapper.Error -> emptyList<PredictionViewState>().also { println("Error: ${currentPredictionAddresses.error}") }
-            is PredictionWrapper.Failure -> emptyList<PredictionViewState>().also {
-                println("Failure: ${currentPredictionAddresses.failure}")
-            }
+                is PredictionWrapper.NoResult -> listOf(PredictionViewState.EmptyState)
+                is PredictionWrapper.Error -> emptyList<PredictionViewState>().also { println("Error: ${currentPredictionAddresses.error}") }
+                is PredictionWrapper.Failure -> emptyList<PredictionViewState>().also {
+                    println("Failure: ${currentPredictionAddresses.failure}")
+                }
 
-            else -> emptyList()
+                else -> emptyList()
+            }
+        } else {
+            formMutableStateFlow.update {
+                it.copy(
+                    isAddressValid = false // we can't say for sure if the address is valid without internet
+                )
+            }
+            emptyList()
         }
-    }
-
 
     private fun mapAmenityTypesToViewStates(amenityTypes: List<AmenityType>): List<AmenityViewState> =
         amenityTypes.map { amenityType ->
@@ -450,6 +446,19 @@ class AddOrEditPropertyViewModel @Inject constructor(
     }
 
     fun onAddressChanged(input: String?) {
+        viewModelScope.launch {
+            isInternetEnabledFlowUseCase.invoke().firstOrNull()?.let { isInternetEnabled ->
+                if (!isInternetEnabled) {
+                    formMutableStateFlow.update {
+                        it.copy(
+                            address = input,
+                        )
+                    }
+                    return@launch
+                }
+            }
+        }
+
         if (formMutableStateFlow.value.isAddressValid && formMutableStateFlow.value.address != input) {
             viewModelScope.launch { updateOnAddressClickedUseCase.invoke(false, formMutableStateFlow.value.id) }
             formMutableStateFlow.update {
@@ -532,7 +541,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
     }
 
     fun onAddPropertyClicked() {
-        onCreateButtonClickedMutableSharedFlow.tryEmit(Unit)
+        onSubmitButtonClickedMutableSharedFlow.tryEmit(Unit)
     }
 }
 

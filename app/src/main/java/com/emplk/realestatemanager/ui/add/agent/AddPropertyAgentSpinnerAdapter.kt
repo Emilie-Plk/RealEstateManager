@@ -9,6 +9,7 @@ import android.widget.Filter
 import android.widget.Filterable
 import android.widget.ListAdapter
 import com.emplk.realestatemanager.databinding.AddPropertySpinnerItemBinding
+import com.emplk.realestatemanager.ui.utils.EquatableCallback
 
 class AddPropertyAgentSpinnerAdapter : ListAdapter, Filterable {
     private val dataSetObservable = DataSetObservable()
@@ -37,7 +38,7 @@ class AddPropertyAgentSpinnerAdapter : ListAdapter, Filterable {
         } else {
             AddPropertySpinnerItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         }
-        getItem(position)?.let { item ->  // let function ensures that you only perform the operations inside the block if getItem(position) returns a non-null item.
+        getItem(position)?.let { item ->
             binding.formSpinnerItemTvName.text = item.name
         }
         return binding.root

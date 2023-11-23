@@ -43,6 +43,13 @@ class FormRepositoryImpl @Inject constructor() : FormRepository {
         formParamsEntity.isFormCompletedMutableStateFlow.tryEmit(null)
     }
 
+    override fun setPropertyAddedInDatabase(isPropertyAddedInDB: Boolean) {
+        formParamsEntity.isSavingPropertyInDatabaseMutableSharedFlow.tryEmit(isPropertyAddedInDB)
+    }
+
+    override fun isPropertyAddedInDatabaseAsFlow(): Flow<Boolean?> =
+        formParamsEntity.isSavingPropertyInDatabaseMutableSharedFlow
+
     override fun setFormTypeAndTitle(formTypeAndDraftTitle: FormTypeAndTitleEntity) {
         formParamsEntity.formTypeAndTitleMutableStateFlow.tryEmit(formTypeAndDraftTitle)
     }
@@ -58,6 +65,7 @@ class FormRepositoryImpl @Inject constructor() : FormRepository {
 data class FormParamsEntity(
     val savePropertyMutableSharedFlow: MutableSharedFlow<Unit> = MutableSharedFlow(extraBufferCapacity = 1),
     val clearPropertyMutableSharedFlow: MutableSharedFlow<Unit> = MutableSharedFlow(extraBufferCapacity = 1),
+    val isSavingPropertyInDatabaseMutableSharedFlow: MutableSharedFlow<Boolean> = MutableSharedFlow(extraBufferCapacity = 1),
     val isFormInProgressMutableStateFlow: MutableStateFlow<Boolean?> = MutableStateFlow(null),
     val isFormCompletedMutableStateFlow: MutableStateFlow<Boolean?> = MutableStateFlow(null),
     val formTypeAndTitleMutableStateFlow: MutableStateFlow<FormTypeAndTitleEntity?> = MutableStateFlow(null),

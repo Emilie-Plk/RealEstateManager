@@ -35,6 +35,12 @@ class GeolocationRepositoryFusedLocationProvider @Inject constructor(
 
     @RequiresPermission(anyOf = ["android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"])
     override fun getCurrentLocationAsFlow(): Flow<GeolocationState> = callbackFlow {
+        /*   // trysend of the last known location if available and if not too old
+            fusedLocationProviderClient.lastLocation?.let {
+                   if (it.time > System.currentTimeMillis() - LOCATION_MAX_UPDATE_DELAY.inWholeMilliseconds) {
+                    trySend(GeolocationState.Success(it.latitude, it.longitude))
+                   }
+             }*/
         val locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 locationResult.lastLocation?.let {

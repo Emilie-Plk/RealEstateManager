@@ -117,7 +117,7 @@ class AddOrEditPropertyFragment : Fragment(R.layout.form_fragment) {
                         }
                     }
 
-                    binding.formAgentActv.setOnItemClickListener { _, _, position, _ ->
+                    binding.formAgentActv.setOnItemClickListener { _, view, position, _ ->
                         agentAdapter.getItem(position)?.let {
                             viewModel.onAgentSelected(it.name)
                         }
@@ -131,7 +131,7 @@ class AddOrEditPropertyFragment : Fragment(R.layout.form_fragment) {
                     binding.formBedroomsNumberPicker.value = viewState.nbBedrooms
                     binding.formBathroomsNumberPicker.value = viewState.nbBathrooms
 
-                    val currentDescription = binding.formDescriptionTextInputEditText.text.toString()
+                    val currentDescription = binding.formDescriptionTextInputEditText.text?.toString()
                     if (currentDescription != viewState.description) {
                         binding.formDescriptionTextInputEditText.setText(viewState.description)
                     }
@@ -141,33 +141,40 @@ class AddOrEditPropertyFragment : Fragment(R.layout.form_fragment) {
                         binding.formSurfaceTextInputEditText.setText(viewState.surface)
                     }
 
-                    val currentPrice = binding.formPriceTextInputEditText.text.toString()
+                    val currentPrice = binding.formPriceTextInputEditText.text?.toString() ?: ""
 
                     if (currentPrice != viewState.price) {
                         binding.formPriceTextInputEditText.setText(viewState.price)
                     }
 
-                    val currentAddress = binding.formAddressTextInputEditText.text.toString()
+                    val currentAddress = binding.formAddressTextInputEditText.text?.toString() ?: ""
 
                     if (currentAddress != viewState.address) {
                         binding.formAddressTextInputEditText.setText(viewState.address)
                     }
 
                     binding.formAddressTextInputEditText.doAfterTextChanged {
-                        binding.formAddressTextInputEditText.setSelection(it.toString().length)
-                        val newText = it.toString()
-                        if (newText != viewState.address) {
-                            viewModel.onAddressChanged(newText)
+                        if (!viewState.isInternetEnabled) {
+                            viewModel.onAddressChanged(it.toString())
+                        } else {
+                            binding.formAddressTextInputEditText.setSelection(it.toString().length)
+                            val newText = it.toString()
+                            if (newText != viewState.address) {
+                                viewModel.onAddressChanged(newText)
+                            }
                         }
                     }
 
                     binding.formAddressTextInputEditText.setOnFocusChangeListener { _, hasFocus ->
-                        viewModel.onAddressEditTextFocused(hasFocus)
-                        if (!hasFocus) {
-                            hideKeyboard(binding.formAddressTextInputEditText)
-                            binding.formAddressTextInputLayout.isHelperTextEnabled = false
+                        if (viewState.isInternetEnabled) {
+                            viewModel.onAddressEditTextFocused(hasFocus)
+                            if (!hasFocus) {
+                                hideKeyboard(binding.formAddressTextInputEditText)
+                                binding.formAddressTextInputLayout.isHelperTextEnabled = false
+                            }
+                            if (hasFocus) binding.formAddressTextInputLayout.helperText =
+                                "Please select a valid address"
                         }
-                        if (hasFocus) binding.formAddressTextInputLayout.helperText = "Please select a valid address"
                     }
 
                     binding.formAddressIsValidHelperTv.isVisible = viewState.isAddressValid

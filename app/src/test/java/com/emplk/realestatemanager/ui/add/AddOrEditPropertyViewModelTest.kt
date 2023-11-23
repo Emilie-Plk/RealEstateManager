@@ -18,6 +18,7 @@ import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.GetClearPropertyFormNavigationEventAsFlowUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.GetDraftNavigationUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.IsFormCompletedAsFlowUseCase
+import com.emplk.realestatemanager.domain.navigation.draft.IsPropertyInsertingInDatabaseFlowUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.SetFormCompletionUseCase
 import com.emplk.realestatemanager.domain.property.AddOrEditPropertyUseCase
 import com.emplk.realestatemanager.domain.property.amenity.type.GetAmenityTypeUseCase
@@ -40,12 +41,14 @@ import com.emplk.realestatemanager.domain.property_draft.picture_preview.id.AddA
 import com.emplk.realestatemanager.domain.property_type.GetPropertyTypeUseCase
 import com.emplk.realestatemanager.fixtures.getTestAgentsMap
 import com.emplk.realestatemanager.fixtures.getTestAmenities
+import com.emplk.realestatemanager.fixtures.getTestFormDraftParams
 import com.emplk.realestatemanager.fixtures.getTestPropertyTypesMap
 import com.emplk.realestatemanager.ui.add.address_predictions.PredictionViewState
 import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem
 import com.emplk.realestatemanager.ui.add.amenity.AmenityViewState
 import com.emplk.realestatemanager.ui.add.type.PropertyTypeViewStateItem
 import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParam
+import com.emplk.realestatemanager.ui.utils.Event
 import com.emplk.realestatemanager.ui.utils.NativeText
 import com.emplk.utils.TestCoroutineRule
 import com.emplk.utils.observeForTesting
@@ -56,7 +59,9 @@ import io.mockk.justRun
 import io.mockk.mockk
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runCurrent
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -82,6 +87,7 @@ class AddOrEditPropertyViewModelTest {
     private val updatePropertyFormUseCase: UpdatePropertyFormUseCase = mockk()
     private val isFormCompletedAsFlowUseCase: IsFormCompletedAsFlowUseCase = mockk()
     private val setFormCompletionUseCase: SetFormCompletionUseCase = mockk()
+    private val isPropertyInsertingInDatabaseFlowUseCase: IsPropertyInsertingInDatabaseFlowUseCase = mockk()
     private val updatePicturePreviewUseCase: UpdatePicturePreviewUseCase = mockk()
     private val addAllPicturePreviewsIdsUseCase: AddAllPicturePreviewsIdsUseCase = mockk()
     private val savePictureToLocalAppFilesAndToLocalDatabaseUseCase: SavePictureToLocalAppFilesAndToLocalDatabaseUseCase =
@@ -104,7 +110,6 @@ class AddOrEditPropertyViewModelTest {
         mockk()
     private val isInternetEnabledFlowUseCase: IsInternetEnabledFlowUseCase = mockk()
     private val getDraftNavigationUseCase: GetDraftNavigationUseCase = mockk()
-    private val setNavigationTypeUseCase: SetNavigationTypeUseCase = mockk()
     private val getClearPropertyFormNavigationEventAsFlowUseCase: GetClearPropertyFormNavigationEventAsFlowUseCase =
         mockk()
 
@@ -112,15 +117,15 @@ class AddOrEditPropertyViewModelTest {
 
     @Before
     fun setUp() {
-
         coJustRun { addOrEditPropertyUseCase.invoke(any()) }
-        coEvery { initPropertyFormUseCase.invoke(any()) } returns testFormTypeEntity
+        coEvery { initPropertyFormUseCase.invoke(TEST_PROPERTY_ID) } returns testFormTypeEntity
         coEvery { getCurrentPropertyIdFlowUseCase.invoke() } returns flowOf(TEST_PROPERTY_ID)
         coJustRun { resetPropertyFormUseCase.invoke(any()) }
         justRun { setPropertyFormProgressUseCase.invoke(any()) }
         coJustRun { updatePropertyFormUseCase.invoke(any()) }
         coEvery { isFormCompletedAsFlowUseCase.invoke() } returns flowOf(false)
         justRun { setFormCompletionUseCase.invoke(false) }
+        coEvery { isPropertyInsertingInDatabaseFlowUseCase.invoke() } returns flowOf(false)
         coEvery { updatePicturePreviewUseCase.invoke(any(), any(), any()) }
         justRun { addAllPicturePreviewsIdsUseCase.invoke(any()) }
         coEvery { savePictureToLocalAppFilesAndToLocalDatabaseUseCase.invoke(any(), any(), any()) } returns 1L
@@ -147,7 +152,6 @@ class AddOrEditPropertyViewModelTest {
         every { getAmenityTypeUseCase.invoke() } returns getTestAmenities()
         coEvery { isInternetEnabledFlowUseCase.invoke() } returns flowOf(true)
         coEvery { getDraftNavigationUseCase.invoke() } returns emptyFlow()
-        justRun { setNavigationTypeUseCase.invoke(any()) }
         coEvery { getClearPropertyFormNavigationEventAsFlowUseCase.invoke() } returns emptyFlow()
 
         addOrEditPropertyViewModel = AddOrEditPropertyViewModel(
@@ -159,6 +163,7 @@ class AddOrEditPropertyViewModelTest {
             updatePropertyFormUseCase,
             isFormCompletedAsFlowUseCase,
             setFormCompletionUseCase,
+            isPropertyInsertingInDatabaseFlowUseCase,
             updatePicturePreviewUseCase,
             addAllPicturePreviewsIdsUseCase,
             savePictureToLocalAppFilesAndToLocalDatabaseUseCase,
@@ -179,7 +184,6 @@ class AddOrEditPropertyViewModelTest {
             getCurrentPredictionAddressesFlowWithDebounceUseCase,
             isInternetEnabledFlowUseCase,
             getDraftNavigationUseCase,
-            setNavigationTypeUseCase,
             getClearPropertyFormNavigationEventAsFlowUseCase
         )
     }
@@ -188,9 +192,145 @@ class AddOrEditPropertyViewModelTest {
     fun `initial case`() = testCoroutineRule.runTest {
         addOrEditPropertyViewModel.viewStateLiveData.observeForTesting(this) {
             assertEquals(testPropertyFormViewState, it.value)
-
         }
     }
+
+    @Test
+    fun `loading case`() = testCoroutineRule.runTest {
+        // When
+        coEvery { isFormCompletedAsFlowUseCase.invoke() } returns emptyFlow()
+
+        addOrEditPropertyViewModel.viewStateLiveData.observeForTesting(this) {
+            // Then
+            assertEquals(testPropertyFormViewStateLoading, it.value)
+        }
+    }
+/*
+    @Test
+    fun `on add property clicked - triggers on submit button event`() = testCoroutineRule.runTest {
+        // Given
+        coEvery { addOrEditPropertyUseCase.invoke(getTestFormDraftParams(TEST_PROPERTY_ID)) } returns FormEvent.Toast(
+            NativeText.Simple("Test")
+        )
+
+        addOrEditPropertyViewModel.viewEventLiveData.observeForTesting(this) {
+            // When
+            addOrEditPropertyViewModel.onAddPropertyClicked()
+            runCurrent()
+
+            // Then
+            assertEquals(Event(FormEvent.Toast(NativeText.Simple("Test"))), it.value)
+        }
+    }*/
+
+    @Test
+    fun `when clicking on address selection - defined it as selected address`() = testCoroutineRule.runTest {
+        addOrEditPropertyViewModel.viewStateLiveData.observeForTesting(this) {
+            // When
+            ((it.value as PropertyFormViewState.PropertyForm)
+                .addressPredictions[2] as PredictionViewState.Prediction).onClickEvent.invoke(
+                testPredictionSuccessWrapper.predictions[2]
+            )
+            runCurrent()
+
+            // Then
+            assertEquals(
+                testPredictionSuccessWrapper.predictions[2],
+                (it.value as PropertyFormViewState.PropertyForm).address
+            )
+            assertTrue((it.value as PropertyFormViewState.PropertyForm).isAddressValid)
+        }
+    }
+
+    @Test
+    fun `on agent changed - agent is set`() = testCoroutineRule.runTest {
+        addOrEditPropertyViewModel.viewStateLiveData.observeForTesting(this) {
+            // When
+            addOrEditPropertyViewModel.onAgentSelected(getTestAgentsMap().values.toList()[1])
+            runCurrent()
+
+            // Then
+            assertEquals(
+                getTestAgentsMap().values.toList()[1],
+                (it.value as PropertyFormViewState.PropertyForm).selectedAgent
+            )
+        }
+    }
+
+ /*   @Test
+    fun `on description changed - description is updated`() = testCoroutineRule.runTest {
+        addOrEditPropertyViewModel.viewStateLiveData.observeForTesting(this) {
+            // When
+            addOrEditPropertyViewModel.onDescriptionChanged("Test description")
+            runCurrent()
+
+            // Then
+            assertEquals(
+                getTestAgentsMap().values.toList()[1],
+                (it.value as PropertyFormViewState.PropertyForm).selectedAgent
+            )
+        }
+    }*/
+
+    @Test
+    fun `on number of rooms changed - number of rooms is updated`() = testCoroutineRule.runTest {
+        addOrEditPropertyViewModel.viewStateLiveData.observeForTesting(this) {
+            // When
+            addOrEditPropertyViewModel.onRoomsNumberChanged(10)
+            runCurrent()
+
+            // Then
+            assertEquals(10, (it.value as PropertyFormViewState.PropertyForm).nbRooms)
+        }
+    }
+
+    @Test
+    fun `on number of bedrooms changed - number of bedrooms is updated`() = testCoroutineRule.runTest {
+        addOrEditPropertyViewModel.viewStateLiveData.observeForTesting(this) {
+            // When
+            addOrEditPropertyViewModel.onBedroomsNumberChanged(4)
+            runCurrent()
+
+            // Then
+            assertEquals(4, (it.value as PropertyFormViewState.PropertyForm).nbBedrooms)
+        }
+    }
+
+    @Test
+    fun `on number of bathrooms changed - number of bathrooms is updated`() = testCoroutineRule.runTest {
+        addOrEditPropertyViewModel.viewStateLiveData.observeForTesting(this) {
+            // When
+            addOrEditPropertyViewModel.onBathroomsNumberChanged(6)
+            runCurrent()
+
+            // Then
+            assertEquals(6, (it.value as PropertyFormViewState.PropertyForm).nbBathrooms)
+        }
+    }
+
+
+    @Test
+    fun `when form is completed - submit button is true`() = testCoroutineRule.runTest {
+        // Given
+        coEvery { isFormCompletedAsFlowUseCase.invoke() } returns flowOf(true)
+
+        addOrEditPropertyViewModel.viewStateLiveData.observeForTesting(this) {
+            // Then
+            assertTrue((it.value as PropertyFormViewState.PropertyForm).isSubmitButtonEnabled)
+        }
+    }
+
+    @Test
+    fun `when is adding in database - progress bar is true`() = testCoroutineRule.runTest {
+        // Given
+        coEvery { isPropertyInsertingInDatabaseFlowUseCase.invoke() } returns flowOf(true)
+
+        addOrEditPropertyViewModel.viewStateLiveData.observeForTesting(this) {
+            // Then
+            assertTrue((it.value as PropertyFormViewState.PropertyForm).isProgressBarVisible)
+        }
+    }
+
 
     private val testFormTypeEntity = FormWithTypeEntity(
         formDraftEntity = FormDraftEntity(
@@ -286,5 +426,6 @@ class AddOrEditPropertyViewModelTest {
         isSold = false,
         soldDate = null,
         areEditItemsVisible = false,
+        isInternetEnabled = true,
     )
 }
