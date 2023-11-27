@@ -1,22 +1,21 @@
 package com.emplk.realestatemanager.domain.property_draft.address
 
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class SetSelectedAddressStateUseCase @Inject constructor(
-    private val getIsPredictionSelectedByUserUseCase: GetIsPredictionSelectedByUserUseCase,
-    private val setIsPredictionSelectedByUserUseCase: SetIsPredictionSelectedByUserUseCase,
-    private val setCurrentAddressInputUseCase: SetCurrentAddressInputUseCase,
-
+    private val predictionAddressStateRepository: PredictionAddressStateRepository,
     ) {
-    fun invoke(userInput: String?) {
+   suspend fun invoke(userInput: String?) {
         if (userInput.isNullOrBlank()) {
-            setIsPredictionSelectedByUserUseCase.invoke(false)
-            setCurrentAddressInputUseCase.invoke(null)
-        } else if (getIsPredictionSelectedByUserUseCase.invoke().value == true) {
-            setCurrentAddressInputUseCase.invoke(userInput)
+            predictionAddressStateRepository.setIsPredictionSelectedByUser(false)
+            predictionAddressStateRepository.setCurrentAddressInput(null)
+            // TODO: PREDICTION Nino is it safe?
+        } else if (predictionAddressStateRepository.getPredictionAddressStateAsFlow().first().isAddressPredictionSelectedByUser == true) {
+            predictionAddressStateRepository.setCurrentAddressInput(userInput)
         } else {
-            setIsPredictionSelectedByUserUseCase.invoke(false)
-            setCurrentAddressInputUseCase.invoke(userInput)
+            predictionAddressStateRepository.setIsPredictionSelectedByUser(false)
+            predictionAddressStateRepository.setCurrentAddressInput(userInput)
         }
     }
 }

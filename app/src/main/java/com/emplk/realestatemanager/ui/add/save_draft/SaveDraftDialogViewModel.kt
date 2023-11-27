@@ -29,19 +29,16 @@ class SaveDraftDialogViewModel @Inject constructor(
     private val getFormTypeAndTitleAsFlowUseCase: GetFormTypeAndTitleAsFlowUseCase,
     private val resetFormParamsUseCase: ResetFormParamsUseCase,
     private val clearPropertyFormNavigationUseCase: ClearPropertyFormNavigationUseCase,
-    private val resources: Resources,
 ) : ViewModel() {
 
-    private val isTitleMissingMutableStateFlow: MutableStateFlow<Boolean?> = MutableStateFlow(null)
     private val hasSaveButtonBeingClicked: MutableStateFlow<Boolean?> =
         MutableStateFlow(null)
 
     val viewState: LiveData<SaveDraftViewState> = liveData {
         combine(
             getFormTypeAndTitleAsFlowUseCase.invoke(),
-            isTitleMissingMutableStateFlow,
             hasSaveButtonBeingClicked
-        ) { formTypeAndTitle, isTitleMissing, hasSaveButtonClicked ->
+        ) { formTypeAndTitle, hasSaveButtonClicked ->
             emit(
                 SaveDraftViewState(
                     isSaveMessageVisible = hasSaveButtonClicked == null || hasSaveButtonClicked == false,
@@ -52,14 +49,13 @@ class SaveDraftDialogViewModel @Inject constructor(
                             resetFormParamsUseCase.invoke()
                         } else {
                             hasSaveButtonBeingClicked.tryEmit(true)
-                            isTitleMissingMutableStateFlow.tryEmit(true)
                         }
                     },
-                    isSubmitTitleButtonVisible = hasSaveButtonClicked == true && isTitleMissing == true,
+                    isSubmitTitleButtonVisible = hasSaveButtonClicked == true && formTypeAndTitle.title.isNullOrEmpty(),
                     submitTitleEvent = EquatableCallbackWithParam { title ->
                         if (title.isBlank()) setFormTitleUseCase.invoke(
                             formTypeAndTitle.formType,
-                            resources.getString(R.string.form_title_untitled)
+                            null
                         ) else setFormTitleUseCase.invoke(formTypeAndTitle.formType, title)
                         resetFormParamsUseCase.invoke()
                         setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
@@ -68,7 +64,7 @@ class SaveDraftDialogViewModel @Inject constructor(
                         clearPropertyFormNavigationUseCase.invoke()
                         setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
                     },
-                    isTitleTextInputVisible = hasSaveButtonClicked == true && isTitleMissing == true,
+                    isTitleTextInputVisible = hasSaveButtonClicked == true && formTypeAndTitle.title.isNullOrEmpty(),
                 )
             )
         }.collect()

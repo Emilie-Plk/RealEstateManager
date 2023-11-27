@@ -6,7 +6,7 @@ import com.emplk.realestatemanager.data.property_draft.picture_preview.PicturePr
 
 data class FormWithTitleDateAndFeaturedPicture(
     @Embedded
-    val formWithTitleAndLastEditionDate: FormWithTitleAndLastEditionDate,
+    val formWithTitleAndLastEditionDateEntity: FormWithTitleAndLastEditionDateEntity,
     @Relation(
         entity = PicturePreviewDto::class,
         parentColumn = "id",
