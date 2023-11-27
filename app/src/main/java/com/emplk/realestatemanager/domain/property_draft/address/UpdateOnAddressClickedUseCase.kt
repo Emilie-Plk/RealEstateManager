@@ -4,11 +4,11 @@ import com.emplk.realestatemanager.domain.property_draft.FormDraftRepository
 import javax.inject.Inject
 
 class UpdateOnAddressClickedUseCase @Inject constructor(
-    private val selectedAddressStateRepository: SelectedAddressStateRepository,
+    private val predictionAddressStateRepository: PredictionAddressStateRepository,
     private val formDraftRepository: FormDraftRepository,
 ) {
     suspend fun invoke(isAddressSelected: Boolean, id: Long) {
-        selectedAddressStateRepository.setIsPredictionSelectedByUser(isAddressSelected)
+        predictionAddressStateRepository.setIsPredictionSelectedByUser(isAddressSelected)
         formDraftRepository.updateIsAddressValid(id, isAddressSelected)
     }
 }

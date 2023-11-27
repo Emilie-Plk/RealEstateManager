@@ -12,6 +12,7 @@ import com.emplk.realestatemanager.domain.permission.SetLocationPermissionUseCas
 import com.emplk.realestatemanager.domain.property.location.PropertyLatLongEntity
 import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParam
 import com.emplk.realestatemanager.ui.utils.Event
+import com.emplk.realestatemanager.ui.utils.NativeText
 import com.emplk.utils.TestCoroutineRule
 import com.emplk.utils.observeForTesting
 import com.google.android.gms.maps.model.LatLng
@@ -117,11 +118,11 @@ class MapViewModelTest {
     fun `when NoLocationWithMissingPermission - userCurrentLocation should be null`() = testCoroutineRule.runTest {
         // Given
         coEvery { getCurrentLocationUseCase.invoke() } returns flowOf(
-            GeolocationState.Error(null)
+            GeolocationState.Error(NativeText.Simple("Missing permissions"))
         )
         // When
         mapViewModel.viewState.observeForTesting(this) { viewState ->
-
+            runCurrent()
             // Then
             assertThat(viewState.value!!.userCurrentLocation).isEqualTo(null)
         }
@@ -132,7 +133,7 @@ class MapViewModelTest {
         testCoroutineRule.runTest {
             // Given
             every { getCurrentLocationUseCase.invoke() } returns flowOf(
-                GeolocationState.Error(null)
+                GeolocationState.Error(NativeText.Simple("Missing permissions"))
             )
 
             // ...and...
@@ -158,7 +159,7 @@ class MapViewModelTest {
 
                 // Then
                 assertThat(viewState.value!!.userCurrentLocation).isEqualTo(TEST_USER_LOCATION)
-                coVerify(exactly = 2) { getCurrentLocationUseCase.invoke(any()) }
+                coVerify(exactly = 2) { getCurrentLocationUseCase.invoke() }
                 confirmVerified(getCurrentLocationUseCase)
             }
         }

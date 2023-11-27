@@ -15,7 +15,6 @@ import com.emplk.realestatemanager.domain.locale_formatting.currency.CurrencyTyp
 import com.emplk.realestatemanager.domain.locale_formatting.currency.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertToSquareFeetDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.surface.GetSurfaceUnitUseCase
-import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.GetClearPropertyFormNavigationEventAsFlowUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.GetDraftNavigationUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.IsFormCompletedAsFlowUseCase
@@ -57,7 +56,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
-
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.transform
@@ -102,8 +101,8 @@ class AddOrEditPropertyViewModel @Inject constructor(
     private val getDraftNavigationUseCase: GetDraftNavigationUseCase,
     private val getClearPropertyFormNavigationEventAsFlowUseCase: GetClearPropertyFormNavigationEventAsFlowUseCase,
 ) : ViewModel() {
-    private val formMutableStateFlow = MutableStateFlow(FormDraftParams())
 
+    private val formMutableStateFlow = MutableStateFlow(FormDraftParams())
     private val onSubmitButtonClickedMutableSharedFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
 
     val viewEventLiveData: LiveData<Event<FormEvent>> = liveData {
@@ -153,7 +152,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                 combine(
                     formMutableStateFlow,
                     getPicturePreviewsAsFlowUseCase.invoke(formMutableStateFlow.value.id),
-                    getCurrentPredictionAddressesFlowWithDebounceUseCase.invoke(),
+                    getCurrentPredictionAddressesFlowWithDebounceUseCase.invoke().onStart { emit(null) },
                     isPropertyInsertingInDatabaseFlowUseCase.invoke().onStart { emit(null) },
                     isFormCompletedAsFlowUseCase.invoke(),
                     isInternetEnabledFlowUseCase.invoke(),
@@ -388,7 +387,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                                         true,
                                         formMutableStateFlow.value.id
                                     )
-                                } // TODO: why tf if I put it above formMutableStateFlow.update it doesn't work
+                                }
                             }
                         )
                     }
@@ -445,7 +444,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
         }
     }
 
-    fun onAddressChanged(input: String?) {
+    fun onAddressChanged(input: String?) { // TODO: PREDICTION Nino spam because of double binding
         viewModelScope.launch {
             isInternetEnabledFlowUseCase.invoke().firstOrNull()?.let { isInternetEnabled ->
                 if (!isInternetEnabled) {
@@ -465,7 +464,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                 it.copy(isAddressValid = false)
             }
         }
-        setSelectedAddressStateUseCase.invoke(input)
+        viewModelScope.launch { setSelectedAddressStateUseCase.invoke(input) }
         formMutableStateFlow.update {
             it.copy(address = input)
         }

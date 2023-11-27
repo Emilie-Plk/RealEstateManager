@@ -58,15 +58,13 @@ class DraftsViewModel @Inject constructor(
         )
     }
 
-    private fun mapTitleToNativeText(title: String?): NativeText {
-        return if (title != null) NativeText.Simple(title)
-        else NativeText.Resource(R.string.draft_no_title)
-    }
+    private fun mapTitleToNativeText(title: String?): NativeText = if (title != null) NativeText.Simple(title)
+    else NativeText.Resource(R.string.draft_no_title)
 
-    private fun mapToString(lastEditionDate: LocalDateTime?): String =
-        if (lastEditionDate != null) resources.getString(
-            R.string.draft_date_last_edition,
-            lastEditionDate.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
-        )
-        else resources.getString(R.string.draft_date_error)
+private fun mapToString(lastEditionDate: LocalDateTime?): String =
+    if (lastEditionDate != null) resources.getString(
+        R.string.draft_date_last_edition,
+        lastEditionDate.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
+    )
+    else resources.getString(R.string.draft_date_error)
 }

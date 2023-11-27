@@ -9,9 +9,9 @@ class FormWithTitleDateAndFeaturedPictureMapper @Inject constructor() {
             forms.forEach { form ->
                 add(
                     FormWithTitleDateAndFeaturedPictureEntity(
-                        id = form.formWithTitleAndLastEditionDate.id,
-                        title = form.formWithTitleAndLastEditionDate.title,
-                        lastEditionDate = form.formWithTitleAndLastEditionDate.lastEditionDate,
+                        id = form.formWithTitleAndLastEditionDateEntity.id,
+                        title = form.formWithTitleAndLastEditionDateEntity.title,
+                        lastEditionDate = form.formWithTitleAndLastEditionDateEntity.lastEditionDate,
                         featuredPicture = form.featuredPicture?.uri,
                         featuredPictureDescription = form.featuredPicture?.description,
                     )
