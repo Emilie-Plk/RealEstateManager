@@ -35,7 +35,7 @@ class BlankActivityViewModel @Inject constructor(
                 }
 
                 NavigationFragmentType.LIST_FRAGMENT -> emit(Event(BlankViewEvent.NavigateToMain(NavigationFragmentType.LIST_FRAGMENT.name)))
-                NavigationFragmentType.DRAFT_DIALOG_FRAGMENT -> emit(Event(BlankViewEvent.SaveDraftDialog))
+                NavigationFragmentType.SAVE_DRAFT_DIALOG_FRAGMENT -> emit(Event(BlankViewEvent.SaveDraftDialog))
                 NavigationFragmentType.FILTER_DIALOG_FRAGMENT,
                 NavigationFragmentType.DETAIL_FRAGMENT,
                 NavigationFragmentType.MAP_FRAGMENT,
@@ -49,7 +49,7 @@ class BlankActivityViewModel @Inject constructor(
         viewModelScope.launch {
             isPropertyFormInProgressUseCase.invoke().collect { isPropertyFormInProgress ->
                 if (isPropertyFormInProgress == true) {
-                    setNavigationTypeUseCase.invoke(NavigationFragmentType.DRAFT_DIALOG_FRAGMENT)
+                    setNavigationTypeUseCase.invoke(NavigationFragmentType.SAVE_DRAFT_DIALOG_FRAGMENT)
                 } else if (isPropertyFormInProgress == false) {
                     setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
                 }

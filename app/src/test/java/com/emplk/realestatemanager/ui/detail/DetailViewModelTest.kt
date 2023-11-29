@@ -57,7 +57,7 @@ class DetailViewModelTest {
     private val generateMapUrlWithApiKeyUseCase: GenerateMapUrlWithApiKeyUseCase = mockk()
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase = mockk()
 
-    private lateinit var detailViewModel: DetailViewModel
+    private lateinit var viewModel: DetailViewModel
 
     @Before
     fun setUp() {
@@ -72,7 +72,7 @@ class DetailViewModelTest {
         every { generateMapUrlWithApiKeyUseCase.invoke(any()) } returns "https://www.google.com/maps/123456789"
         justRun { setNavigationTypeUseCase.invoke(any()) }
 
-        detailViewModel = DetailViewModel(
+        viewModel = DetailViewModel(
             getCurrentPropertyUseCase = getCurrentPropertyUseCase,
             formatPriceToHumanReadableUseCase = formatPriceToHumanReadableUseCase,
             convertPriceDependingOnLocaleUseCase = convertPriceDependingOnLocaleUseCase,
@@ -88,7 +88,7 @@ class DetailViewModelTest {
     @Test
     fun `initial case`() = testCoroutineRule.runTest {
         // When
-        detailViewModel.viewState.observeForTesting(this) {
+        viewModel.viewState.observeForTesting(this) {
 
             // Then
             assertThat(it.value).isEqualTo(testDetailViewStateDetails)
@@ -101,7 +101,7 @@ class DetailViewModelTest {
         every { getCurrentPropertyUseCase.invoke() } returns flowOf()
 
         // When
-        detailViewModel.viewState.observeForTesting(this) {
+        viewModel.viewState.observeForTesting(this) {
 
             // Then
             assertThat(it.value).isEqualTo(testDetailViewStateLoading)
@@ -111,7 +111,7 @@ class DetailViewModelTest {
     @Test
     fun `on edit clicked`() {
         // When
-        detailViewModel.onEditClicked()
+        viewModel.onEditClicked()
 
         // Then
         verify(exactly = 1) { setNavigationTypeUseCase.invoke(NavigationFragmentType.EDIT_FRAGMENT) }

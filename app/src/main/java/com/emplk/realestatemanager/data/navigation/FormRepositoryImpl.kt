@@ -15,7 +15,7 @@ class FormRepositoryImpl @Inject constructor() : FormRepository {
         formParamsEntity.savePropertyMutableSharedFlow.tryEmit(Unit)
     }
 
-    override fun getSavedPropertyDraftEvent(): Flow<Unit> = formParamsEntity.savePropertyMutableSharedFlow
+    override fun getSavePropertyDraftEvent(): Flow<Unit> = formParamsEntity.savePropertyMutableSharedFlow
 
     override fun clearPropertyDraftEvent() {
         formParamsEntity.clearPropertyMutableSharedFlow.tryEmit(Unit)
@@ -54,8 +54,8 @@ class FormRepositoryImpl @Inject constructor() : FormRepository {
         formParamsEntity.formTypeAndTitleMutableStateFlow.tryEmit(formTypeAndDraftTitle)
     }
 
-    override fun getFormTypeAndTitleAsFlow(): Flow<FormTypeAndTitleEntity> =
-        formParamsEntity.formTypeAndTitleMutableStateFlow.filterNotNull()
+    override fun getFormTypeAndTitleAsFlow(): Flow<FormTypeAndTitleEntity?> =
+        formParamsEntity.formTypeAndTitleMutableStateFlow
 
     override fun resetFormTypeAndTitle() {
         formParamsEntity.formTypeAndTitleMutableStateFlow.tryEmit(null)

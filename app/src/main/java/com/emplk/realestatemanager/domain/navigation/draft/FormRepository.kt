@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 interface FormRepository {
     // PropertyDraft save Event
     fun savePropertyDraftEvent()
-    fun getSavedPropertyDraftEvent(): Flow<Unit>
+    fun getSavePropertyDraftEvent(): Flow<Unit>
 
     // PropertyDraft clear Event
     fun clearPropertyDraftEvent()
@@ -28,6 +28,6 @@ interface FormRepository {
 
     // FormTypeAndTitle
     fun setFormTypeAndTitle(formTypeAndDraftTitle: FormTypeAndTitleEntity)
-    fun getFormTypeAndTitleAsFlow(): Flow<FormTypeAndTitleEntity>
+    fun getFormTypeAndTitleAsFlow(): Flow<FormTypeAndTitleEntity?>
     fun resetFormTypeAndTitle()
 }

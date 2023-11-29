@@ -49,7 +49,7 @@ class PropertiesViewModelTest {
     private val isPropertyMatchingFiltersUseCase: IsPropertyMatchingFiltersUseCase = mockk()
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase = mockk()
 
-    private lateinit var propertiesViewModel: PropertiesViewModel
+    private lateinit var viewModel: PropertiesViewModel
 
     @Before
     fun setUp() {
@@ -62,7 +62,7 @@ class PropertiesViewModelTest {
         every { isPropertyMatchingFiltersUseCase.invoke(any(), any(), any(), any(), any(), any(), any()) } returns true
         justRun { setNavigationTypeUseCase.invoke(any()) }
 
-        propertiesViewModel = PropertiesViewModel(
+        viewModel = PropertiesViewModel(
             getPropertiesAsFlowUseCase,
             setCurrentPropertyIdUseCase,
             convertToSquareFeetDependingOnLocaleUseCase,
@@ -81,7 +81,7 @@ class PropertiesViewModelTest {
         coEvery { getPropertiesAsFlowUseCase.invoke() } returns flowOf(emptyList())
 
         // Then
-        propertiesViewModel.viewState.observeForTesting(this) {
+        viewModel.viewState.observeForTesting(this) {
             assertThat(it.value).isEqualTo(listOf(PropertiesViewState.EmptyState(onAddClick = EquatableCallback {})))
         }
     }
@@ -89,7 +89,7 @@ class PropertiesViewModelTest {
     @Test
     fun `3 properties give 3 view states`() = testCoroutineRule.runTest {
         coEvery { getPropertiesAsFlowUseCase.invoke() } returns flowOf(getPropertyEntities(3))
-        propertiesViewModel.viewState.observeForTesting(this) {
+        viewModel.viewState.observeForTesting(this) {
             assertThat(it.value!!.size).isEqualTo(3)
             assertThat(it.value).isEqualTo(testViewStates)
         }
@@ -123,7 +123,7 @@ class PropertiesViewModelTest {
                 any()
             )
         } returns false andThen false andThen false andThen true
-        propertiesViewModel.viewState.observeForTesting(this) {
+        viewModel.viewState.observeForTesting(this) {
             assertThat(it.value!!.size).isEqualTo(1)
             assertThat((it.value!![0] as PropertiesViewState.Properties).humanReadablePrice).isEqualTo("$2,000,000")
         }
@@ -151,7 +151,7 @@ class PropertiesViewModelTest {
                 any()
             )
         } returns false andThen false andThen false andThen true
-        propertiesViewModel.viewState.observeForTesting(this) {
+        viewModel.viewState.observeForTesting(this) {
             assertThat(it.value!!.size).isEqualTo(2)
             assertThat((it.value!![0] as PropertiesViewState.Properties).propertyType).isEqualTo("Villa")
             assertThat((it.value!![1] as PropertiesViewState.Properties).propertyType).isEqualTo("Villa")
@@ -162,7 +162,7 @@ class PropertiesViewModelTest {
     fun `on click event should set both current property id and navigation`() = testCoroutineRule.runTest {
         // Given
         coEvery { getPropertiesAsFlowUseCase.invoke() } returns flowOf(getPropertyEntities(3))
-        propertiesViewModel.viewState.observeForTesting(this) {
+        viewModel.viewState.observeForTesting(this) {
             // When
             (it.value!![0] as PropertiesViewState.Properties).onClickEvent.invoke()
             // Then

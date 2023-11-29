@@ -9,6 +9,7 @@ import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.location.LocationEntity
 import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
 import com.emplk.realestatemanager.domain.property_draft.FormDraftParams
+import com.emplk.realestatemanager.domain.property_draft.picture_preview.PicturePreviewEntity
 import com.google.android.gms.maps.model.LatLng
 import java.math.BigDecimal
 import java.time.Clock
@@ -254,4 +255,25 @@ fun getTestAmenities() = listOf(
     AmenityType.HOSPITAL,
     AmenityType.LIBRARY,
 )
+
+fun getTestPicturePreviewEntities() : List<PicturePreviewEntity> = buildList {
+    add(PicturePreviewEntity(
+        id = 1L,
+        uri = "https://www.google.com/front_view",
+        description = "Front view",
+        isFeatured = true,
+    ))
+    add(PicturePreviewEntity(
+        id = 2L,
+        uri = "https://www.google.com/garden",
+        description = "Garden",
+        isFeatured = false,
+    ))
+    add(PicturePreviewEntity(
+        id = 3L,
+        uri = "https://www.google.com/swimming_pool",
+        description = "Swimming pool",
+        isFeatured = false,
+    ))
+}
 

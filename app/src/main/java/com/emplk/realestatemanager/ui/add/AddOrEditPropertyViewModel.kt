@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.ui.add
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
@@ -16,7 +17,7 @@ import com.emplk.realestatemanager.domain.locale_formatting.currency.GetCurrency
 import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertToSquareFeetDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.surface.GetSurfaceUnitUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.GetClearPropertyFormNavigationEventAsFlowUseCase
-import com.emplk.realestatemanager.domain.navigation.draft.GetDraftNavigationUseCase
+import com.emplk.realestatemanager.domain.navigation.draft.GetSavePropertyDraftEvent
 import com.emplk.realestatemanager.domain.navigation.draft.IsFormCompletedAsFlowUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.IsPropertyInsertingInDatabaseFlowUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.SetFormCompletionUseCase
@@ -56,7 +57,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.transform
@@ -98,7 +98,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
     private val getAmenityTypeUseCase: GetAmenityTypeUseCase,
     private val getCurrentPredictionAddressesFlowWithDebounceUseCase: GetCurrentPredictionAddressesFlowWithDebounceUseCase,
     private val isInternetEnabledFlowUseCase: IsInternetEnabledFlowUseCase,
-    private val getDraftNavigationUseCase: GetDraftNavigationUseCase,
+    private val getSavePropertyDraftEvent: GetSavePropertyDraftEvent,
     private val getClearPropertyFormNavigationEventAsFlowUseCase: GetClearPropertyFormNavigationEventAsFlowUseCase,
 ) : ViewModel() {
 
@@ -119,6 +119,8 @@ class AddOrEditPropertyViewModel @Inject constructor(
 
             val propertyId = getCurrentPropertyIdFlowUseCase.invoke().firstOrNull()
             val formWithType = initPropertyFormUseCase.invoke(propertyId)
+
+            Log.d("COUCOU", "formWithType: $formWithType with id: ${formWithType.formDraftEntity.id}")
 
             formMutableStateFlow.update { form ->
                 form.copy(
@@ -286,7 +288,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
 
 // Save draft when navigating away
             launch {
-                getDraftNavigationUseCase.invoke().collect {
+                getSavePropertyDraftEvent.invoke().collect {
                     updatePropertyFormUseCase.invoke(formMutableStateFlow.value)
                 }
             }

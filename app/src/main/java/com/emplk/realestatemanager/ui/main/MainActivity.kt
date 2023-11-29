@@ -170,6 +170,8 @@ class MainActivity : AppCompatActivity() {
                     if (supportFragmentManager.findFragmentByTag(LOAN_SIM_BOTTOM_SHEET_FRAGMENT) == null)
                         LoanSimulatorFragment.newInstance().show(supportFragmentManager, LOAN_SIM_BOTTOM_SHEET_FRAGMENT)
                 }
+
+                MainViewEvent.NoEvent -> {}
             }
         }
     }

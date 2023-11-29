@@ -57,7 +57,7 @@ class FilterPropertiesViewModelTest {
     private val getAmenityTypeUseCase: GetAmenityTypeUseCase = mockk()
     private val setPropertiesFilterUseCase: SetPropertiesFilterUseCase = mockk()
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase = mockk()
-    private lateinit var filterPropertiesViewModel: FilterPropertiesViewModel
+    private lateinit var viewModel: FilterPropertiesViewModel
 
     @Before
     fun setUp() {
@@ -88,7 +88,7 @@ class FilterPropertiesViewModelTest {
         justRun { setPropertiesFilterUseCase.invoke(any(), any(), any(), any(), any(), any(), any(), any()) }
         justRun { setNavigationTypeUseCase.invoke(any()) }
 
-        filterPropertiesViewModel = FilterPropertiesViewModel(
+        viewModel = FilterPropertiesViewModel(
             getFilteredPropertiesCountAsFlowUseCase,
             convertSearchedEntryDateRangeToEpochMilliUseCase,
             getMinMaxPriceAndSurfaceUseCase,
@@ -119,16 +119,16 @@ class FilterPropertiesViewModelTest {
                 any()
             )
         } returns flowOf(3)
-        filterPropertiesViewModel.onPropertyTypeSelected("House")
-        filterPropertiesViewModel.onMinPriceChanged("100000")
-        filterPropertiesViewModel.onMaxPriceChanged("200000")
-        filterPropertiesViewModel.onMinSurfaceChanged("100")
-        filterPropertiesViewModel.onMaxSurfaceChanged("200")
-        filterPropertiesViewModel.onEntryDateRangeStatusChanged(SearchedEntryDateRange.ALL)
-        filterPropertiesViewModel.onPropertySaleStateChanged(PropertySaleState.ALL)
+        viewModel.onPropertyTypeSelected("House")
+        viewModel.onMinPriceChanged("100000")
+        viewModel.onMaxPriceChanged("200000")
+        viewModel.onMinSurfaceChanged("100")
+        viewModel.onMaxSurfaceChanged("200")
+        viewModel.onEntryDateRangeStatusChanged(SearchedEntryDateRange.ALL)
+        viewModel.onPropertySaleStateChanged(PropertySaleState.ALL)
 
         // When
-        filterPropertiesViewModel.viewState.observeForTesting(this) {
+        viewModel.viewState.observeForTesting(this) {
 
             // Then
             assertEquals(testFilterViewState, it.value)
@@ -138,13 +138,13 @@ class FilterPropertiesViewModelTest {
     @Test
     fun `on reset filter - should reset viewState`() = testCoroutineRule.runTest {
         // Given
-        filterPropertiesViewModel.onPropertyTypeSelected("House")
-        filterPropertiesViewModel.onMinPriceChanged("100000")
-        filterPropertiesViewModel.onMaxPriceChanged("200000")
-        filterPropertiesViewModel.onMinSurfaceChanged("100")
-        filterPropertiesViewModel.onMaxSurfaceChanged("200")
-        filterPropertiesViewModel.onEntryDateRangeStatusChanged(SearchedEntryDateRange.ALL)
-        filterPropertiesViewModel.onPropertySaleStateChanged(PropertySaleState.ALL)
+        viewModel.onPropertyTypeSelected("House")
+        viewModel.onMinPriceChanged("100000")
+        viewModel.onMaxPriceChanged("200000")
+        viewModel.onMinSurfaceChanged("100")
+        viewModel.onMaxSurfaceChanged("200")
+        viewModel.onEntryDateRangeStatusChanged(SearchedEntryDateRange.ALL)
+        viewModel.onPropertySaleStateChanged(PropertySaleState.ALL)
         coEvery {
             getFilteredPropertiesCountAsFlowUseCase.invoke(
                 any(),
@@ -159,8 +159,8 @@ class FilterPropertiesViewModelTest {
         } returns flowOf(3)
 
         // When
-        filterPropertiesViewModel.onResetFilters()
-        filterPropertiesViewModel.viewState.observeForTesting(this) {
+        viewModel.onResetFilters()
+        viewModel.viewState.observeForTesting(this) {
             // Then
             assertEquals(testEmptyViewState, it.value)
         }

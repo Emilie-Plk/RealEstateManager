@@ -119,12 +119,7 @@ class PropertyRepositoryRoom @Inject constructor(
         entryDateEpochMin: Long?,
         entryDateEpochMax: Long?,
         isSold: Boolean?
-    ): Flow<Int> {
-        Log.d(
-            "COUCOU",
-            "getFilteredPropertiesCount: $propertyType, $minPrice, $maxPrice, $minSurface, $maxSurface, $amenitySchool, $amenityPark, $amenityShopping, $amenityRestaurant, $amenityConcierge, $amenityGym, $amenityTransport, $amenityHospital, $amenityLibrary, entryDateMin: $entryDateEpochMin, entrydateMax: $entryDateEpochMax, $isSold"
-        )
-        return propertyDao.getFilteredPropertiesCount(
+    ): Flow<Int> = propertyDao.getFilteredPropertiesCount(
             propertyType,
             minPrice,
             maxPrice,
@@ -143,7 +138,6 @@ class PropertyRepositoryRoom @Inject constructor(
             entryDateEpochMax,
             isSold
         )
-    }
 
 
     override suspend fun update(propertyEntity: PropertyEntity): Boolean =

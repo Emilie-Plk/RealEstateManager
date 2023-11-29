@@ -285,7 +285,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/detail_amenities_recyclerView_flexbox"
-            tools:src="@drawable/detail_dummy_map" />
+            tools:src="@drawable/baseline_map_24" />
 
         <androidx.constraintlayout.widget.Barrier
             android:layout_width="wrap_content"
