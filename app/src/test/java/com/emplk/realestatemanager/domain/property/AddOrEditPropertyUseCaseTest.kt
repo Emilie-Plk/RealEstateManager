@@ -45,9 +45,6 @@ class AddOrEditPropertyUseCaseTest {
     @get:Rule
     val testCoroutineRule = TestCoroutineRule()
 
-    @get:Rule
-    val instantTaskExecutorRule = InstantTaskExecutorRule()
-
     private val propertyRepository: PropertyRepository = mockk()
     private val formDraftRepository: FormDraftRepository = mockk()
     private val geocodingRepository: GeocodingRepository = mockk()
