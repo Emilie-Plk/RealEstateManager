@@ -4,7 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.filter.ConvertSearchedEntryDateRangeToEpochMilliUseCase
 import com.emplk.realestatemanager.domain.filter.GetFilteredPropertiesCountAsFlowUseCase
-import com.emplk.realestatemanager.domain.filter.GetMinMaxPriceAndSurfaceUseCase
+import com.emplk.realestatemanager.domain.filter.GetMinMaxPriceAndSurfaceConvertedUseCase
 import com.emplk.realestatemanager.domain.filter.GetPropertyTypeForFilterUseCase
 import com.emplk.realestatemanager.domain.filter.PropertyMinMaxStatsEntity
 import com.emplk.realestatemanager.domain.filter.SearchedEntryDateRange
@@ -46,7 +46,7 @@ class FilterPropertiesViewModelTest {
     private val getFilteredPropertiesCountAsFlowUseCase: GetFilteredPropertiesCountAsFlowUseCase = mockk()
     private val convertSearchedEntryDateRangeToEpochMilliUseCase: ConvertSearchedEntryDateRangeToEpochMilliUseCase =
         mockk()
-    private val getMinMaxPriceAndSurfaceUseCase: GetMinMaxPriceAndSurfaceUseCase = mockk()
+    private val getMinMaxPriceAndSurfaceConvertedUseCase: GetMinMaxPriceAndSurfaceConvertedUseCase = mockk()
     private val formatPriceToHumanReadableUseCase: FormatPriceToHumanReadableUseCase = mockk()
     private val convertSurfaceDependingOnLocaleUseCase: ConvertSurfaceDependingOnLocaleUseCase = mockk()
     private val formatAndRoundSurfaceToHumanReadableUseCase: FormatAndRoundSurfaceToHumanReadableUseCase = mockk()
@@ -74,7 +74,7 @@ class FilterPropertiesViewModelTest {
             )
         } returns flowOf(3)
         every { convertSearchedEntryDateRangeToEpochMilliUseCase.invoke(any()) } returns 1698758555
-        coEvery { getMinMaxPriceAndSurfaceUseCase.invoke() } returns minMaxPriceAndSurface
+        coEvery { getMinMaxPriceAndSurfaceConvertedUseCase.invoke() } returns minMaxPriceAndSurface
         every { formatPriceToHumanReadableUseCase.invoke(minMaxPriceAndSurface.minPrice) } returns "$100000"
         every { formatPriceToHumanReadableUseCase.invoke(minMaxPriceAndSurface.maxPrice) } returns "$200000"
         every { convertSurfaceDependingOnLocaleUseCase.invoke(minMaxPriceAndSurface.minSurface) } returns BigDecimal(100)
@@ -91,7 +91,7 @@ class FilterPropertiesViewModelTest {
         viewModel = FilterPropertiesViewModel(
             getFilteredPropertiesCountAsFlowUseCase,
             convertSearchedEntryDateRangeToEpochMilliUseCase,
-            getMinMaxPriceAndSurfaceUseCase,
+            getMinMaxPriceAndSurfaceConvertedUseCase,
             formatPriceToHumanReadableUseCase,
             convertSurfaceDependingOnLocaleUseCase,
             formatAndRoundSurfaceToHumanReadableUseCase,

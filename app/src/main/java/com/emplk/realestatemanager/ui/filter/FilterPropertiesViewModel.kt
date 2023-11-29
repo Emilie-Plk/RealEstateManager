@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.filter.ConvertSearchedEntryDateRangeToEpochMilliUseCase
 import com.emplk.realestatemanager.domain.filter.GetFilteredPropertiesCountAsFlowUseCase
-import com.emplk.realestatemanager.domain.filter.GetMinMaxPriceAndSurfaceUseCase
+import com.emplk.realestatemanager.domain.filter.GetMinMaxPriceAndSurfaceConvertedUseCase
 import com.emplk.realestatemanager.domain.filter.GetPropertyTypeForFilterUseCase
 import com.emplk.realestatemanager.domain.filter.SearchedEntryDateRange
 import com.emplk.realestatemanager.domain.filter.SetPropertiesFilterUseCase
@@ -41,7 +41,7 @@ import javax.inject.Inject
 class FilterPropertiesViewModel @Inject constructor(
     private val getFilteredPropertiesCountAsFlowUseCase: GetFilteredPropertiesCountAsFlowUseCase,
     private val convertSearchedEntryDateRangeToEpochMilliUseCase: ConvertSearchedEntryDateRangeToEpochMilliUseCase,
-    private val getMinMaxPriceAndSurfaceUseCase: GetMinMaxPriceAndSurfaceUseCase,
+    private val getMinMaxPriceAndSurfaceConvertedUseCase: GetMinMaxPriceAndSurfaceConvertedUseCase,
     private val formatPriceToHumanReadableUseCase: FormatPriceToHumanReadableUseCase,
     private val convertSurfaceDependingOnLocaleUseCase: ConvertSurfaceDependingOnLocaleUseCase,
     private val formatAndRoundSurfaceToHumanReadableUseCase: FormatAndRoundSurfaceToHumanReadableUseCase,
@@ -69,7 +69,7 @@ class FilterPropertiesViewModel @Inject constructor(
                 propertySaleState = filterParams.saleState,
             )
         }.collectLatest { filteredPropertiesCount ->
-            val minMaxPriceAndSurface = getMinMaxPriceAndSurfaceUseCase.invoke()
+            val minMaxPriceAndSurface = getMinMaxPriceAndSurfaceConvertedUseCase.invoke()
 
             val propertyTypes = getPropertyTypeForFilterUseCase.invoke()
             val amenityTypes = getAmenityTypeUseCase.invoke()

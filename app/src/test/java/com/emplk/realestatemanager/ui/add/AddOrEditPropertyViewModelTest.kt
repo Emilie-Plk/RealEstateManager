@@ -46,6 +46,7 @@ import com.emplk.realestatemanager.fixtures.getTestPropertyTypesMap
 import com.emplk.realestatemanager.ui.add.address_predictions.PredictionViewState
 import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem
 import com.emplk.realestatemanager.ui.add.amenity.AmenityViewState
+import com.emplk.realestatemanager.ui.add.picture_preview.PicturePreviewStateItem
 import com.emplk.realestatemanager.ui.add.type.PropertyTypeViewStateItem
 import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParam
 import com.emplk.realestatemanager.ui.utils.Event
@@ -58,6 +59,7 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.justRun
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runCurrent
@@ -143,7 +145,7 @@ class AddOrEditPropertyViewModelTest {
         coEvery { getFormTypeAndTitleAsFlowUseCase.invoke() } returns flowOf(
             FormTypeAndTitleEntity(
                 formType = FormType.ADD,
-                title = "Test property"
+                title = null
             )
         )
         coJustRun { updateOnAddressClickedUseCase.invoke(any(), any()) }
@@ -195,6 +197,14 @@ class AddOrEditPropertyViewModelTest {
     fun `initial case`() = testCoroutineRule.runTest {
         viewModel.viewStateLiveData.observeForTesting(this) {
             assertEquals(testPropertyFormViewState, it.value)
+
+            coVerify { initPropertyFormUseCase.invoke(TEST_PROPERTY_ID) }
+            coVerify { getCurrentPropertyIdFlowUseCase.invoke() }
+            verify { setPropertyFormProgressUseCase.invoke(false) }
+            coVerify { updatePropertyFormUseCase.invoke(any()) }
+            coVerify { isFormCompletedAsFlowUseCase.invoke() }
+            verify { setFormCompletionUseCase.invoke(false) }
+            coVerify { isPropertyInsertingInDatabaseFlowUseCase.invoke() }
         }
     }
 
@@ -211,6 +221,7 @@ class AddOrEditPropertyViewModelTest {
 
     @Test
     fun `on add property clicked - triggers submit button event`() = testCoroutineRule.runTest {
+
         // When
         viewModel.viewEventLiveData.observeForTesting(this) {
             viewModel.onAddPropertyClicked()
@@ -224,8 +235,8 @@ class AddOrEditPropertyViewModelTest {
 
     @Test
     fun `when clicking on address selection - defined it as selected address`() = testCoroutineRule.runTest {
+        // When
         viewModel.viewStateLiveData.observeForTesting(this) {
-            // When
             ((it.value as PropertyFormViewState.PropertyForm)
                 .addressPredictions[2] as PredictionViewState.Prediction).onClickEvent.invoke(
                 testPredictionSuccessWrapper.predictions[2]
@@ -433,26 +444,6 @@ class AddOrEditPropertyViewModelTest {
         }
     }
 
-    /*  @Test
-      fun `setFormCompletionUseCase is called when form is completed`() = testCoroutineRule.runTest {
-          // Given
-          coEvery { convertPriceDependingOnLocaleUseCase.invoke(any()) } returns BigDecimal(100000)
-          every { convertToSquareFeetDependingOnLocaleUseCase.invoke(any()) } returns BigDecimal(100)
-          coEvery { initPropertyFormUseCase.invoke(TEST_PROPERTY_ID) } returns testFilledFormTypeEntity
-          coEvery { getPicturePreviewsAsFlowUseCase.invoke(TEST_PROPERTY_ID) } returns flowOf(
-              getTestPicturePreviewEntities()
-          )
-          coEvery { isFormCompletedAsFlowUseCase.invoke() } returns flowOf(true)
-
-
-          // When
-          addOrEditPropertyViewModel.viewStateLiveData.observeForTesting(this) {
-              runCurrent()
-
-              verify { setFormCompletionUseCase.invoke(true) }
-          }
-      }*/
-
     @Test
     fun `set currency type to EURO - should display prices in €`() = testCoroutineRule.runTest {
         every { getCurrencyTypeUseCase.invoke() } returns CurrencyType.EURO
@@ -494,6 +485,36 @@ class AddOrEditPropertyViewModelTest {
         viewModel.viewStateLiveData.observeForTesting(this) {
             // Then
             assertTrue((it.value as PropertyFormViewState.PropertyForm).isSubmitButtonEnabled)
+        }
+    }
+
+    @Test
+    fun `when delete a featured picture preview - update new picture preview case`() = testCoroutineRule.runTest {
+        // Given
+        coEvery { initPropertyFormUseCase.invoke(TEST_PROPERTY_ID) } returns testFilledFormTypeEntity
+        justRun { setFormTitleUseCase.invoke(FormType.ADD, "Test property") }
+        coEvery { getFormTypeAndTitleAsFlowUseCase.invoke() } returns flowOf(
+            FormTypeAndTitleEntity(
+                formType = FormType.ADD,
+                title = "Test property"
+            )
+        )
+        coEvery { getPicturePreviewsAsFlowUseCase.invoke(any()) } returns flowOf(
+            getTestPicturePreviewEntities()
+        )
+        coJustRun { updatePicturePreviewUseCase.invoke(any(), any(), any()) }
+
+        // When
+        viewModel.viewStateLiveData.observeForTesting(this) {
+            println(it.value)
+            ((it.value as PropertyFormViewState.PropertyForm).pictures[0] as PicturePreviewStateItem.AddPropertyPicturePreview).onDeleteEvent.invoke()
+            runCurrent()
+
+            assertTrue(((it.value as PropertyFormViewState.PropertyForm).pictures[0] as PicturePreviewStateItem.AddPropertyPicturePreview).isFeatured)
+
+            // Then
+            /* coVerify { updatePicturePreviewUseCase.invoke(any(), any(), any()) }
+             coVerify { deletePicturePreviewUseCase.invoke(any(), any()) }*/
         }
     }
 
