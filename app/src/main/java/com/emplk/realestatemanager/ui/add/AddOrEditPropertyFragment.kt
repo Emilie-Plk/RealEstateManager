@@ -158,10 +158,10 @@ class AddOrEditPropertyFragment : Fragment(R.layout.form_fragment) {
                             viewModel.onAddressChanged(it.toString())
                         } else {
                             binding.formAddressTextInputEditText.setSelection(it.toString().length)
-                       /*     val newText = it.toString()
-                            if (newText != viewState.address) {*/
-                                viewModel.onAddressChanged(it?.toString() ?: "")
-                          //  }
+                            /*     val newText = it.toString()
+                                 if (newText != viewState.address) {*/
+                            viewModel.onAddressChanged(it?.toString() ?: "")
+                            //  }
                         }
                     }
 

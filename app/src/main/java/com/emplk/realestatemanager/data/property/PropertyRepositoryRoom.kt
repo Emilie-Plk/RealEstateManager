@@ -1,7 +1,6 @@
 package com.emplk.realestatemanager.data.property
 
 import android.database.sqlite.SQLiteException
-import android.util.Log
 import com.emplk.realestatemanager.data.property.location.LocationDao
 import com.emplk.realestatemanager.data.property.location.LocationMapper
 import com.emplk.realestatemanager.data.property.picture.PictureDao
@@ -120,24 +119,24 @@ class PropertyRepositoryRoom @Inject constructor(
         entryDateEpochMax: Long?,
         isSold: Boolean?
     ): Flow<Int> = propertyDao.getFilteredPropertiesCount(
-            propertyType,
-            minPrice,
-            maxPrice,
-            minSurface,
-            maxSurface,
-            amenitySchool,
-            amenityPark,
-            amenityShopping,
-            amenityRestaurant,
-            amenityConcierge,
-            amenityGym,
-            amenityTransport,
-            amenityHospital,
-            amenityLibrary,
-            entryDateEpochMin,
-            entryDateEpochMax,
-            isSold
-        )
+        propertyType,
+        minPrice,
+        maxPrice,
+        minSurface,
+        maxSurface,
+        amenitySchool,
+        amenityPark,
+        amenityShopping,
+        amenityRestaurant,
+        amenityConcierge,
+        amenityGym,
+        amenityTransport,
+        amenityHospital,
+        amenityLibrary,
+        entryDateEpochMin,
+        entryDateEpochMax,
+        isSold
+    )
 
 
     override suspend fun update(propertyEntity: PropertyEntity): Boolean =

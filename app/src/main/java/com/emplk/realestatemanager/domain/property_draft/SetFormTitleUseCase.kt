@@ -1,7 +1,5 @@
 package com.emplk.realestatemanager.domain.property_draft
 
-import android.content.res.Resources
-import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.data.property_draft.FormTypeAndTitleEntity
 import com.emplk.realestatemanager.domain.navigation.draft.FormRepository
 import com.emplk.realestatemanager.ui.add.FormType

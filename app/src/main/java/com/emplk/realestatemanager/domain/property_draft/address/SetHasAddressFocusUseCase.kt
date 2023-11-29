@@ -5,5 +5,7 @@ import javax.inject.Inject
 class SetHasAddressFocusUseCase @Inject constructor(
     private val predictionAddressStateRepository: PredictionAddressStateRepository,
 ) {
-    fun invoke(hasFocus: Boolean) { predictionAddressStateRepository.setHasAddressFocus(hasFocus) }
+    fun invoke(hasFocus: Boolean) {
+        predictionAddressStateRepository.setHasAddressFocus(hasFocus)
+    }
 }

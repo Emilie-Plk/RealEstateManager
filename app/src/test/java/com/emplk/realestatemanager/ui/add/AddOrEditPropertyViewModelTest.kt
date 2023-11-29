@@ -433,25 +433,25 @@ class AddOrEditPropertyViewModelTest {
         }
     }
 
-  /*  @Test
-    fun `setFormCompletionUseCase is called when form is completed`() = testCoroutineRule.runTest {
-        // Given
-        coEvery { convertPriceDependingOnLocaleUseCase.invoke(any()) } returns BigDecimal(100000)
-        every { convertToSquareFeetDependingOnLocaleUseCase.invoke(any()) } returns BigDecimal(100)
-        coEvery { initPropertyFormUseCase.invoke(TEST_PROPERTY_ID) } returns testFilledFormTypeEntity
-        coEvery { getPicturePreviewsAsFlowUseCase.invoke(TEST_PROPERTY_ID) } returns flowOf(
-            getTestPicturePreviewEntities()
-        )
-        coEvery { isFormCompletedAsFlowUseCase.invoke() } returns flowOf(true)
+    /*  @Test
+      fun `setFormCompletionUseCase is called when form is completed`() = testCoroutineRule.runTest {
+          // Given
+          coEvery { convertPriceDependingOnLocaleUseCase.invoke(any()) } returns BigDecimal(100000)
+          every { convertToSquareFeetDependingOnLocaleUseCase.invoke(any()) } returns BigDecimal(100)
+          coEvery { initPropertyFormUseCase.invoke(TEST_PROPERTY_ID) } returns testFilledFormTypeEntity
+          coEvery { getPicturePreviewsAsFlowUseCase.invoke(TEST_PROPERTY_ID) } returns flowOf(
+              getTestPicturePreviewEntities()
+          )
+          coEvery { isFormCompletedAsFlowUseCase.invoke() } returns flowOf(true)
 
 
-        // When
-        addOrEditPropertyViewModel.viewStateLiveData.observeForTesting(this) {
-            runCurrent()
+          // When
+          addOrEditPropertyViewModel.viewStateLiveData.observeForTesting(this) {
+              runCurrent()
 
-            verify { setFormCompletionUseCase.invoke(true) }
-        }
-    }*/
+              verify { setFormCompletionUseCase.invoke(true) }
+          }
+      }*/
 
     @Test
     fun `set currency type to EURO - should display prices in €`() = testCoroutineRule.runTest {
@@ -484,7 +484,6 @@ class AddOrEditPropertyViewModelTest {
             )
         }
     }
-
 
 
     @Test
