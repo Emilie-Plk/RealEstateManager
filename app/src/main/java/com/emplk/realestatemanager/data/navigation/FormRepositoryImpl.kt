@@ -5,7 +5,6 @@ import com.emplk.realestatemanager.domain.navigation.draft.FormRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.filterNotNull
 import javax.inject.Inject
 
 class FormRepositoryImpl @Inject constructor() : FormRepository {

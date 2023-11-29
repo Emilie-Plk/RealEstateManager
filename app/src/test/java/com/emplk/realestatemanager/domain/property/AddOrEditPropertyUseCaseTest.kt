@@ -62,7 +62,7 @@ class AddOrEditPropertyUseCaseTest {
     private val setPropertyInsertingInDatabaseUseCase: SetPropertyInsertingInDatabaseUseCase = mockk()
     private val resetPropertyFormUseCase: ResetPropertyFormUseCase = mockk()
     private val resetCurrentPropertyIdUseCase: ResetCurrentPropertyIdUseCase = mockk()
-private val setNavigationTypeUseCase: SetNavigationTypeUseCase = mockk()
+    private val setNavigationTypeUseCase: SetNavigationTypeUseCase = mockk()
 
     private val addOrEditPropertyUseCase = AddOrEditPropertyUseCase(
         propertyRepository,

@@ -1,10 +1,8 @@
 package com.emplk.realestatemanager.ui.add.save_draft
 
-import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
-import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.ClearPropertyFormNavigationUseCase
@@ -16,8 +14,10 @@ import com.emplk.realestatemanager.ui.add.FormType
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParam
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
@@ -31,15 +31,13 @@ class SaveDraftDialogViewModel @Inject constructor(
     private val clearPropertyFormNavigationUseCase: ClearPropertyFormNavigationUseCase,
 ) : ViewModel() {
 
-    private val hasSaveButtonBeingClicked: MutableStateFlow<Boolean?> =
-        MutableStateFlow(null)
+    private val hasSaveButtonBeingClicked: MutableStateFlow<Boolean?> = MutableStateFlow(null)
 
     val viewState: LiveData<SaveDraftViewState> = liveData {
         combine(
             getFormTypeAndTitleAsFlowUseCase.invoke(),
             hasSaveButtonBeingClicked
         ) { formTypeAndTitle, hasSaveButtonClicked ->
-            emit(
                 SaveDraftViewState(
                     isSaveMessageVisible = hasSaveButtonClicked == null || hasSaveButtonClicked == false,
                     saveButtonEvent = EquatableCallback {
@@ -65,9 +63,8 @@ class SaveDraftDialogViewModel @Inject constructor(
                         setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
                     },
                     isTitleTextInputVisible = hasSaveButtonClicked == true && formTypeAndTitle.title.isNullOrEmpty(),
-                )
             )
-        }.collect()
+        }.collectLatest { emit(it) }
     }
 }
 

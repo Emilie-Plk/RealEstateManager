@@ -9,7 +9,6 @@ import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
-import androidx.annotation.RequiresApi
 import com.emplk.realestatemanager.data.DataModule
 import com.emplk.realestatemanager.domain.connectivity.InternetConnectivityRepository
 import kotlinx.coroutines.channels.awaitClose

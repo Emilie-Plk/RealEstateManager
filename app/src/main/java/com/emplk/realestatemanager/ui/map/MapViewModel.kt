@@ -7,14 +7,12 @@ import com.emplk.realestatemanager.domain.current_property.SetCurrentPropertyIdU
 import com.emplk.realestatemanager.domain.geolocation.GeolocationState
 import com.emplk.realestatemanager.domain.geolocation.GetCurrentLocationUseCase
 import com.emplk.realestatemanager.domain.map.GetAllPropertiesLatLongUseCase
-import com.emplk.realestatemanager.domain.permission.HasLocationPermissionFlowUseCase
 import com.emplk.realestatemanager.domain.permission.SetLocationPermissionUseCase
 import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParam
 import com.emplk.realestatemanager.ui.utils.Event
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
@@ -25,7 +23,7 @@ class MapViewModel @Inject constructor(
     private val setCurrentPropertyIdUseCase: SetCurrentPropertyIdUseCase,
     private val getCurrentLocationUseCase: GetCurrentLocationUseCase,
     private val setLocationPermissionUseCase: SetLocationPermissionUseCase,
-    ) : ViewModel() {
+) : ViewModel() {
 
     companion object {
         /**

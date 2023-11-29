@@ -7,15 +7,16 @@ import com.emplk.realestatemanager.domain.permission.HasLocationPermissionFlowUs
 import com.emplk.realestatemanager.ui.utils.NativeText
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
 class GetCurrentLocationUseCase @Inject constructor(
-    private val geolocationRepository: GeolocationRepository,
-    private val gpsConnectivityRepository: GpsConnectivityRepository,
-    private val isInternetEnabledFlowUseCase: IsInternetEnabledFlowUseCase,
     private val hasLocationPermissionFlowUseCase: HasLocationPermissionFlowUseCase,
+    private val isInternetEnabledFlowUseCase: IsInternetEnabledFlowUseCase,
+    private val gpsConnectivityRepository: GpsConnectivityRepository,
+    private val geolocationRepository: GeolocationRepository,
 ) {
     fun invoke(): Flow<GeolocationState> =
         combine(
@@ -23,27 +24,29 @@ class GetCurrentLocationUseCase @Inject constructor(
             isInternetEnabledFlowUseCase.invoke(),
             gpsConnectivityRepository.isGpsEnabledAsFlow(),
         ) { isPermissionGranted, isInternetEnabled, isGpsEnabled ->
-            if (isPermissionGranted == true && isInternetEnabled && isGpsEnabled) {
-                geolocationRepository.getCurrentLocationAsFlow()
-            } else if (!isInternetEnabled && !isGpsEnabled) {
-                /*  geolocationRepository.getCurrentLocationAsFlow().flatMapLatest { geolocationState ->
-                      if (geolocationState is GeolocationState.LastKnownLocation) {
-                          flowOf(geolocationState)
-                      } else {*/
-                flowOf(
-                    GeolocationState.Error(
-                        NativeText.Resource(R.string.geolocation_error_no_internet),
-                    )
-                )
-
+            if (isPermissionGranted != true) {
+                FetchLocationState.NO_PERMISSION
+            } else if (!isInternetEnabled) {
+                FetchLocationState.NO_INTERNET
             } else if (!isGpsEnabled) {
-                flowOf(
-                    GeolocationState.Error(
-                        NativeText.Resource(R.string.geolocation_error_no_gps),
-                    )
-                )
+                FetchLocationState.GPS_DISABLED
             } else {
-                flowOf(GeolocationState.Error(null))
+                FetchLocationState.CAN_FETCH_LOCATION
             }
-        }.flatMapLatest { it }
+        }.distinctUntilChanged()
+            .flatMapLatest { state ->
+                when (state) {
+                    FetchLocationState.CAN_FETCH_LOCATION -> geolocationRepository.getCurrentLocationAsFlow()
+                    FetchLocationState.GPS_DISABLED -> flowOf(GeolocationState.Error(NativeText.Resource(R.string.geolocation_error_no_gps)))
+                    FetchLocationState.NO_INTERNET -> flowOf(GeolocationState.Error(NativeText.Resource(R.string.geolocation_error_no_internet)))
+                    FetchLocationState.NO_PERMISSION -> flowOf(GeolocationState.Error(null))
+                }
+            }
+}
+
+private enum class FetchLocationState {
+    CAN_FETCH_LOCATION,
+    GPS_DISABLED,
+    NO_INTERNET,
+    NO_PERMISSION,
 }
