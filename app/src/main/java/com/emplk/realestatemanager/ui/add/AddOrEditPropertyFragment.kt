@@ -117,7 +117,7 @@ class AddOrEditPropertyFragment : Fragment(R.layout.form_fragment) {
                         }
                     }
 
-                    binding.formAgentActv.setOnItemClickListener { _, view, position, _ ->
+                    binding.formAgentActv.setOnItemClickListener { _, _, position, _ ->
                         agentAdapter.getItem(position)?.let {
                             viewModel.onAgentSelected(it.name)
                         }

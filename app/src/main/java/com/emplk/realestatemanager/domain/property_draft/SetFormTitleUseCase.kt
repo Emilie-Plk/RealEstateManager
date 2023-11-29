@@ -9,7 +9,6 @@ import javax.inject.Inject
 
 class SetFormTitleUseCase @Inject constructor(
     private val formRepository: FormRepository,
-    private val resources: Resources,
 ) {
     fun invoke(formType: FormType, title: String?) {
         formRepository.setFormTypeAndTitle(

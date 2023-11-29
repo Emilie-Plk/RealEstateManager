@@ -32,7 +32,7 @@ class GetToolbarSubtitleUseCase @Inject constructor(
                     NavigationFragmentType.ADD_FRAGMENT -> "Add property"
                     NavigationFragmentType.DETAIL_FRAGMENT -> "Property details"
                     NavigationFragmentType.MAP_FRAGMENT -> "Map"
-                    NavigationFragmentType.DRAFT_DIALOG_FRAGMENT,
+                    NavigationFragmentType.SAVE_DRAFT_DIALOG_FRAGMENT,
                     NavigationFragmentType.DRAFTS_FRAGMENT,
                     NavigationFragmentType.FILTER_DIALOG_FRAGMENT,
                     NavigationFragmentType.LOAN_SIMULATOR_DIALOG_FRAGMENT -> null

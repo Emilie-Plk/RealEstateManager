@@ -46,7 +46,7 @@ class MapViewModelTest {
     private val getCurrentLocationUseCase: GetCurrentLocationUseCase = mockk()
     private val setLocationPermissionUseCase: SetLocationPermissionUseCase = mockk()
 
-    private lateinit var mapViewModel: MapViewModel
+    private lateinit var viewModel: MapViewModel
 
     @Before
     fun setUp() {
@@ -57,7 +57,7 @@ class MapViewModelTest {
                 TEST_USER_LOCATION.latitude, TEST_USER_LOCATION.longitude
             )
         )
-        mapViewModel = MapViewModel(
+        viewModel = MapViewModel(
             getAllPropertiesLatLongUseCase,
             setCurrentPropertyIdUseCase,
             getCurrentLocationUseCase,
@@ -68,7 +68,7 @@ class MapViewModelTest {
     @Test
     fun `initial case`() = testCoroutineRule.runTest {
         // Given
-        mapViewModel.viewState.observeForTesting(this) {
+        viewModel.viewState.observeForTesting(this) {
             assertThat(it.value).isEqualTo(testMarkerViewState)
         }
         // When
@@ -79,7 +79,7 @@ class MapViewModelTest {
     fun `viewEvent initial case`() = testCoroutineRule.runTest {
         // When
 
-        mapViewModel.viewEvent.observeForTesting(this) {
+        viewModel.viewEvent.observeForTesting(this) {
             // Then
             assertThat(it.value).isEqualTo(null)
         }
@@ -88,8 +88,8 @@ class MapViewModelTest {
     @Test
     fun `viewEvent onMarkerClicked case`() = testCoroutineRule.runTest {
         // Given
-        mapViewModel.viewState.observeForTesting(this) { viewState ->
-            mapViewModel.viewEvent.observeForTesting(this) { event ->
+        viewModel.viewState.observeForTesting(this) { viewState ->
+            viewModel.viewEvent.observeForTesting(this) { event ->
                 // When
                 viewState.value!!.propertyMarkers.first().onMarkerClicked.invoke(1L)
                 runCurrent()
@@ -107,7 +107,7 @@ class MapViewModelTest {
             GeolocationState.Error(null)
         )
         // When
-        mapViewModel.viewState.observeForTesting(this) { viewState ->
+        viewModel.viewState.observeForTesting(this) { viewState ->
 
             // Then
             assertThat(viewState.value!!.userCurrentLocation).isEqualTo(null)
@@ -121,7 +121,7 @@ class MapViewModelTest {
             GeolocationState.Error(NativeText.Simple("Missing permissions"))
         )
         // When
-        mapViewModel.viewState.observeForTesting(this) { viewState ->
+        viewModel.viewState.observeForTesting(this) { viewState ->
             runCurrent()
             // Then
             assertThat(viewState.value!!.userCurrentLocation).isEqualTo(null)
@@ -154,7 +154,7 @@ class MapViewModelTest {
             }
 
             // When
-            mapViewModel.viewState.observeForTesting(this)
+            viewModel.viewState.observeForTesting(this)
             { viewState ->
 
                 // Then
@@ -170,7 +170,7 @@ class MapViewModelTest {
         coEvery { getAllPropertiesLatLongUseCase.invoke() } returns flowOf(emptyList())
 
         // When
-        mapViewModel.viewState.observeForTesting(this) { viewState ->
+        viewModel.viewState.observeForTesting(this) { viewState ->
 
             // Then
             assertThat(viewState.value!!.propertyMarkers).isEqualTo(emptyList())

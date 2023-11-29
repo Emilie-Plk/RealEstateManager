@@ -11,4 +11,6 @@ sealed class MainViewEvent {
     object LoanSimulator : MainViewEvent()
 
     data class NavigateToBlank(val fragmentTag: String) : MainViewEvent()
+
+    object NoEvent : MainViewEvent()
 }

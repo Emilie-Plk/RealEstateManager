@@ -44,7 +44,7 @@ class LoanSimulatorViewModelTest {
     private val formatPriceToHumanReadableUseCase: FormatPriceToHumanReadableUseCase = mockk()
     private val resetLoanDataUseCase: ResetLoanDataUseCase = mockk()
 
-    private lateinit var loanSimulatorViewModel: LoanSimulatorViewModel
+    private lateinit var viewModel: LoanSimulatorViewModel
 
     @Before
     fun setUp() {
@@ -64,7 +64,7 @@ class LoanSimulatorViewModelTest {
             monthlyPayment = BigDecimal(5000),
         )
 
-        loanSimulatorViewModel = LoanSimulatorViewModel(
+        viewModel = LoanSimulatorViewModel(
             setLoanDataUseCase = setLoanDataUseCase,
             getLoanDataAsFlowUseCase = getLoanDataAsFlowUseCase,
             getLoanYearlyAndMonthlyPaymentUseCase = getLoanYearlyAndMonthlyPaymentUseCase,
@@ -76,7 +76,7 @@ class LoanSimulatorViewModelTest {
     @Test
     fun `nominal case`() = testCoroutineRule.runTest {
         // When
-        loanSimulatorViewModel.viewState.observeForTesting(this) {
+        viewModel.viewState.observeForTesting(this) {
             // Then
             assertThat(it.value).isEqualTo(testLoanSimulatorViewState)
         }
@@ -93,7 +93,7 @@ class LoanSimulatorViewModelTest {
             )
         )
         // When
-        loanSimulatorViewModel.viewState.observeForTesting(this) {
+        viewModel.viewState.observeForTesting(this) {
             // Then
             assertThat(it.value!!.yearlyAndMonthlyPayment).isNull()
         }
@@ -102,12 +102,12 @@ class LoanSimulatorViewModelTest {
     @Test
     fun `on interest rate change - should update value`() = testCoroutineRule.runTest {
         // Given
-        loanSimulatorViewModel.viewState.observeForTesting(this) {
+        viewModel.viewState.observeForTesting(this) {
 
             assertThat(it.value!!.loanRate).isEqualTo("3.85")
 
             // When
-            loanSimulatorViewModel.onInterestRateChanged("2.22")
+            viewModel.onInterestRateChanged("2.22")
             advanceTimeBy(3.seconds)
             runCurrent()
             assertThat(it.value!!.loanRate).isEqualTo("2.22")
@@ -117,12 +117,12 @@ class LoanSimulatorViewModelTest {
     @Test
     fun `on loan amount change - should update value`() = testCoroutineRule.runTest {
         // Given
-        loanSimulatorViewModel.viewState.observeForTesting(this) {
+        viewModel.viewState.observeForTesting(this) {
 
             assertThat(it.value!!.loanAmount).isEqualTo("1000000")
 
             // When
-            loanSimulatorViewModel.onLoanAmountChanged("2000000")
+            viewModel.onLoanAmountChanged("2000000")
             advanceTimeBy(3.seconds)
             runCurrent()
             assertThat(it.value!!.loanAmount).isEqualTo("2000000")
@@ -132,11 +132,11 @@ class LoanSimulatorViewModelTest {
     @Test
     fun `on duration change - should update value`() = testCoroutineRule.runTest {
         // Given
-        loanSimulatorViewModel.viewState.observeForTesting(this) {
+        viewModel.viewState.observeForTesting(this) {
             assertThat(it.value!!.loanDuration).isEqualTo("25")
 
             // When
-            loanSimulatorViewModel.onLoanDurationChanged("10")
+            viewModel.onLoanDurationChanged("10")
             advanceTimeBy(3.seconds)
             runCurrent()
             assertThat(it.value!!.loanDuration).isEqualTo("10")
@@ -146,9 +146,9 @@ class LoanSimulatorViewModelTest {
     @Test
     fun `on calculate clicked with missing interest rate - should trigger event`() = testCoroutineRule.runTest {
         // Given
-        loanSimulatorViewModel.viewState.observeForTesting(this) { viewState ->
-            loanSimulatorViewModel.onInterestRateReset()
-            loanSimulatorViewModel.viewEvent.observeForTesting(this) { event ->
+        viewModel.viewState.observeForTesting(this) { viewState ->
+            viewModel.onInterestRateReset()
+            viewModel.viewEvent.observeForTesting(this) { event ->
                 // When
                 viewState.value!!.onCalculateClicked.invoke()
                 runCurrent()
@@ -174,8 +174,8 @@ class LoanSimulatorViewModelTest {
             )
         )
 
-        loanSimulatorViewModel.viewEvent.observeForTesting(this) { event ->
-            loanSimulatorViewModel.viewState.observeForTesting(this) { viewState ->
+        viewModel.viewEvent.observeForTesting(this) { event ->
+            viewModel.viewState.observeForTesting(this) { viewState ->
                 viewState.value!!.onCalculateClicked.invoke()
                 runCurrent()
 
@@ -201,8 +201,8 @@ class LoanSimulatorViewModelTest {
             )
         )
 
-        loanSimulatorViewModel.viewEvent.observeForTesting(this) { event ->
-            loanSimulatorViewModel.viewState.observeForTesting(this) { viewState ->
+        viewModel.viewEvent.observeForTesting(this) { event ->
+            viewModel.viewState.observeForTesting(this) { viewState ->
                 viewState.value!!.onCalculateClicked.invoke()
                 runCurrent()
 
@@ -222,10 +222,10 @@ class LoanSimulatorViewModelTest {
     @Test
     fun `onResumed() called - should trigger setLoanDataUseCase`() = testCoroutineRule.runTest {
         // When
-        loanSimulatorViewModel.onResume()
+        viewModel.onResume()
 
         // Then
-        loanSimulatorViewModel.viewState.observeForTesting(this) {
+        viewModel.viewState.observeForTesting(this) {
             assertThat(it.value).isEqualTo(testLoanSimulatorViewState)
         } // called twice bc launching with empty form
         verify(exactly = 2) { setLoanDataUseCase.invoke(any()) }

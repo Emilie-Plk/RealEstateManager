@@ -95,7 +95,7 @@ class BlankActivity : AppCompatActivity() {
                     }
                 }
 
-                NavigationFragmentType.DRAFT_DIALOG_FRAGMENT.name ->
+                NavigationFragmentType.SAVE_DRAFT_DIALOG_FRAGMENT.name ->
                     SaveDraftDialogFragment.newInstance().show(supportFragmentManager, null)
 
                 else -> {}

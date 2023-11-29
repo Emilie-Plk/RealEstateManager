@@ -197,6 +197,7 @@ koverReport {
                     "*Response",
                     "*Response\$*",
 
+
                     "*MainApplication",
                     "*MainApplication\$*",
                     "*Fragment",
@@ -208,6 +209,8 @@ koverReport {
                     "*ViewState",
                     "*ViewState\$*",
                     "*ViewEvent",
+                    "*Event",
+                    "*Event\$*",
                     "*ViewEvent\$*",
                     "*DiffCallback",
                     "*DiffCallback\$*",

@@ -13,12 +13,12 @@ import com.emplk.realestatemanager.domain.navigation.GetToolbarSubtitleUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.ADD_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.DETAIL_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.DRAFTS_FRAGMENT
-import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.DRAFT_DIALOG_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.EDIT_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.FILTER_DIALOG_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.LIST_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.LOAN_SIMULATOR_DIALOG_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.MAP_FRAGMENT
+import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType.SAVE_DRAFT_DIALOG_FRAGMENT
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.GetPropertiesCountUseCase
 import com.emplk.realestatemanager.domain.property_draft.GetDraftsCountUseCase
@@ -28,6 +28,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
@@ -127,9 +128,10 @@ class MainViewModel @Inject constructor(
 
                 EDIT_FRAGMENT,
                 LOAN_SIMULATOR_DIALOG_FRAGMENT,
-                DRAFT_DIALOG_FRAGMENT,
+                SAVE_DRAFT_DIALOG_FRAGMENT,
                 MAP_FRAGMENT,
                 DRAFTS_FRAGMENT -> Unit
+
             }
         }.collect()
     }
@@ -141,34 +143,40 @@ class MainViewModel @Inject constructor(
             getCurrentPropertyIdFlowUseCase.invoke(),
         ) { isTablet, navigationType, propertyId ->
             when (navigationType) {
-                LIST_FRAGMENT -> emit(Event(MainViewEvent.PropertyList))
+                LIST_FRAGMENT -> Event(MainViewEvent.PropertyList)
 
                 ADD_FRAGMENT -> {
                     when (getDraftsCountUseCase.invoke()) {
-                        0 -> emit(Event(MainViewEvent.NavigateToBlank(ADD_FRAGMENT.name)))
-                        else -> setNavigationTypeUseCase.invoke(DRAFTS_FRAGMENT)
+                        0 -> Event(MainViewEvent.NavigateToBlank(ADD_FRAGMENT.name))
+                        else -> {
+                            setNavigationTypeUseCase.invoke(DRAFTS_FRAGMENT)
+                            Event(MainViewEvent.NoEvent)
+                        }
                     }
                 }
 
-                EDIT_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(EDIT_FRAGMENT.name)))
+                EDIT_FRAGMENT -> Event(MainViewEvent.NavigateToBlank(EDIT_FRAGMENT.name))
 
                 DETAIL_FRAGMENT ->
                     if (propertyId != null) {
                         if (!isTablet) {
-                            emit(Event(MainViewEvent.DetailOnPhone))
+                            Event(MainViewEvent.DetailOnPhone)
                         } else {
-                            emit(Event(MainViewEvent.DetailOnTablet))
+                            Event(MainViewEvent.DetailOnTablet)
                         }
+                    } else {
+                        Event(MainViewEvent.NavigateToBlank(LIST_FRAGMENT.name))
                     }
 
-                FILTER_DIALOG_FRAGMENT -> emit(Event(MainViewEvent.FilterProperties))
 
-                DRAFTS_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(DRAFTS_FRAGMENT.name)))
-                MAP_FRAGMENT -> emit(Event(MainViewEvent.NavigateToBlank(MAP_FRAGMENT.name)))
-                LOAN_SIMULATOR_DIALOG_FRAGMENT -> emit(Event(MainViewEvent.LoanSimulator))
-                DRAFT_DIALOG_FRAGMENT -> Unit
+                FILTER_DIALOG_FRAGMENT -> Event(MainViewEvent.FilterProperties)
+
+                DRAFTS_FRAGMENT -> Event(MainViewEvent.NavigateToBlank(DRAFTS_FRAGMENT.name))
+                MAP_FRAGMENT -> Event(MainViewEvent.NavigateToBlank(MAP_FRAGMENT.name))
+                LOAN_SIMULATOR_DIALOG_FRAGMENT -> Event(MainViewEvent.LoanSimulator)
+                SAVE_DRAFT_DIALOG_FRAGMENT -> Event(MainViewEvent.NoEvent)
             }
-        }.collect()
+        }.collectLatest { emit(it) }
     }
 
     fun onAddPropertyClicked() {

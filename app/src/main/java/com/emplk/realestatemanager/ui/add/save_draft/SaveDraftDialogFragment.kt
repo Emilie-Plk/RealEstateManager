@@ -34,6 +34,7 @@ class SaveDraftDialogFragment : DialogFragment(R.layout.save_draft_dialog_fragme
                     addDraftDialogSaveButton.text = resources.getString(R.string.submit_title_btn_text)
                     addDraftDialogSaveButton.setOnClickListener {
                         viewState.submitTitleEvent(addDraftDialogTitleTextInputEditText.text?.toString() ?: "")
+                        dismiss()
                     }
                 }
 
