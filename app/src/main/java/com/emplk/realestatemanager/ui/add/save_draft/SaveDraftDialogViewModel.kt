@@ -14,9 +14,7 @@ import com.emplk.realestatemanager.ui.add.FormType
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParam
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
@@ -38,31 +36,31 @@ class SaveDraftDialogViewModel @Inject constructor(
             getFormTypeAndTitleAsFlowUseCase.invoke(),
             hasSaveButtonBeingClicked
         ) { formTypeAndTitle, hasSaveButtonClicked ->
-                SaveDraftViewState(
-                    isSaveMessageVisible = hasSaveButtonClicked == null || hasSaveButtonClicked == false,
-                    saveButtonEvent = EquatableCallback {
-                        if (formTypeAndTitle.formType == FormType.EDIT || (formTypeAndTitle.formType == FormType.ADD && formTypeAndTitle.title != null)) {
-                            setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
-                            saveDraftNavigationUseCase.invoke()
-                            resetFormParamsUseCase.invoke()
-                        } else {
-                            hasSaveButtonBeingClicked.tryEmit(true)
-                        }
-                    },
-                    isSubmitTitleButtonVisible = hasSaveButtonClicked == true && formTypeAndTitle.title.isNullOrEmpty(),
-                    submitTitleEvent = EquatableCallbackWithParam { title ->
-                        if (title.isBlank()) setFormTitleUseCase.invoke(
-                            formTypeAndTitle.formType,
-                            null
-                        ) else setFormTitleUseCase.invoke(formTypeAndTitle.formType, title)
+            SaveDraftViewState(
+                isSaveMessageVisible = hasSaveButtonClicked == null || hasSaveButtonClicked == false,
+                saveButtonEvent = EquatableCallback {
+                    if (formTypeAndTitle.formType == FormType.EDIT || (formTypeAndTitle.formType == FormType.ADD && formTypeAndTitle.title != null)) {
+                        setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
+                        saveDraftNavigationUseCase.invoke()
                         resetFormParamsUseCase.invoke()
-                        setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
-                    },
-                    discardEvent = EquatableCallback {
-                        clearPropertyFormNavigationUseCase.invoke()
-                        setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
-                    },
-                    isTitleTextInputVisible = hasSaveButtonClicked == true && formTypeAndTitle.title.isNullOrEmpty(),
+                    } else {
+                        hasSaveButtonBeingClicked.tryEmit(true)
+                    }
+                },
+                isSubmitTitleButtonVisible = hasSaveButtonClicked == true && formTypeAndTitle.title.isNullOrEmpty(),
+                submitTitleEvent = EquatableCallbackWithParam { title ->
+                    if (title.isBlank()) setFormTitleUseCase.invoke(
+                        formTypeAndTitle.formType,
+                        null
+                    ) else setFormTitleUseCase.invoke(formTypeAndTitle.formType, title)
+                    resetFormParamsUseCase.invoke()
+                    setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
+                },
+                discardEvent = EquatableCallback {
+                    clearPropertyFormNavigationUseCase.invoke()
+                    setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
+                },
+                isTitleTextInputVisible = hasSaveButtonClicked == true && formTypeAndTitle.title.isNullOrEmpty(),
             )
         }.collectLatest { emit(it) }
     }
