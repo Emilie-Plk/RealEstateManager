@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
+import android.net.Network
 import android.net.NetworkCapabilities
 import android.os.Build
 import com.emplk.realestatemanager.data.DataModule
@@ -45,12 +46,13 @@ class InternetConnectivityRepositoryBroadcastReceiver @Inject constructor(
 
     @SuppressLint("NewApi")
     private fun hasInternetConnection(): Boolean {
+        val activeNetwork: Network? = connectivityManager?.activeNetwork
         return if (currentVersion >= Build.VERSION_CODES.M) {
-            if (connectivityManager?.activeNetwork == null) {
+            if (connectivityManager == null || activeNetwork == null) {
                 false
             } else {
                 val networkCapabilities =
-                    connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+                    connectivityManager.getNetworkCapabilities(activeNetwork)
                 if (networkCapabilities != null) {
                     networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
                             networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)

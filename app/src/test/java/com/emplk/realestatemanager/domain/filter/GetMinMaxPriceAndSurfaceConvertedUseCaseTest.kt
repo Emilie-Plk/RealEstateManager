@@ -59,10 +59,12 @@ class GetMinMaxPriceAndSurfaceConvertedUseCaseTest {
         )
         every { convertToSquareFeetDependingOnLocaleUseCase.invoke(testPropertyMinMaxStatsEntity.minSurface) } returns BigDecimal.ZERO
         val result = getMinMaxPriceAndSurfaceConvertedUseCase.invoke()
-        assertEquals(result, testPropertyMinMaxStatsEntity.copy(
-            maxPrice = BigDecimal(728804),
-            maxSurface = BigDecimal(93),
-        ))
+        assertEquals(
+            result, testPropertyMinMaxStatsEntity.copy(
+                maxPrice = BigDecimal(728804),
+                maxSurface = BigDecimal(93),
+            )
+        )
     }
 
     private val testPropertyMinMaxStatsEntity = PropertyMinMaxStatsEntity(

@@ -1,6 +1,5 @@
 package com.emplk.realestatemanager.domain.property
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import assertk.assertThat
 import com.emplk.realestatemanager.domain.connectivity.IsInternetEnabledFlowUseCase
 import com.emplk.realestatemanager.domain.current_property.ResetCurrentPropertyIdUseCase
