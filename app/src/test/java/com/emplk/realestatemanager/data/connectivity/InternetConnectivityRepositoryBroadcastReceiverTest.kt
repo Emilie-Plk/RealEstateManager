@@ -30,18 +30,15 @@ class InternetConnectivityRepositoryBroadcastReceiverTest {
 
     private val application: Application = mockk()
     private val connectivityManager: ConnectivityManager = mockk()
-    private var currentVersionCode: Int = Build.VERSION_CODES.M
 
     private val internetConnectivityRepositoryBroadcastReceiver = InternetConnectivityRepositoryBroadcastReceiver(
         application,
         connectivityManager,
-        currentVersionCode
+        Build.VERSION_CODES.M
     )
 
     @Before
     fun setup() {
-        currentVersionCode = Build.VERSION_CODES.M
-
         every { connectivityManager.activeNetwork } returns mockk {
             every { connectivityManager.getNetworkCapabilities(this@mockk) } returns mockk {
                 every { hasTransport(NetworkCapabilities.TRANSPORT_WIFI) } returns true
@@ -117,9 +114,94 @@ class InternetConnectivityRepositoryBroadcastReceiverTest {
     }
 
     @Test
+    fun `edge case 2 - networkCapabilities is null`() = testCoroutineRule.runTest {
+        // Given
+        every { connectivityManager.activeNetwork } returns mockk {
+            every { connectivityManager.getNetworkCapabilities(this@mockk) } returns null
+        }
+
+        internetConnectivityRepositoryBroadcastReceiver.isInternetEnabledAsFlow().test {
+            // When
+            val result = awaitItem()
+
+            // Then
+            assertFalse(result)
+            verify(exactly = 1) {
+                connectivityManager.getNetworkCapabilities(any())
+            }
+            verify { application.registerReceiver(any(), any()) }
+
+            // When 2
+            cancel()
+
+            // Then 2
+            verify { application.unregisterReceiver(any()) }
+        }
+    }
+
+    @Test
+    fun `edge case 3 - connectivityManager is null`() = testCoroutineRule.runTest {
+        // Given
+        val internetConnectivityRepositoryBroadcastReceiver = InternetConnectivityRepositoryBroadcastReceiver(
+            application,
+            null,
+            Build.VERSION_CODES.M
+        )
+
+        internetConnectivityRepositoryBroadcastReceiver.isInternetEnabledAsFlow().test {
+            // When
+            val result = awaitItem()
+
+            // Then
+            assertFalse(result)
+            verify{
+                connectivityManager.getNetworkCapabilities(any())?.wasNot(Called)
+            }
+            verify { application.registerReceiver(any(), any()) }
+
+            // When 2
+            cancel()
+
+            // Then 2
+            verify { application.unregisterReceiver(any()) }
+        }
+    }
+
+    @Test
+    fun `edge case 4 - activeNetwork is null`() = testCoroutineRule.runTest {
+        // Given
+        every { connectivityManager.activeNetwork } returns null
+
+        internetConnectivityRepositoryBroadcastReceiver.isInternetEnabledAsFlow().test {
+            // When
+            val result = awaitItem()
+
+            // Then
+            assertFalse(result)
+            verify(exactly = 1) {
+                connectivityManager.activeNetwork
+            }
+            verify { connectivityManager.getNetworkCapabilities(any())?.wasNot(Called) }
+            verify { application.registerReceiver(any(), any()) }
+
+            // When 2
+            cancel()
+
+            // Then 2
+            verify { application.unregisterReceiver(any()) }
+        }
+    }
+
+    @Test
     fun `with Android version Lollipop 21`() = testCoroutineRule.runTest {
         // Given
-        currentVersionCode = Build.VERSION_CODES.LOLLIPOP
+        val internetConnectivityRepositoryBroadcastReceiver = InternetConnectivityRepositoryBroadcastReceiver(
+            application,
+            connectivityManager,
+            Build.VERSION_CODES.LOLLIPOP
+        )
+
+        every { connectivityManager.activeNetworkInfo?.isConnected } returns true
 
         internetConnectivityRepositoryBroadcastReceiver.isInternetEnabledAsFlow().test {
             // When
@@ -129,9 +211,9 @@ class InternetConnectivityRepositoryBroadcastReceiverTest {
             assertTrue(result)
             verify(exactly = 1) {
                 connectivityManager.activeNetwork
+                connectivityManager.activeNetworkInfo?.isConnected
             }
             verify { connectivityManager.getNetworkCapabilities(any())?.wasNot(Called) }
-
             verify(exactly = 1) { application.registerReceiver(any(), any()) }
 
             // When 2
