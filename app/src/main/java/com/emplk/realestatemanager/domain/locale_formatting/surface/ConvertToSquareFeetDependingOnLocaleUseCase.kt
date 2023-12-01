@@ -16,7 +16,7 @@ class ConvertToSquareFeetDependingOnLocaleUseCase @Inject constructor(
     fun invoke(surface: BigDecimal): BigDecimal =
         when (getLocaleUseCase.invoke()) {
             Locale.US -> surface
-            Locale.FRANCE -> localeFormattingRepository.convertSquareFeetToSquareMeters(surface)
+            Locale.FRANCE -> localeFormattingRepository.convertSquareFeetToSquareMetersRoundedHalfUp(surface)
             else -> surface
         }
 }

@@ -1,6 +1,7 @@
-package com.emplk.realestatemanager.data.property_draft.picture_preview
+package com.emplk.realestatemanager.data.property_draft.mappers
 
 import com.emplk.realestatemanager.data.property_draft.FormDraftDto
+import com.emplk.realestatemanager.data.property_draft.picture_preview.PicturePreviewDto
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property_draft.FormDraftEntity
 import java.math.RoundingMode

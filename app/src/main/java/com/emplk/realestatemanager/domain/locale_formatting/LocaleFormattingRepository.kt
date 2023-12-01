@@ -7,11 +7,11 @@ import java.util.Locale
 
 interface LocaleFormattingRepository {
     fun getLocale(): Locale
-    fun convertSquareFeetToSquareMeters(squareFeet: BigDecimal): BigDecimal
-    fun convertSquareMetersToSquareFeet(squareMeters: BigDecimal): BigDecimal
+    fun convertSquareFeetToSquareMetersRoundedHalfUp(squareFeet: BigDecimal): BigDecimal
+    fun convertSquareMetersToSquareFeetRoundedHalfUp(squareMeters: BigDecimal): BigDecimal
     fun getLocaleSurfaceUnitFormatting(): SurfaceUnitType
-    fun convertDollarToEuro(dollar: BigDecimal, currencyRate: BigDecimal): BigDecimal
-    fun convertEuroToDollar(euro: BigDecimal, currencyRate: BigDecimal): BigDecimal
-    fun formatPriceToHumanReadable(price: BigDecimal): String
+    fun convertDollarToEuroRoundedHalfUp(dollar: BigDecimal, currencyRate: BigDecimal): BigDecimal
+    fun convertEuroToDollarRoundedHalfUp(euro: BigDecimal, currencyRate: BigDecimal): BigDecimal
+    fun formatRoundedPriceToHumanReadable(price: BigDecimal): String
     fun getLocaleCurrencyFormatting(): CurrencyType
 }

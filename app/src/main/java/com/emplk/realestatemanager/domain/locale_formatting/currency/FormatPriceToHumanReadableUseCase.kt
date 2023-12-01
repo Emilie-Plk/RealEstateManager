@@ -10,5 +10,5 @@ class FormatPriceToHumanReadableUseCase @Inject constructor(
     /**
      * @return String of the price formatted depending on locale with currency symbol (€ or $)
      */
-    fun invoke(price: BigDecimal): String = localeFormattingRepository.formatPriceToHumanReadable(price)
+    fun invoke(price: BigDecimal): String = localeFormattingRepository.formatRoundedPriceToHumanReadable(price)
 }

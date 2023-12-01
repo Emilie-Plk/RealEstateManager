@@ -8,5 +8,5 @@ class ConvertDollarToEuroUseCase @Inject constructor(
     private val localeFormattingRepositoryImpl: LocaleFormattingRepositoryImpl,
 ) {
     fun invoke(priceInUsd: BigDecimal, usdToEuroRate: BigDecimal): BigDecimal =
-        localeFormattingRepositoryImpl.convertDollarToEuro(priceInUsd, usdToEuroRate)
+        localeFormattingRepositoryImpl.convertDollarToEuroRoundedHalfUp(priceInUsd, usdToEuroRate)
 }
