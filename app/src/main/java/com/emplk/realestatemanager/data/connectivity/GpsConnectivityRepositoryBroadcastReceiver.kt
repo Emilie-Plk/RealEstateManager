@@ -23,14 +23,13 @@ class GpsConnectivityRepositoryBroadcastReceiver @Inject constructor(
     override fun isGpsEnabledAsFlow(): Flow<Boolean> = callbackFlow {
         trySend(hasGpsConnexion())
 
-        val intentFilter = IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION)
         val receiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 trySend(hasGpsConnexion())
             }
         }
 
-        application.registerReceiver(receiver, intentFilter)
+        application.registerReceiver(receiver, IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION))
 
         awaitClose {
             application.unregisterReceiver(receiver)

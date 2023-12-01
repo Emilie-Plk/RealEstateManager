@@ -37,7 +37,7 @@ class FilterPropertiesFragment : DialogFragment(R.layout.filter_properties_fragm
         binding.filterPropertyTypeActv.setAdapter(propertyTypeAdapter)
 
         val amenityAdapter = AmenityListAdapter()
-        binding.filterPropertyAmenitiesRecyclerView?.adapter = amenityAdapter
+        binding.filterPropertyAmenitiesRecyclerView.adapter = amenityAdapter
 
         binding.filterPropertyCancelBtn.setOnClickListener {
             dismiss()

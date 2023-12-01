@@ -10,6 +10,7 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.os.Build
+import androidx.annotation.RequiresApi
 import com.emplk.realestatemanager.data.DataModule
 import com.emplk.realestatemanager.domain.connectivity.InternetConnectivityRepository
 import kotlinx.coroutines.channels.awaitClose
@@ -44,25 +45,21 @@ class InternetConnectivityRepositoryBroadcastReceiver @Inject constructor(
     }.distinctUntilChanged()
 
 
-    @SuppressLint("NewApi")
     private fun hasInternetConnection(): Boolean {
-        val activeNetwork: Network? = connectivityManager?.activeNetwork
-        return if (currentVersion >= Build.VERSION_CODES.M) {
-            if (connectivityManager == null || activeNetwork == null) {
-                false
-            } else {
-                val networkCapabilities =
-                    connectivityManager.getNetworkCapabilities(activeNetwork)
-                if (networkCapabilities != null) {
-                    networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
-                            networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
-                } else {
-                    false
-                }
-            }
+        if (connectivityManager == null) {
+            return false
+        }
+
+        @RequiresApi(Build.VERSION_CODES.M)
+        if (currentVersion >= Build.VERSION_CODES.M) {
+            val activeNetwork: Network = connectivityManager.activeNetwork ?: return false
+            val networkCapabilities: NetworkCapabilities? = connectivityManager.getNetworkCapabilities(activeNetwork)
+            return  networkCapabilities != null &&
+                    (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                            networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR))
         } else {
             @Suppress("DEPRECATION")
-            connectivityManager?.activeNetworkInfo?.isConnected == true
+            return connectivityManager.activeNetworkInfo?.isConnected == true
         }
     }
 }

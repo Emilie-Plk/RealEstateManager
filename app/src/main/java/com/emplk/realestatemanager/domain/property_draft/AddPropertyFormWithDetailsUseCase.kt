@@ -9,7 +9,7 @@ class AddPropertyFormWithDetailsUseCase @Inject constructor(
 ) {
     suspend fun invoke(id: Long?): Long =
         if (id == null || id == 0L) {
-            formDraftRepository.addPropertyFormWithDetails(
+            formDraftRepository.addFormDraftWithDetails(
                 FormDraftEntity(
                     id = 0L,
                     type = "",
@@ -31,6 +31,6 @@ class AddPropertyFormWithDetailsUseCase @Inject constructor(
                 )
             )
         } else {
-            formDraftRepository.addPropertyFormWithDetails(mapPropertyToDraftUseCase.invoke(id))
+            formDraftRepository.addFormDraftWithDetails(mapPropertyToDraftUseCase.invoke(id))
         }
 }

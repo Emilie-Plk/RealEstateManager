@@ -4,10 +4,12 @@ import com.emplk.realestatemanager.data.property.PropertyDto
 import com.emplk.realestatemanager.data.property.PropertyWithDetails
 import com.emplk.realestatemanager.data.property.location.LocationDto
 import com.emplk.realestatemanager.data.property.picture.PictureDto
+import com.emplk.realestatemanager.data.property_draft.FormDraftDto
 import com.emplk.realestatemanager.domain.property.PropertyEntity
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.location.LocationEntity
 import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
+import com.emplk.realestatemanager.domain.property_draft.FormDraftEntity
 import com.emplk.realestatemanager.domain.property_draft.FormDraftParams
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.PicturePreviewEntity
 import com.google.android.gms.maps.model.LatLng
@@ -224,6 +226,64 @@ fun getTestFormDraftParams(id: Long) = FormDraftParams(
     formType = null,
 )
 // endregion FormDraftParams
+
+// region FormDraftEntity
+fun getTestFormDraftEntity(id: Long) = FormDraftEntity(
+    id = id,
+    type = "House",
+    title = "House for sale in Dummy City",
+    address = "1st, Dummy Street, 12345, Dummy City",
+    isAddressValid = true,
+    price = BigDecimal(1000000),
+    surface = BigDecimal(500),
+    description = "Test description",
+    rooms = 5,
+    bathrooms = 2,
+    bedrooms = 3,
+    agentName = "John Doe",
+    amenities = buildList {
+        add(AmenityType.SCHOOL)
+        add(AmenityType.PARK)
+        add(AmenityType.SHOPPING_MALL)
+    },
+    pictures = getTestPicturePreviewEntities(),
+    isSold = false,
+    entryDate = LocalDateTime.of(2023, 1, 1, 12, 0),
+    saleDate = null,
+    lastEditionDate = LocalDateTime.of(2023, 1, 1, 12, 0),
+)
+// endregion FormDraftEntity
+
+// region FormDraftDto
+fun getTestFormDraftDto(id: Long) = FormDraftDto(
+    id = id,
+    title = "House for sale in Dummy City",
+    type = "House",
+    price = BigDecimal(1000000),
+    surface = BigDecimal(500),
+    address = "1st, Dummy Street, 12345, Dummy City",
+    isAddressValid = true,
+    rooms = 5,
+    bedrooms = 3,
+    bathrooms = 2,
+    description = "Test description",
+    amenitySchool = true,
+    amenityPark = true,
+    amenityShopping = true,
+    amenityRestaurant = false,
+    amenityConcierge = false,
+    amenityGym = false,
+    amenityTransportation = false,
+    amenityHospital = false,
+    amenityLibrary = false,
+    agentName = "John Doe",
+    isSold = false,
+    entryDate = LocalDateTime.of(2023, 1, 1, 12, 0),
+    saleDate = null,
+    lastEditionDate = LocalDateTime.of(2023, 1, 1, 12, 0),
+    )
+// endregion FormDraftDto
+
 
 fun getTestAgentsMap() = mapOf(
     1L to "John Doe",

@@ -25,9 +25,6 @@ class InternetConnectivityRepositoryBroadcastReceiverTest {
     @get:Rule
     val testCoroutineRule = TestCoroutineRule()
 
-    @get:Rule
-    val instantTaskExecutorRule = InstantTaskExecutorRule()
-
     private val application: Application = mockk()
     private val connectivityManager: ConnectivityManager = mockk()
 
@@ -114,6 +111,48 @@ class InternetConnectivityRepositoryBroadcastReceiverTest {
     }
 
     @Test
+    fun `callbackFlow called thrice with same value won't re-trigger broadcast receiver`() = testCoroutineRule.runTest {
+        // Given
+        val broadcastReceiverSlot = slot<BroadcastReceiver>()
+
+        every { application.registerReceiver(capture(broadcastReceiverSlot), any()) } returns mockk()
+
+        every { connectivityManager.activeNetwork } returnsMany listOf(
+            mockk {
+                every { connectivityManager.getNetworkCapabilities(this@mockk) } returns mockk {
+                    every { hasTransport(NetworkCapabilities.TRANSPORT_WIFI) } returns true
+                    every { hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) } returns true
+                }
+            },
+            mockk {
+                every { connectivityManager.getNetworkCapabilities(this@mockk) } returns mockk {
+                    every { hasTransport(NetworkCapabilities.TRANSPORT_WIFI) } returns true
+                    every { hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) } returns true
+                }
+            },
+            mockk {
+                every { connectivityManager.getNetworkCapabilities(this@mockk) } returns mockk {
+                    every { hasTransport(NetworkCapabilities.TRANSPORT_WIFI) } returns true
+                    every { hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) } returns true
+                }
+            }
+        )
+
+        internetConnectivityRepositoryBroadcastReceiver.isInternetEnabledAsFlow().test {
+            // When 1
+            val capturedEmission = awaitItem()
+
+            // Then 1
+            assertTrue(capturedEmission)
+
+            verify(exactly = 1) { application.registerReceiver(any(), any()) }
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+
+    @Test
     fun `edge case 2 - networkCapabilities is null`() = testCoroutineRule.runTest {
         // Given
         every { connectivityManager.activeNetwork } returns mockk {
@@ -178,10 +217,7 @@ class InternetConnectivityRepositoryBroadcastReceiverTest {
 
             // Then
             assertFalse(result)
-            verify(exactly = 1) {
-                connectivityManager.activeNetwork
-            }
-            verify { connectivityManager.getNetworkCapabilities(any())?.wasNot(Called) }
+
             verify { application.registerReceiver(any(), any()) }
 
             // When 2
@@ -210,10 +246,11 @@ class InternetConnectivityRepositoryBroadcastReceiverTest {
             // Then
             assertTrue(result)
             verify(exactly = 1) {
-                connectivityManager.activeNetwork
                 connectivityManager.activeNetworkInfo?.isConnected
             }
-            verify { connectivityManager.getNetworkCapabilities(any())?.wasNot(Called) }
+            verify {
+                connectivityManager.activeNetwork?.wasNot(Called)
+                connectivityManager.getNetworkCapabilities(any())?.wasNot(Called) }
             verify(exactly = 1) { application.registerReceiver(any(), any()) }
 
             // When 2
