@@ -28,12 +28,12 @@ class GeolocationRepositoryFusedLocationProvider @Inject constructor(
 ) : GeolocationRepository {
 
     companion object {
-        private val LOCATION_INTERVAL_DURATION = 5.seconds
+        private val LOCATION_INTERVAL_DURATION = 4.seconds
         private val LOCATION_MAX_UPDATE_DELAY = 10.seconds
         private const val LOCATION_DISTANCE_THRESHOLD = 50F
     }
 
-    @RequiresPermission(anyOf = ["android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"])
+   @RequiresPermission(anyOf = ["android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"])
     override fun getCurrentLocationAsFlow(): Flow<GeolocationState> = callbackFlow {
 
         val locationCallback = object : LocationCallback() {
@@ -45,7 +45,6 @@ class GeolocationRepositoryFusedLocationProvider @Inject constructor(
                             it.longitude
                         )
                     )
-                    Log.d("COUCOU", "Location sent: ${it.latitude}, ${it.longitude}")
                 } ?: trySend(GeolocationState.Error(NativeText.Resource(R.string.geolocation_error_no_location_found)))
             }
         }

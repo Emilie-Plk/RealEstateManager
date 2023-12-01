@@ -35,12 +35,48 @@ class PropertiesFilterRepositoryImplTest {
                 val firstCapturedEmission = awaitItem()
                 assertEquals(PropertiesFilterEntity(), firstCapturedEmission)
 
-                repository.setPropertiesFilter(PropertiesFilterEntity(minMaxPrice = Pair(BigDecimal(1), BigDecimal(2))))
+                repository.setPropertiesFilter(
+                    PropertiesFilterEntity(
+                        minMaxPrice = Pair(
+                            BigDecimal(1),
+                            BigDecimal(2)
+                        )
+                    )
+                )
                 val secondCapturedEmission = awaitItem()
                 assertEquals(
                     PropertiesFilterEntity(minMaxPrice = Pair(BigDecimal(1), BigDecimal(2))),
                     secondCapturedEmission
                 )
+            }
+        }
+
+    // TODO: test resetPropertiesFilter()
+
+    @Test
+    fun `reset properties filter`() = testCoroutineRule.runTest {
+            repository.getPropertiesFilter().test {
+                // Given
+                val initialState = awaitItem()
+                assertNull(initialState)
+
+                // When
+                repository.setPropertiesFilter(
+                    PropertiesFilterEntity(
+                        minMaxPrice = Pair(BigDecimal(1), BigDecimal(2))
+                    )
+                )
+                val firstCapturedEmission = awaitItem()
+                assertEquals(
+                    PropertiesFilterEntity(minMaxPrice = Pair(BigDecimal(1), BigDecimal(2))),
+                    firstCapturedEmission
+                )
+
+                repository.resetPropertiesFilter()
+
+                // Then
+                val reinitializeState = awaitItem()
+                assertNull(reinitializeState)
             }
         }
 }

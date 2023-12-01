@@ -3,13 +3,13 @@ package com.emplk.realestatemanager.domain.property_draft
 interface FormDraftRepository {
     suspend fun add(formDraftEntity: FormDraftEntity): Long
 
-    suspend fun addPropertyFormWithDetails(formDraftEntity: FormDraftEntity): Long
+    suspend fun addFormDraftWithDetails(formDraftEntity: FormDraftEntity): Long
 
-    suspend fun doesDraftExist(propertyFormId: Long?): Boolean
+    suspend fun doesDraftExist(formId: Long?): Boolean
 
-    suspend fun doesPropertyExist(propertyFormId: Long?): Boolean
+    suspend fun doesPropertyExist(formId: Long?): Boolean
 
-    suspend fun getPropertyFormById(propertyFormId: Long): FormDraftEntity
+    suspend fun getFormDraftEntityById(formId: Long): FormDraftEntity
 
     suspend fun getDraftsCount(): Int
 
@@ -17,7 +17,7 @@ interface FormDraftRepository {
 
     suspend fun update(formDraftEntity: FormDraftEntity)
 
-    suspend fun updateIsAddressValid(propertyFormId: Long, isAddressValid: Boolean)
+    suspend fun updateAddressValidity(formId: Long, isAddressValid: Boolean)
 
-    suspend fun delete(propertyFormId: Long): Boolean
+    suspend fun delete(formId: Long): Boolean
 }

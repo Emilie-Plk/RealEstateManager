@@ -9,6 +9,6 @@ class UpdateOnAddressClickedUseCase @Inject constructor(
 ) {
     suspend fun invoke(isAddressSelected: Boolean, id: Long) {
         predictionAddressStateRepository.setIsPredictionSelectedByUser(isAddressSelected)
-        formDraftRepository.updateIsAddressValid(id, isAddressSelected)
+        formDraftRepository.updateAddressValidity(id, isAddressSelected)
     }
 }

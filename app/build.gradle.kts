@@ -86,7 +86,7 @@ dependencies {
     implementation("com.google.android.flexbox:flexbox:3.0.0")
 
     // GLIDE
-    implementation("com.github.bumptech.glide:glide:4.15.1")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
     kapt("com.github.bumptech.glide:ksp:4.15.1")
 
     // SPLASH SCREEN

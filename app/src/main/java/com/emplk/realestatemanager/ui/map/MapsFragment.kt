@@ -34,16 +34,14 @@ class MapsFragment : SupportMapFragment(), OnMapReadyCallback {
 
     companion object {
         fun newInstance(): Fragment = MapsFragment()
-
     }
 
     private val viewModel: MapViewModel by viewModels()
 
-
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             viewModel.hasPermissionBeenGranted(
-                permissions[android.Manifest.permission.ACCESS_FINE_LOCATION] == true &&
+                permissions[android.Manifest.permission.ACCESS_FINE_LOCATION] == true ||
                         permissions[android.Manifest.permission.ACCESS_COARSE_LOCATION] == true
             )
         }
@@ -132,13 +130,14 @@ class MapsFragment : SupportMapFragment(), OnMapReadyCallback {
     private fun requestPermissions() {
         when {
             // Permissions already granted
-            ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) ==
-                    PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED ||
                     ContextCompat.checkSelfPermission(
                         requireContext(),
                         android.Manifest.permission.ACCESS_COARSE_LOCATION
-                    ) ==
-                    PackageManager.PERMISSION_GRANTED ->
+                    ) == PackageManager.PERMISSION_GRANTED ->
                 viewModel.hasPermissionBeenGranted(true)
 
             // Permissions have been denied once - show rationale
@@ -159,7 +158,7 @@ class MapsFragment : SupportMapFragment(), OnMapReadyCallback {
 
     private fun showRequestPermissionRationale() {
         // rationale should be shown only once
-        val show = AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(requireContext())
             .setTitle(getString(R.string.permission_rationale_title))
             .setMessage(getString(R.string.permission_rationale_message))
             .setPositiveButton(getString(R.string.permission_rationale_ok_btn)) { dialogInterface, _ ->

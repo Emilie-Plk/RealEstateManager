@@ -24,10 +24,10 @@ class FormDraftRepositoryRoom @Inject constructor(
 
     override suspend fun add(formDraftEntity: FormDraftEntity): Long =
         withContext(coroutineDispatcherProvider.io) {
-            formDraftDao.insert(formDraftMapper.mapToPropertyDraftDto(formDraftEntity))
+            formDraftDao.insert(formDraftMapper.mapToFormDraftDto(formDraftEntity))
         }
 
-    override suspend fun addPropertyFormWithDetails(formDraftEntity: FormDraftEntity): Long =
+    override suspend fun addFormDraftWithDetails(formDraftEntity: FormDraftEntity): Long =
         withContext(coroutineDispatcherProvider.io) {
             add(formDraftEntity).also { propertyFormId ->
                 buildList {
@@ -45,32 +45,32 @@ class FormDraftRepositoryRoom @Inject constructor(
         }
 
 
-    override suspend fun doesDraftExist(propertyFormId: Long?): Boolean =
+    override suspend fun doesDraftExist(formId: Long?): Boolean =
         withContext(coroutineDispatcherProvider.io) {
-            if (propertyFormId == null) return@withContext false
+            if (formId == null) return@withContext false
             try {
-                formDraftDao.doesDraftExist(propertyFormId)
+                formDraftDao.doesDraftExist(formId)
             } catch (e: SQLiteException) {
                 e.printStackTrace()
                 false
             }
         }
 
-    override suspend fun doesPropertyExist(propertyFormId: Long?): Boolean =
+    override suspend fun doesPropertyExist(formId: Long?): Boolean =
         withContext(coroutineDispatcherProvider.io) {
-            if (propertyFormId == null) return@withContext false
+            if (formId == null) return@withContext false
             try {
-                formDraftDao.doesPropertyExist(propertyFormId)
+                formDraftDao.doesPropertyExist(formId)
             } catch (e: SQLiteException) {
                 e.printStackTrace()
                 false
             }
         }
 
-    override suspend fun getPropertyFormById(propertyFormId: Long): FormDraftEntity =
+    override suspend fun getFormDraftEntityById(formId: Long): FormDraftEntity =
         withContext(coroutineDispatcherProvider.io) {
-            val propertyFormWithDetails = formDraftDao.getPropertyFormById(propertyFormId)
-            formDraftMapper.mapToPropertyDraftEntity(
+            val propertyFormWithDetails = formDraftDao.getPropertyFormById(formId)
+            formDraftMapper.mapToFormDraftEntity(
                 propertyFormWithDetails.propertyForm,
                 propertyFormWithDetails.picturePreviews,
             )
@@ -82,14 +82,15 @@ class FormDraftRepositoryRoom @Inject constructor(
 
     override suspend fun getDraftsWithFeaturePicture(): List<FormWithTitleDateAndFeaturedPictureEntity> =
         withContext(coroutineDispatcherProvider.io) {
-            formDraftDao.getFormsWithFeaturedPicture()
-                .let { formWithTitleDateAndFeaturedPictureMapper.mapToFormsWithTitleDateAndFeaturedPictureEntities(it) }
+            val formWithTitleDateAndFeaturedPictures = formDraftDao.getFormsWithFeaturedPicture()
+            formWithTitleDateAndFeaturedPictureMapper.mapToFormsWithTitleDateAndFeaturedPictureEntities(
+                formWithTitleDateAndFeaturedPictures
+            )
         }
 
     override suspend fun update(formDraftEntity: FormDraftEntity) =
         withContext(coroutineDispatcherProvider.io) {
-
-            val propertyFormDto = formDraftMapper.mapToPropertyDraftDto(formDraftEntity)
+            val propertyFormDto = formDraftMapper.mapToFormDraftDto(formDraftEntity)
             formDraftDao.update(
                 propertyFormDto.type,
                 propertyFormDto.title,
@@ -118,17 +119,17 @@ class FormDraftRepositoryRoom @Inject constructor(
             )
         }
 
-    override suspend fun updateIsAddressValid(propertyFormId: Long, isAddressValid: Boolean) =
+    override suspend fun updateAddressValidity(formId: Long, isAddressValid: Boolean) =
         withContext(coroutineDispatcherProvider.io) {
-            formDraftDao.updateIsAddressValid(propertyFormId, isAddressValid)
+            formDraftDao.updateAddressValidity(formId, isAddressValid)
         }
 
-    override suspend fun delete(propertyFormId: Long): Boolean = withContext(coroutineDispatcherProvider.io) {
+    override suspend fun delete(formId: Long): Boolean = withContext(coroutineDispatcherProvider.io) {
         try {
             buildList {
-                add(async { picturePreviewDao.deleteAll(propertyFormId) })
+                add(async { picturePreviewDao.deleteAll(formId) })
 
-                add(async { formDraftDao.delete(propertyFormId) })
+                add(async { formDraftDao.delete(formId) })
             }.awaitAll().all { it != null }
         } catch (e: SQLiteException) {
             e.printStackTrace()

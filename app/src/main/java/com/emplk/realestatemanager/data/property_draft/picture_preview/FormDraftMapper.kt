@@ -10,7 +10,7 @@ class FormDraftMapper @Inject constructor(
     private val picturePreviewMapper: PicturePreviewMapper,
 ) {
 
-    fun mapToPropertyDraftDto(propertyForm: FormDraftEntity): FormDraftDto =
+    fun mapToFormDraftDto(propertyForm: FormDraftEntity): FormDraftDto =
         FormDraftDto(
             id = propertyForm.id,
             title = propertyForm.title,
@@ -39,7 +39,7 @@ class FormDraftMapper @Inject constructor(
             lastEditionDate = propertyForm.lastEditionDate,
         )
 
-    fun mapToPropertyDraftEntity(
+    fun mapToFormDraftEntity(
         formDraftDto: FormDraftDto,
         picturePreviewDtos: List<PicturePreviewDto>,
     ): FormDraftEntity =
