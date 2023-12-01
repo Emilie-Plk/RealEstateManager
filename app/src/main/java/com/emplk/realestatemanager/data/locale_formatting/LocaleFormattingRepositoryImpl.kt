@@ -19,20 +19,20 @@ class LocaleFormattingRepositoryImpl @Inject constructor(
 
     override fun getLocale(): Locale = locale
 
-    override fun convertSquareFeetToSquareMeters(squareFeet: BigDecimal): BigDecimal =
+    override fun convertSquareFeetToSquareMetersRoundedHalfUp(squareFeet: BigDecimal): BigDecimal =
         squareFeet.divide(BigDecimal(SQUARE_FEET_TO_SQUARE_METERS), 0, RoundingMode.HALF_UP)
 
-    override fun convertSquareMetersToSquareFeet(squareMeters: BigDecimal): BigDecimal =
+    override fun convertSquareMetersToSquareFeetRoundedHalfUp(squareMeters: BigDecimal): BigDecimal =
         squareMeters.multiply(BigDecimal(SQUARE_FEET_TO_SQUARE_METERS)).setScale(0, RoundingMode.HALF_UP)
 
-    override fun convertDollarToEuro(dollar: BigDecimal, currencyRate: BigDecimal): BigDecimal =
+    override fun convertDollarToEuroRoundedHalfUp(dollar: BigDecimal, currencyRate: BigDecimal): BigDecimal =
         dollar.divide(currencyRate, 0, RoundingMode.HALF_UP)
 
-    override fun convertEuroToDollar(euro: BigDecimal, currencyRate: BigDecimal): BigDecimal =
+    override fun convertEuroToDollarRoundedHalfUp(euro: BigDecimal, currencyRate: BigDecimal): BigDecimal =
         euro.multiply(currencyRate).setScale(0, RoundingMode.HALF_UP)
 
 
-    override fun formatPriceToHumanReadable(price: BigDecimal): String {
+    override fun formatRoundedPriceToHumanReadable(price: BigDecimal): String {
         val roundedPrice = price.setScale(0, RoundingMode.HALF_UP)
 
         val numberFormat = NumberFormat.getCurrencyInstance(locale)

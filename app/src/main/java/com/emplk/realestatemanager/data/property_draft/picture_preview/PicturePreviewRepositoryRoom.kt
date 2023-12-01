@@ -1,6 +1,7 @@
 package com.emplk.realestatemanager.data.property_draft.picture_preview
 
 import android.database.sqlite.SQLiteException
+import com.emplk.realestatemanager.data.property_draft.mappers.PicturePreviewMapper
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.PicturePreviewEntity
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.PicturePreviewRepository

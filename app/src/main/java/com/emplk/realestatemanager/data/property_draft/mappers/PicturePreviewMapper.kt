@@ -1,5 +1,6 @@
-package com.emplk.realestatemanager.data.property_draft.picture_preview
+package com.emplk.realestatemanager.data.property_draft.mappers
 
+import com.emplk.realestatemanager.data.property_draft.picture_preview.PicturePreviewDto
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.PicturePreviewEntity
 import javax.inject.Inject
 
