@@ -4,5 +4,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface ScreenWidthTypeRepository {
     fun setScreenWidthType(isTablet: Boolean)
-    fun getScreenWidthTypeAsFlow(): Flow<ScreenWidthType>
+    fun getScreenWidthTypeAsFlow(): Flow<ScreenWidthType?>
 }

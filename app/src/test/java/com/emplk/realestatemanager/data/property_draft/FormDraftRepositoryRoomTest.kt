@@ -2,9 +2,9 @@ package com.emplk.realestatemanager.data.property_draft
 
 import android.database.sqlite.SQLiteException
 import com.emplk.realestatemanager.data.property_draft.mappers.FormDraftMapper
+import com.emplk.realestatemanager.data.property_draft.mappers.PicturePreviewMapper
 import com.emplk.realestatemanager.data.property_draft.picture_preview.PicturePreviewDao
 import com.emplk.realestatemanager.data.property_draft.picture_preview.PicturePreviewDto
-import com.emplk.realestatemanager.data.property_draft.mappers.PicturePreviewMapper
 import com.emplk.realestatemanager.domain.property_draft.FormWithTitleDateAndFeaturedPictureEntity
 import com.emplk.realestatemanager.fixtures.getTestFormDraftDto
 import com.emplk.realestatemanager.fixtures.getTestFormDraftEntity

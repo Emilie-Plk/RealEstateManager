@@ -1,16 +1,13 @@
 package com.emplk.realestatemanager.data.content_resolver
 
-import android.app.Application
 import android.content.ContentResolver
 import android.content.Context
 import com.emplk.realestatemanager.fixtures.testFixedClock
 import com.emplk.utils.TestCoroutineRule
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
-import org.junit.Test
 
 class PictureFileRepositoryContentResolverTest {
 
@@ -18,7 +15,7 @@ class PictureFileRepositoryContentResolverTest {
     val testCoroutineRule = TestCoroutineRule()
 
     private val contentResolver: ContentResolver = mockk()
-    private val context : Context = mockk()
+    private val context: Context = mockk()
 
     private val pictureFileRepositoryContentResolver = PictureFileRepositoryContentResolver(
         contentResolver,
@@ -36,18 +33,18 @@ class PictureFileRepositoryContentResolverTest {
         every { context.cacheDir.absolutePath } returns "cacheDir"
     }
 
-   /* @Test
-    fun `initial case`() = testCoroutineRule.runTest {
+    /* @Test
+     fun `initial case`() = testCoroutineRule.runTest {
 
-        // Given
-        val stringUri = "stringUri"
-        val filePrefix = "filePrefix"
-        val absolutePath = "cacheDir/filePrefix0.jpg"
+         // Given
+         val stringUri = "stringUri"
+         val filePrefix = "filePrefix"
+         val absolutePath = "cacheDir/filePrefix0.jpg"
 
-        // When
-        val result = pictureFileRepositoryContentResolver.saveToAppFiles(stringUri, filePrefix)
+         // When
+         val result = pictureFileRepositoryContentResolver.saveToAppFiles(stringUri, filePrefix)
 
-        // Then
-        assertEquals(absolutePath, result)
-    }*/
+         // Then
+         assertEquals(absolutePath, result)
+     }*/
 }

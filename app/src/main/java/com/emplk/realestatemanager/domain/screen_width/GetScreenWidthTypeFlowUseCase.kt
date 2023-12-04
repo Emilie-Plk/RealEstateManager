@@ -7,6 +7,6 @@ import javax.inject.Inject
 class GetScreenWidthTypeFlowUseCase @Inject constructor(
     private val screenWidthTypeRepository: ScreenWidthTypeRepository
 ) {
-    fun invoke(): Flow<ScreenWidthType> = screenWidthTypeRepository.getScreenWidthTypeAsFlow()
+    fun invoke(): Flow<ScreenWidthType?> = screenWidthTypeRepository.getScreenWidthTypeAsFlow()
 
 }

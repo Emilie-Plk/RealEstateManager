@@ -1,6 +1,5 @@
 package com.emplk.realestatemanager.data.connectivity
 
-import android.annotation.SuppressLint
 import android.app.Application
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -54,7 +53,7 @@ class InternetConnectivityRepositoryBroadcastReceiver @Inject constructor(
         if (currentVersion >= Build.VERSION_CODES.M) {
             val activeNetwork: Network = connectivityManager.activeNetwork ?: return false
             val networkCapabilities: NetworkCapabilities? = connectivityManager.getNetworkCapabilities(activeNetwork)
-            return  networkCapabilities != null &&
+            return networkCapabilities != null &&
                     (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
                             networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR))
         } else {

@@ -164,10 +164,14 @@ koverReport {
                     "androidx.room.Database",
                 )
                 packages(
-                    "hilt_aggregated_deps", // Hilt: GeneratedInjectors (NOT annotated by DaggerGenerated)
-                    "com.emplk.realestatemanager.databinding", // ViewBinding
+                    // Hilt: GeneratedInjectors (NOT annotated by DaggerGenerated)
+                    "hilt_aggregated_deps",
+                    // ViewBinding
+                    "com.emplk.realestatemanager.databinding",
                     // Gradle generated
                     "com.emplk.realestatemanager.BuildConfig",
+                    // Data Utils
+                    "com.emplk.realestatemanager.data.utils",
                     // UI Utils
                     "com.emplk.realestatemanager.ui.utils",
                 )
@@ -184,6 +188,9 @@ koverReport {
 
                     "*BuildConfig",
                     "*BuildConfig\$*",
+
+                    "*Api",
+                    "*Api\$*",
 
                     "*Dto",
                     "*Dto\$*",

@@ -1,8 +1,6 @@
 package com.emplk.realestatemanager.data.property_draft.mappers
 
 import com.emplk.realestatemanager.data.property_draft.getTestPicturePreviewDtos
-import com.emplk.realestatemanager.data.property_draft.mappers.FormDraftMapper
-import com.emplk.realestatemanager.data.property_draft.mappers.PicturePreviewMapper
 import com.emplk.realestatemanager.fixtures.getTestFormDraftDto
 import com.emplk.realestatemanager.fixtures.getTestFormDraftEntity
 import com.emplk.realestatemanager.fixtures.getTestPicturePreviewEntities
@@ -39,7 +37,7 @@ class FormDraftMapperTest {
         // When
         val formDraftEntity = formDraftMapper.mapToFormDraftEntity(
             getTestFormDraftDto(1L),
-           getTestPicturePreviewDtos(1L)
+            getTestPicturePreviewDtos(1L)
         )
 
         // Then
