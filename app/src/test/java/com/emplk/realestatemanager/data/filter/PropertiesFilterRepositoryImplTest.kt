@@ -55,28 +55,28 @@ class PropertiesFilterRepositoryImplTest {
 
     @Test
     fun `reset properties filter`() = testCoroutineRule.runTest {
-            repository.getPropertiesFilter().test {
-                // Given
-                val initialState = awaitItem()
-                assertNull(initialState)
+        repository.getPropertiesFilter().test {
+            // Given
+            val initialState = awaitItem()
+            assertNull(initialState)
 
-                // When
-                repository.setPropertiesFilter(
-                    PropertiesFilterEntity(
-                        minMaxPrice = Pair(BigDecimal(1), BigDecimal(2))
-                    )
+            // When
+            repository.setPropertiesFilter(
+                PropertiesFilterEntity(
+                    minMaxPrice = Pair(BigDecimal(1), BigDecimal(2))
                 )
-                val firstCapturedEmission = awaitItem()
-                assertEquals(
-                    PropertiesFilterEntity(minMaxPrice = Pair(BigDecimal(1), BigDecimal(2))),
-                    firstCapturedEmission
-                )
+            )
+            val firstCapturedEmission = awaitItem()
+            assertEquals(
+                PropertiesFilterEntity(minMaxPrice = Pair(BigDecimal(1), BigDecimal(2))),
+                firstCapturedEmission
+            )
 
-                repository.resetPropertiesFilter()
+            repository.resetPropertiesFilter()
 
-                // Then
-                val reinitializeState = awaitItem()
-                assertNull(reinitializeState)
-            }
+            // Then
+            val reinitializeState = awaitItem()
+            assertNull(reinitializeState)
         }
+    }
 }

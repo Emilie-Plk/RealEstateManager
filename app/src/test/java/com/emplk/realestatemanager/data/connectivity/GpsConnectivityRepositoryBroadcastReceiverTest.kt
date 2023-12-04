@@ -10,7 +10,6 @@ import io.mockk.justRun
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
-import kotlinx.coroutines.test.runCurrent
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -86,29 +85,30 @@ class GpsConnectivityRepositoryBroadcastReceiverTest {
     }
 
     @Test
-    fun `gps enabled callbackFlow called thrice with same value won't re-trigger broadcast receiver`() = testCoroutineRule.runTest {
-        // Given
-        val broadcastReceiverSlot = slot<BroadcastReceiver>()
+    fun `gps enabled callbackFlow called thrice with same value won't re-trigger broadcast receiver`() =
+        testCoroutineRule.runTest {
+            // Given
+            val broadcastReceiverSlot = slot<BroadcastReceiver>()
 
-        every { application.registerReceiver(capture(broadcastReceiverSlot), any()) } returns mockk()
+            every { application.registerReceiver(capture(broadcastReceiverSlot), any()) } returns mockk()
 
-        every { locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) } returnsMany listOf(
-            true,
-            true,
-            true
-        )
+            every { locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) } returnsMany listOf(
+                true,
+                true,
+                true
+            )
 
-        repository.isGpsEnabledAsFlow().test {
-            // When 1
-            val firstCapturedEmission = awaitItem()
-            // Then 2
-            assertEquals(true, firstCapturedEmission)
+            repository.isGpsEnabledAsFlow().test {
+                // When 1
+                val firstCapturedEmission = awaitItem()
+                // Then 2
+                assertEquals(true, firstCapturedEmission)
 
-            broadcastReceiverSlot.captured.onReceive(mockk(), mockk())
+                broadcastReceiverSlot.captured.onReceive(mockk(), mockk())
 
-            verify(exactly = 1) { application.registerReceiver(any(), any()) }
+                verify(exactly = 1) { application.registerReceiver(any(), any()) }
 
-            cancelAndIgnoreRemainingEvents()
+                cancelAndIgnoreRemainingEvents()
+            }
         }
-    }
 }

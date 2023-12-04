@@ -281,7 +281,7 @@ fun getTestFormDraftDto(id: Long) = FormDraftDto(
     entryDate = LocalDateTime.of(2023, 1, 1, 12, 0),
     saleDate = null,
     lastEditionDate = LocalDateTime.of(2023, 1, 1, 12, 0),
-    )
+)
 // endregion FormDraftDto
 
 

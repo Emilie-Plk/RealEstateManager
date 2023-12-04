@@ -12,7 +12,7 @@ class MapPropertyToDraftUseCase @Inject constructor(
         return FormDraftEntity(
             id = propertyId,
             type = propertyEntity.type,
-            title = null,   // TODO: CHANGE that
+            title = null,
             price = propertyEntity.price,
             surface = propertyEntity.surface,
             address = propertyEntity.location.address,

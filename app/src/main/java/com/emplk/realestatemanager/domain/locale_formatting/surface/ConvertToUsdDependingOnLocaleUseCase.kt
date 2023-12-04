@@ -31,7 +31,10 @@ class ConvertToUsdDependingOnLocaleUseCase @Inject constructor(
                 }
 
                 is CurrencyRateWrapper.Error -> {
-                    localeFormattingRepository.convertEuroToDollarRoundedHalfUp(price, currencyWrapper.fallbackUsToEuroRate)
+                    localeFormattingRepository.convertEuroToDollarRoundedHalfUp(
+                        price,
+                        currencyWrapper.fallbackUsToEuroRate
+                    )
                 }
             }
         } else {

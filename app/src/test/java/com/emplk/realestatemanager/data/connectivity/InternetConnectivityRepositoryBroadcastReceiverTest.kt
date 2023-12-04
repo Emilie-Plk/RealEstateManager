@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.emplk.utils.TestCoroutineRule
 import io.mockk.Called
@@ -193,7 +192,7 @@ class InternetConnectivityRepositoryBroadcastReceiverTest {
 
             // Then
             assertFalse(result)
-            verify{
+            verify {
                 connectivityManager.getNetworkCapabilities(any())?.wasNot(Called)
             }
             verify { application.registerReceiver(any(), any()) }
@@ -250,7 +249,8 @@ class InternetConnectivityRepositoryBroadcastReceiverTest {
             }
             verify {
                 connectivityManager.activeNetwork?.wasNot(Called)
-                connectivityManager.getNetworkCapabilities(any())?.wasNot(Called) }
+                connectivityManager.getNetworkCapabilities(any())?.wasNot(Called)
+            }
             verify(exactly = 1) { application.registerReceiver(any(), any()) }
 
             // When 2

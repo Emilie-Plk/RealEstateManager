@@ -1,6 +1,5 @@
 package com.emplk.realestatemanager.data.geolocation
 
-import android.util.Log
 import androidx.annotation.RequiresPermission
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
@@ -33,7 +32,7 @@ class GeolocationRepositoryFusedLocationProvider @Inject constructor(
         private const val LOCATION_DISTANCE_THRESHOLD = 50F
     }
 
-   @RequiresPermission(anyOf = ["android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"])
+    @RequiresPermission(anyOf = ["android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"])
     override fun getCurrentLocationAsFlow(): Flow<GeolocationState> = callbackFlow {
 
         val locationCallback = object : LocationCallback() {
