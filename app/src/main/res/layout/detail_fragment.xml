@@ -11,7 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp">
 
-
         <ProgressBar
             android:id="@+id/detail_progressBar"
             android:layout_width="wrap_content"
@@ -53,7 +52,7 @@
             android:layout_marginStart="12dp"
             android:layout_marginTop="14dp"
             android:textSize="18sp"
-            app:layout_constraintEnd_toStartOf="@+id/detail_last_updated_currency_rate_tv"
+            app:layout_constraintEnd_toStartOf="@+id/detail_price_tv"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/detail_photo_carouselRv"
             tools:text="Villa" />
@@ -109,16 +108,16 @@
             android:id="@+id/detail_sold_date_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="8dp"
             android:text="@string/detail_sold_date_tv"
             android:textAllCaps="true"
             android:textColor="@color/cherry_red"
             android:textStyle="bold"
             android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="@+id/detail_location_tv"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/detail_location_tv"
+            android:gravity="end"
+            app:layout_constraintBottom_toTopOf="@id/detail_entry_date_tv"
+            app:layout_constraintEnd_toEndOf="@+id/detail_entry_date_tv"
+            app:layout_constraintStart_toStartOf="@+id/detail_entry_date_tv"
+            tools:layout_editor_absoluteY="294dp"
             tools:text="Sold date: 01/01/2020"
             tools:visibility="visible" />
 
@@ -126,14 +125,13 @@
             android:id="@+id/detail_price_tv"
             style="@style/Theme.RealEstateManager.PropertyPrice"
             android:layout_width="0dp"
+            android:layout_marginTop="14dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
             android:gravity="end"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/detail_type_tv"
+            android:layout_marginEnd="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/detail_type_tv"
-            app:layout_constraintTop_toTopOf="@+id/detail_type_tv"
+            app:layout_constraintTop_toBottomOf="@+id/detail_photo_carouselRv"
             tools:text="$50000000" />
 
         <TextView
@@ -142,6 +140,7 @@
             android:layout_height="wrap_content"
             android:drawablePadding="4dp"
             android:gravity="end"
+            app:layout_constraintBottom_toTopOf="@id/detail_sold_date_tv"
             android:text="@string/currency_rate_last_updated_date_tv"
             android:textColor="@color/medium_gray"
             android:textSize="11sp"
@@ -168,7 +167,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="12dp"
-            android:layout_marginStart="4dp"
+            android:layout_marginStart="12dp"
             android:paddingTop="4dp"
             android:paddingBottom="4dp"
             android:ellipsize="end"

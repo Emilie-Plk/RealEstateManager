@@ -10,23 +10,26 @@ class InitPropertyFormUseCase @Inject constructor(
 ) {
     suspend fun invoke(id: Long?): FormWithTypeEntity {
         return if (id == null || id == 0L) {
+            // case add new draft
             val newlyAddedFormId = addPropertyFormWithDetailsUseCase.invoke(null)
             Log.d("InitPropertyFormUseCase", "invoke: Newly added form id: $newlyAddedFormId")
             FormWithTypeEntity(
                 formDraftRepository.getFormDraftEntityById(newlyAddedFormId),
                 FormType.ADD
-            ) // case add new draft
+            )
         } else {
             val doesDraftExist = formDraftRepository.doesDraftExist(id)
             val doesPropertyExist = formDraftRepository.doesPropertyExist(id)
-            if (doesDraftExist && !doesPropertyExist) { // case add draft already exists
+            if (doesDraftExist && !doesPropertyExist) {
+                // case add draft already exists
                 Log.d("InitPropertyFormUseCase", "invoke: Draft exist but not property: $id ADD")
                 FormWithTypeEntity(formDraftRepository.getFormDraftEntityById(id), FormType.ADD)
-            } else if (doesPropertyExist && doesDraftExist) { // case edit draft already exists
-                // case edit draft existant
+            } else if (doesPropertyExist && doesDraftExist) {
+                // case edit draft already exists
                 Log.d("InitPropertyFormUseCase", "invoke: Draft exist and property: $id EDIT")
                 FormWithTypeEntity(formDraftRepository.getFormDraftEntityById(id), FormType.EDIT)
-            } else if (doesPropertyExist) { //  case edit new draft
+            } else if (doesPropertyExist) {
+                //  case edit new draft
                 addPropertyFormWithDetailsUseCase.invoke(id)
                 FormWithTypeEntity(formDraftRepository.getFormDraftEntityById(id), FormType.EDIT)
             } else throw Exception("Error in InitPropertyFormUseCase with id: $id")

@@ -77,7 +77,7 @@ class AddOrEditPropertyUseCase @Inject constructor(
             if (doesPropertyExist) {
                 // region edit existing property
                 require(
-                    form.entryDate != null && form.entryDateEpoch != null
+                    form.entryDate != null
                 ) {
                     "Impossible case: entry date should not be null => form : $form"
                 }

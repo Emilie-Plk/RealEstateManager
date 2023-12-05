@@ -65,31 +65,34 @@ class GetCurrentPropertyUseCaseTest {
         // Given
         every { getCurrentPropertyIdFlowUseCase.invoke() } returns flowOf(null)
 
-        // When
         getCurrentPropertyUseCase.invoke().test {
+            // When
             awaitComplete()
+
+            // Then
+            coVerify(exactly = 1) { getCurrentPropertyIdFlowUseCase.invoke() }
+            coVerify(exactly = 0) { propertyRepository.getPropertyByIdAsFlow(TEST_PROPERTY_ID) }
+            confirmVerified(getCurrentPropertyIdFlowUseCase, propertyRepository)
         }
-        // Then
-        coVerify(exactly = 1) { getCurrentPropertyIdFlowUseCase.invoke() }
-        coVerify(exactly = 0) { propertyRepository.getPropertyByIdAsFlow(TEST_PROPERTY_ID) }
-        confirmVerified(getCurrentPropertyIdFlowUseCase)
     }
 
     @Test
     fun `invoke - current property is null`() = testCoroutineRule.runTest {
-        /*      // Given
-              every { propertyRepository.getPropertyByIdAsFlow(TEST_PROPERTY_ID) } returns flowOf(null)
+        // Given
+        every { propertyRepository.getPropertyByIdAsFlow(TEST_PROPERTY_ID) } returns flowOf(null)
 
-              // When
-              getCurrentPropertyUseCase.invoke().test {
+        getCurrentPropertyUseCase.invoke().test {
+            // When
+            awaitComplete()
 
-              }
-              // Then
-              coVerify(exactly = 1) { getCurrentPropertyIdFlowUseCase.invoke() }
-              coVerify(exactly = 1) { propertyRepository.getPropertyByIdAsFlow(TEST_PROPERTY_ID) }
-              confirmVerified(getCurrentPropertyIdFlowUseCase)*/
+            // Then
+            coVerify(exactly = 1) {
+                getCurrentPropertyIdFlowUseCase.invoke()
+                propertyRepository.getPropertyByIdAsFlow(TEST_PROPERTY_ID)
+            }
+            confirmVerified(getCurrentPropertyIdFlowUseCase, propertyRepository)
+        }
     }
-
 
     @Test
     fun `invoke - current property id change should be reactive`() = testCoroutineRule.runTest {
@@ -121,8 +124,6 @@ class GetCurrentPropertyUseCaseTest {
         { propertyRepository.getPropertyByIdAsFlow(2L) }
         coVerify(exactly = 1)
         { propertyRepository.getPropertyByIdAsFlow(456L) }
-        confirmVerified(getCurrentPropertyIdFlowUseCase)
+        confirmVerified(getCurrentPropertyIdFlowUseCase, propertyRepository)
     }
-
-
 }
