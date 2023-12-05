@@ -64,17 +64,14 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
                     if (viewState.isSold) {
                         binding.detailSoldDateTv.visibility = View.VISIBLE
                         binding.detailSoldDateTv.text = viewState.saleDate?.toCharSequence(requireContext())
+                        binding.detailPriceTv.paintFlags =
+                            binding.detailPriceTv.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                     } else {
-                        binding.detailSoldDateTv.visibility = View.GONE
+                       binding.detailSoldDateTv.visibility = View.GONE
                     }
 
                     binding.detailTypeTv.text = viewState.propertyType
                     binding.detailPriceTv.text = viewState.price
-                    if (viewState.isSold) {
-                        // strike through price
-                        binding.detailPriceTv.paintFlags = binding.detailPriceTv.paintFlags or
-                                Paint.STRIKE_THRU_TEXT_FLAG
-                    }
                     binding.detailLastUpdatedCurrencyRateTv.isVisible =
                         viewState.isCurrencyLastUpdatedCurrencyRateVisible
 
@@ -95,7 +92,6 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
                         .into(binding.detailMapIv)
                 }
 
-                else -> Unit
             }
         }
     }

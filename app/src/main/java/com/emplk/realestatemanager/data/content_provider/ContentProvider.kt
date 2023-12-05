@@ -25,7 +25,6 @@ class ContentProvider : ContentProvider() {
         private const val TABLE_NAME = "RealEstateManager_database"
         private const val MIME_TYPE_PREFIX = "vnd.android.cursor.dir/vnd."
 
-
         private const val PROPERTIES = 1
         private const val PICTURES = 2
         private const val LOCATIONS = 3

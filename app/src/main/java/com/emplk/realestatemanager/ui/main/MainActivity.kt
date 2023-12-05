@@ -23,6 +23,7 @@ import com.emplk.realestatemanager.ui.detail.DetailFragment
 import com.emplk.realestatemanager.ui.filter.FilterPropertiesFragment
 import com.emplk.realestatemanager.ui.list.PropertiesFragment
 import com.emplk.realestatemanager.ui.loan_simulator.LoanSimulatorFragment
+import com.emplk.realestatemanager.ui.main.empty_detail.EmptyDetailFragment
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -79,6 +80,16 @@ class MainActivity : AppCompatActivity() {
                                 PROPERTIES_FRAGMENT_TAG
                             )
                         }
+
+                        supportFragmentManager.commit {
+                            binding.mainFrameLayoutContainerDetail?.id?.let {
+                                replace(
+                                    it,
+                                    EmptyDetailFragment.newInstance(),
+                                    null
+                                )
+                            }
+                        }
                     }
                 }
             } else {
@@ -92,6 +103,17 @@ class MainActivity : AppCompatActivity() {
                         PROPERTIES_FRAGMENT_TAG
                     )
                 }
+
+                supportFragmentManager.commit {
+                    binding.mainFrameLayoutContainerDetail?.id?.let {
+                        replace(
+                            it,
+                            EmptyDetailFragment.newInstance(),
+                            null
+                        )
+                    }
+                }
+
             }
         }
 
