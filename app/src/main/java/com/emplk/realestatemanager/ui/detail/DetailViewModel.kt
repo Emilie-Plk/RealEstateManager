@@ -19,9 +19,6 @@ import com.emplk.realestatemanager.ui.detail.picture_banner.PictureBannerViewSta
 import com.emplk.realestatemanager.ui.utils.NativePhoto
 import com.emplk.realestatemanager.ui.utils.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.map
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.Locale

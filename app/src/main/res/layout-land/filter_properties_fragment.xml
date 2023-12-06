@@ -264,21 +264,21 @@
 
                 <Button
                     android:id="@+id/filter_property_for_sale_btn"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    style="@style/Theme.RealEstateManager.ButtonGroup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="For sale" />
 
                 <Button
                     android:id="@+id/filter_property_sold_btn"
-                    style="?attr/materialButtonOutlinedStyle"
+                    style="@style/Theme.RealEstateManager.ButtonGroup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Sold" />
 
                 <Button
                     android:id="@+id/filter_property_all_btn"
-                    style="?attr/materialButtonOutlinedStyle"
+                    style="@style/Theme.RealEstateManager.ButtonGroup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="All" />
@@ -292,8 +292,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/almost_white"
-
         android:orientation="horizontal"
+        android:paddingStart="60dp"
+        android:paddingEnd="60dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -303,10 +304,10 @@
             style="@style/Widget.Material3.Button.IconButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_gravity="start|center_vertical"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="12dp"
+            android:layout_weight="1"
 
             android:text="Cancel" />
 
@@ -316,8 +317,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:maxLines="2"
             android:layout_weight="1"
+            android:maxLines="2"
             android:text="Reset"
             app:icon="@drawable/baseline_reset_24"
             app:layout_constraintEnd_toEndOf="parent"

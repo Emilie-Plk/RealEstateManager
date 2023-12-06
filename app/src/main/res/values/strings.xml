@@ -66,6 +66,7 @@
     <string name="save_draft_btn_text">Save</string>
     <string name="enter_draft_title_textInputLayout">Please enter draft title</string>
     <string name="add_draft_dialog_textView">You started creating a property but didn\'t finish.\nWhat would you like to do?</string>
+    <string name="edit_draft_dialog_textView">You started editing a property but didn\'t finish.\nWhat would you like to do with this draft?</string>
     <string name="menu_loan_simulator">Loan simulator</string>
     <string name="loan_simulator_payment_result">%1s per year\n%2s per month</string>
     <string name="loan_simulator_calculate_button_error_message">Please enter a value</string>
@@ -79,7 +80,6 @@
     <string name="permission_rationale_message">Location permission is needed to display properties on the map</string>
     <string name="permission_rationale_ok_btn">Got it</string>
     <string name="permission_rationale_title">Location permission</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="discard_draft_button">Discard</string>
+    <string name="formAddressHelperText">Please select a valid address</string>
 </resources>

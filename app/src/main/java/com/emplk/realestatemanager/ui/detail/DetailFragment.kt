@@ -67,7 +67,7 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
                         binding.detailPriceTv.paintFlags =
                             binding.detailPriceTv.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                     } else {
-                       binding.detailSoldDateTv.visibility = View.GONE
+                        binding.detailSoldDateTv.visibility = View.GONE
                     }
 
                     binding.detailTypeTv.text = viewState.propertyType
@@ -91,7 +91,6 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
                         .error(R.drawable.baseline_villa_24)
                         .into(binding.detailMapIv)
                 }
-
             }
         }
     }

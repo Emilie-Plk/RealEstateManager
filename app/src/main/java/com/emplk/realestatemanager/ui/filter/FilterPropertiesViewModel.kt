@@ -264,6 +264,10 @@ class FilterPropertiesViewModel @Inject constructor(
                 it.copy(maxSurface = BigDecimal(maxSurface))
             }
     }
+
+    fun onStop() {
+        setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
+    }
 }
 
 data class FilterParams(

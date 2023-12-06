@@ -3,6 +3,7 @@ package com.emplk.realestatemanager.ui.add.save_draft
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
+import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.ClearPropertyFormNavigationUseCase
@@ -13,6 +14,7 @@ import com.emplk.realestatemanager.domain.property_draft.SetFormTitleUseCase
 import com.emplk.realestatemanager.ui.add.FormType
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParam
+import com.emplk.realestatemanager.ui.utils.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -38,6 +40,10 @@ class SaveDraftDialogViewModel @Inject constructor(
         ) { formTypeAndTitle, hasSaveButtonClicked ->
             SaveDraftViewState(
                 isSaveMessageVisible = hasSaveButtonClicked == null || hasSaveButtonClicked == false,
+                dialogMessage = when (formTypeAndTitle.formType) {
+                    FormType.ADD -> NativeText.Resource(R.string.add_draft_dialog_textView)
+                    FormType.EDIT -> NativeText.Resource(R.string.edit_draft_dialog_textView)
+                },
                 saveButtonEvent = EquatableCallback {
                     if (formTypeAndTitle.formType == FormType.EDIT || (formTypeAndTitle.formType == FormType.ADD && formTypeAndTitle.title != null)) {
                         setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)

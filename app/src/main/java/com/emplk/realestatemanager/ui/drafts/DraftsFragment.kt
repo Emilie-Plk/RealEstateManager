@@ -21,8 +21,8 @@ class DraftsFragment : Fragment(R.layout.drafts_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val draftsAdapter = DraftsAdapter() // on déclare
-        binding.draftsRv.adapter = draftsAdapter // on l'associe à la recyclerview
+        val draftsAdapter = DraftsAdapter()
+        binding.draftsRv.adapter = draftsAdapter
 
         viewModel.viewStates.observe(viewLifecycleOwner) { viewState ->
             draftsAdapter.submitList(viewState)

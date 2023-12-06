@@ -67,4 +67,5 @@ class DraftsViewModel @Inject constructor(
             lastEditionDate.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
         )
         else resources.getString(R.string.draft_date_error)
+
 }

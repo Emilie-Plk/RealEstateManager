@@ -113,7 +113,6 @@ class MainActivity : AppCompatActivity() {
                         )
                     }
                 }
-
             }
         }
 
@@ -136,13 +135,24 @@ class MainActivity : AppCompatActivity() {
         viewModel.viewEventLiveData.observeEvent(this) { event ->
             when (event) {
                 MainViewEvent.PropertyList -> {
-                    if (supportFragmentManager.findFragmentByTag(PROPERTIES_FRAGMENT_TAG) == null)
+                    if (supportFragmentManager.findFragmentByTag(PROPERTIES_FRAGMENT_TAG) == null) {
                         supportFragmentManager.commit {
                             replace(
                                 binding.mainFrameLayoutContainerProperties.id,
-                                PropertiesFragment.newInstance()
+                                PropertiesFragment.newInstance(),
+                                PROPERTIES_FRAGMENT_TAG
                             ).addToBackStack(null)
                         }
+                    }
+                    supportFragmentManager.commit {
+                        binding.mainFrameLayoutContainerDetail?.id?.let {
+                            replace(
+                                it,
+                                EmptyDetailFragment.newInstance(),
+                                null
+                            )
+                        }
+                    }
                 }
 
                 is MainViewEvent.DetailOnPhone -> {
@@ -156,15 +166,13 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 is MainViewEvent.DetailOnTablet -> {
-                    if (supportFragmentManager.findFragmentByTag(PROPERTIES_FRAGMENT_TAG) == null) {
-                        Log.d("COUCOU", "MainActivity onCreate: properties fragment is null ")
-                        supportFragmentManager.commit {
-                            replace(
-                                binding.mainFrameLayoutContainerProperties.id,
-                                PropertiesFragment.newInstance(),
-                                PROPERTIES_FRAGMENT_TAG
-                            )
-                        }
+                    Log.d("COUCOU", "MainActivity onCreate: properties fragment is null ")
+                    supportFragmentManager.commit {
+                        replace(
+                            binding.mainFrameLayoutContainerProperties.id,
+                            PropertiesFragment.newInstance(),
+                            PROPERTIES_FRAGMENT_TAG
+                        )
                     }
 
                     supportFragmentManager.commit {
@@ -182,7 +190,6 @@ class MainActivity : AppCompatActivity() {
                     if (supportFragmentManager.findFragmentByTag(FILTER_FRAGMENT_TAG) == null)
                         FilterPropertiesFragment.newInstance().show(supportFragmentManager, FILTER_FRAGMENT_TAG)
                 }
-
 
                 is MainViewEvent.NavigateToBlank -> {
                     startActivity(BlankActivity.navigate(this, event.fragmentTag))
@@ -237,7 +244,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun onBackPress() {
         onBackPressedDispatcher.addCallback(this) {
-            if (supportFragmentManager.backStackEntryCount > 0) {
+            if (supportFragmentManager.findFragmentByTag(DETAIL_FRAGMENT_TAG) != null) {
+                viewModel.onBackClicked()
                 supportFragmentManager.popBackStack()
             } else {
                 finish()
