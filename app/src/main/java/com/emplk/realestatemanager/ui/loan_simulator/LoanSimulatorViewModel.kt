@@ -11,20 +11,19 @@ import com.emplk.realestatemanager.domain.loan_simulator.LoanParams
 import com.emplk.realestatemanager.domain.loan_simulator.ResetLoanDataUseCase
 import com.emplk.realestatemanager.domain.loan_simulator.SetLoanDataUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.currency.FormatPriceToHumanReadableUseCase
+import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
+import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.Event
 import com.emplk.realestatemanager.ui.utils.NativeText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import javax.inject.Inject
-import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class LoanSimulatorViewModel @Inject constructor(
@@ -32,6 +31,7 @@ class LoanSimulatorViewModel @Inject constructor(
     private val getLoanDataAsFlowUseCase: GetLoanDataAsFlowUseCase,
     private val getLoanYearlyAndMonthlyPaymentUseCase: GetLoanYearlyAndMonthlyPaymentUseCase,
     private val formatPriceToHumanReadableUseCase: FormatPriceToHumanReadableUseCase,
+    private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val resetLoanDataUseCase: ResetLoanDataUseCase,
 ) : ViewModel() {
 
@@ -56,15 +56,7 @@ class LoanSimulatorViewModel @Inject constructor(
                 }
             }
 
-            // throttle
-            launch {
-                loanParamsMutableStateFlow.transform {
-                    emit(it)
-                    delay(5.seconds)
-                }.collect {
-                    setLoanDataUseCase.invoke(it)
-                }
-            }
+            setLoanDataUseCase.invoke(loanParamsMutableStateFlow.value)
 
             loanParamsMutableStateFlow.collectLatest { loanParams ->
                 emit(
@@ -196,6 +188,11 @@ class LoanSimulatorViewModel @Inject constructor(
                 loanDuration = BigDecimal.ZERO
             )
         }
+    }
+
+    fun onStop() {
+        setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
+        resetLoanDataUseCase.invoke()
     }
 }
 

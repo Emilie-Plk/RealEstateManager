@@ -11,24 +11,26 @@ import com.emplk.realestatemanager.domain.loan_simulator.LoanDataEntity
 import com.emplk.realestatemanager.domain.loan_simulator.ResetLoanDataUseCase
 import com.emplk.realestatemanager.domain.loan_simulator.SetLoanDataUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.currency.FormatPriceToHumanReadableUseCase
+import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
+import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.Event
 import com.emplk.realestatemanager.ui.utils.NativeText
 import com.emplk.utils.TestCoroutineRule
 import com.emplk.utils.observeForTesting
+import io.mockk.coVerify
+import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.justRun
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import java.math.BigDecimal
 import java.math.RoundingMode
-import kotlin.time.Duration.Companion.seconds
 
 class LoanSimulatorViewModelTest {
 
@@ -42,6 +44,7 @@ class LoanSimulatorViewModelTest {
     private val getLoanDataAsFlowUseCase: GetLoanDataAsFlowUseCase = mockk()
     private val getLoanYearlyAndMonthlyPaymentUseCase: GetLoanYearlyAndMonthlyPaymentUseCase = mockk()
     private val formatPriceToHumanReadableUseCase: FormatPriceToHumanReadableUseCase = mockk()
+    private val setNavigationTypeUseCase: SetNavigationTypeUseCase = mockk()
     private val resetLoanDataUseCase: ResetLoanDataUseCase = mockk()
 
     private lateinit var viewModel: LoanSimulatorViewModel
@@ -53,10 +56,11 @@ class LoanSimulatorViewModelTest {
         every { getLoanDataAsFlowUseCase.invoke() } returns flowOf(testLoanDataEntity)
         every { formatPriceToHumanReadableUseCase.invoke(BigDecimal(600000)) } returns "$600,000"
         every { formatPriceToHumanReadableUseCase.invoke(BigDecimal(5000)) } returns "$5,000"
+        justRun { setNavigationTypeUseCase.invoke(any()) }
         every {
             getLoanYearlyAndMonthlyPaymentUseCase.invoke(
                 loanAmount = any(),
-                loanInterest = any(), // limit to 2 decimals
+                loanInterest = any(),
                 loanDuration = any()
             )
         } returns GetLoanYearlyAndMonthlyPaymentUseCase.YearlyAndMonthlyPayment(
@@ -69,6 +73,7 @@ class LoanSimulatorViewModelTest {
             getLoanDataAsFlowUseCase = getLoanDataAsFlowUseCase,
             getLoanYearlyAndMonthlyPaymentUseCase = getLoanYearlyAndMonthlyPaymentUseCase,
             formatPriceToHumanReadableUseCase = formatPriceToHumanReadableUseCase,
+            setNavigationTypeUseCase = setNavigationTypeUseCase,
             resetLoanDataUseCase = resetLoanDataUseCase,
         )
     }
@@ -79,6 +84,39 @@ class LoanSimulatorViewModelTest {
         viewModel.viewState.observeForTesting(this) {
             // Then
             assertThat(it.value).isEqualTo(testLoanSimulatorViewState)
+            coVerify(exactly = 1) {
+                getLoanDataAsFlowUseCase.invoke()
+            }
+            verify {
+                formatPriceToHumanReadableUseCase.invoke(BigDecimal(600000))
+                formatPriceToHumanReadableUseCase.invoke(BigDecimal(5000))
+            }
+            confirmVerified(
+                getLoanDataAsFlowUseCase,
+                getLoanYearlyAndMonthlyPaymentUseCase,
+                formatPriceToHumanReadableUseCase
+            )
+        }
+    }
+
+    @Test
+    fun `on calculate clicked - should trigger setLoanDataUseCase`() = testCoroutineRule.runTest {
+        // Given
+        viewModel.viewState.observeForTesting(this) {
+            // When
+            it.value!!.onCalculateClicked.invoke()
+            runCurrent()
+
+            // Then
+            verify { setLoanDataUseCase.invoke(any()) }
+            verify {
+                getLoanYearlyAndMonthlyPaymentUseCase.invoke(
+                    loanAmount = BigDecimal(1000000),
+                    loanInterest = BigDecimal(3.85).setScale(2, RoundingMode.HALF_UP),
+                    loanDuration = BigDecimal(25)
+                )
+            }
+            confirmVerified(setLoanDataUseCase, getLoanYearlyAndMonthlyPaymentUseCase)
         }
     }
 
@@ -96,6 +134,9 @@ class LoanSimulatorViewModelTest {
         viewModel.viewState.observeForTesting(this) {
             // Then
             assertThat(it.value!!.yearlyAndMonthlyPayment).isNull()
+            coVerify(exactly = 1) { getLoanDataAsFlowUseCase.invoke() }
+            verify { setLoanDataUseCase.invoke(any()) }
+            confirmVerified(getLoanDataAsFlowUseCase)
         }
     }
 
@@ -108,9 +149,12 @@ class LoanSimulatorViewModelTest {
 
             // When
             viewModel.onInterestRateChanged("2.22")
-            advanceTimeBy(3.seconds)
             runCurrent()
+
+            // Then
             assertThat(it.value!!.loanRate).isEqualTo("2.22")
+            verify { setLoanDataUseCase.invoke(any()) }
+            coVerify { getLoanDataAsFlowUseCase.invoke()  }
         }
     }
 
@@ -123,8 +167,9 @@ class LoanSimulatorViewModelTest {
 
             // When
             viewModel.onLoanAmountChanged("2000000")
-            advanceTimeBy(3.seconds)
             runCurrent()
+
+            // Then
             assertThat(it.value!!.loanAmount).isEqualTo("2000000")
         }
     }
@@ -137,8 +182,9 @@ class LoanSimulatorViewModelTest {
 
             // When
             viewModel.onLoanDurationChanged("10")
-            advanceTimeBy(3.seconds)
             runCurrent()
+
+            // Then
             assertThat(it.value!!.loanDuration).isEqualTo("10")
         }
     }
@@ -216,6 +262,7 @@ class LoanSimulatorViewModelTest {
                     )
                 )
             }
+            coVerify(exactly = 1) { getLoanDataAsFlowUseCase.invoke() }
         }
     }
 
@@ -229,6 +276,20 @@ class LoanSimulatorViewModelTest {
             assertThat(it.value).isEqualTo(testLoanSimulatorViewState)
         } // called twice bc launching with empty form
         verify(exactly = 2) { setLoanDataUseCase.invoke(any()) }
+        confirmVerified(setLoanDataUseCase)
+    }
+
+    @Test
+    fun `onStop() nominal case`() = testCoroutineRule.runTest {
+        // When
+        viewModel.onStop()
+
+        // Then
+        verify(exactly = 1) {
+            setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
+            resetLoanDataUseCase.invoke()
+        }
+        confirmVerified(setNavigationTypeUseCase, resetLoanDataUseCase)
     }
 
     private val testLoanDataEntity = LoanDataEntity(

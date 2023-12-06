@@ -173,7 +173,7 @@ class AddOrEditPropertyFragment : Fragment(R.layout.form_fragment) {
                                 binding.formAddressTextInputLayout.isHelperTextEnabled = false
                             }
                             if (hasFocus) binding.formAddressTextInputLayout.helperText =
-                                "Please select a valid address"
+                                getString(R.string.formAddressHelperText)
                         }
                     }
 

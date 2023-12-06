@@ -37,7 +37,6 @@ class BlankActivity : AppCompatActivity() {
         }
 
         private const val KEY_FRAGMENT_TAG = "KEY_FRAGMENT_TAG"
-        private const val PROPERTY_ID_KEY = "PROPERTY_ID_KEY"
         private const val ADD_OR_EDIT_FRAGMENT_TAG = "ADD_OR_EDIT_FRAGMENT_TAG"
     }
 
@@ -58,12 +57,14 @@ class BlankActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             when (fragmentTag) {
                 NavigationFragmentType.EDIT_FRAGMENT.name -> {
-                    supportFragmentManager.commitNow {
-                        add(
-                            binding.blankFrameLayoutContainer.id,
-                            AddOrEditPropertyFragment.newInstance(),
-                            ADD_OR_EDIT_FRAGMENT_TAG
-                        )
+                    if (supportFragmentManager.findFragmentByTag(ADD_OR_EDIT_FRAGMENT_TAG) == null) {
+                        supportFragmentManager.commitNow {
+                            add(
+                                binding.blankFrameLayoutContainer.id,
+                                AddOrEditPropertyFragment.newInstance(),
+                                ADD_OR_EDIT_FRAGMENT_TAG
+                            )
+                        }
                     }
                 }
 
@@ -77,12 +78,14 @@ class BlankActivity : AppCompatActivity() {
                 }
 
                 NavigationFragmentType.ADD_FRAGMENT.name -> {
-                    supportFragmentManager.commitNow {
-                        add(
-                            binding.blankFrameLayoutContainer.id,
-                            AddOrEditPropertyFragment.newInstance(),
-                            ADD_OR_EDIT_FRAGMENT_TAG
-                        )
+                    if (supportFragmentManager.findFragmentByTag(ADD_OR_EDIT_FRAGMENT_TAG) == null) {
+                        supportFragmentManager.commitNow {
+                            add(
+                                binding.blankFrameLayoutContainer.id,
+                                AddOrEditPropertyFragment.newInstance(),
+                                ADD_OR_EDIT_FRAGMENT_TAG
+                            )
+                        }
                     }
                 }
 
@@ -118,19 +121,26 @@ class BlankActivity : AppCompatActivity() {
                     SaveDraftDialogFragment.newInstance().show(supportFragmentManager, null)
 
                 BlankViewEvent.OnAddNewDraftClicked -> {
-                    supportFragmentManager.commit {
-                        replace(
-                            R.id.blank_frameLayout_container,
-                            AddOrEditPropertyFragment.newInstance()
-                        )
+                    if (supportFragmentManager.findFragmentByTag(ADD_OR_EDIT_FRAGMENT_TAG) == null) {
+                        supportFragmentManager.commit {
+                            replace(
+                                R.id.blank_frameLayout_container,
+                                AddOrEditPropertyFragment.newInstance(),
+                                ADD_OR_EDIT_FRAGMENT_TAG
+                            )
+                        }
                     }
                 }
 
                 is BlankViewEvent.OnDraftClicked -> {
-                    supportFragmentManager.commit {
-                        replace(
-                            R.id.blank_frameLayout_container, AddOrEditPropertyFragment.newInstance()
-                        )
+                    if (supportFragmentManager.findFragmentByTag(ADD_OR_EDIT_FRAGMENT_TAG) == null) {
+                        supportFragmentManager.commit {
+                            replace(
+                                R.id.blank_frameLayout_container,
+                                AddOrEditPropertyFragment.newInstance(),
+                                ADD_OR_EDIT_FRAGMENT_TAG
+                            )
+                        }
                     }
                 }
 
@@ -147,7 +157,12 @@ class BlankActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                viewModel.onBackClicked()
+                if (supportFragmentManager.findFragmentByTag(ADD_OR_EDIT_FRAGMENT_TAG) != null) {
+                    viewModel.onBackClicked()
+                } else {
+                    finish()
+                }
+                supportFragmentManager.popBackStack()
                 true
             }
 

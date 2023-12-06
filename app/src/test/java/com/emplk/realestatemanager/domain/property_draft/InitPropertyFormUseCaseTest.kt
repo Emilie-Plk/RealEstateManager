@@ -121,7 +121,7 @@ class InitPropertyFormUseCaseTest {
 
         // Then
         assertThrows(Exception::class.java) {
-           throw Exception("Error in InitPropertyFormUseCase with id: 5")
+            throw Exception("Error in InitPropertyFormUseCase with id: 5")
         }
         coVerify(exactly = 1) {
             formDraftRepository.getFormDraftEntityById(5L)

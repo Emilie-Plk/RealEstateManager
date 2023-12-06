@@ -143,4 +143,9 @@ class LoanSimulatorFragment : BottomSheetDialogFragment(R.layout.loan_simulator_
         super.onResume()
         viewModel.onResume()
     }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.onStop()
+    }
 }

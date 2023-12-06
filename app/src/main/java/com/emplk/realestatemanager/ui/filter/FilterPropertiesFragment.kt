@@ -164,6 +164,11 @@ class FilterPropertiesFragment : DialogFragment(R.layout.filter_properties_fragm
         }
     }
 
+    override fun onStop() {
+        super.onStop()
+        viewModel.onStop()
+    }
+
     private fun hideKeyboard(view: View?) {
         if (view != null) {
             val inputMethodManager =

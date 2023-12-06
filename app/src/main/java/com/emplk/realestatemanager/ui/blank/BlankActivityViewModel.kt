@@ -50,7 +50,7 @@ class BlankActivityViewModel @Inject constructor(
             isPropertyFormInProgressUseCase.invoke().collect { isPropertyFormInProgress ->
                 if (isPropertyFormInProgress == true) {
                     setNavigationTypeUseCase.invoke(NavigationFragmentType.SAVE_DRAFT_DIALOG_FRAGMENT)
-                } else if (isPropertyFormInProgress == false) {
+                } else {
                     setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)
                 }
             }

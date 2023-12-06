@@ -27,6 +27,7 @@ class SaveDraftDialogFragment : DialogFragment(R.layout.save_draft_dialog_fragme
                 addDraftDialogTextView.isVisible = viewState.isSaveMessageVisible
                 if (viewState.isSaveMessageVisible) {
                     addDraftDialogSaveButton.text = resources.getString(R.string.save_draft_btn_text)
+                    addDraftDialogTextView.text = viewState.dialogMessage.toCharSequence(requireContext())
                     addDraftDialogSaveButton.setOnClickListener {
                         viewState.saveButtonEvent()
                     }

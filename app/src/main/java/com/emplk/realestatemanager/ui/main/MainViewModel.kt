@@ -203,6 +203,10 @@ class MainViewModel @Inject constructor(
         isTabletMutableStateFlow.value = isTablet
         setScreenWidthTypeUseCase.invoke(isTablet)
     }
+
+    fun onBackClicked() {
+        setNavigationTypeUseCase.invoke(LIST_FRAGMENT)
+    }
 }
 
 
