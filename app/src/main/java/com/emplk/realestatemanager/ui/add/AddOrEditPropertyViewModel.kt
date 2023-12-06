@@ -145,16 +145,17 @@ class AddOrEditPropertyViewModel @Inject constructor(
                     soldDate = formWithType.formDraftEntity.saleDate,
                 )
             }
-            if (formWithType.formType == FormType.ADD) setFormTitleUseCase.invoke(formWithType.formType, null)
 
             addAllPicturePreviewsIdsUseCase.invoke(formMutableStateFlow.value.pictureIds)
+
             setFormTitleUseCase.invoke(formWithType.formType, formWithType.formDraftEntity.title)
 
             launch {
                 combine(
                     formMutableStateFlow,
                     getPicturePreviewsAsFlowUseCase.invoke(formMutableStateFlow.value.id),
-                    getCurrentPredictionAddressesFlowWithDebounceUseCase.invoke().onStart { emit(null) },
+                    getCurrentPredictionAddressesFlowWithDebounceUseCase.invoke()
+                        .onStart { emit(null) }, // TODO: NINO heu obligé dans combine?
                     isPropertyInsertingInDatabaseFlowUseCase.invoke().onStart { emit(null) },
                     isFormCompletedAsFlowUseCase.invoke(),
                     isInternetEnabledFlowUseCase.invoke(),
@@ -264,7 +265,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                 }
             }
 
-// Throttle
+// Save form throttle
             launch {
                 formMutableStateFlow.transform {
                     emit(it)

@@ -154,7 +154,7 @@ class LoanSimulatorViewModelTest {
             // Then
             assertThat(it.value!!.loanRate).isEqualTo("2.22")
             verify { setLoanDataUseCase.invoke(any()) }
-            coVerify { getLoanDataAsFlowUseCase.invoke()  }
+            coVerify { getLoanDataAsFlowUseCase.invoke() }
         }
     }
 

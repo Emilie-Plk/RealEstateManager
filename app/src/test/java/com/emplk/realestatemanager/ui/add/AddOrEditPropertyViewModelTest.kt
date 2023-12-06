@@ -56,6 +56,7 @@ import com.emplk.utils.observeForTesting
 import io.mockk.coEvery
 import io.mockk.coJustRun
 import io.mockk.coVerify
+import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.justRun
 import io.mockk.mockk
@@ -159,6 +160,7 @@ class AddOrEditPropertyViewModelTest {
         coEvery { getSavePropertyDraftEvent.invoke() } returns emptyFlow()
         coEvery { getClearPropertyFormNavigationEventAsFlowUseCase.invoke() } returns emptyFlow()
 
+
         viewModel = AddOrEditPropertyViewModel(
             addOrEditPropertyUseCase,
             initPropertyFormUseCase,
@@ -196,8 +198,10 @@ class AddOrEditPropertyViewModelTest {
     @Test
     fun `initial case`() = testCoroutineRule.runTest {
         viewModel.viewStateLiveData.observeForTesting(this) {
-            assertEquals(testPropertyFormViewState, it.value)
+            // When
+            assertEquals(testEmptyPropertyFormViewState, it.value)
 
+            // Then
             coVerify { initPropertyFormUseCase.invoke(TEST_PROPERTY_ID) }
             coVerify { getCurrentPropertyIdFlowUseCase.invoke() }
             verify { setPropertyFormProgressUseCase.invoke(false) }
@@ -205,6 +209,15 @@ class AddOrEditPropertyViewModelTest {
             coVerify { isFormCompletedAsFlowUseCase.invoke() }
             verify { setFormCompletionUseCase.invoke(false) }
             coVerify { isPropertyInsertingInDatabaseFlowUseCase.invoke() }
+            confirmVerified(
+                initPropertyFormUseCase,
+                getCurrentPropertyIdFlowUseCase,
+                setPropertyFormProgressUseCase,
+                updatePropertyFormUseCase,
+                isFormCompletedAsFlowUseCase,
+                setFormCompletionUseCase,
+                isPropertyInsertingInDatabaseFlowUseCase
+            )
         }
     }
 
@@ -220,8 +233,20 @@ class AddOrEditPropertyViewModelTest {
     }
 
     @Test
-    fun `on add property clicked - triggers submit button event`() = testCoroutineRule.runTest {
+    fun `nominal case`() = testCoroutineRule.runTest {
+        viewModel.viewStateLiveData.observeForTesting(this) {
+            // Then
+            assertEquals(testEmptyPropertyFormViewState, it.value)
+            verify {
+                setFormCompletionUseCase.invoke(false)
+                setPropertyFormProgressUseCase.invoke(false)
+            }
+            confirmVerified(setFormCompletionUseCase, setPropertyFormProgressUseCase)
+        }
+    }
 
+    @Test
+    fun `on add property clicked - triggers submit button event`() = testCoroutineRule.runTest {
         // When
         viewModel.viewEventLiveData.observeForTesting(this) {
             viewModel.onAddPropertyClicked()
@@ -229,14 +254,15 @@ class AddOrEditPropertyViewModelTest {
 
             // Then
             assertEquals(Event(FormEvent.Toast(NativeText.Simple("Test"))), it.value)
-            coVerify { addOrEditPropertyUseCase.invoke(any()) }
+            coVerify(exactly = 1) { addOrEditPropertyUseCase.invoke(any()) }
+            confirmVerified(addOrEditPropertyUseCase)
         }
     }
 
     @Test
-    fun `when clicking on address selection - defined it as selected address`() = testCoroutineRule.runTest {
-        // When
+    fun `when clicking on address selection - set it as selected address`() = testCoroutineRule.runTest {
         viewModel.viewStateLiveData.observeForTesting(this) {
+            // When
             ((it.value as PropertyFormViewState.PropertyForm)
                 .addressPredictions[2] as PredictionViewState.Prediction).onClickEvent.invoke(
                 testPredictionSuccessWrapper.predictions[2]
@@ -249,28 +275,11 @@ class AddOrEditPropertyViewModelTest {
                 (it.value as PropertyFormViewState.PropertyForm).address
             )
             assertTrue((it.value as PropertyFormViewState.PropertyForm).isAddressValid)
+            coVerify { updateOnAddressClickedUseCase.invoke(any(), any()) }
+            coVerify(exactly = 3) { setPropertyFormProgressUseCase.invoke(any()) } // TODO: NINO why invoked thrice? + see test below too
+            confirmVerified(updateOnAddressClickedUseCase, setPropertyFormProgressUseCase)
         }
     }
-
-    @Test
-    fun `when clicking on address selection - defined it as selected address and set address as invalid`() =
-        testCoroutineRule.runTest {
-            viewModel.viewStateLiveData.observeForTesting(this) {
-                // When
-                ((it.value as PropertyFormViewState.PropertyForm)
-                    .addressPredictions[2] as PredictionViewState.Prediction).onClickEvent.invoke(
-                    testPredictionSuccessWrapper.predictions[2]
-                )
-                runCurrent()
-
-                // Then
-                assertEquals(
-                    testPredictionSuccessWrapper.predictions[2],
-                    (it.value as PropertyFormViewState.PropertyForm).address
-                )
-                assertTrue((it.value as PropertyFormViewState.PropertyForm).isAddressValid)
-            }
-        }
 
     @Test
     fun `on type changed - type is set`() = testCoroutineRule.runTest {
@@ -284,6 +293,9 @@ class AddOrEditPropertyViewModelTest {
                 getTestPropertyTypesMap().values.toList()[1],
                 (it.value as PropertyFormViewState.PropertyForm).propertyType
             )
+            coVerify(exactly = 2) { setPropertyFormProgressUseCase.invoke(false) }
+            coVerify(exactly = 1) { setPropertyFormProgressUseCase.invoke(true) }
+            confirmVerified(setPropertyFormProgressUseCase)
         }
     }
 
@@ -478,13 +490,15 @@ class AddOrEditPropertyViewModelTest {
 
 
     @Test
-    fun `when form is completed - submit button is true`() = testCoroutineRule.runTest {
+    fun `when form is completed - submit button is enabled`() = testCoroutineRule.runTest {
         // Given
-        coEvery { isFormCompletedAsFlowUseCase.invoke() } returns flowOf(true)
+        caseFormFilled()
+        runCurrent()
 
         viewModel.viewStateLiveData.observeForTesting(this) {
             // Then
             assertTrue((it.value as PropertyFormViewState.PropertyForm).isSubmitButtonEnabled)
+            //  verify { setFormCompletionUseCase.invoke(true) }
         }
     }
 
@@ -529,6 +543,15 @@ class AddOrEditPropertyViewModelTest {
         }
     }
 
+    private fun caseFormFilled() {
+        coEvery { initPropertyFormUseCase.invoke(TEST_PROPERTY_ID) } returns testFilledFormTypeEntity
+        coEvery { isFormCompletedAsFlowUseCase.invoke() } returns flowOf(true)
+        coEvery { getPicturePreviewsAsFlowUseCase.invoke(any()) } returns flowOf(
+            getTestPicturePreviewEntities()
+        )
+        coEvery { convertPriceDependingOnLocaleUseCase.invoke(any()) } returns BigDecimal(100000)
+        every { convertToSquareFeetDependingOnLocaleUseCase.invoke(any()) } returns BigDecimal(500)
+    }
 
     private val testFormTypeEntity = FormWithTypeEntity(
         formDraftEntity = FormDraftEntity(
@@ -553,14 +576,13 @@ class AddOrEditPropertyViewModelTest {
         formType = FormType.ADD,
     )
 
-
     private val testFilledFormTypeEntity = FormWithTypeEntity(
         formDraftEntity = FormDraftEntity(
             id = 1L,
             type = "Villa",
             title = "Test property",
             price = BigDecimal(100000),
-            surface = BigDecimal(100),
+            surface = BigDecimal(500),
             rooms = 10,
             bedrooms = 5,
             bathrooms = 5,
@@ -590,7 +612,7 @@ class AddOrEditPropertyViewModelTest {
 
     private val testPropertyFormViewStateLoading = PropertyFormViewState.LoadingState
 
-    private val testPropertyFormViewState = PropertyFormViewState.PropertyForm(
+    private val testEmptyPropertyFormViewState = PropertyFormViewState.PropertyForm(
         propertyType = null,
         addressPredictions = listOf(
             PredictionViewState.Prediction(
