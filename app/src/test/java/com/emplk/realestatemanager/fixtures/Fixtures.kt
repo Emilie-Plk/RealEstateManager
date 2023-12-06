@@ -30,8 +30,8 @@ val testFixedClock: Clock =
 fun getTestPropertyDto(id: Long) = PropertyDto(
     id = id,
     type = "House",
-    price = BigDecimal(100000),
-    surface = BigDecimal(100),
+    price = BigDecimal(1000000),
+    surface = BigDecimal(500),
     rooms = 5,
     bedrooms = 3,
     bathrooms = 2,
@@ -39,7 +39,7 @@ fun getTestPropertyDto(id: Long) = PropertyDto(
     amenitySchool = true,
     amenityPark = true,
     amenityShopping = true,
-    amenityRestaurant = true,
+    amenityRestaurant = false,
     amenityConcierge = false,
     amenityGym = false,
     amenityTransportation = false,
@@ -50,7 +50,7 @@ fun getTestPropertyDto(id: Long) = PropertyDto(
     saleDate = null,
     lastEditionDate = LocalDateTime.of(2023, 1, 1, 12, 0),
     entryDate = LocalDateTime.of(2023, 1, 1, 12, 0),
-    entryDateEpoch = 1698758555,
+    entryDateEpoch = 1672570800000,
 )
 
 
@@ -124,7 +124,7 @@ fun getPropertyWithDetail(propertyId: Long) = PropertyWithDetails(
 // endregion PropertyWithDetail
 
 
-// region LocationDto
+// region Location
 fun getTestLocationDto(propertyId: Long) = LocationDto(
     propertyId = propertyId,
     address = "1st, Dummy Street, 12345, Dummy City",
@@ -132,9 +132,15 @@ fun getTestLocationDto(propertyId: Long) = LocationDto(
     latitude = 123.0,
     longitude = 456.0,
 )
-// endregion LocationDto
 
-// region PictureDto
+fun getTestLocationEntity() = LocationEntity(
+    address = "1st, Dummy Street, 12345, Dummy City",
+    miniatureMapUrl = "https://www.google.com/maps/123456789",
+    latLng = LatLng(123.0, 456.0),
+)
+// endregion Location
+
+// region Picture
 fun getPictureDtos(propertyId: Long) = buildList {
     add(
         PictureDto(
@@ -161,7 +167,28 @@ fun getPictureDtos(propertyId: Long) = buildList {
         )
     )
 }
-// endregion PictureDto
+
+fun getTestPictureEntities() = listOf(
+    PictureEntity(
+        id = 1L,
+        uri = "https://www.google.com/front_view",
+        description = "Front view",
+        isFeatured = true,
+    ),
+    PictureEntity(
+        id = 2L,
+        uri = "https://www.google.com/garden",
+        description = "Garden",
+        isFeatured = false,
+    ),
+    PictureEntity(
+        id = 3L,
+        uri = "https://www.google.com/swimming_pool",
+        description = "Swimming pool",
+        isFeatured = false,
+    ),
+)
+// endregion Picture
 
 
 // region mappers
