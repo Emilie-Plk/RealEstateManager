@@ -27,9 +27,9 @@ class MapViewModel @Inject constructor(
 
     companion object {
         /**
-         * Default is Google HQ location, could be changed to user's last known location or any other chosen location
+         * Default is Upper East Side, could be changed to user's last known location or any other chosen location
          */
-        private val FALLBACK_LOCATION = LatLng(37.422131, -122.084801)
+        private val FALLBACK_LOCATION = LatLng(40.7736, -73.9566)
     }
 
     private val eventMutableSharedFlow: MutableSharedFlow<MapEvent> = MutableSharedFlow(extraBufferCapacity = 1)

@@ -53,6 +53,7 @@ class MapBottomSheetViewModel @Inject constructor(
                     price = formatPriceToHumanReadableUseCase.invoke(propertyWithConvertedPriceAndSurface.price),
                     surface = getRoundedSurfaceWithUnitHumanReadableUseCase.invoke(propertyWithConvertedPriceAndSurface.surface),
                     featuredPicture = NativePhoto.Uri(getFeaturedPictureUri(propertyWithConvertedPriceAndSurface.pictures)),
+                    isSold = propertyWithConvertedPriceAndSurface.isSold,
                     onDetailClick = EquatableCallbackWithParam { fragmentTag ->
                         onActionClickedMutableSharedFlow.tryEmit(fragmentTag)
                     },
