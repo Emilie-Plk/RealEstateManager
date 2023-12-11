@@ -13,7 +13,7 @@ interface FormDraftRepository {
 
     suspend fun getDraftsCount(): Int
 
-    suspend fun getDraftsWithFeaturePicture(): List<FormWithTitleDateAndFeaturedPictureEntity>
+    suspend fun getFormsWithDetails(): List<FormWithDetailEntity>
 
     suspend fun update(formDraftEntity: FormDraftEntity)
 

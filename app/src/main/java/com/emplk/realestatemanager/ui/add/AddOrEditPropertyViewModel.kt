@@ -12,7 +12,6 @@ import com.emplk.realestatemanager.domain.autocomplete.PredictionWrapper
 import com.emplk.realestatemanager.domain.connectivity.IsInternetEnabledFlowUseCase
 import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdFlowUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.currency.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.currency.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertToSquareFeetDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.surface.GetSurfaceUnitUseCase
@@ -52,6 +51,7 @@ import com.emplk.realestatemanager.ui.utils.Event
 import com.emplk.realestatemanager.ui.utils.NativeText
 import com.emplk.realestatemanager.ui.utils.combine
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -155,7 +155,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                     formMutableStateFlow,
                     getPicturePreviewsAsFlowUseCase.invoke(formMutableStateFlow.value.id),
                     getCurrentPredictionAddressesFlowWithDebounceUseCase.invoke()
-                        .onStart { emit(null) }, // TODO: NINO heu obligé dans combine?
+                        .onStart { emit(null) },
                     isPropertyInsertingInDatabaseFlowUseCase.invoke().onStart { emit(null) },
                     isFormCompletedAsFlowUseCase.invoke(),
                     isInternetEnabledFlowUseCase.invoke(),
@@ -195,7 +195,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                                 form.pictureIds.isNotEmpty() &&
                                 form.featuredPictureId != null
                     )
-
+                    println("combine() => description: ${form.description}")
                     PropertyFormViewState.PropertyForm(
                         propertyType = form.propertyType,
                         address = form.address,
@@ -207,15 +207,8 @@ class AddOrEditPropertyViewModel @Inject constructor(
                         nbBedrooms = form.nbBedrooms,
                         pictures = mapPicturePreviews(picturePreviews, form),
                         selectedAgent = form.agent,
-                        priceCurrencyHint = when (currencyType) {
-                            CurrencyType.DOLLAR -> NativeText.Resource(R.string.price_in_dollar)
-
-                            CurrencyType.EURO -> NativeText.Resource(R.string.price_in_euro)
-                        },
-                        currencyDrawableRes = when (currencyType) {
-                            CurrencyType.DOLLAR -> R.drawable.baseline_dollar_24
-                            CurrencyType.EURO -> R.drawable.baseline_euro_24
-                        },
+                        priceCurrencyHint = NativeText.Resource(currencyType.stringRes),
+                        currencyDrawableRes = currencyType.drawableRes,
                         surfaceUnit = NativeText.Argument(
                             R.string.surface_area_unit_in_n,
                             getSurfaceUnitUseCase.invoke().symbol,
@@ -512,9 +505,19 @@ class AddOrEditPropertyViewModel @Inject constructor(
         }
     }
 
+    private var updateDescription: Job? = null
+
     fun onDescriptionChanged(description: String) {
-        formMutableStateFlow.update {
-            it.copy(description = description)
+        updateDescription = viewModelScope.launch {
+            println("Before job's cancelation with ${formMutableStateFlow.value.description}")
+            updateDescription?.cancel()
+            println("Before delay with ${formMutableStateFlow.value.description}")
+            delay(1.seconds)
+            println("After delay with ${formMutableStateFlow.value.description}")
+            formMutableStateFlow.update {
+                it.copy(description = description)
+            }
+            println("After update with ${formMutableStateFlow.value.description}")
         }
     }
 

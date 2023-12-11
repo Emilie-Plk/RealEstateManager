@@ -3,7 +3,6 @@ package com.emplk.realestatemanager.domain.geolocation
 import app.cash.turbine.test
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.connectivity.GpsConnectivityRepository
-import com.emplk.realestatemanager.domain.connectivity.IsInternetEnabledFlowUseCase
 import com.emplk.realestatemanager.domain.permission.HasLocationPermissionFlowUseCase
 import com.emplk.realestatemanager.ui.utils.NativeText
 import com.emplk.utils.TestCoroutineRule
@@ -29,12 +28,10 @@ class GetCurrentLocationUseCaseTest {
 
     private val geolocationRepository: GeolocationRepository = mockk()
     private val gpsConnectivityRepository: GpsConnectivityRepository = mockk()
-    private val isInternetEnabledFlowUseCase: IsInternetEnabledFlowUseCase = mockk()
     private val hasLocationPermissionFlowUseCase: HasLocationPermissionFlowUseCase = mockk()
 
     private val getCurrentLocationUseCase = GetCurrentLocationUseCase(
         hasLocationPermissionFlowUseCase,
-        isInternetEnabledFlowUseCase,
         gpsConnectivityRepository,
         geolocationRepository
     )
@@ -42,7 +39,6 @@ class GetCurrentLocationUseCaseTest {
     @Before
     fun setUp() {
         coEvery { hasLocationPermissionFlowUseCase.invoke() } returns flowOf(true)
-        coEvery { isInternetEnabledFlowUseCase.invoke() } returns flowOf(true)
         coEvery { gpsConnectivityRepository.isGpsEnabledAsFlow() } returns flowOf(true)
         coEvery { geolocationRepository.getCurrentLocationAsFlow() } returns flowOf(
             GeolocationState.Success(
@@ -70,7 +66,6 @@ class GetCurrentLocationUseCaseTest {
     fun `edge case`() = testCoroutineRule.runTest {
         // Given
         coEvery { hasLocationPermissionFlowUseCase.invoke() } returns flowOf(false)
-        coEvery { isInternetEnabledFlowUseCase.invoke() } returns flowOf(false)
         coEvery { gpsConnectivityRepository.isGpsEnabledAsFlow() } returns flowOf(false)
         coEvery { geolocationRepository.getCurrentLocationAsFlow() } returns flowOf(
             GeolocationState.Error(null)
@@ -115,25 +110,6 @@ class GetCurrentLocationUseCaseTest {
             assertTrue(result is GeolocationState.Error)
             assertEquals(
                 NativeText.Resource(R.string.geolocation_error_no_gps),
-                (result as GeolocationState.Error).message
-            )
-            cancelAndIgnoreRemainingEvents()
-        }
-    }
-
-    @Test
-    fun `no internet connection`() = testCoroutineRule.runTest {
-        // Given
-        coEvery { isInternetEnabledFlowUseCase.invoke() } returns flowOf(false)
-
-        // When
-        getCurrentLocationUseCase.invoke().test {
-
-            // Then
-            val result = awaitItem()
-            assertTrue(result is GeolocationState.Error)
-            assertEquals(
-                NativeText.Resource(R.string.geolocation_error_no_internet),
                 (result as GeolocationState.Error).message
             )
             cancelAndIgnoreRemainingEvents()

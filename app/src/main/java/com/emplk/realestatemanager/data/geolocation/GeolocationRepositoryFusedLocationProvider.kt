@@ -28,13 +28,11 @@ class GeolocationRepositoryFusedLocationProvider @Inject constructor(
 
     companion object {
         private val LOCATION_INTERVAL_DURATION = 4.seconds
-        private val LOCATION_MAX_UPDATE_DELAY = 10.seconds
         private const val LOCATION_DISTANCE_THRESHOLD = 50F
     }
 
     @RequiresPermission(anyOf = ["android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"])
     override fun getCurrentLocationAsFlow(): Flow<GeolocationState> = callbackFlow {
-
         val locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 locationResult.lastLocation?.let {
@@ -51,7 +49,6 @@ class GeolocationRepositoryFusedLocationProvider @Inject constructor(
         fusedLocationProviderClient.requestLocationUpdates(
             LocationRequest.Builder(LOCATION_INTERVAL_DURATION.inWholeMilliseconds)
                 .setMinUpdateDistanceMeters(LOCATION_DISTANCE_THRESHOLD)
-                .setMaxUpdateDelayMillis(LOCATION_MAX_UPDATE_DELAY.inWholeMilliseconds)
                 .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
                 .build(),
             coroutineDispatcherProvider.io.asExecutor(),

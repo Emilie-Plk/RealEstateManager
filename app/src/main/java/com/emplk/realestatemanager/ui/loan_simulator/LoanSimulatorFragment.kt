@@ -98,7 +98,7 @@ class LoanSimulatorFragment : BottomSheetDialogFragment(R.layout.loan_simulator_
 
         binding.amountEditText.doOnTextChanged { text, _, _, _ ->
             if (text.toString().trim().length == 1 && text.toString().trim() == "0") {
-                binding.amountEditText.setText("");
+                binding.amountEditText.setText("")
             }
         }
         binding.amountEditText.doAfterTextChanged {
@@ -126,7 +126,7 @@ class LoanSimulatorFragment : BottomSheetDialogFragment(R.layout.loan_simulator_
 
         binding.loanDurationEditText.doOnTextChanged { text, _, _, _ ->
             if (text.toString().trim().length == 1 && text.toString().trim() == "0") {
-                binding.loanDurationEditText.setText("");
+                binding.loanDurationEditText.setText("")
             }
         }
         binding.loanDurationEditText.doAfterTextChanged {

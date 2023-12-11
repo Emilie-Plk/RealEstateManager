@@ -21,7 +21,7 @@ class InitPropertyFormUseCase @Inject constructor(
             val doesDraftExist = formDraftRepository.doesDraftExist(id)
             val doesPropertyExist = formDraftRepository.doesPropertyExist(id)
             if (doesDraftExist && !doesPropertyExist) {
-                // case add draft already exists
+                // case "add draft" already exists
                 Log.d("InitPropertyFormUseCase", "invoke: Draft exist but not property: $id ADD")
                 FormWithTypeEntity(formDraftRepository.getFormDraftEntityById(id), FormType.ADD)
             } else if (doesPropertyExist && doesDraftExist) {

@@ -5,7 +5,7 @@ import com.emplk.realestatemanager.data.property_draft.mappers.FormDraftMapper
 import com.emplk.realestatemanager.data.property_draft.mappers.PicturePreviewMapper
 import com.emplk.realestatemanager.data.property_draft.picture_preview.PicturePreviewDao
 import com.emplk.realestatemanager.data.property_draft.picture_preview.PicturePreviewDto
-import com.emplk.realestatemanager.domain.property_draft.FormWithTitleDateAndFeaturedPictureEntity
+import com.emplk.realestatemanager.domain.property_draft.FormWithDetailEntity
 import com.emplk.realestatemanager.fixtures.getTestFormDraftDto
 import com.emplk.realestatemanager.fixtures.getTestFormDraftEntity
 import com.emplk.realestatemanager.fixtures.getTestPicturePreviewEntities
@@ -26,7 +26,7 @@ import org.junit.Rule
 import org.junit.Test
 import java.time.LocalDateTime
 
-class FormDraftRepositoryRoomTest {
+class FormDraftRepositoryRoomTestItem {
 
     companion object {
         private const val TEST_PROPERTY_ID = 1L
@@ -230,7 +230,7 @@ class FormDraftRepositoryRoomTest {
             } returns getTestFormWithTitleDateAndFeaturedPictureEntities()
 
             // When
-            val result = repository.getDraftsWithFeaturePicture()
+            val result = repository.getFormsWithDetails()
 
             // Then
             assertEquals(getTestFormWithTitleDateAndFeaturedPictureEntities(), result)
@@ -380,7 +380,7 @@ fun getTestPicturePreviewDtos(id: Long) = getTestPicturePreviewEntities().map {
 
 fun getTestFormWithTitleDateAndFeaturedPictureEntities() = buildList {
     add(
-        FormWithTitleDateAndFeaturedPictureEntity(
+        FormWithDetailEntity(
             id = 1L,
             title = "Test Title 1",
             lastEditionDate = LocalDateTime.of(2021, 1, 1, 1, 1),
@@ -389,7 +389,7 @@ fun getTestFormWithTitleDateAndFeaturedPictureEntities() = buildList {
         )
     )
     add(
-        FormWithTitleDateAndFeaturedPictureEntity(
+        FormWithDetailEntity(
             id = 2L,
             title = "Test Title 2",
             lastEditionDate = LocalDateTime.of(2021, 2, 2, 2, 2),
@@ -398,7 +398,7 @@ fun getTestFormWithTitleDateAndFeaturedPictureEntities() = buildList {
         )
     )
     add(
-        FormWithTitleDateAndFeaturedPictureEntity(
+        FormWithDetailEntity(
             id = 3L,
             title = "Test Title 3",
             lastEditionDate = LocalDateTime.of(2021, 3, 3, 3, 3),

@@ -1,14 +1,14 @@
 package com.emplk.realestatemanager.data.property_draft
 
-import com.emplk.realestatemanager.domain.property_draft.FormWithTitleDateAndFeaturedPictureEntity
+import com.emplk.realestatemanager.domain.property_draft.FormWithDetailEntity
 import javax.inject.Inject
 
 class FormWithTitleDateAndFeaturedPictureMapper @Inject constructor() {
-    fun mapToFormsWithTitleDateAndFeaturedPictureEntities(forms: List<FormWithTitleDateAndFeaturedPicture>): List<FormWithTitleDateAndFeaturedPictureEntity> =
+    fun mapToFormsWithTitleDateAndFeaturedPictureEntities(forms: List<FormWithTitleDateAndFeaturedPicture>): List<FormWithDetailEntity> =
         buildList {
             forms.forEach { form ->
                 add(
-                    FormWithTitleDateAndFeaturedPictureEntity(
+                    FormWithDetailEntity(
                         id = form.formWithTitleAndLastEditionDateEntity.id,
                         title = form.formWithTitleAndLastEditionDateEntity.title,
                         lastEditionDate = form.formWithTitleAndLastEditionDateEntity.lastEditionDate,

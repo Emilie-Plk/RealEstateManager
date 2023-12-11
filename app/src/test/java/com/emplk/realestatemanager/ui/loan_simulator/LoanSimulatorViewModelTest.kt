@@ -113,7 +113,7 @@ class LoanSimulatorViewModelTest {
                 getLoanYearlyAndMonthlyPaymentUseCase.invoke(
                     loanAmount = BigDecimal(1000000),
                     loanInterest = BigDecimal(3.85).setScale(2, RoundingMode.HALF_UP),
-                    loanDuration = BigDecimal(25)
+                    loanDuration = BigDecimal(25),
                 )
             }
             confirmVerified(setLoanDataUseCase, getLoanYearlyAndMonthlyPaymentUseCase)
@@ -130,6 +130,7 @@ class LoanSimulatorViewModelTest {
                 monthlyPayment = BigDecimal(0),
             )
         )
+
         // When
         viewModel.viewState.observeForTesting(this) {
             // Then
