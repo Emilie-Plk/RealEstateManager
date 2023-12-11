@@ -14,6 +14,7 @@ data class PropertyMapBottomSheetViewState(
     val bathrooms: NativeText,
     val description: String,
     val featuredPicture: NativePhoto,
+    val isSold: Boolean,
     val onDetailClick: EquatableCallbackWithParam<String>,
     val onEditClick: EquatableCallbackWithParam<String>,
     val isProgressBarVisible: Boolean,

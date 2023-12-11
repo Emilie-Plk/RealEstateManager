@@ -114,6 +114,7 @@
             android:textStyle="bold"
             android:visibility="gone"
             android:gravity="end"
+            app:layout_constraintTop_toBottomOf="@id/detail_last_updated_currency_rate_tv"
             app:layout_constraintBottom_toTopOf="@id/detail_entry_date_tv"
             app:layout_constraintEnd_toEndOf="@+id/detail_entry_date_tv"
             app:layout_constraintStart_toStartOf="@+id/detail_entry_date_tv"

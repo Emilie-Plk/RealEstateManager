@@ -230,6 +230,7 @@ class InternetConnectivityRepositoryBroadcastReceiverTest {
         }
     }
 
+    @Suppress("DEPRECATION")
     @Test
     fun `with Android version Lollipop 21`() = testCoroutineRule.runTest {
         // Given
