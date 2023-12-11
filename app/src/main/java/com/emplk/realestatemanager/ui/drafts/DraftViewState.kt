@@ -11,7 +11,7 @@ sealed class DraftViewState(val type: Type) {
         ADD_NEW_DRAFT,
     }
 
-    data class Drafts(
+    data class DraftItem(
         val id: Long,
         val title: NativeText,
         val featuredPicture: NativePhoto,
@@ -20,7 +20,7 @@ sealed class DraftViewState(val type: Type) {
         val onClick: EquatableCallback,
     ) : DraftViewState(Type.DRAFTS)
 
-    data class AddNewDraft(
+    data class AddNewDraftItem(
         val text: NativeText,
         val icon: NativePhoto,
         val onClick: EquatableCallback,

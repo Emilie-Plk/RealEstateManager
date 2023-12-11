@@ -20,9 +20,9 @@ class ConvertPriceDependingOnLocaleUseCase @Inject constructor(
      * (used to convert price in € if Locale is France)
      */
     suspend fun invoke(price: BigDecimal): BigDecimal {
-        when (getLocaleUseCase.invoke()) {
+        return when (getLocaleUseCase.invoke()) {
             FRANCE -> {
-                return when (val currencyRateWrapper = getCurrencyRateUseCase.invoke()) {
+                when (val currencyRateWrapper = getCurrencyRateUseCase.invoke()) {
                     is CurrencyRateWrapper.Success -> {
                         convertDollarToEuroUseCase.invoke(
                             price,
@@ -39,9 +39,7 @@ class ConvertPriceDependingOnLocaleUseCase @Inject constructor(
                 }
             }
 
-            else -> {
-                return price
-            }
+            else -> price
         }
     }
 }

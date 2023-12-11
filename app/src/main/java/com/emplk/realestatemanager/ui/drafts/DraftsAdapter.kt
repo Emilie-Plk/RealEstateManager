@@ -23,8 +23,8 @@ class DraftsAdapter : ListAdapter<DraftViewState, DraftsAdapter.DraftViewHolder>
 
     override fun onBindViewHolder(holder: DraftViewHolder, position: Int) =
         when (holder) {
-            is DraftViewHolder.Drafts -> holder.bind(item = getItem(position) as DraftViewState.Drafts)
-            is DraftViewHolder.AddNewDraft -> holder.bind(item = getItem(position) as DraftViewState.AddNewDraft)
+            is DraftViewHolder.Drafts -> holder.bind(item = getItem(position) as DraftViewState.DraftItem)
+            is DraftViewHolder.AddNewDraft -> holder.bind(item = getItem(position) as DraftViewState.AddNewDraftItem)
         }
 
     override fun getItemViewType(position: Int): Int = getItem(position).type.ordinal
@@ -41,7 +41,7 @@ class DraftsAdapter : ListAdapter<DraftViewState, DraftsAdapter.DraftViewHolder>
                 )
             }
 
-            fun bind(item: DraftViewState.Drafts) {
+            fun bind(item: DraftViewState.DraftItem) {
                 binding.draftItemTitleTv.text = item.title.toCharSequence(binding.root.context)
                 binding.draftItemDateTv.text = item.lastEditionDate
                 binding.root.setOnClickListener {
@@ -66,7 +66,7 @@ class DraftsAdapter : ListAdapter<DraftViewState, DraftsAdapter.DraftViewHolder>
                 )
             }
 
-            fun bind(item: DraftViewState.AddNewDraft) {
+            fun bind(item: DraftViewState.AddNewDraftItem) {
                 binding.draftItemTitleTv.text = item.text.toCharSequence(binding.root.context)
                 binding.root.setCardBackgroundColor(
                     ContextCompat.getColor(
@@ -97,8 +97,8 @@ class DraftsAdapter : ListAdapter<DraftViewState, DraftsAdapter.DraftViewHolder>
 object DraftViewStateDiffCallback : DiffUtil.ItemCallback<DraftViewState>() {
     override fun areItemsTheSame(oldItem: DraftViewState, newItem: DraftViewState): Boolean =
         when {
-            oldItem is DraftViewState.Drafts && newItem is DraftViewState.Drafts -> oldItem.id == newItem.id
-            oldItem is DraftViewState.AddNewDraft && newItem is DraftViewState.AddNewDraft -> oldItem.type == newItem.type
+            oldItem is DraftViewState.DraftItem && newItem is DraftViewState.DraftItem -> oldItem.id == newItem.id
+            oldItem is DraftViewState.AddNewDraftItem && newItem is DraftViewState.AddNewDraftItem -> oldItem.type == newItem.type
             else -> false
         }
 

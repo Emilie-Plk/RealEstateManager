@@ -67,12 +67,9 @@ class MapViewModelTest {
 
     @Test
     fun `initial case`() = testCoroutineRule.runTest {
-        // Given
         viewModel.viewState.observeForTesting(this) {
             assertThat(it.value).isEqualTo(testMarkerViewState)
         }
-        // When
-        // Then
     }
 
     @Test

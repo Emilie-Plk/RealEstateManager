@@ -25,12 +25,13 @@ class DraftsViewModel @Inject constructor(
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val resources: Resources,
 ) : ViewModel() {
+
     val viewStates: LiveData<List<DraftViewState>> = liveData {
         emit(
             buildList {
                 getAllDraftsWithTitleAndDateUseCase.invoke().forEach { form ->
                     add(
-                        DraftViewState.Drafts(
+                        DraftViewState.DraftItem(
                             id = form.id,
                             title = mapTitleToNativeText(form.title),
                             lastEditionDate = mapToString(form.lastEditionDate),
@@ -45,7 +46,7 @@ class DraftsViewModel @Inject constructor(
                     )
                 }
                 add(
-                    DraftViewState.AddNewDraft(
+                    DraftViewState.AddNewDraftItem(
                         text = NativeText.Resource(R.string.draft_add_new_draft),
                         icon = NativePhoto.Resource(R.drawable.baseline_add_home_24),
                         onClick = EquatableCallback {
@@ -54,7 +55,7 @@ class DraftsViewModel @Inject constructor(
                     )
                 )
             }.sortedWith(compareBy<DraftViewState> { it.type != DraftViewState.Type.ADD_NEW_DRAFT }
-                .thenByDescending { (it as DraftViewState.Drafts).lastEditionDate })
+                .thenByDescending { (it as DraftViewState.DraftItem).lastEditionDate })
         )
     }
 

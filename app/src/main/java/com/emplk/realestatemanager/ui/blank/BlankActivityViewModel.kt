@@ -48,7 +48,7 @@ class BlankActivityViewModel @Inject constructor(
     fun onBackClicked() {
         viewModelScope.launch {
             isPropertyFormInProgressUseCase.invoke().collect { isPropertyFormInProgress ->
-                if (isPropertyFormInProgress == true) {
+                if (isPropertyFormInProgress) {
                     setNavigationTypeUseCase.invoke(NavigationFragmentType.SAVE_DRAFT_DIALOG_FRAGMENT)
                 } else {
                     setNavigationTypeUseCase.invoke(NavigationFragmentType.LIST_FRAGMENT)

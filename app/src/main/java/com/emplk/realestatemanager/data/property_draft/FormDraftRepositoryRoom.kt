@@ -7,7 +7,7 @@ import com.emplk.realestatemanager.data.property_draft.picture_preview.PicturePr
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.property_draft.FormDraftEntity
 import com.emplk.realestatemanager.domain.property_draft.FormDraftRepository
-import com.emplk.realestatemanager.domain.property_draft.FormWithTitleDateAndFeaturedPictureEntity
+import com.emplk.realestatemanager.domain.property_draft.FormWithDetailEntity
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
@@ -80,7 +80,7 @@ class FormDraftRepositoryRoom @Inject constructor(
         formDraftDao.getAddPropertyDraftsCount()
     }
 
-    override suspend fun getDraftsWithFeaturePicture(): List<FormWithTitleDateAndFeaturedPictureEntity> =
+    override suspend fun getFormsWithDetails(): List<FormWithDetailEntity> =
         withContext(coroutineDispatcherProvider.io) {
             val formWithTitleDateAndFeaturedPictures = formDraftDao.getFormsWithFeaturedPicture()
             formWithTitleDateAndFeaturedPictureMapper.mapToFormsWithTitleDateAndFeaturedPictureEntities(

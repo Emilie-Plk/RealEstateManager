@@ -9,14 +9,13 @@ class CurrentPropertyRepositoryImpl @Inject constructor() : CurrentPropertyRepos
 
     private var currentPropertyIdMutableSharedFlow: MutableStateFlow<Long?> = MutableStateFlow(null)
 
-
     override fun getCurrentPropertyIdAsFlow(): Flow<Long?> = currentPropertyIdMutableSharedFlow
 
     override fun setCurrentPropertyId(id: Long) {
         currentPropertyIdMutableSharedFlow.tryEmit(id)
     }
 
-    override fun resetCurrentPropertyId() {  // TODO: à mettre partout qd nav back detail ou edit (sauf si detail -> edit lol)
+    override fun resetCurrentPropertyId() {
         currentPropertyIdMutableSharedFlow.tryEmit(null)
     }
 }

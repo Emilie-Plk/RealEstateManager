@@ -61,10 +61,6 @@ class MapViewModel @Inject constructor(
                         null
                     }
 
-                    /*  is GeolocationState.LastKnownLocation -> LatLng(
-                          geolocationState.latitude,
-                          geolocationState.longitude
-                      )*/
                 },
                 fallbackLocationGoogleHq = FALLBACK_LOCATION,
                 propertyMarkers = if (propertiesLatLong.isEmpty()) emptyList() else

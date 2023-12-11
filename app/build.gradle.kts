@@ -132,7 +132,7 @@ dependencies {
         exclude("org.mockito", "mockito-core") // excludes redundant mockito dependency bundled with arch core
     }
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")  // weird but testImplementation doesn't work
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     testImplementation("junit:junit:4.13.2")
     testImplementation("io.mockk:mockk:1.13.4")
     testImplementation("org.slf4j:slf4j-nop:2.0.9") // to avoid warning about missing logger
@@ -204,6 +204,8 @@ koverReport {
                     "*Response",
                     "*Response\$*",
 
+                    // Excluded repo
+                    "PictureFileRepositoryContentResolver", // way too tricky to test
 
                     "*MainApplication",
                     "*MainApplication\$*",
@@ -221,6 +223,12 @@ koverReport {
                     "*ViewEvent\$*",
                     "*DiffCallback",
                     "*DiffCallback\$*",
+                    "*ViewHolder",
+                    "*ViewHolder\$*",
+                    "ContentProvider",
+                    "ContentProvider\$*",
+                    "*TypeConverter",
+                    "*TypeConverter\$*",
                 )
             }
         }

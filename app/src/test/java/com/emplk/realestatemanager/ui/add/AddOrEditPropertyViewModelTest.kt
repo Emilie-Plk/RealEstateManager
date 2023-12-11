@@ -63,6 +63,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -72,6 +73,7 @@ import org.junit.Rule
 import org.junit.Test
 import java.math.BigDecimal
 import java.time.LocalDateTime
+import kotlin.time.Duration.Companion.seconds
 
 class AddOrEditPropertyViewModelTest {
 
@@ -276,7 +278,8 @@ class AddOrEditPropertyViewModelTest {
             )
             assertTrue((it.value as PropertyFormViewState.PropertyForm).isAddressValid)
             coVerify { updateOnAddressClickedUseCase.invoke(any(), any()) }
-            coVerify(exactly = 3) { setPropertyFormProgressUseCase.invoke(any()) } // TODO: NINO why invoked thrice? + see test below too
+            // 3: 1st initial, 2nd nominal, 3rd on address clicked
+            coVerify(exactly = 3) { setPropertyFormProgressUseCase.invoke(any()) }
             confirmVerified(updateOnAddressClickedUseCase, setPropertyFormProgressUseCase)
         }
     }
@@ -293,6 +296,7 @@ class AddOrEditPropertyViewModelTest {
                 getTestPropertyTypesMap().values.toList()[1],
                 (it.value as PropertyFormViewState.PropertyForm).propertyType
             )
+            // 1st initial, 2nd nominal
             coVerify(exactly = 2) { setPropertyFormProgressUseCase.invoke(false) }
             coVerify(exactly = 1) { setPropertyFormProgressUseCase.invoke(true) }
             confirmVerified(setPropertyFormProgressUseCase)
@@ -315,17 +319,35 @@ class AddOrEditPropertyViewModelTest {
     }
 
     @Test
-    fun `on description changed - description is updated`() = testCoroutineRule.runTest {
+    fun `on description changed - description is updated with 1second debounce`() = testCoroutineRule.runTest {
         viewModel.viewStateLiveData.observeForTesting(this) {
             // When
+            val initialValue = (it.value as PropertyFormViewState.PropertyForm).description
+            viewModel.onDescriptionChanged("Test ")
+            viewModel.onDescriptionChanged("Test des")
+            viewModel.onDescriptionChanged("Test descri")
             viewModel.onDescriptionChanged("Test description")
+            viewModel.onDescriptionChanged("Test description")
+
+            // TODO: NINO if called once, result is ""!.. even with advanceTimeBy(1.seconds)
+            advanceTimeBy(1.seconds)
             runCurrent()
+
+            val result = (it.value as PropertyFormViewState.PropertyForm).description
 
             // Then
             assertEquals(
-                "Test description",
-                (it.value as PropertyFormViewState.PropertyForm).description
+                "",
+                initialValue
             )
+            assertEquals(
+                "Test description",
+                result
+            )
+            coVerify(exactly = 3) {
+                setPropertyFormProgressUseCase.invoke(any())
+                setFormCompletionUseCase.invoke(any())
+            }
         }
     }
 
@@ -493,9 +515,9 @@ class AddOrEditPropertyViewModelTest {
     fun `when form is completed - submit button is enabled`() = testCoroutineRule.runTest {
         // Given
         caseFormFilled()
-        runCurrent()
 
         viewModel.viewStateLiveData.observeForTesting(this) {
+            runCurrent()
             // Then
             assertTrue((it.value as PropertyFormViewState.PropertyForm).isSubmitButtonEnabled)
             //  verify { setFormCompletionUseCase.invoke(true) }
@@ -527,8 +549,11 @@ class AddOrEditPropertyViewModelTest {
             assertTrue(((it.value as PropertyFormViewState.PropertyForm).pictures[0] as PicturePreviewStateItem.AddPropertyPicturePreview).isFeatured)
 
             // Then
-            /* coVerify { updatePicturePreviewUseCase.invoke(any(), any(), any()) }
-             coVerify { deletePicturePreviewUseCase.invoke(any(), any()) }*/
+            coVerify {
+                updatePicturePreviewUseCase.invoke(any(), any(), any())
+                deletePicturePreviewUseCase.invoke(any(), any())
+            }
+            confirmVerified(updatePicturePreviewUseCase, deletePicturePreviewUseCase)
         }
     }
 
@@ -546,9 +571,8 @@ class AddOrEditPropertyViewModelTest {
     private fun caseFormFilled() {
         coEvery { initPropertyFormUseCase.invoke(TEST_PROPERTY_ID) } returns testFilledFormTypeEntity
         coEvery { isFormCompletedAsFlowUseCase.invoke() } returns flowOf(true)
-        coEvery { getPicturePreviewsAsFlowUseCase.invoke(any()) } returns flowOf(
-            getTestPicturePreviewEntities()
-        )
+        justRun { setFormCompletionUseCase.invoke(any()) }
+        justRun { setFormTitleUseCase.invoke(any(), any()) }
         coEvery { convertPriceDependingOnLocaleUseCase.invoke(any()) } returns BigDecimal(100000)
         every { convertToSquareFeetDependingOnLocaleUseCase.invoke(any()) } returns BigDecimal(500)
     }

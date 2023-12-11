@@ -1,7 +1,9 @@
 package com.emplk.realestatemanager.data.connectivity
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.BroadcastReceiver
+import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
@@ -19,6 +21,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+@SuppressLint("UnspecifiedRegisterReceiverFlag")
 class InternetConnectivityRepositoryBroadcastReceiverTest {
 
     @get:Rule
@@ -167,7 +170,7 @@ class InternetConnectivityRepositoryBroadcastReceiverTest {
             verify(exactly = 1) {
                 connectivityManager.getNetworkCapabilities(any())
             }
-            verify { application.registerReceiver(any(), any()) }
+            verify { application.registerReceiver(any(), any(), Context.RECEIVER_NOT_EXPORTED) }
 
             // When 2
             cancel()
