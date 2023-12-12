@@ -19,7 +19,6 @@ data class PropertyEntity(
     val amenities: List<AmenityType>,
     val description: String,
     val agentName: String,
-    val isSold: Boolean,
     val entryDate: LocalDateTime,
     val lastEditionDate: LocalDateTime?,
     val saleDate: LocalDateTime?,

@@ -271,7 +271,6 @@ class FormDraftRepositoryRoomTestItem {
                 any(),
                 any(),
                 any(),
-                any()
             )
         }
 
@@ -306,7 +305,6 @@ class FormDraftRepositoryRoomTestItem {
                 any(),
                 any(),
                 any(),
-                any()
             )
         }
         verify(exactly = 1) { formDraftMapper.mapToFormDraftDto(testFormDraftEntity) }

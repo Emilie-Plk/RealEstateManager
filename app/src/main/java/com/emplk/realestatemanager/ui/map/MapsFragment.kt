@@ -91,7 +91,7 @@ class MapsFragment : SupportMapFragment(), OnMapReadyCallback {
             }
 
             // Property markers
-            val customMarkerIcon = vectorToBitmap(requireContext(), R.drawable.baseline_house_pin_circle_24)
+            val customMarkerIcon = vectorToBitmap(requireContext(), R.drawable.baseline_house_pin_circle_32)
             viewState.propertyMarkers.forEach { markerViewState ->
                 val marker = MarkerOptions()
                     .position(markerViewState.latLng)

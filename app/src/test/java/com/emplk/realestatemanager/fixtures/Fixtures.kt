@@ -46,7 +46,6 @@ fun getTestPropertyDto(id: Long) = PropertyDto(
     amenityHospital = false,
     amenityLibrary = false,
     agentName = "John Doe",
-    isSold = false,
     saleDate = null,
     lastEditionDate = LocalDateTime.of(2023, 1, 1, 12, 0),
     entryDate = LocalDateTime.of(2023, 1, 1, 12, 0),
@@ -102,7 +101,6 @@ fun getTestPropertyEntity(id: Long) = PropertyEntity(
         add(AmenityType.PARK)
         add(AmenityType.SHOPPING_MALL)
     },
-    isSold = false,
     saleDate = null,
     lastEditionDate = LocalDateTime.of(2023, 1, 1, 12, 0),
     entryDate = LocalDateTime.of(2023, 1, 1, 12, 0),
@@ -211,7 +209,6 @@ fun mapPropertyEntityToDto(property: PropertyEntity) = PropertyDto(
     amenityHospital = property.amenities.contains(AmenityType.HOSPITAL),
     amenityLibrary = property.amenities.contains(AmenityType.LIBRARY),
     agentName = property.agentName,
-    isSold = property.isSold,
     entryDate = property.entryDate,
     entryDateEpoch = property.entryDate.toEpochSecond(ZoneOffset.UTC),
     saleDate = property.saleDate,
@@ -274,7 +271,6 @@ fun getTestFormDraftEntity(id: Long) = FormDraftEntity(
         add(AmenityType.SHOPPING_MALL)
     },
     pictures = getTestPicturePreviewEntities(),
-    isSold = false,
     entryDate = LocalDateTime.of(2023, 1, 1, 12, 0),
     saleDate = null,
     lastEditionDate = LocalDateTime.of(2023, 1, 1, 12, 0),
@@ -304,7 +300,6 @@ fun getTestFormDraftDto(id: Long) = FormDraftDto(
     amenityHospital = false,
     amenityLibrary = false,
     agentName = "John Doe",
-    isSold = false,
     entryDate = LocalDateTime.of(2023, 1, 1, 12, 0),
     saleDate = null,
     lastEditionDate = LocalDateTime.of(2023, 1, 1, 12, 0),

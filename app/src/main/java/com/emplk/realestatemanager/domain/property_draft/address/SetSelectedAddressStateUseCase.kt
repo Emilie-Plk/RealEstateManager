@@ -10,7 +10,6 @@ class SetSelectedAddressStateUseCase @Inject constructor(
         if (userInput.isNullOrBlank()) {
             predictionAddressStateRepository.setIsPredictionSelectedByUser(false)
             predictionAddressStateRepository.setCurrentAddressInput(null)
-            // TODO: PREDICTION Nino is it safe?
         } else if (predictionAddressStateRepository.getPredictionAddressStateAsFlow()
                 .first().isAddressPredictionSelectedByUser == true
         ) {

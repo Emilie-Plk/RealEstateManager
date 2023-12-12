@@ -41,8 +41,6 @@ data class PropertyDto(
     val amenityLibrary: Boolean,
     @ColumnInfo(name = "agent_name")
     val agentName: String,
-    @ColumnInfo(name = "is_sold")
-    val isSold: Boolean,
     @ColumnInfo(name = "entry_date")
     val entryDate: LocalDateTime,
     @ColumnInfo(name = "entry_date_epoch")

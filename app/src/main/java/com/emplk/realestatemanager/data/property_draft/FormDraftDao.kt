@@ -51,7 +51,6 @@ interface FormDraftDao {
                 " amenity_hospital = :newAmenityHospital," +
                 " amenity_library = :newAmenityLibrary," +
                 " agent_name = :newAgentName," +
-                " is_sold = :isSold," +
                 " sale_date = :newSaleDate," +
                 " entry_date = :newEntryDate," +
                 " last_edition_date = :lastEditionDate WHERE id = :propertyFormId"
@@ -76,7 +75,6 @@ interface FormDraftDao {
         newAmenityHospital: Boolean,
         newAmenityLibrary: Boolean,
         newAgentName: String?,
-        isSold: Boolean,
         newEntryDate: LocalDateTime?,
         newSaleDate: LocalDateTime?,
         lastEditionDate: LocalDateTime?,

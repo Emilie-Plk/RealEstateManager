@@ -72,11 +72,11 @@ class PropertiesViewModel @Inject constructor(
                             property.surface,
                             property.amenities,
                             property.entryDate,
-                            property.isSold,
+                            property.saleDate != null,
                             propertiesFilter
                         )
                     }
-                    .sortedBy { it.isSold }
+                    .sortedBy { it.saleDate != null }
                     .map { property ->
                         val photoUrl = property.pictures.find { it.isFeatured }?.uri
                         val featuredPicture = photoUrl?.let { NativePhoto.Uri(it) }
@@ -87,7 +87,7 @@ class PropertiesViewModel @Inject constructor(
                             featuredPicture = featuredPicture,
                             address = property.location.address,
                             humanReadablePrice = formatPriceToHumanReadableUseCase.invoke(property.price),
-                            isSold = property.isSold,
+                            isSold = property.saleDate != null,
                             room = NativeText.Argument(R.string.rooms_nb_short_version, property.rooms),
                             bathroom = NativeText.Argument(R.string.bathrooms_nb_short_version, property.bathrooms),
                             bedroom = NativeText.Argument(R.string.bedrooms_nb_short_version, property.bedrooms),
