@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RealEstateManager</string>
+    <string name="app_name" translatable="false">RealEstateManager</string>
     <string name="main_fab_add_new_property_a11y">Add new property</string>
     <string name="price_in_euro">Price (\u20ac)</string>
     <string name="price_in_dollar">Price (\u0024)</string>
@@ -12,7 +12,6 @@
     <string name="amenity_public_transportation">Transportation</string>
     <string name="amenity_hospital">Hospital</string>
     <string name="amenity_library">Library</string>
-
     <string name="detail_fragment_featured_picture_a11y">Picture of %s</string>
     <string name="property_item_sold_banner_tv">SOLD</string>
     <string name="property_item_sold_banner_a11y">Sold banner</string>
@@ -27,17 +26,8 @@
     <string name="menu_map_view">Map view</string>
     <string name="menu_filter_property">Filter properties</string>
     <string name="menu_reset_filter_property">Reset filters</string>
-    <string name="logo_slogan_tv">Where dreams\nfind their address</string>
-    <string name="realestatemanager_logo_a11y">RealEstateManager logo</string>
-    <string name="checkbox_amenity_restaurant">Restaurant</string>
-    <string name="checkbox_amenity_mall">Mall</string>
-    <string name="checkbox_amenity_park">Park</string>
-    <string name="checkbox_amenity_school">School</string>
-    <string name="checkbox_amenity_concierge">Concierge</string>
-    <string name="checkbox_amenity_gym">Gym</string>
-    <string name="checkbox_amenity_public_transp">Public transp.</string>
-    <string name="checkbox_amenity_hospital">Hospital</string>
-    <string name="checkbox_amenity_library">Library</string>
+    <string name="logo_slogan_tv">Where dreams find their address</string>
+    <string name="realestatemanager_logo_a11y" translatable="false">RealEstateManager logo</string>
     <string name="iv_preview_delete_property_btn">Delete property</string>
     <string name="price_currency_in_n">(in %s)</string>
     <string name="surface_area_unit_in_n">Area (%s)</string>
@@ -48,15 +38,13 @@
     <string name="form_creation_date_tv">Property created on: %s</string>
     <string name="form_successfully_created_message">Property successfully created!</string>
     <string name="form_successfully_updated_message">Property successfully updated!</string>
-    <string name="title_activity_blank">BlankActivity</string>
-
     <string name="prediction_no_address_found">No address found</string>
     <string name="form_generic_error_message">Oops, an error occurred, try again later!</string>
     <string name="no_internet_connection_draft_saved">Draft saved, please check your connection and try again</string>
     <string name="form_edit_button">Edit Property</string>
     <string name="currency_rate_last_updated_date_tv">Currency rate as of %s</string>
     <string name="currency_rate_with_no_date_tv">Currency rate might be inaccurate</string>
-    <string name="draft_date_last_edition">Last edited on: %1$s</string>
+    <string name="draft_date_last_edition">Last edited on: %$s</string>
     <string name="draft_date_error">No date recorded</string>
     <string name="draft_no_title">Unnamed draft</string>
     <string name="draft_add_new_draft">Add new property</string>
@@ -76,7 +64,7 @@
     <string name="geolocation_error_no_location_found">Can\'t find geolocation, try again later!</string>
     <string name="geolocation_error_no_internet">Please check your internet connexion and try later!</string>
     <string name="geolocation_error_no_gps">Please enable GPS and try again!</string>
-    <string name="permission_rationale_message">Location permission is needed to display properties on the map</string>
+    <string name="permission_rationale_message">Location permission is aksed to display properties on the map, yet you can browse the map with the properties without your geolocation info.</string>
     <string name="permission_rationale_ok_btn">Got it</string>
     <string name="permission_rationale_title">Location permission</string>
     <string name="discard_draft_button">Discard</string>

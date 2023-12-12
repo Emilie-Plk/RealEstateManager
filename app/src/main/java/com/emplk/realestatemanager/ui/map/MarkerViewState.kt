@@ -12,5 +12,6 @@ data class MarkerViewState(
 data class PropertyMarkerViewState(
     val propertyId: Long,
     val latLng: LatLng,
+    val isSold: Boolean,
     val onMarkerClicked: EquatableCallbackWithParam<Long>,
 )

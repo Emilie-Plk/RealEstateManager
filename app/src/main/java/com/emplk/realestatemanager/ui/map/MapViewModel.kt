@@ -68,6 +68,7 @@ class MapViewModel @Inject constructor(
                         PropertyMarkerViewState(
                             propertyId = propertyLatLong.propertyId,
                             latLng = propertyLatLong.latLng,
+                            isSold = propertyLatLong.isSold,
                             onMarkerClicked = EquatableCallbackWithParam { propertyId ->
                                 setCurrentPropertyIdUseCase.invoke(propertyId)
                                 eventMutableSharedFlow.tryEmit(MapEvent.OnMarkerClicked)

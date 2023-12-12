@@ -92,11 +92,12 @@ class MapsFragment : SupportMapFragment(), OnMapReadyCallback {
 
             // Property markers
             val customMarkerIcon = vectorToBitmap(requireContext(), R.drawable.baseline_house_pin_circle_32)
+            val customMarkerIconSold = vectorToBitmap(requireContext(), R.drawable.baseline_house_pin_sold_circle_32)
             viewState.propertyMarkers.forEach { markerViewState ->
                 val marker = MarkerOptions()
                     .position(markerViewState.latLng)
                     .title(markerViewState.propertyId.toString())
-                    .icon(customMarkerIcon)
+                    .icon(if (markerViewState.isSold) customMarkerIcon else customMarkerIconSold)
 
                 val propertyMarker = googleMap.addMarker(marker)
                 propertyMarker?.tag = markerViewState.propertyId
