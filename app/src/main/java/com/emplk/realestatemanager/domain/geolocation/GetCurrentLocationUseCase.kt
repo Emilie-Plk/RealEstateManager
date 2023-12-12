@@ -1,6 +1,5 @@
 package com.emplk.realestatemanager.domain.geolocation
 
-import android.util.Log
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.connectivity.GpsConnectivityRepository
 import com.emplk.realestatemanager.domain.permission.HasLocationPermissionFlowUseCase
@@ -32,11 +31,7 @@ class GetCurrentLocationUseCase @Inject constructor(
         }.distinctUntilChanged()
             .flatMapLatest { state ->
                 when (state) {
-                    FetchLocationState.CAN_FETCH_LOCATION -> {
-                        Log.d("COUCOU", "invoke() -> state: $state")
-                        geolocationRepository.getCurrentLocationAsFlow()
-                    }
-
+                    FetchLocationState.CAN_FETCH_LOCATION -> geolocationRepository.getCurrentLocationAsFlow()
                     FetchLocationState.GPS_DISABLED -> flowOf(GeolocationState.Error(NativeText.Resource(R.string.geolocation_error_no_gps)))
                     FetchLocationState.NO_PERMISSION -> flowOf(GeolocationState.Error(null))
                 }

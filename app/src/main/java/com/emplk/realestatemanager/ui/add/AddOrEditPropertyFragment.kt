@@ -49,10 +49,8 @@ class AddOrEditPropertyFragment : Fragment(R.layout.form_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("COUCOU", "AddOrEditPropertyFragment onViewCreated: ")
 
         setNumberPickersListeners()
-
         initFormFieldsTextWatchers()
 
         val typeAdapter = PropertyTypeSpinnerAdapter()
@@ -158,10 +156,7 @@ class AddOrEditPropertyFragment : Fragment(R.layout.form_fragment) {
                             viewModel.onAddressChanged(it.toString())
                         } else {
                             binding.formAddressTextInputEditText.setSelection(it.toString().length)
-                            /*     val newText = it.toString()
-                                 if (newText != viewState.address) {*/
                             viewModel.onAddressChanged(it?.toString() ?: "")
-                            //  }
                         }
                     }
 
@@ -173,7 +168,7 @@ class AddOrEditPropertyFragment : Fragment(R.layout.form_fragment) {
                                 binding.formAddressTextInputLayout.isHelperTextEnabled = false
                             }
                             if (hasFocus) binding.formAddressTextInputLayout.helperText =
-                                getString(R.string.formAddressHelperText)
+                                getString(R.string.form_address_helper_text)
                         }
                     }
 
@@ -184,7 +179,8 @@ class AddOrEditPropertyFragment : Fragment(R.layout.form_fragment) {
                         viewModel.onSoldStatusChanged(isChecked)
                     }
 
-                    binding.formPriceTextInputLayout.hint = viewState.priceCurrencyHint.toCharSequence(requireContext())
+                    binding.formPriceTextInputLayout.hint =
+                        viewState.priceCurrencyHint.toCharSequence(requireContext())
                     binding.formPriceTextInputLayout.startIconDrawable = ContextCompat.getDrawable(
                         requireContext(),
                         viewState.currencyDrawableRes
@@ -242,7 +238,6 @@ class AddOrEditPropertyFragment : Fragment(R.layout.form_fragment) {
     }
 
     private fun initFormFieldsTextWatchers() {
-
 
         binding.formPriceTextInputEditText.doAfterTextChanged {
             if (it.isNullOrBlank()) {

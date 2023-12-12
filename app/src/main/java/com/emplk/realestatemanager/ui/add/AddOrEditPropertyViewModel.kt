@@ -120,7 +120,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
             val propertyId = getCurrentPropertyIdFlowUseCase.invoke().firstOrNull()
             val formWithType = initPropertyFormUseCase.invoke(propertyId)
 
-            Log.d("COUCOU", "formWithType: $formWithType with id: ${formWithType.formDraftEntity.id}")
+            Log.d("AddVM", "formWithType: $formWithType with id: ${formWithType.formDraftEntity.id}")
 
             formMutableStateFlow.update { form ->
                 form.copy(
@@ -207,7 +207,10 @@ class AddOrEditPropertyViewModel @Inject constructor(
                         nbBedrooms = form.nbBedrooms,
                         pictures = mapPicturePreviews(picturePreviews, form),
                         selectedAgent = form.agent,
-                        priceCurrencyHint = NativeText.Resource(currencyType.stringRes),
+                        priceCurrencyHint = NativeText.Argument(
+                            R.string.price_hint,
+                            currencyType.symbol,
+                        ),
                         currencyDrawableRes = currencyType.drawableRes,
                         surfaceUnit = NativeText.Argument(
                             R.string.surface_area_unit_in_n,

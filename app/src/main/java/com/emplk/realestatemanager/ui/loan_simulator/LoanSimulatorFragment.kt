@@ -45,14 +45,11 @@ class LoanSimulatorFragment : BottomSheetDialogFragment(R.layout.loan_simulator_
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // bottom sheet expanded
         val standardBottomSheetBehavior = BottomSheetBehavior.from(binding.loanSimulatorConstraintLayout as View)
         standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-        // set peek height to half screen
         standardBottomSheetBehavior.peekHeight = ViewGroup.LayoutParams.MATCH_PARENT
         standardBottomSheetBehavior.isDraggable = false
 
-        // set max height to half screen if tablet
         val displayMetrics = resources.displayMetrics
         val dpHeight = displayMetrics.heightPixels / displayMetrics.density
         if (dpHeight > 600) {
@@ -71,6 +68,7 @@ class LoanSimulatorFragment : BottomSheetDialogFragment(R.layout.loan_simulator_
             if (currentAmount != viewState.loanAmount) {
                 binding.amountEditText.setText(viewState.loanAmount)
             }
+            binding.amountEditText.hint = viewState.loanCurrencyHint.toCharSequence(view.context)
 
             val currentRate = binding.interestRateEditText.text.toString()
             if (currentRate != viewState.loanRate) {

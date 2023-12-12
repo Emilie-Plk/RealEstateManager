@@ -484,7 +484,7 @@ class AddOrEditPropertyViewModelTest {
         viewModel.viewStateLiveData.observeForTesting(this) {
             // Then
             assertEquals(
-                NativeText.Resource(R.string.price_in_euro),
+                NativeText.Resource(R.string.price_hint),
                 (it.value as PropertyFormViewState.PropertyForm).priceCurrencyHint
             )
             assertEquals(

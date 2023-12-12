@@ -3,7 +3,6 @@ package com.emplk.realestatemanager.ui.main
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -166,7 +165,6 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 is MainViewEvent.DetailOnTablet -> {
-                    Log.d("COUCOU", "MainActivity onCreate: properties fragment is null ")
                     supportFragmentManager.commit {
                         replace(
                             binding.mainFrameLayoutContainerProperties.id,

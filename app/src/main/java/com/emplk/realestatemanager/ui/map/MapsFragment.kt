@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -103,7 +102,6 @@ class MapsFragment : SupportMapFragment(), OnMapReadyCallback {
                 propertyMarker?.tag = markerViewState.propertyId
 
                 googleMap.setOnMarkerClickListener {
-                    Log.d("COUCOU", "Marker clicked: ${it.tag}")
                     if (it.tag == null) return@setOnMarkerClickListener false
                     markerViewState.onMarkerClicked.invoke(it.tag as Long)
                     googleMap.moveCamera(

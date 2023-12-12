@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="4dp"
-            android:contentDescription="TODO"
+            android:importantForAccessibility="no"
             android:src="@drawable/baseline_edit_24"
             app:fabSize="mini"
             app:layout_constraintBottom_toBottomOf="@id/detail_photo_carouselRv"
@@ -285,7 +285,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/detail_amenities_recyclerView_flexbox"
-            tools:src="@drawable/baseline_map_24" />
+            tools:src="@drawable/baseline_map_24"
+            android:importantForAccessibility="no" />
 
         <androidx.constraintlayout.widget.Barrier
             android:layout_width="wrap_content"

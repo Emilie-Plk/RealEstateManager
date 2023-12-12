@@ -15,31 +15,21 @@
         android:id="@+id/empty_property_nothing_to_display_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No property to display"
+        android:layout_marginBottom="92dp"
+        android:text="@string/no_property_to_display_empty"
         android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/empty_property_add_text"
+        app:layout_constraintBottom_toBottomOf="@+id/empty_property_button_add"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/empty_property_add_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add one?"
-        android:layout_marginBottom="12dp"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/horizontal_guideline_top"
-        app:layout_constraintEnd_toEndOf="@+id/empty_property_nothing_to_display_text"
-        app:layout_constraintStart_toStartOf="@+id/empty_property_nothing_to_display_text" />
 
     <Button
         android:id="@+id/empty_property_button_add"
         android:layout_width="wrap_content"
-        android:layout_marginTop="12dp"
         android:layout_height="wrap_content"
-        android:text="Add property"
-        app:layout_constraintEnd_toEndOf="@+id/empty_property_add_text"
-        app:layout_constraintStart_toStartOf="@+id/empty_property_add_text"
+        android:layout_marginTop="12dp"
+        android:text="@string/add_property_btn"
+        app:layout_constraintEnd_toEndOf="@+id/empty_property_nothing_to_display_text"
+        app:layout_constraintStart_toStartOf="@+id/empty_property_nothing_to_display_text"
         app:layout_constraintTop_toTopOf="@+id/horizontal_guideline_top" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
