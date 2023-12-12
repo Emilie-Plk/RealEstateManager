@@ -1,10 +1,8 @@
 # RealEstateManager
 ## A realestate management app designed for realtors
 
-[TOC]
-
 #Presentation
-**RealEstatManager** is an Android app 
+**RealEstatManager** is an Android app 🚧 STILL IN PROGRESS 🚧👷‍♀️
 
 #Features
 - Written in *Kotlin*
