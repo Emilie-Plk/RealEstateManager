@@ -141,7 +141,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                     pictureIds = formWithType.formDraftEntity.pictures.map { it.id },
                     featuredPictureId = formWithType.formDraftEntity.pictures.find { it.isFeatured }?.id,
                     entryDate = formWithType.formDraftEntity.entryDate,
-                    isSold = formWithType.formDraftEntity.isSold,
+                    isSold = formWithType.formDraftEntity.saleDate != null,
                     soldDate = formWithType.formDraftEntity.saleDate,
                 )
             }
@@ -440,7 +440,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
         }
     }
 
-    fun onAddressChanged(input: String?) { // TODO: PREDICTION Nino spam because of double binding
+    fun onAddressChanged(input: String?) {
         viewModelScope.launch {
             isInternetEnabledFlowUseCase.invoke().firstOrNull()?.let { isInternetEnabled ->
                 if (!isInternetEnabled) {

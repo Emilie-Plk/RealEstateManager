@@ -34,7 +34,6 @@ class MapBottomSheetViewModel @Inject constructor(
     private val onActionClickedMutableSharedFlow: MutableSharedFlow<String> = MutableSharedFlow(extraBufferCapacity = 1)
 
     private val isProgressBarVisibleMutableLiveData: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    // TODO: 2021-08-31  virer ça
 
     val viewState: LiveData<PropertyMapBottomSheetViewState> = liveData {
         if (latestValue == null) isProgressBarVisibleMutableLiveData.tryEmit(true)
@@ -53,7 +52,7 @@ class MapBottomSheetViewModel @Inject constructor(
                     price = formatPriceToHumanReadableUseCase.invoke(propertyWithConvertedPriceAndSurface.price),
                     surface = getRoundedSurfaceWithUnitHumanReadableUseCase.invoke(propertyWithConvertedPriceAndSurface.surface),
                     featuredPicture = NativePhoto.Uri(getFeaturedPictureUri(propertyWithConvertedPriceAndSurface.pictures)),
-                    isSold = propertyWithConvertedPriceAndSurface.isSold,
+                    isSold = propertyWithConvertedPriceAndSurface.saleDate != null,
                     onDetailClick = EquatableCallbackWithParam { fragmentTag ->
                         onActionClickedMutableSharedFlow.tryEmit(fragmentTag)
                     },

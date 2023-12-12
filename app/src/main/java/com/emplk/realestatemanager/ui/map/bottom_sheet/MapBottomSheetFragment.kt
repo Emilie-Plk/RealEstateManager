@@ -47,7 +47,8 @@ class MapBottomSheetFragment : BottomSheetDialogFragment(R.layout.map_bottom_she
                 .error(R.drawable.baseline_villa_24)
                 .into(binding.mapBottomSheetPropertyImageView)
 
-            binding.mapBottomSheetPropertyImageView.contentDescription = "Picture of ${viewState.type}. Status: ${viewState.isSold}"
+            binding.mapBottomSheetPropertyImageView.contentDescription =
+                "Picture of ${viewState.type}. Status: ${viewState.isSold}"
 
             binding.mapBottomSheetPropertyEditBtn.setOnClickListener {
                 viewState.onEditClick.invoke(EDIT_PROPERTY_TAG)

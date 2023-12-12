@@ -31,7 +31,7 @@ import org.junit.Test
 class MapViewModelTest {
 
     companion object {
-        private val FALLBACK_LOCATION_GOOGLE_HG = LatLng(37.422131, -122.084801)
+        private val FALLBACK_LOCATION_UPPER_EAST_SIDE = LatLng(40.7736, -73.9566)
         private val TEST_USER_LOCATION = LatLng(1.2, 3.4)
     }
 
@@ -204,7 +204,7 @@ class MapViewModelTest {
 
     private val testMarkerViewState = MarkerViewState(
         userCurrentLocation = TEST_USER_LOCATION,
-        fallbackLocationGoogleHq = FALLBACK_LOCATION_GOOGLE_HG,
+        fallbackLocationGoogleHq = FALLBACK_LOCATION_UPPER_EAST_SIDE,
         propertyMarkers = testPropertiesLatLongEntities.map { propertyLatLong ->
             PropertyMarkerViewState(
                 propertyId = propertyLatLong.propertyId,

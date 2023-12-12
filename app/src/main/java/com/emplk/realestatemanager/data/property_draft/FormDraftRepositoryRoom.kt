@@ -111,7 +111,6 @@ class FormDraftRepositoryRoom @Inject constructor(
                 propertyFormDto.amenityHospital,
                 propertyFormDto.amenityLibrary,
                 propertyFormDto.agentName,
-                propertyFormDto.isSold,
                 propertyFormDto.entryDate,
                 propertyFormDto.saleDate,
                 propertyFormDto.lastEditionDate,

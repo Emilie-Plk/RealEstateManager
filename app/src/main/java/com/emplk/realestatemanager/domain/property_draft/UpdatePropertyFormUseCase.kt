@@ -33,7 +33,6 @@ class UpdatePropertyFormUseCase @Inject constructor(
                 bedrooms = form.nbBedrooms,
                 agentName = form.agent,
                 amenities = form.selectedAmenities,
-                isSold = form.isSold,
                 entryDate = form.entryDate,
                 saleDate = form.soldDate,
                 lastEditionDate = LocalDateTime.now(clock),

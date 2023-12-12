@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">RealEstateManager</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="main_fab_add_new_property_a11y">Add new property</string>
     <string name="price_in_euro">Price (\u20ac)</string>
     <string name="price_in_dollar">Price (\u0024)</string>

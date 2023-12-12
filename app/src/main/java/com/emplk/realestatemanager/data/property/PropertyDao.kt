@@ -62,7 +62,7 @@ interface PropertyDao {
                 "(:amenityHospital IS NULL OR :amenityHospital = 0 OR amenity_hospital = 1) AND " +
                 "(:amenityLibrary IS NULL OR :amenityLibrary = 0 OR amenity_library = 1) AND " +
                 "((:entryDateMin IS NULL OR entry_date_epoch >= :entryDateMin) AND (:entryDateMax IS NULL OR entry_date_epoch <= :entryDateMax)) AND " +
-                "(:isSold IS NULL OR is_sold = :isSold)"
+                "(:isSold IS NULL OR (:isSold = 0 AND sale_date IS NULL) OR (:isSold = 1 AND sale_date IS NOT NULL))"
     )
     fun getFilteredPropertiesCount(
         propertyType: String?,

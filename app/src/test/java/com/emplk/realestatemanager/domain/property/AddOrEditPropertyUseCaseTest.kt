@@ -148,7 +148,6 @@ class AddOrEditPropertyUseCaseTest {
     }
 
     // TODO: tester case où le propertyId est null, et où le propertyId est non null
-    // où on n'a pas internet, où on a internet, où on a internet mais pas de latlong
 
     @Test
     fun `edge case - incorrect FormDraftParams properties throws IllegalArgumentException`() =

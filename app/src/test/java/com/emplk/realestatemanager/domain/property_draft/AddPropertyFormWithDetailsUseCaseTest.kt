@@ -104,7 +104,6 @@ private val testEmptyFormDraftEntity = FormDraftEntity(
     address = "",
     isAddressValid = false,
     agentName = "",
-    isSold = false,
     entryDate = null,
     saleDate = null,
     lastEditionDate = null,

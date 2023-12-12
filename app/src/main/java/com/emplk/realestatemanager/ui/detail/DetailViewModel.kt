@@ -63,8 +63,7 @@ class DetailViewModel @Inject constructor(
                         property.location.miniatureMapUrl
                     )
                 ),
-                price =
-                formatPriceToHumanReadableUseCase.invoke(
+                price = formatPriceToHumanReadableUseCase.invoke(
                     convertPriceDependingOnLocaleUseCase.invoke(property.price)
                 ),
                 lastUpdatedCurrencyRateDate =
@@ -117,7 +116,7 @@ class DetailViewModel @Inject constructor(
                     R.string.detail_manager_agent_name,
                     property.agentName
                 ),
-                isSold = property.isSold,
+                isSold = property.saleDate != null,
                 saleDate = property.saleDate?.let { saleDate ->
                     NativeText.Argument(
                         R.string.detail_sold_date_tv,

@@ -4,7 +4,6 @@ import com.emplk.realestatemanager.initial_bugfix.Utils.convertDollarToEuro
 import com.emplk.realestatemanager.initial_bugfix.Utils.convertEuroToDollar
 import com.emplk.realestatemanager.initial_bugfix.Utils.getTodayDate
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -37,8 +36,8 @@ class UtilsTest {
         // Given
         Locale.setDefault(Locale.US)
         val today = Date()
-        val dateFormatUs = SimpleDateFormat("MM/dd/yy", Locale.US)
-        val expected = dateFormatUs.format(today)
+        val expectedDateFormatUs = SimpleDateFormat("MM/dd/yy", Locale.US)
+        val expected = expectedDateFormatUs.format(today)
 
         // When
         val result = getTodayDate()
@@ -46,7 +45,7 @@ class UtilsTest {
         println("Locale: $locale - Date: $result")
 
         // Then
-        assertTrue(result == expected)
+        assertEquals(expected, result)
     }
 
     @Test
@@ -54,8 +53,8 @@ class UtilsTest {
         // Given
         Locale.setDefault(Locale.FRANCE)
         val today = Date()
-        val dateFormatUs = SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE)
-        val expected = dateFormatUs.format(today)
+        val expectedDateFormatFr = SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE)
+        val expected = expectedDateFormatFr.format(today)
 
         // When
         val result = getTodayDate()
@@ -63,6 +62,6 @@ class UtilsTest {
         println("Locale: $locale - Date: $result")
 
         // Then
-        assertTrue(result == expected)
+        assertEquals(expected, result)
     }
 }

@@ -113,7 +113,6 @@ class AddOrEditPropertyUseCase @Inject constructor(
                         },
                         entryDate = form.entryDate,
                         lastEditionDate = LocalDateTime.now(clock),
-                        isSold = form.isSold,
                         saleDate = if (!form.isSold) null else form.soldDate ?: LocalDateTime.now(clock),
                     ),
                 )
@@ -156,7 +155,6 @@ class AddOrEditPropertyUseCase @Inject constructor(
                         },
                         entryDate = now,
                         lastEditionDate = null,
-                        isSold = false,
                         saleDate = null,
                     ),
                 )
