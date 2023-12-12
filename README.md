@@ -6,7 +6,7 @@
 
 If the internet connectivity is being fussing, no worries: you can save your property form safely (and locally) and it'll be accessible later: only reason is we need internet connection to fetch the location data from the entered address.
 
-The app is supported in France and US so far. Currency rate is updated thanks to Fixer API every 4h for better precision for conversion 💱 (EUR and USD)
+The app is supported in France and US so far. Currency rate is updated (with Fixer API) every 4h for better precision for conversion 💱 (EUR and USD)
 
 ### Tech stack
 * Written in `Kotlin`, the star of the show! ✨
