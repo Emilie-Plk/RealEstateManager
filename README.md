@@ -22,7 +22,7 @@ Whether you call them [gif] or [dʒif] doesn't matter much, they're always usefu
 
 #### List view
 
-![Main demo](https://github.com/Emilie-Plk/RealEstateManager/assets/96174269/397052bd-a4d6-449c-b875-d05d0f83a404)
+![Main demo](https://github.com/Emilie-Plk/RealEstateManager/assets/96174269/a0f3bd27-e1b2-487a-b716-77d6e122e7dc)
 
 
 #### Filter properties
