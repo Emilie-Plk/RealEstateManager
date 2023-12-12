@@ -38,6 +38,27 @@
                 app:layout_constraintTop_toBottomOf="@id/drag_handle"
                 tools:src="@drawable/fallback_villa" />
 
+            <LinearLayout
+                android:id="@+id/mapBottomSheet_property_sold_linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:textAlignment="center"
+                android:background="@color/transparent_silver"
+                app:layout_constraintBottom_toBottomOf="@id/mapBottomSheet_property_imageView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/mapBottomSheet_property_imageView"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/mapBottomSheet_property_sold_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    style="@style/Theme.RealEstateManager.PropertyTypeTitle"
+                    android:gravity="center|center_vertical"
+                    android:text="SOLD" />
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/mapBottomSheet_property_type_tv"
                 style="@style/Theme.RealEstateManager.TextOverlayTransparentGray"

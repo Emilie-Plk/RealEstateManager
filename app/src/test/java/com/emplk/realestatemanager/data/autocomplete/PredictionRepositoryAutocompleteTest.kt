@@ -97,7 +97,7 @@ class PredictionRepositoryAutocompleteTest {
     }
 
     @Test
-    fun `Status Zero_Results - gives PredictionWrapper NoResult`() = testCoroutineRule.runTest {
+    fun `status Zero_Results - gives PredictionWrapper NoResult`() = testCoroutineRule.runTest {
         // Given
         coEvery { googleApi.getAddressPredictions(TEST_INPUT, TEST_TYPE) } returns
                 AutocompleteResponse(getTestPredictionsResponses(), TEST_STATUS_ZERO_RESULTS)
@@ -112,7 +112,7 @@ class PredictionRepositoryAutocompleteTest {
     }
 
     @Test
-    fun `Status OK with null predictions - gives PredictionWrapper NoResult`() = testCoroutineRule.runTest {
+    fun `status OK with null predictions - gives PredictionWrapper NoResult`() = testCoroutineRule.runTest {
         // Given
         every { testPredictionLruCache.get(any()) } returns null
         coEvery { googleApi.getAddressPredictions(TEST_INPUT, TEST_TYPE) } returns

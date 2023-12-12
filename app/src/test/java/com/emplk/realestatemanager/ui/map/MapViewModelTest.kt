@@ -9,7 +9,7 @@ import com.emplk.realestatemanager.domain.geolocation.GeolocationState
 import com.emplk.realestatemanager.domain.geolocation.GetCurrentLocationUseCase
 import com.emplk.realestatemanager.domain.map.GetAllPropertiesLatLongUseCase
 import com.emplk.realestatemanager.domain.permission.SetLocationPermissionUseCase
-import com.emplk.realestatemanager.domain.property.location.PropertyLatLongEntity
+import com.emplk.realestatemanager.domain.property.location.PropertyLatLongAndSoldStatusEntity
 import com.emplk.realestatemanager.ui.utils.EquatableCallbackWithParam
 import com.emplk.realestatemanager.ui.utils.Event
 import com.emplk.realestatemanager.ui.utils.NativeText
@@ -181,23 +181,26 @@ class MapViewModelTest {
 
     private val testPropertiesLatLongEntities = buildList {
         add(
-            PropertyLatLongEntity(
+            PropertyLatLongAndSoldStatusEntity(
                 propertyId = 1L,
                 latLng = LatLng(0.0, 0.0),
+                isSold = false,
             )
         )
 
         add(
-            PropertyLatLongEntity(
+            PropertyLatLongAndSoldStatusEntity(
                 propertyId = 2L,
-                latLng = LatLng(1.0, 1.0)
+                latLng = LatLng(1.0, 1.0),
+                isSold = false,
             )
         )
 
         add(
-            PropertyLatLongEntity(
+            PropertyLatLongAndSoldStatusEntity(
                 propertyId = 3L,
-                latLng = LatLng(2.0, 2.0)
+                latLng = LatLng(2.0, 2.0),
+                isSold = true
             )
         )
     }
@@ -209,6 +212,7 @@ class MapViewModelTest {
             PropertyMarkerViewState(
                 propertyId = propertyLatLong.propertyId,
                 latLng = propertyLatLong.latLng,
+                isSold = propertyLatLong.isSold,
                 onMarkerClicked = EquatableCallbackWithParam {},
             )
         }

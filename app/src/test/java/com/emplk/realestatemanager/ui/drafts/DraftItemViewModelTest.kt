@@ -75,7 +75,6 @@ class DraftItemViewModelTest {
             runCurrent()
             assertEquals(draftItemViewStates, it.value)
             coVerify(exactly = 1) { getAllDraftsWithTitleAndDateUseCase.invoke() }
-
         }
     }
 

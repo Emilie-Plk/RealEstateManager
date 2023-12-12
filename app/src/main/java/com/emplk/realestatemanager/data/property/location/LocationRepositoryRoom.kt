@@ -2,7 +2,7 @@ package com.emplk.realestatemanager.data.property.location
 
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.property.location.LocationRepository
-import com.emplk.realestatemanager.domain.property.location.PropertyLatLongEntity
+import com.emplk.realestatemanager.domain.property.location.PropertyLatLongAndSoldStatusEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -14,10 +14,11 @@ class LocationRepositoryRoom @Inject constructor(
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : LocationRepository {
 
-    override fun getAllPropertyLatLongAsFlow(): Flow<List<PropertyLatLongEntity>> = locationDao
-        .getAllPropertyLatLongAsFlow().map { propertyLatLongDtos ->
-            propertyLatLongDtos.mapNotNull { propertyLatLongDto ->
-                locationMapper.mapToPropertyLatLongEntity(propertyLatLongDto)
-            }
-        }.flowOn(coroutineDispatcherProvider.io)
+    override fun getAllPropertyLatLongAndSoldStatusAsFlow(): Flow<List<PropertyLatLongAndSoldStatusEntity>> =
+        locationDao
+            .getAllPropertyLatLongAsFlow().map { propertyLatLongDtos ->
+                propertyLatLongDtos.mapNotNull { propertyLatLongDto ->
+                    locationMapper.mapToPropertyLatLongEntity(propertyLatLongDto)
+                }
+            }.flowOn(coroutineDispatcherProvider.io)
 }

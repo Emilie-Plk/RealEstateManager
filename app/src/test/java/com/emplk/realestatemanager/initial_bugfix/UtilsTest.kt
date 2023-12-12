@@ -3,7 +3,9 @@ package com.emplk.realestatemanager.initial_bugfix;
 import com.emplk.realestatemanager.initial_bugfix.Utils.convertDollarToEuro
 import com.emplk.realestatemanager.initial_bugfix.Utils.convertEuroToDollar
 import com.emplk.realestatemanager.initial_bugfix.Utils.getTodayDate
+import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -18,6 +20,19 @@ class UtilsTest {
         private const val TEST_EURO_RESULT = 812000
         private const val TEST_DOLLAR_RESULT = 1230000
     }
+
+    private lateinit var locale: Locale
+
+    @Before
+    fun setUp() {
+        locale = Locale.getDefault()
+    }
+
+    @After
+    fun tearDown() {
+        Locale.setDefault(locale)
+    }
+
 
     @Test
     fun `dollar to euro conversion`() {

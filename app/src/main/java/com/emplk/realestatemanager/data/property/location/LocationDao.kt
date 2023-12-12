@@ -16,8 +16,8 @@ interface LocationDao {
     suspend fun insert(locationDto: LocationDto): Long?
 
     @RewriteQueriesToDropUnusedColumns
-    @Query("SELECT * FROM locations")
-    fun getAllPropertyLatLongAsFlow(): Flow<List<PropertyLatLongDto>>
+    @Query("SELECT * FROM locations INNER JOIN properties ON locations.property_id = properties.id")
+    fun getAllPropertyLatLongAsFlow(): Flow<List<PropertyWithLatLongAndSaleDateDto>>
 
     @Query("SELECT * FROM locations")
     fun getAllLocationsWithCursor(): Cursor
