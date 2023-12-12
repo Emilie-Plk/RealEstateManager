@@ -57,7 +57,7 @@
             android:id="@+id/form_type_actv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Select a type"
+            android:hint="@string/property_type_actv_hint"
             android:inputType="none" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -68,7 +68,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
-        android:hint="Address"
+        android:hint="@string/property_address_hint"
         app:endIconMode="clear_text"
         app:layout_constraintEnd_toEndOf="@+id/form_type_textInputLayout"
         app:layout_constraintStart_toStartOf="@+id/form_type_textInputLayout"
@@ -93,7 +93,7 @@
         android:layout_marginBottom="4dp"
         android:drawablePadding="4dp"
         android:gravity="center"
-        android:text="Address is valid"
+        android:text="@string/address_validity_tooltip"
         app:drawableStartCompat="@drawable/baseline_check_circle_24"
         app:drawableTint="@color/secondary"
         app:layout_constraintBottom_toTopOf="@+id/form_address_textInputLayout"
@@ -151,7 +151,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Rooms"
+        android:text="@string/property_room_tv"
         app:layout_constraintEnd_toStartOf="@id/form_bedrooms_tv"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/form_surface_textInputLayout" />
@@ -170,7 +170,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Bedrooms"
+        android:text="@string/property_bedroom_tv"
         app:layout_constraintEnd_toStartOf="@id/form_bathrooms_tv"
         app:layout_constraintStart_toEndOf="@id/form_rooms_tv"
         app:layout_constraintTop_toBottomOf="@id/form_surface_textInputLayout" />
@@ -189,7 +189,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Bathrooms"
+        android:text="@string/property_bathroom_tv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/form_bedrooms_tv"
         app:layout_constraintTop_toBottomOf="@id/form_surface_textInputLayout" />
@@ -209,7 +209,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
-        android:hint="Description"
+        android:hint="@string/property_description_hint"
         app:endIconMode="clear_text"
         app:expandedHintEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
@@ -233,7 +233,7 @@
         style="@style/Theme.RealEstateManager.AddPropertySubtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Amenities"
+        android:text="@string/property_amenities_title_tv"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/form_description_textInputLayout" />
 
@@ -269,7 +269,7 @@
             android:id="@+id/form_agent_actv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Select an agent"
+            android:hint="@string/select_agent_actv"
             android:inputType="none" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -279,7 +279,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
         android:backgroundTint="@color/primary_light"
-        android:text="Import picture"
+        android:text="@string/import_picture_btn"
         app:icon="@drawable/baseline_drive_folder_upload_24"
         app:layout_constraintEnd_toStartOf="@id/form_from_camera_button"
         app:layout_constraintStart_toStartOf="@+id/form_agent_textInputLayout"
@@ -290,7 +290,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/primary_light"
-        android:text="Take picture"
+        android:text="@string/take_picture_btn"
         app:icon="@drawable/baseline_photo_camera_24"
         app:layout_constraintEnd_toEndOf="@+id/form_agent_textInputLayout"
         app:layout_constraintStart_toEndOf="@id/form_pictures_from_storage_button"

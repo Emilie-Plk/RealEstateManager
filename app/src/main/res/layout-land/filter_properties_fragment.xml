@@ -23,15 +23,6 @@
             android:focusable="true"
             android:focusableInTouchMode="true">
 
-            <TextView
-                android:id="@+id/filter_property_type_tv"
-                style="@style/Theme.RealEstateManager.FilterPropertySubtitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Type"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/filter_property_type_textInputLayout"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
@@ -42,13 +33,13 @@
                 android:layout_marginEnd="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/filter_property_type_tv">
+                app:layout_constraintTop_toTopOf="parent">
 
                 <AutoCompleteTextView
                     android:id="@+id/filter_property_type_actv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Type"
+                    android:hint="@string/property_type_actv_hint"
                     android:inputType="none" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -68,7 +59,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:hint="Min price"
+                android:hint="@string/min_price_textInputLayout"
                 app:endIconMode="clear_text"
                 app:layout_constraintEnd_toStartOf="@id/filter_property_max_price_textInputLayout"
                 app:layout_constraintStart_toStartOf="@+id/filter_property_type_textInputLayout"
@@ -86,7 +77,7 @@
                 style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:hint="Max price"
+                android:hint="@string/max_price_textInputLayout"
                 app:endIconMode="clear_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/filter_property_min_price_textInputLayout"
@@ -106,7 +97,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:hint="Min surface"
+                android:hint="@string/min_surface_textInputLayout"
                 app:endIconMode="clear_text"
                 app:layout_constraintEnd_toStartOf="@id/filter_property_max_surface_textInputLayout"
                 app:layout_constraintStart_toStartOf="@+id/filter_property_type_textInputLayout"
@@ -124,7 +115,7 @@
                 style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:hint="Max surface"
+                android:hint="@string/max_surface_textInputLayout"
                 app:endIconMode="clear_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/filter_property_min_surface_textInputLayout"
@@ -152,7 +143,7 @@
                 style="@style/Theme.RealEstateManager.AddPropertySubtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Amenities"
+                android:text="@string/property_amenities_title_tv"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/filter_property_min_surface_textInputLayout" />
 
@@ -176,7 +167,7 @@
                 style="@style/Theme.RealEstateManager.FilterPropertySubtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Entry date"
+                android:text="@string/entry_date_tv"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/filter_property_amenities_recyclerView" />
 
@@ -196,7 +187,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="4dp"
-                    android:text="&lt; 1year" />
+                    android:text="@string/chip_less_than_a_year" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/filter_property_entry_less_than_6_months_chip"
@@ -204,7 +195,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="4dp"
-                    android:text="&lt; 6 months" />
+                    android:text="@string/chip_less_than_six_months" />
 
 
                 <com.google.android.material.chip.Chip
@@ -213,7 +204,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="4dp"
-                    android:text="&lt; 3 months" />
+                    android:text="@string/chip_less_than_three_months" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/filter_property_entry_date_less_than_1_month_chip"
@@ -221,7 +212,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="4dp"
-                    android:text="&lt; 1 month" />
+                    android:text="@string/chip_less_than_a_month" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/filter_property_entry_date_less_than_1_week_chip"
@@ -229,7 +220,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="4dp"
-                    android:text="&lt; 1 week" />
+                    android:text="@string/chip_less_than_a_month" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/filter_property_entry_date_all_chip"
@@ -237,7 +228,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="4dp"
-                    android:text="Any"
+                    android:text="@string/chip_any"
                     android:textAlignment="center" />
 
             </com.google.android.material.chip.ChipGroup>
@@ -248,7 +239,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="Available for sale"
+                android:text="@string/available_for_sale_title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/filter_property_entry_date_chipGroup" />
 
@@ -267,21 +258,21 @@
                     style="@style/Theme.RealEstateManager.ButtonGroup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="For sale" />
+                    android:text="@string/for_sale_button_filter" />
 
                 <Button
                     android:id="@+id/filter_property_sold_btn"
                     style="@style/Theme.RealEstateManager.ButtonGroup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sold" />
+                    android:text="@string/sold_button_filter" />
 
                 <Button
                     android:id="@+id/filter_property_all_btn"
                     style="@style/Theme.RealEstateManager.ButtonGroup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="All" />
+                    android:text="@string/all_button_filter" />
 
             </com.google.android.material.button.MaterialButtonToggleGroup>
         </androidx.constraintlayout.widget.ConstraintLayout>

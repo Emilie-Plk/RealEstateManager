@@ -63,10 +63,10 @@ class DraftsViewModel @Inject constructor(
     else NativeText.Resource(R.string.draft_no_title)
 
     private fun mapToString(lastEditionDate: LocalDateTime?): String =
-        if (lastEditionDate != null) resources.getString(
-            R.string.draft_date_last_edition,
-            lastEditionDate.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
-        )
-        else resources.getString(R.string.draft_date_error)
-
+        if (lastEditionDate != null) {
+            resources.getString(
+                R.string.draft_date_last_edition,
+                lastEditionDate.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
+            )
+        } else resources.getString(R.string.draft_date_error)
 }

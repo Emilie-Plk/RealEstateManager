@@ -45,8 +45,8 @@ class PictureFileRepositoryContentResolver @Inject constructor(
         withContext(coroutineDispatcherProvider.io) {
             if (File(absolutePath).exists()) {
                 File(absolutePath).delete()
-                Log.d("COUCOU", "File $absolutePath deleted")
-            } else Log.d("COUCOU", "File $absolutePath does not exist")
+                Log.d("PictureContentResolver", "File $absolutePath deleted")
+            } else Log.d("PictureyContentResolver", "File $absolutePath does not exist")
         }
     }
 }

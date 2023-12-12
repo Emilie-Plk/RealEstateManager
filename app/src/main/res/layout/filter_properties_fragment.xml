@@ -15,9 +15,12 @@
         android:fillViewport="true"
         android:padding="8dp"
         app:layout_constraintBottom_toTopOf="@id/filter_buttons_bottom_banner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/filter_property_constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusable="true"
@@ -40,7 +43,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/filter_property_constraintLayout"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/filter_property_type_tv">
 
@@ -48,7 +51,7 @@
                     android:id="@+id/filter_property_type_actv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Type"
+                    android:hint="@string/property_type_actv_hint"
                     android:inputType="none" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -68,10 +71,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:hint="Min price"
+                android:hint="@string/min_price_textInputLayout"
                 app:endIconMode="clear_text"
-                app:layout_constraintEnd_toStartOf="@id/filter_property_max_price_textInputLayout"
-                app:layout_constraintStart_toStartOf="@+id/filter_property_type_textInputLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/filter_property_price_range_tv">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -86,11 +89,11 @@
                 style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:hint="Max price"
+                android:hint="@string/max_price_textInputLayout"
                 app:endIconMode="clear_text"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/filter_property_min_price_textInputLayout"
-                app:layout_constraintTop_toTopOf="@+id/filter_property_min_price_textInputLayout">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/filter_property_min_price_textInputLayout">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/filter_property_max_price_editText"
@@ -106,10 +109,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:hint="Min surface"
+                android:hint="@string/min_surface_textInputLayout"
                 app:endIconMode="clear_text"
-                app:layout_constraintEnd_toStartOf="@id/filter_property_max_surface_textInputLayout"
-                app:layout_constraintStart_toStartOf="@+id/filter_property_type_textInputLayout"
+                app:layout_constraintEnd_toEndOf="@id/filter_property_constraintLayout"
+                app:layout_constraintStart_toStartOf="@id/filter_property_constraintLayout"
                 app:layout_constraintTop_toBottomOf="@+id/filter_property_surface_range_tv">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -124,11 +127,11 @@
                 style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:hint="Max surface"
+                android:hint="@string/max_surface_textInputLayout"
                 app:endIconMode="clear_text"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/filter_property_min_surface_textInputLayout"
-                app:layout_constraintTop_toTopOf="@+id/filter_property_min_surface_textInputLayout">
+                app:layout_constraintEnd_toEndOf="@id/filter_property_constraintLayout"
+                app:layout_constraintStart_toStartOf="@id/filter_property_constraintLayout"
+                app:layout_constraintTop_toBottomOf="@+id/filter_property_min_surface_textInputLayout">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/filter_property_max_surface_editText"
@@ -152,9 +155,9 @@
                 style="@style/Theme.RealEstateManager.AddPropertySubtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Amenities"
+                android:text="@string/property_amenities_title_tv"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/filter_property_min_surface_textInputLayout" />
+                app:layout_constraintTop_toBottomOf="@+id/filter_property_max_surface_textInputLayout" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/filter_property_amenities_recyclerView"
@@ -176,7 +179,7 @@
                 style="@style/Theme.RealEstateManager.FilterPropertySubtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Entry date"
+                android:text="@string/entry_date_tv"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/filter_property_amenities_recyclerView" />
 
@@ -195,56 +198,56 @@
                     style="@style/Theme.RealEstateManager.ChipFilter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:backgroundTint="@color/button_group_color"
                     android:layout_margin="4dp"
-                    android:text="&lt; 1year" />
+                    android:text="@string/chip_less_than_a_year"
+                    app:backgroundTint="@color/button_group_color" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/filter_property_entry_less_than_6_months_chip"
                     style="@style/Theme.RealEstateManager.ChipFilter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:backgroundTint="@color/button_group_color"
                     android:layout_margin="4dp"
-                    android:text="&lt; 6 months" />
+                    android:text="@string/chip_less_than_six_months"
+                    app:backgroundTint="@color/button_group_color" />
 
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/filter_property_entry_date_less_than_3_months_chip"
                     style="@style/Theme.RealEstateManager.ChipFilter"
                     android:layout_width="wrap_content"
-                    app:backgroundTint="@color/button_group_color"
                     android:layout_height="wrap_content"
                     android:layout_margin="4dp"
-                    android:text="&lt; 3 months" />
+                    android:text="@string/chip_less_than_three_months"
+                    app:backgroundTint="@color/button_group_color" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/filter_property_entry_date_less_than_1_month_chip"
                     style="@style/Theme.RealEstateManager.ChipFilter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:backgroundTint="@color/button_group_color"
                     android:layout_margin="4dp"
-                    android:text="&lt; 1 month" />
+                    android:text="@string/chip_less_than_a_month"
+                    app:backgroundTint="@color/button_group_color" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/filter_property_entry_date_less_than_1_week_chip"
                     style="@style/Theme.RealEstateManager.ChipFilter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:backgroundTint="@color/button_group_color"
                     android:layout_margin="4dp"
-                    android:text="&lt; 1 week" />
+                    android:text="@string/chip_less_than_a_week"
+                    app:backgroundTint="@color/button_group_color" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/filter_property_entry_date_all_chip"
                     style="@style/Theme.RealEstateManager.ChipFilter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:backgroundTint="@color/button_group_color"
                     android:layout_margin="4dp"
-                    android:text="Any"
-                    android:textAlignment="center" />
+                    android:text="@string/chip_any"
+                    android:textAlignment="center"
+                    app:backgroundTint="@color/button_group_color" />
 
             </com.google.android.material.chip.ChipGroup>
 
@@ -254,7 +257,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="Available for sale"
+                android:text="@string/available_for_sale_title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/filter_property_entry_date_chipGroup" />
 
@@ -274,21 +277,21 @@
                     style="@style/Theme.RealEstateManager.ButtonGroup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="For sale" />
+                    android:text="@string/for_sale_button_filter" />
 
                 <Button
                     android:id="@+id/filter_property_sold_btn"
                     style="@style/Theme.RealEstateManager.ButtonGroup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sold" />
+                    android:text="@string/sold_button_filter" />
 
                 <Button
                     android:id="@+id/filter_property_all_btn"
                     style="@style/Theme.RealEstateManager.ButtonGroup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="All" />
+                    android:text="@string/all_button_filter" />
 
             </com.google.android.material.button.MaterialButtonToggleGroup>
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -313,7 +316,7 @@
             android:layout_marginTop="12dp"
             android:layout_marginBottom="12dp"
             android:layout_weight="1"
-            android:text="Cancel" />
+            android:text="@string/cancel_button" />
 
         <Button
             android:id="@+id/filter_property_reset_btn"
@@ -322,7 +325,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:maxLines="2"
-            android:text="Reset"
+            android:text="@string/reset_button"
             app:icon="@drawable/baseline_reset_24"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -333,9 +336,7 @@
             android:id="@+id/filter_property_filter_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end|center_vertical"
             android:layout_margin="8dp"
-            android:layout_weight="2"
             android:maxLines="2"
             tools:text="View 24 results" />
     </LinearLayout>

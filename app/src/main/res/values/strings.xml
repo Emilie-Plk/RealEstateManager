@@ -1,8 +1,6 @@
 <resources>
     <string name="app_name" translatable="false">RealEstateManager</string>
     <string name="main_fab_add_new_property_a11y">Add new property</string>
-    <string name="price_in_euro">Price (\u20ac)</string>
-    <string name="price_in_dollar">Price (\u0024)</string>
     <string name="amenity_school">School</string>
     <string name="amenity_park">Park</string>
     <string name="amenity_shopping_mall">Mall</string>
@@ -30,6 +28,9 @@
     <string name="realestatemanager_logo_a11y" translatable="false">RealEstateManager logo</string>
     <string name="iv_preview_delete_property_btn">Delete property</string>
     <string name="price_currency_in_n">(in %s)</string>
+    <string name="price_hint">Price (%s)</string>
+    <string name="dollar_symbol" translatable="false">\\u0024</string>
+    <string name="euro_symbol" translatable="false">\\u20ac</string>
     <string name="surface_area_unit_in_n">Area (%s)</string>
     <string name="rooms_nb_short_version">%s RM</string>
     <string name="bathrooms_nb_short_version">%s BA</string>
@@ -44,7 +45,7 @@
     <string name="form_edit_button">Edit Property</string>
     <string name="currency_rate_last_updated_date_tv">Currency rate as of %s</string>
     <string name="currency_rate_with_no_date_tv">Currency rate might be inaccurate</string>
-    <string name="draft_date_last_edition">Last edited on: %$s</string>
+    <string name="draft_date_last_edition">Last edited on: %s</string>
     <string name="draft_date_error">No date recorded</string>
     <string name="draft_no_title">Unnamed draft</string>
     <string name="draft_add_new_draft">Add new property</string>
@@ -64,9 +65,45 @@
     <string name="geolocation_error_no_location_found">Can\'t find geolocation, try again later!</string>
     <string name="geolocation_error_no_internet">Please check your internet connexion and try later!</string>
     <string name="geolocation_error_no_gps">Please enable GPS and try again!</string>
-    <string name="permission_rationale_message">Location permission is aksed to display properties on the map, yet you can browse the map with the properties without your geolocation info.</string>
+    <string name="permission_rationale_message">Location permission is asked to display properties on the map, yet you can browse the map with the properties without your geolocation info.</string>
     <string name="permission_rationale_ok_btn">Got it</string>
     <string name="permission_rationale_title">Location permission</string>
     <string name="discard_draft_button">Discard</string>
-    <string name="formAddressHelperText">Please select a valid address</string>
+
+    <string name="property_type_actv_hint">Select a type</string>
+    <string name="property_address_hint">Address</string>
+    <string name="address_validity_tooltip">Address is valid</string>
+    <string name="property_room_tv">Rooms</string>
+    <string name="property_bedroom_tv">Bedrooms</string>
+    <string name="property_bathroom_tv">Bathrooms</string>
+    <string name="property_description_hint">Description</string>
+    <string name="property_amenities_title_tv">Amenities</string>
+    <string name="import_picture_btn">Import picture</string>
+    <string name="take_picture_btn">Take picture</string>
+    <string name="select_agent_actv">Select an agent</string>
+    <string name="min_price_textInputLayout">Min price</string>
+    <string name="max_price_textInputLayout">Max price</string>
+    <string name="min_surface_textInputLayout">Min surface</string>
+    <string name="max_surface_textInputLayout">Max surface</string>
+    <string name="entry_date_tv">Entry date</string>
+    <string name="chip_less_than_a_year"><![CDATA[< 1year]]></string>
+    <string name="chip_less_than_six_months"><![CDATA[< 6 months]]></string>
+    <string name="chip_less_than_three_months"><![CDATA[< 3 months]]></string>
+    <string name="chip_less_than_a_month"><![CDATA[< 1 month]]></string>
+    <string name="chip_less_than_a_week"><![CDATA[< 1 week]]></string>
+    <string name="chip_any">Any</string>
+    <string name="available_for_sale_title">Available for sale</string>
+    <string name="for_sale_button_filter">For sale</string>
+    <string name="sold_button_filter">Sold</string>
+    <string name="all_button_filter">All</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="reset_button">Reset</string>
+    <string name="no_property_to_display_empty">No property to display\nAdd a new one?</string>
+    <string name="add_property_btn">Add property</string>
+    <string name="form_address_helper_text">Please select a valid address from suggestions</string>
+    <string name="close_bottom_sheet_iv">Close bottom sheet</string>
+    <string name="loan_amount_hint">Loan amount in %s</string>
+    <string name="interest_rate_hint">Interest rate in %</string>
+    <string name="loan_duration_in_years_hint">Loan duration in years (max 30 y.)</string>
+    <string name="calculate_loan_btn">Calculate</string>
 </resources>

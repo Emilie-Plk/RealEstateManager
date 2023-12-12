@@ -11,6 +11,7 @@ import com.emplk.realestatemanager.domain.loan_simulator.LoanParams
 import com.emplk.realestatemanager.domain.loan_simulator.ResetLoanDataUseCase
 import com.emplk.realestatemanager.domain.loan_simulator.SetLoanDataUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.currency.FormatPriceToHumanReadableUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.currency.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
@@ -30,6 +31,7 @@ class LoanSimulatorViewModel @Inject constructor(
     private val setLoanDataUseCase: SetLoanDataUseCase,
     private val getLoanDataAsFlowUseCase: GetLoanDataAsFlowUseCase,
     private val getLoanYearlyAndMonthlyPaymentUseCase: GetLoanYearlyAndMonthlyPaymentUseCase,
+    private val getCurrencyTypeUseCase: GetCurrencyTypeUseCase,
     private val formatPriceToHumanReadableUseCase: FormatPriceToHumanReadableUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
     private val resetLoanDataUseCase: ResetLoanDataUseCase,
@@ -64,6 +66,10 @@ class LoanSimulatorViewModel @Inject constructor(
                         loanAmount = if (loanParams.loanAmount == BigDecimal.ZERO) "" else loanParams.loanAmount.toString(),
                         loanRate = if (loanParams.interestRate == BigDecimal.ZERO) "" else loanParams.interestRate.toString(),
                         loanDuration = if (loanParams.loanDuration == BigDecimal.ZERO) "" else loanParams.loanDuration.toString(),
+                        loanCurrencyHint = NativeText.Argument(
+                            R.string.loan_amount_hint,
+                            getCurrencyTypeUseCase.invoke().symbol
+                        ),
                         yearlyAndMonthlyPayment = if (
                             loanParams.yearlyPayment == BigDecimal.ZERO &&
                             loanParams.monthlyPayment == BigDecimal.ZERO
