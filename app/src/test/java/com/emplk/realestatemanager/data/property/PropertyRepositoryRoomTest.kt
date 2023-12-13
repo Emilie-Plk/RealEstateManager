@@ -229,7 +229,7 @@ class PropertyRepositoryRoomTest {
         assertThrows(IllegalStateException::class.java) {
             throw IllegalStateException("Property with id $TEST_PROPERTY_ID not found")
         }
-        //  coVerify(exactly = 1) { propertyDao.getPropertyById(TEST_PROPERTY_ID) } // TODO NINO : why this line makes test fail? Verification failed: call 1 of 1: PropertyDao(#1).getPropertyById(eq(1), any())) was not called
+    //    coVerify(exactly = 1) { propertyDao.getPropertyById(TEST_PROPERTY_ID) }
         confirmVerified(propertyDao)
     }
 

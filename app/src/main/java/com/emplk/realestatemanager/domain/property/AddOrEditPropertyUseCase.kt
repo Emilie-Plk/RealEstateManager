@@ -169,7 +169,7 @@ class AddOrEditPropertyUseCase @Inject constructor(
                 }
             }
         }
-        // endregion edit existing property
+        // endregion
         return when (addOrEditPropertyWrapper) {
             is AddOrEditPropertyWrapper.Success -> {
                 resetPropertyFormUseCase.invoke(form.id)

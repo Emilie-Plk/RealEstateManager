@@ -23,16 +23,6 @@ class GetLoanYearlyAndMonthlyPaymentUseCaseTest {
 
         assertThat(BigDecimal(459.89) == (result as GetLoanYearlyAndMonthlyPaymentUseCase.YearlyAndMonthlyPayment).monthlyPayment)
         assertThat(BigDecimal(5518.68) == result.yearlyPayment)
-        // TODO: NINO: why does this fail with Junit assertEquals but not assertK?
-        // assertEquals => "Asserts that two objects are equal" vs "Asserts on the given value" for assertK
-        /* assertEquals(
-             BigDecimal(459.89),
-             (result as GetLoanYearlyAndMonthlyPaymentUseCase.YearlyAndMonthlyPayment).monthlyPayment
-         )
-         assertEquals(
-             BigDecimal(5518.68),
-             result.yearlyPayment
-         )*/
     }
 
     @Test

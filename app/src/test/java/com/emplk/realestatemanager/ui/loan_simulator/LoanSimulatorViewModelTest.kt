@@ -10,7 +10,9 @@ import com.emplk.realestatemanager.domain.loan_simulator.GetLoanYearlyAndMonthly
 import com.emplk.realestatemanager.domain.loan_simulator.LoanDataEntity
 import com.emplk.realestatemanager.domain.loan_simulator.ResetLoanDataUseCase
 import com.emplk.realestatemanager.domain.loan_simulator.SetLoanDataUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.currency.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.currency.FormatPriceToHumanReadableUseCase
+import com.emplk.realestatemanager.domain.locale_formatting.currency.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
@@ -43,6 +45,7 @@ class LoanSimulatorViewModelTest {
     private val setLoanDataUseCase: SetLoanDataUseCase = mockk()
     private val getLoanDataAsFlowUseCase: GetLoanDataAsFlowUseCase = mockk()
     private val getLoanYearlyAndMonthlyPaymentUseCase: GetLoanYearlyAndMonthlyPaymentUseCase = mockk()
+    private val getCurrencyTypeUseCase: GetCurrencyTypeUseCase = mockk()
     private val formatPriceToHumanReadableUseCase: FormatPriceToHumanReadableUseCase = mockk()
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase = mockk()
     private val resetLoanDataUseCase: ResetLoanDataUseCase = mockk()
@@ -56,6 +59,7 @@ class LoanSimulatorViewModelTest {
         every { getLoanDataAsFlowUseCase.invoke() } returns flowOf(testLoanDataEntity)
         every { formatPriceToHumanReadableUseCase.invoke(BigDecimal(600000)) } returns "$600,000"
         every { formatPriceToHumanReadableUseCase.invoke(BigDecimal(5000)) } returns "$5,000"
+        every { getCurrencyTypeUseCase.invoke() } returns CurrencyType.DOLLAR
         justRun { setNavigationTypeUseCase.invoke(any()) }
         every {
             getLoanYearlyAndMonthlyPaymentUseCase.invoke(
@@ -75,6 +79,7 @@ class LoanSimulatorViewModelTest {
             formatPriceToHumanReadableUseCase = formatPriceToHumanReadableUseCase,
             setNavigationTypeUseCase = setNavigationTypeUseCase,
             resetLoanDataUseCase = resetLoanDataUseCase,
+            getCurrencyTypeUseCase = getCurrencyTypeUseCase,
         )
     }
 
@@ -305,6 +310,10 @@ class LoanSimulatorViewModelTest {
         loanAmount = "1000000",
         loanRate = "3.85",
         loanDuration = "25",
+        loanCurrencyHint = NativeText.Argument(
+            R.string.loan_amount_hint,
+            "$"
+        ),
         yearlyAndMonthlyPayment = NativeText.Arguments(
             R.string.loan_simulator_payment_result,
             listOf("$600,000", "$5,000")

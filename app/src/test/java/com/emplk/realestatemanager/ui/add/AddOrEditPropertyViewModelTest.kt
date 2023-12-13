@@ -15,7 +15,7 @@ import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertToSqu
 import com.emplk.realestatemanager.domain.locale_formatting.surface.GetSurfaceUnitUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.surface.SurfaceUnitType
 import com.emplk.realestatemanager.domain.navigation.draft.GetClearPropertyFormNavigationEventAsFlowUseCase
-import com.emplk.realestatemanager.domain.navigation.draft.GetSavePropertyDraftEvent
+import com.emplk.realestatemanager.domain.navigation.draft.GetSavePropertyDraftEventUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.IsFormCompletedAsFlowUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.IsPropertyInsertingInDatabaseFlowUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.SetFormCompletionUseCase
@@ -117,7 +117,7 @@ class AddOrEditPropertyViewModelTest {
     private val getCurrentPredictionAddressesFlowWithDebounceUseCase: GetCurrentPredictionAddressesFlowWithDebounceUseCase =
         mockk()
     private val isInternetEnabledFlowUseCase: IsInternetEnabledFlowUseCase = mockk()
-    private val getSavePropertyDraftEvent: GetSavePropertyDraftEvent = mockk()
+    private val getSavePropertyDraftEventUseCase: GetSavePropertyDraftEventUseCase = mockk()
     private val getClearPropertyFormNavigationEventAsFlowUseCase: GetClearPropertyFormNavigationEventAsFlowUseCase =
         mockk()
 
@@ -159,7 +159,7 @@ class AddOrEditPropertyViewModelTest {
         )
         every { getAmenityTypeUseCase.invoke() } returns getTestAmenities()
         coEvery { isInternetEnabledFlowUseCase.invoke() } returns flowOf(true)
-        coEvery { getSavePropertyDraftEvent.invoke() } returns emptyFlow()
+        coEvery { getSavePropertyDraftEventUseCase.invoke() } returns emptyFlow()
         coEvery { getClearPropertyFormNavigationEventAsFlowUseCase.invoke() } returns emptyFlow()
 
 
@@ -192,7 +192,7 @@ class AddOrEditPropertyViewModelTest {
             getAmenityTypeUseCase,
             getCurrentPredictionAddressesFlowWithDebounceUseCase,
             isInternetEnabledFlowUseCase,
-            getSavePropertyDraftEvent,
+            getSavePropertyDraftEventUseCase,
             getClearPropertyFormNavigationEventAsFlowUseCase
         )
     }
@@ -484,7 +484,7 @@ class AddOrEditPropertyViewModelTest {
         viewModel.viewStateLiveData.observeForTesting(this) {
             // Then
             assertEquals(
-                NativeText.Resource(R.string.price_hint),
+                NativeText.Argument(R.string.price_hint, "€"),
                 (it.value as PropertyFormViewState.PropertyForm).priceCurrencyHint
             )
             assertEquals(
@@ -669,7 +669,10 @@ class AddOrEditPropertyViewModelTest {
         pictures = listOf(),
         agents = getTestAgentsMap().map { AddPropertyAgentViewStateItem(it.key, it.value) },
         selectedAgent = null,
-        priceCurrencyHint = NativeText.Resource(R.string.price_in_dollar),
+        priceCurrencyHint = NativeText.Argument(
+            R.string.price_hint,
+            "$"
+        ),
         currencyDrawableRes = R.drawable.baseline_dollar_24,
         surfaceUnit = NativeText.Argument(
             R.string.surface_area_unit_in_n,
