@@ -220,16 +220,20 @@ class PropertyRepositoryRoomTest {
         confirmVerified(propertyDao)
     }
 
-    @Test
+    @Test(expected = IllegalStateException::class)
     fun `get property by id - edge case with null return`() = testCoroutineRule.runTest {
         //  Given
         coEvery { propertyDao.getPropertyById(TEST_PROPERTY_ID) } returns null
 
         // When
+        propertyRepositoryRoom.getPropertyById(TEST_PROPERTY_ID)
+
+        // Then
         assertThrows(IllegalStateException::class.java) {
             throw IllegalStateException("Property with id $TEST_PROPERTY_ID not found")
         }
-    //    coVerify(exactly = 1) { propertyDao.getPropertyById(TEST_PROPERTY_ID) }
+
+        coVerify(exactly = 1) { propertyDao.getPropertyById(TEST_PROPERTY_ID) }
         confirmVerified(propertyDao)
     }
 
