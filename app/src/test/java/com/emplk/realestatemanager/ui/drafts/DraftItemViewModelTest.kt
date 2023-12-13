@@ -14,6 +14,7 @@ import com.emplk.utils.TestCoroutineRule
 import com.emplk.utils.observeForTesting
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.justRun
 import io.mockk.mockk
@@ -68,13 +69,13 @@ class DraftItemViewModelTest {
         )
     }
 
+    // TODO: NINO pourquoi ça marche en isolé mais pas en groupé ???
     @Test
     fun `nominal case`() = testCoroutineRule.runTest {
-        // When
         viewModel.viewStates.observeForTesting(this) {
-            runCurrent()
             assertEquals(draftItemViewStates, it.value)
             coVerify(exactly = 1) { getAllDraftsWithTitleAndDateUseCase.invoke() }
+            confirmVerified(getAllDraftsWithTitleAndDateUseCase)
         }
     }
 

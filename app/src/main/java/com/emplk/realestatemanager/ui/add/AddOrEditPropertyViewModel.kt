@@ -16,7 +16,7 @@ import com.emplk.realestatemanager.domain.locale_formatting.currency.GetCurrency
 import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertToSquareFeetDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.surface.GetSurfaceUnitUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.GetClearPropertyFormNavigationEventAsFlowUseCase
-import com.emplk.realestatemanager.domain.navigation.draft.GetSavePropertyDraftEvent
+import com.emplk.realestatemanager.domain.navigation.draft.GetSavePropertyDraftEventUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.IsFormCompletedAsFlowUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.IsPropertyInsertingInDatabaseFlowUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.SetFormCompletionUseCase
@@ -98,7 +98,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
     private val getAmenityTypeUseCase: GetAmenityTypeUseCase,
     private val getCurrentPredictionAddressesFlowWithDebounceUseCase: GetCurrentPredictionAddressesFlowWithDebounceUseCase,
     private val isInternetEnabledFlowUseCase: IsInternetEnabledFlowUseCase,
-    private val getSavePropertyDraftEvent: GetSavePropertyDraftEvent,
+    private val getSavePropertyDraftEventUseCase: GetSavePropertyDraftEventUseCase,
     private val getClearPropertyFormNavigationEventAsFlowUseCase: GetClearPropertyFormNavigationEventAsFlowUseCase,
 ) : ViewModel() {
 
@@ -195,7 +195,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                                 form.pictureIds.isNotEmpty() &&
                                 form.featuredPictureId != null
                     )
-                    println("combine() => description: ${form.description}")
+
                     PropertyFormViewState.PropertyForm(
                         propertyType = form.propertyType,
                         address = form.address,
@@ -285,7 +285,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
 
 // Save draft when navigating away
             launch {
-                getSavePropertyDraftEvent.invoke().collect {
+                getSavePropertyDraftEventUseCase.invoke().collect {
                     updatePropertyFormUseCase.invoke(formMutableStateFlow.value)
                 }
             }
