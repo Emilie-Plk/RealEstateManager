@@ -8,8 +8,10 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import android.view.Gravity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -44,8 +46,7 @@ class AddOrEditPropertyFragment : Fragment(R.layout.form_fragment) {
     }
 
     private val viewModel by viewModels<AddOrEditPropertyViewModel>()
-    private val binding by viewBinding { FormFragmentBinding.bind(it).propertyForm }
-    private val loadingBinding by viewBinding { FormFragmentBinding.bind(it).loadingState }
+    private val binding by viewBinding { FormFragmentBinding.bind(it) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -86,16 +87,17 @@ class AddOrEditPropertyFragment : Fragment(R.layout.form_fragment) {
         }
 
         viewModel.viewStateLiveData.observe(viewLifecycleOwner) { viewState ->
-
             when (viewState) {
-                is PropertyFormViewState.LoadingState -> {
-                    binding.root.isVisible = false
-                    loadingBinding.root.isVisible = true
-                }
+                is PropertyFormViewState.LoadingState -> binding.formViewSwitcher.displayedChild = 0
 
                 is PropertyFormViewState.PropertyForm -> {
-                    binding.root.isVisible = true
-                    loadingBinding.root.isVisible = false
+                    // resetting gravity of viewSwitcher to default
+                    val params = binding.formViewSwitcher.layoutParams as FrameLayout.LayoutParams
+                    params.gravity = Gravity.NO_GRAVITY
+                    binding.formViewSwitcher.layoutParams = params
+
+                    binding.formViewSwitcher.displayedChild = 1
+
                     typeAdapter.setData(viewState.propertyTypes)
                     agentAdapter.setData(viewState.agents)
 

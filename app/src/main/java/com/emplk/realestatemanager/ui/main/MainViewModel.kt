@@ -107,7 +107,7 @@ class MainViewModel @Inject constructor(
                 DETAIL_FRAGMENT -> if (!isTablet) {
                     emit(
                         MainViewState(
-                            false,
+                            isAddFabVisible = false,
                             isFilterAppBarButtonVisible = false,
                             isResetFilterAppBarButtonVisible = false,
                             isAddAppBarButtonVisible = false,
@@ -117,7 +117,7 @@ class MainViewModel @Inject constructor(
                 } else {
                     emit(
                         MainViewState(
-                            false,
+                            isAddFabVisible = false,
                             isFilterAppBarButtonVisible = false,
                             isResetFilterAppBarButtonVisible = false,
                             isAddAppBarButtonVisible = true,
