@@ -8,7 +8,6 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.databinding.MapBottomSheetFragmentBinding
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
-import com.emplk.realestatemanager.ui.blank.BlankActivity
 import com.emplk.realestatemanager.ui.main.MainActivity
 import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.NativePhoto.Companion.load
@@ -70,12 +69,6 @@ class MapBottomSheetFragment : BottomSheetDialogFragment(R.layout.map_bottom_she
         viewModel.viewEvent.observeEvent(viewLifecycleOwner) { viewEvent ->
             when (viewEvent) {
                 is MapBottomSheetEvent.Edit -> {
-                    startActivity(
-                        BlankActivity.navigate(
-                            requireContext(),
-                            NavigationFragmentType.EDIT_FRAGMENT.name,
-                        )
-                    )
                     dismiss()
                 }
 

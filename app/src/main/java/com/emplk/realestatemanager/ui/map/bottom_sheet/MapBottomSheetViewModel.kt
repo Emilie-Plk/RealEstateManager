@@ -8,6 +8,8 @@ import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceDependingOnL
 import com.emplk.realestatemanager.domain.locale_formatting.currency.FormatPriceToHumanReadableUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertToSquareFeetDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.surface.FormatAndRoundSurfaceToHumanReadableUseCase
+import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
+import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.GetCurrentPropertyUseCase
 import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
 import com.emplk.realestatemanager.ui.map.bottom_sheet.MapBottomSheetFragment.Companion.DETAIL_PROPERTY_TAG
@@ -29,6 +31,7 @@ class MapBottomSheetViewModel @Inject constructor(
     private val convertPriceDependingOnLocaleUseCase: ConvertPriceDependingOnLocaleUseCase,
     private val getRoundedSurfaceWithUnitHumanReadableUseCase: FormatAndRoundSurfaceToHumanReadableUseCase,
     private val formatPriceToHumanReadableUseCase: FormatPriceToHumanReadableUseCase,
+    private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
 ) : ViewModel() {
 
     private val onActionClickedMutableSharedFlow: MutableSharedFlow<String> = MutableSharedFlow(extraBufferCapacity = 1)
@@ -54,9 +57,11 @@ class MapBottomSheetViewModel @Inject constructor(
                     featuredPicture = NativePhoto.Uri(getFeaturedPictureUri(propertyWithConvertedPriceAndSurface.pictures)),
                     isSold = propertyWithConvertedPriceAndSurface.saleDate != null,
                     onDetailClick = EquatableCallbackWithParam { fragmentTag ->
+                        setNavigationTypeUseCase.invoke(NavigationFragmentType.DETAIL_FRAGMENT)
                         onActionClickedMutableSharedFlow.tryEmit(fragmentTag)
                     },
                     onEditClick = EquatableCallbackWithParam { fragmentTag ->
+                        setNavigationTypeUseCase.invoke(NavigationFragmentType.EDIT_FRAGMENT)
                         onActionClickedMutableSharedFlow.tryEmit(fragmentTag)
                     },
                     description = propertyWithConvertedPriceAndSurface.description,

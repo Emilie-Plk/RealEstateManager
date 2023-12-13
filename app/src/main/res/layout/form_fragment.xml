@@ -1,25 +1,388 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:fillViewport="true"
     android:layout_gravity="center"
+    android:fillViewport="true"
+    android:orientation="vertical"
     tools:context=".ui.add.AddOrEditPropertyFragment">
 
-    <LinearLayout
+    <ViewSwitcher
+        android:id="@+id/form_viewSwitcher"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
 
-        <include
-            android:id="@+id/property_form"
-            layout="@layout/form_layout"
-            tools:visibility="visible" />
+        <LinearLayout
+            android:id="@+id/loading_animation_lottie_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
 
-        <include
-            android:id="@+id/loading_state"
-            layout="@layout/loading_state"
-            tools:visibility="gone" />
-    </LinearLayout>
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/loading_animation_lottie"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:scaleX="3"
+                android:scaleY="3"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/loading_anim" />
+        </LinearLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp">
+
+            <TextView
+                android:id="@+id/form_info_tv"
+                style="@style/Theme.RealEstateManager.AddPropertySubtitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:maxLines="2"
+                android:textStyle="bold|italic"
+                app:layout_constraintBottom_toBottomOf="@+id/form_soldStatus_switch"
+                app:layout_constraintEnd_toStartOf="@id/form_soldStatus_tv"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Property creation date: 12/12/2022 at 12:12" />
+
+            <TextView
+                android:id="@+id/form_soldStatus_tv"
+                style="@style/Theme.RealEstateManager.AddPropertySubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:text="@string/sold_switch"
+                app:layout_constraintEnd_toStartOf="@id/form_soldStatus_switch"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/form_soldStatus_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/form_soldStatus_tv"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/form_soldStatus_tv"
+                tools:checked="true" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/form_type_textInputLayout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="14dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/form_soldStatus_switch"
+                app:startIconDrawable="@drawable/round_home_24">
+
+                <AutoCompleteTextView
+                    android:id="@+id/form_type_actv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/property_type_actv_hint"
+                    android:inputType="none" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/form_address_textInputLayout"
+                style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:hint="@string/property_address_hint"
+                app:endIconMode="clear_text"
+                app:layout_constraintEnd_toEndOf="@+id/form_type_textInputLayout"
+                app:layout_constraintStart_toStartOf="@+id/form_type_textInputLayout"
+                app:layout_constraintTop_toBottomOf="@+id/form_type_textInputLayout"
+                app:startIconDrawable="@drawable/baseline_location_on_24"
+                tools:helperText="Please select an address from suggestions">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/form_address_textInputEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionDone"
+                    android:inputType="text|textCapSentences"
+                    android:maxLines="2"
+                    android:padding="16dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/form_address_is_valid_helper_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:drawablePadding="4dp"
+                android:gravity="center"
+                android:text="@string/address_validity_tooltip"
+                app:drawableStartCompat="@drawable/baseline_check_circle_24"
+                app:drawableTint="@color/secondary"
+                app:layout_constraintBottom_toTopOf="@+id/form_address_textInputLayout"
+                app:layout_constraintEnd_toEndOf="@id/form_address_textInputLayout" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/form_price_textInputLayout"
+                style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                app:endIconMode="clear_text"
+                app:layout_constraintEnd_toStartOf="@id/form_surface_textInputLayout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/form_address_textInputLayout"
+                app:startIconDrawable="@drawable/baseline_euro_24"
+                tools:hint="Price in €">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/form_price_textInputEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionDone"
+                    android:inputType="number"
+                    android:lines="1"
+                    android:padding="16dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/form_surface_textInputLayout"
+                style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:endIconMode="clear_text"
+                app:layout_constraintBottom_toBottomOf="@+id/form_price_textInputLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/form_price_textInputLayout"
+                app:layout_constraintTop_toTopOf="@+id/form_price_textInputLayout"
+                app:startIconDrawable="@drawable/baseline_surface_24"
+                tools:hint="Surface in m²">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/form_surface_textInputEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionDone"
+                    android:inputType="number"
+                    android:lines="1"
+                    android:padding="16dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/form_rooms_tv"
+                style="@style/Theme.RealEstateManager.AddPropertySubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/property_room_tv"
+                app:layout_constraintEnd_toStartOf="@id/form_bedrooms_tv"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/form_surface_textInputLayout" />
+
+            <NumberPicker
+                android:id="@+id/form_rooms_numberPicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="@id/form_rooms_tv"
+                app:layout_constraintStart_toStartOf="@id/form_rooms_tv"
+                app:layout_constraintTop_toBottomOf="@id/form_rooms_tv" />
+
+            <TextView
+                android:id="@+id/form_bedrooms_tv"
+                style="@style/Theme.RealEstateManager.AddPropertySubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/property_bedroom_tv"
+                app:layout_constraintEnd_toStartOf="@id/form_bathrooms_tv"
+                app:layout_constraintStart_toEndOf="@id/form_rooms_tv"
+                app:layout_constraintTop_toBottomOf="@id/form_surface_textInputLayout" />
+
+            <NumberPicker
+                android:id="@+id/form_bedrooms_numberPicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="@id/form_bedrooms_tv"
+                app:layout_constraintStart_toStartOf="@id/form_bedrooms_tv"
+                app:layout_constraintTop_toBottomOf="@id/form_bedrooms_tv" />
+
+            <TextView
+                android:id="@+id/form_bathrooms_tv"
+                style="@style/Theme.RealEstateManager.AddPropertySubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/property_bathroom_tv"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/form_bedrooms_tv"
+                app:layout_constraintTop_toBottomOf="@id/form_surface_textInputLayout" />
+
+
+            <NumberPicker
+                android:id="@+id/form_bathrooms_numberPicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="@id/form_bathrooms_tv"
+                app:layout_constraintStart_toStartOf="@id/form_bathrooms_tv"
+                app:layout_constraintTop_toBottomOf="@id/form_bathrooms_tv" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/form_description_textInputLayout"
+                style="@style/Theme.RealEstateManager.AddPropertyTextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:hint="@string/property_description_hint"
+                app:endIconMode="clear_text"
+                app:expandedHintEnabled="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/form_rooms_numberPicker"
+                app:startIconDrawable="@drawable/description_form_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/form_description_textInputEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top|start"
+                    android:imeOptions="actionDone"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:lines="5"
+                    android:maxLines="5" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/form_amenities_tv"
+                style="@style/Theme.RealEstateManager.AddPropertySubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/property_amenities_title_tv"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/form_description_textInputLayout" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/form_amenities_recyclerView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                app:flexDirection="row"
+                app:justifyContent="center"
+                app:layoutManager="com.google.android.flexbox.FlexboxLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/form_amenities_tv"
+                tools:itemCount="9"
+                tools:listitem="@layout/amenity_checkbox_item" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/form_agent_textInputLayout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="28dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/form_amenities_recyclerView"
+                app:startIconDrawable="@drawable/real_estate_agent_24">
+
+                <AutoCompleteTextView
+                    android:id="@+id/form_agent_actv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/select_agent_actv"
+                    android:inputType="none" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/form_pictures_from_storage_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:backgroundTint="@color/primary_light"
+                android:text="@string/import_picture_btn"
+                app:icon="@drawable/baseline_drive_folder_upload_24"
+                app:layout_constraintEnd_toStartOf="@id/form_from_camera_button"
+                app:layout_constraintStart_toStartOf="@+id/form_agent_textInputLayout"
+                app:layout_constraintTop_toBottomOf="@+id/form_agent_textInputLayout" />
+
+            <Button
+                android:id="@+id/form_from_camera_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/primary_light"
+                android:text="@string/take_picture_btn"
+                app:icon="@drawable/baseline_photo_camera_24"
+                app:layout_constraintEnd_toEndOf="@+id/form_agent_textInputLayout"
+                app:layout_constraintStart_toEndOf="@id/form_pictures_from_storage_button"
+                app:layout_constraintTop_toTopOf="@id/form_pictures_from_storage_button" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/form_preview_pictures_recyclerView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal"
+                app:flexDirection="row"
+                app:justifyContent="center"
+                app:layoutManager="com.google.android.flexbox.FlexboxLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/form_pictures_from_storage_button"
+                tools:itemCount="5"
+                tools:listitem="@layout/property_preview_picture_item" />
+
+            <Button
+                android:id="@+id/form_submit_button"
+                style="@style/Theme.RealEstateManager.SubmitButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                app:icon="@drawable/baseline_add_home_24"
+                app:iconTint="@color/secondary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/form_preview_pictures_recyclerView"
+                tools:enabled="true"
+                tools:text="@string/form_create_button" />
+
+            <ProgressBar
+                android:id="@+id/form_progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/form_submit_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/form_submit_button"
+                app:layout_constraintTop_toTopOf="@id/form_submit_button" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/form_address_predictions_recyclerView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="@id/form_address_textInputLayout"
+                app:layout_constraintStart_toStartOf="@id/form_address_textInputLayout"
+                app:layout_constraintTop_toBottomOf="@id/form_address_textInputLayout"
+                tools:itemCount="6"
+                tools:listitem="@layout/property_address_prediction_item"
+                tools:visibility="gone" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ViewSwitcher>
 
 </ScrollView>

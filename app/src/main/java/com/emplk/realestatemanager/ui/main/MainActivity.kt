@@ -63,12 +63,14 @@ class MainActivity : AppCompatActivity() {
                 when (fragmentName) {
                     NavigationFragmentType.DETAIL_FRAGMENT.name -> {
                         supportFragmentManager.commit {
-                            add(
+                            replace(
                                 binding.mainFrameLayoutContainerProperties.id,
                                 DetailFragment.newInstance(),
                                 DETAIL_FRAGMENT_TAG
                             )
                         }
+
+                        binding.mainAddPropertyFab?.isVisible = false
                     }
 
                     NavigationFragmentType.LIST_FRAGMENT.name -> {
@@ -140,7 +142,7 @@ class MainActivity : AppCompatActivity() {
                                 binding.mainFrameLayoutContainerProperties.id,
                                 PropertiesFragment.newInstance(),
                                 PROPERTIES_FRAGMENT_TAG
-                            ).addToBackStack(null)
+                            )
                         }
                     }
                     supportFragmentManager.commit {

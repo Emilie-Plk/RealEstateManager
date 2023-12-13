@@ -2,7 +2,6 @@ package com.emplk.realestatemanager.ui.loan_simulator
 
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.NativeText
-import java.lang.annotation.Native
 
 data class LoanSimulatorViewState(
     val loanAmount: String,
