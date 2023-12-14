@@ -18,7 +18,6 @@ import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.justRun
 import io.mockk.mockk
-import kotlinx.coroutines.test.runCurrent
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule

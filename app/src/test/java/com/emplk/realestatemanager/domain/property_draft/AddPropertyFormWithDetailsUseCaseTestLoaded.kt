@@ -12,7 +12,7 @@ import org.junit.Rule
 import org.junit.Test
 import java.math.BigDecimal
 
-class AddPropertyFormWithDetailsUseCaseTest {
+class AddPropertyFormWithDetailsUseCaseTestLoaded {
     companion object {
         private const val TEST_PROPERTY_ID = 1L
     }

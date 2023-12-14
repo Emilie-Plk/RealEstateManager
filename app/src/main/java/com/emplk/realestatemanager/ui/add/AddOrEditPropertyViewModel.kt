@@ -104,17 +104,30 @@ class AddOrEditPropertyViewModel @Inject constructor(
 
     private val formMutableStateFlow = MutableStateFlow(FormDraftParams())
     private val onSubmitButtonClickedMutableSharedFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+    private val isLoadingMutableStateFlow = MutableStateFlow(true)
 
     val viewEventLiveData: LiveData<Event<FormEvent>> = liveData {
-        onSubmitButtonClickedMutableSharedFlow.collectLatest {
-            emit(Event(addOrEditPropertyUseCase.invoke(formMutableStateFlow.value)))
+        coroutineScope {
+            launch {
+                isLoadingMutableStateFlow.collect { isLoading ->
+                    if (isLoading) emit(Event(FormEvent.Loading))
+                    else emit(Event(FormEvent.FormLoaded))
+                }
+            }
+
+            launch {
+                onSubmitButtonClickedMutableSharedFlow.collectLatest {
+                    emit(Event(addOrEditPropertyUseCase.invoke(formMutableStateFlow.value)))
+                }
+            }
         }
     }
 
     val viewStateLiveData: LiveData<PropertyFormViewState> = liveData {
         coroutineScope {
             if (latestValue == null) {
-                emit(PropertyFormViewState.LoadingState)
+                isLoadingMutableStateFlow.tryEmit(true)
+                delay(400)
             }
 
             val propertyId = getCurrentPropertyIdFlowUseCase.invoke().firstOrNull()
@@ -160,6 +173,8 @@ class AddOrEditPropertyViewModel @Inject constructor(
                     isFormCompletedAsFlowUseCase.invoke(),
                     isInternetEnabledFlowUseCase.invoke(),
                 ) { form, picturePreviews, predictionWrapper, isAddingInDatabase, isFormCompleted, isInternetEnabled ->
+                    isLoadingMutableStateFlow.tryEmit(false)
+
                     val currencyType = getCurrencyTypeUseCase.invoke()
                     val amenityTypes = getAmenityTypeUseCase.invoke()
                     val propertyTypes = getPropertyTypeUseCase.invoke()
@@ -196,7 +211,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                                 form.featuredPictureId != null
                     )
 
-                    PropertyFormViewState.PropertyForm(
+                    PropertyFormViewState(
                         propertyType = form.propertyType,
                         address = form.address,
                         price = if (form.price == BigDecimal.ZERO) "" else form.price.toString(),

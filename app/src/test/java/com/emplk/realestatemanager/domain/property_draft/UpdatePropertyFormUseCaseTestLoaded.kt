@@ -16,7 +16,7 @@ import org.junit.Rule
 import org.junit.Test
 import java.math.BigDecimal
 
-class UpdatePropertyFormUseCaseTest {
+class UpdatePropertyFormUseCaseTestLoaded {
 
     companion object {
         private val form = getTestFormDraftParams(1L)

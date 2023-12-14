@@ -67,6 +67,7 @@ import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
@@ -162,7 +163,6 @@ class AddOrEditPropertyViewModelTest {
         coEvery { getSavePropertyDraftEventUseCase.invoke() } returns emptyFlow()
         coEvery { getClearPropertyFormNavigationEventAsFlowUseCase.invoke() } returns emptyFlow()
 
-
         viewModel = AddOrEditPropertyViewModel(
             addOrEditPropertyUseCase,
             initPropertyFormUseCase,
@@ -201,9 +201,12 @@ class AddOrEditPropertyViewModelTest {
     fun `initial case`() = testCoroutineRule.runTest {
         viewModel.viewStateLiveData.observeForTesting(this) {
             // When
-            assertEquals(testEmptyPropertyFormViewState, it.value)
+            advanceTimeBy(400)
+            runCurrent()
 
             // Then
+            assertEquals(testEmptyPropertyFormViewState, it.value)
+
             coVerify { initPropertyFormUseCase.invoke(TEST_PROPERTY_ID) }
             coVerify { getCurrentPropertyIdFlowUseCase.invoke() }
             verify { setPropertyFormProgressUseCase.invoke(false) }
@@ -228,15 +231,45 @@ class AddOrEditPropertyViewModelTest {
         // When
         coEvery { isFormCompletedAsFlowUseCase.invoke() } returns emptyFlow()
 
-        viewModel.viewStateLiveData.observeForTesting(this) {
-            // Then
-            assertEquals(testPropertyFormViewStateLoading, it.value)
+        viewModel.viewStateLiveData.observeForTesting(this) { viewState ->
+            viewModel.viewEventLiveData.observeForTesting(this) { event ->
+                // When 1
+                advanceTimeBy(399)
+                runCurrent()
+
+                // Then 1
+                assertNull(viewState.value)
+
+                // Then 2
+                assertEquals(Event(FormEvent.Loading), event.value)
+            }
+        }
+    }
+
+    @Test
+    fun `form loaded case`() = testCoroutineRule.runTest {
+        viewModel.viewStateLiveData.observeForTesting(this) { viewState ->
+            viewModel.viewEventLiveData.observeForTesting(this) { event ->
+                // When 1
+                advanceTimeBy(400)
+                runCurrent()
+
+                // Then 1
+                assertEquals(testEmptyPropertyFormViewState, viewState.value)
+
+                // Then 2
+                assertEquals(Event(FormEvent.FormLoaded), event.value)
+            }
         }
     }
 
     @Test
     fun `nominal case`() = testCoroutineRule.runTest {
         viewModel.viewStateLiveData.observeForTesting(this) {
+            // When
+            advanceTimeBy(400)
+            runCurrent()
+
             // Then
             assertEquals(testEmptyPropertyFormViewState, it.value)
             verify {
@@ -249,8 +282,12 @@ class AddOrEditPropertyViewModelTest {
 
     @Test
     fun `on add property clicked - triggers submit button event`() = testCoroutineRule.runTest {
-        // When
         viewModel.viewEventLiveData.observeForTesting(this) {
+            // Given
+            advanceTimeBy(400)
+            runCurrent()
+
+            // When
             viewModel.onAddPropertyClicked()
             runCurrent()
 
@@ -264,9 +301,12 @@ class AddOrEditPropertyViewModelTest {
     @Test
     fun `when clicking on address selection - set it as selected address`() = testCoroutineRule.runTest {
         viewModel.viewStateLiveData.observeForTesting(this) {
+            // Given
+            advanceTimeBy(400)
+            runCurrent()
+
             // When
-            ((it.value as PropertyFormViewState.PropertyForm)
-                .addressPredictions[2] as PredictionViewState.Prediction).onClickEvent.invoke(
+            (it.value!!.addressPredictions[2] as PredictionViewState.Prediction).onClickEvent.invoke(
                 testPredictionSuccessWrapper.predictions[2]
             )
             runCurrent()
@@ -274,9 +314,9 @@ class AddOrEditPropertyViewModelTest {
             // Then
             assertEquals(
                 testPredictionSuccessWrapper.predictions[2],
-                (it.value as PropertyFormViewState.PropertyForm).address
+                it.value!!.address
             )
-            assertTrue((it.value as PropertyFormViewState.PropertyForm).isAddressValid)
+            assertTrue(it.value!!.isAddressValid)
             coVerify { updateOnAddressClickedUseCase.invoke(any(), any()) }
             // 3: 1st initial, 2nd nominal, 3rd on address clicked
             coVerify(exactly = 3) { setPropertyFormProgressUseCase.invoke(any()) }
@@ -287,6 +327,10 @@ class AddOrEditPropertyViewModelTest {
     @Test
     fun `on type changed - type is set`() = testCoroutineRule.runTest {
         viewModel.viewStateLiveData.observeForTesting(this) {
+            // Given
+            advanceTimeBy(400)
+            runCurrent()
+
             // When
             viewModel.onPropertyTypeSelected(getTestPropertyTypesMap().values.toList()[1])
             runCurrent()
@@ -294,7 +338,7 @@ class AddOrEditPropertyViewModelTest {
             // Then
             assertEquals(
                 getTestPropertyTypesMap().values.toList()[1],
-                (it.value as PropertyFormViewState.PropertyForm).propertyType
+                it.value!!.propertyType
             )
             // 1st initial, 2nd nominal
             coVerify(exactly = 2) { setPropertyFormProgressUseCase.invoke(false) }
@@ -306,6 +350,10 @@ class AddOrEditPropertyViewModelTest {
     @Test
     fun `on agent changed - agent is set`() = testCoroutineRule.runTest {
         viewModel.viewStateLiveData.observeForTesting(this) {
+            // Given
+            advanceTimeBy(400)
+            runCurrent()
+
             // When
             viewModel.onAgentSelected(getTestAgentsMap().values.toList()[1])
             runCurrent()
@@ -313,7 +361,7 @@ class AddOrEditPropertyViewModelTest {
             // Then
             assertEquals(
                 getTestAgentsMap().values.toList()[1],
-                (it.value as PropertyFormViewState.PropertyForm).selectedAgent
+                it.value!!.selectedAgent
             )
         }
     }
@@ -321,8 +369,12 @@ class AddOrEditPropertyViewModelTest {
     @Test
     fun `on description changed - description is updated with 1second debounce`() = testCoroutineRule.runTest {
         viewModel.viewStateLiveData.observeForTesting(this) {
+            // Given
+            advanceTimeBy(400)
+            runCurrent()
+
             // When
-            val initialValue = (it.value as PropertyFormViewState.PropertyForm).description
+            val initialValue = it.value!!.description
             viewModel.onDescriptionChanged("Test ")
             viewModel.onDescriptionChanged("Test des")
             viewModel.onDescriptionChanged("Test descri")
@@ -333,7 +385,7 @@ class AddOrEditPropertyViewModelTest {
             advanceTimeBy(1.seconds)
             runCurrent()
 
-            val result = (it.value as PropertyFormViewState.PropertyForm).description
+            val result = it.value!!.description
 
             // Then
             assertEquals(
@@ -354,42 +406,58 @@ class AddOrEditPropertyViewModelTest {
     @Test
     fun `on number of rooms changed - number of rooms is updated`() = testCoroutineRule.runTest {
         viewModel.viewStateLiveData.observeForTesting(this) {
+            // Given
+            advanceTimeBy(400)
+            runCurrent()
+
             // When
             viewModel.onRoomsNumberChanged(10)
             runCurrent()
 
             // Then
-            assertEquals(10, (it.value as PropertyFormViewState.PropertyForm).nbRooms)
+            assertEquals(10, it.value!!.nbRooms)
         }
     }
 
     @Test
     fun `on number of bedrooms changed - number of bedrooms is updated`() = testCoroutineRule.runTest {
         viewModel.viewStateLiveData.observeForTesting(this) {
+            // Given
+            advanceTimeBy(400)
+            runCurrent()
+
             // When
             viewModel.onBedroomsNumberChanged(4)
             runCurrent()
 
             // Then
-            assertEquals(4, (it.value as PropertyFormViewState.PropertyForm).nbBedrooms)
+            assertEquals(4, it.value!!.nbBedrooms)
         }
     }
 
     @Test
     fun `on number of bathrooms changed - number of bathrooms is updated`() = testCoroutineRule.runTest {
         viewModel.viewStateLiveData.observeForTesting(this) {
+            // Given
+            advanceTimeBy(400)
+            runCurrent()
+
             // When
             viewModel.onBathroomsNumberChanged(6)
             runCurrent()
 
             // Then
-            assertEquals(6, (it.value as PropertyFormViewState.PropertyForm).nbBathrooms)
+            assertEquals(6, it.value!!.nbBathrooms)
         }
     }
 
     @Test
     fun `on surface changed - surface is set`() = testCoroutineRule.runTest {
         viewModel.viewStateLiveData.observeForTesting(this) {
+            // Given
+            advanceTimeBy(400)
+            runCurrent()
+
             // When
             viewModel.onSurfaceChanged("100")
             runCurrent()
@@ -397,7 +465,7 @@ class AddOrEditPropertyViewModelTest {
             // Then
             assertEquals(
                 "100",
-                (it.value as PropertyFormViewState.PropertyForm).surface
+                it.value!!.surface
             )
         }
     }
@@ -406,19 +474,20 @@ class AddOrEditPropertyViewModelTest {
     @Test
     fun `on amenities checked - amenities is updated`() = testCoroutineRule.runTest {
         viewModel.viewStateLiveData.observeForTesting(this) {
+            // Given
+            advanceTimeBy(400)
+            runCurrent()
+
             // When
-            ((it.value as PropertyFormViewState.PropertyForm)
-                .amenities[2] as AmenityViewState.AmenityCheckbox).onCheckBoxClicked.invoke(true)
+            (it.value!!.amenities[2] as AmenityViewState.AmenityCheckbox).onCheckBoxClicked.invoke(true)
             runCurrent()
 
             // Then
             assertTrue(
-                ((it.value as PropertyFormViewState.PropertyForm)
-                    .amenities[2] as AmenityViewState.AmenityCheckbox).isChecked
+                (it.value!!.amenities[2] as AmenityViewState.AmenityCheckbox).isChecked
             )
             assertFalse(
-                ((it.value as PropertyFormViewState.PropertyForm)
-                    .amenities[3] as AmenityViewState.AmenityCheckbox).isChecked
+                (it.value!!.amenities[3] as AmenityViewState.AmenityCheckbox).isChecked
             )
         }
     }
@@ -426,24 +495,25 @@ class AddOrEditPropertyViewModelTest {
     @Test
     fun `on 3 amenities checked - 3 amenities are updated`() = testCoroutineRule.runTest {
         viewModel.viewStateLiveData.observeForTesting(this) {
+            // Given
+            advanceTimeBy(400)
+            runCurrent()
+
             // When
-            ((it.value as PropertyFormViewState.PropertyForm)
-                .amenities[2] as AmenityViewState.AmenityCheckbox).onCheckBoxClicked.invoke(true)
-            ((it.value as PropertyFormViewState.PropertyForm)
-                .amenities[3] as AmenityViewState.AmenityCheckbox).onCheckBoxClicked.invoke(true)
-            ((it.value as PropertyFormViewState.PropertyForm)
-                .amenities[5] as AmenityViewState.AmenityCheckbox).onCheckBoxClicked.invoke(true)
+            (it.value!!.amenities[2] as AmenityViewState.AmenityCheckbox).onCheckBoxClicked.invoke(true)
+            (it.value!!.amenities[3] as AmenityViewState.AmenityCheckbox).onCheckBoxClicked.invoke(true)
+            (it.value!!.amenities[5] as AmenityViewState.AmenityCheckbox).onCheckBoxClicked.invoke(true)
             runCurrent()
 
             // Then
             assertTrue(
-                ((it.value as PropertyFormViewState.PropertyForm).amenities[2] as AmenityViewState.AmenityCheckbox).isChecked
+                (it.value!!.amenities[2] as AmenityViewState.AmenityCheckbox).isChecked
             )
             assertTrue(
-                ((it.value as PropertyFormViewState.PropertyForm).amenities[3] as AmenityViewState.AmenityCheckbox).isChecked
+                (it.value!!.amenities[3] as AmenityViewState.AmenityCheckbox).isChecked
             )
             assertTrue(
-                ((it.value as PropertyFormViewState.PropertyForm).amenities[5] as AmenityViewState.AmenityCheckbox).isChecked
+                (it.value!!.amenities[5] as AmenityViewState.AmenityCheckbox).isChecked
             )
         }
     }
@@ -451,17 +521,18 @@ class AddOrEditPropertyViewModelTest {
     @Test
     fun `on amenities check toggled - amenities is updated`() = testCoroutineRule.runTest {
         viewModel.viewStateLiveData.observeForTesting(this) {
+            // Given
+            advanceTimeBy(400)
+            runCurrent()
+
             // When
-            ((it.value as PropertyFormViewState.PropertyForm)
-                .amenities[2] as AmenityViewState.AmenityCheckbox).onCheckBoxClicked.invoke(true)
-            ((it.value as PropertyFormViewState.PropertyForm)
-                .amenities[2] as AmenityViewState.AmenityCheckbox).onCheckBoxClicked.invoke(false)
+            (it.value!!.amenities[2] as AmenityViewState.AmenityCheckbox).onCheckBoxClicked.invoke(true)
+            (it.value!!.amenities[2] as AmenityViewState.AmenityCheckbox).onCheckBoxClicked.invoke(false)
             runCurrent()
 
             // Then
             assertFalse(
-                ((it.value as PropertyFormViewState.PropertyForm)
-                    .amenities[2] as AmenityViewState.AmenityCheckbox).isChecked
+                (it.value!!.amenities[2] as AmenityViewState.AmenityCheckbox).isChecked
             )
         }
     }
@@ -469,12 +540,16 @@ class AddOrEditPropertyViewModelTest {
     @Test
     fun `on sold status changed - sold status is updated`() = testCoroutineRule.runTest {
         viewModel.viewStateLiveData.observeForTesting(this) {
+            // Given
+            advanceTimeBy(400)
+            runCurrent()
+
             // When
             viewModel.onSoldStatusChanged(true)
             runCurrent()
 
             // Then
-            assertEquals(true, (it.value as PropertyFormViewState.PropertyForm).isSold)
+            assertEquals(true, it.value!!.isSold)
         }
     }
 
@@ -482,14 +557,18 @@ class AddOrEditPropertyViewModelTest {
     fun `set currency type to EURO - should display prices in €`() = testCoroutineRule.runTest {
         every { getCurrencyTypeUseCase.invoke() } returns CurrencyType.EURO
         viewModel.viewStateLiveData.observeForTesting(this) {
-            // Then
+            // Given
+            advanceTimeBy(400)
+            runCurrent()
+
+            // When
             assertEquals(
                 NativeText.Argument(R.string.price_hint, "€"),
-                (it.value as PropertyFormViewState.PropertyForm).priceCurrencyHint
+                it.value!!.priceCurrencyHint
             )
             assertEquals(
                 R.drawable.baseline_euro_24,
-                (it.value as PropertyFormViewState.PropertyForm).currencyDrawableRes
+                it.value!!.currencyDrawableRes
             )
         }
     }
@@ -500,12 +579,16 @@ class AddOrEditPropertyViewModelTest {
         // Given
         coEvery { isInternetEnabledFlowUseCase.invoke() } returns flowOf(false)
 
+
         viewModel.viewStateLiveData.observeForTesting(this) {
+            advanceTimeBy(400)
+            runCurrent()
+
             // Then
-            assertFalse((it.value as PropertyFormViewState.PropertyForm).isInternetEnabled)
+            assertFalse(it.value!!.isInternetEnabled)
             assertEquals(
                 emptyList<PredictionViewState>(),
-                (it.value as PropertyFormViewState.PropertyForm).addressPredictions
+                it.value!!.addressPredictions
             )
         }
     }
@@ -517,9 +600,13 @@ class AddOrEditPropertyViewModelTest {
         caseFormFilled()
 
         viewModel.viewStateLiveData.observeForTesting(this) {
+            advanceTimeBy(400)
+
+            // When
             runCurrent()
+
             // Then
-            assertTrue((it.value as PropertyFormViewState.PropertyForm).isSubmitButtonEnabled)
+            assertTrue(it.value!!.isSubmitButtonEnabled)
             //  verify { setFormCompletionUseCase.invoke(true) }
         }
     }
@@ -542,11 +629,14 @@ class AddOrEditPropertyViewModelTest {
 
         // When
         viewModel.viewStateLiveData.observeForTesting(this) {
-            println(it.value)
-            ((it.value as PropertyFormViewState.PropertyForm).pictures[0] as PicturePreviewStateItem.AddPropertyPicturePreview).onDeleteEvent.invoke()
+            advanceTimeBy(400)
             runCurrent()
 
-            assertTrue(((it.value as PropertyFormViewState.PropertyForm).pictures[0] as PicturePreviewStateItem.AddPropertyPicturePreview).isFeatured)
+            println(it.value)
+            (it.value!!.pictures[0] as PicturePreviewStateItem.AddPropertyPicturePreview).onDeleteEvent.invoke()
+            runCurrent()
+
+            assertTrue((it.value!!.pictures[0] as PicturePreviewStateItem.AddPropertyPicturePreview).isFeatured)
 
             // Then
             coVerify {
@@ -563,8 +653,14 @@ class AddOrEditPropertyViewModelTest {
         coEvery { isPropertyInsertingInDatabaseFlowUseCase.invoke() } returns flowOf(true)
 
         viewModel.viewStateLiveData.observeForTesting(this) {
+            advanceTimeBy(400)
+            runCurrent()
+
+            // When
+            caseFormFilled()
+
             // Then
-            assertTrue((it.value as PropertyFormViewState.PropertyForm).isProgressBarVisible)
+            assertTrue(it.value!!.isProgressBarVisible)
         }
     }
 
@@ -632,9 +728,7 @@ class AddOrEditPropertyViewModelTest {
         )
     )
 
-    private val testPropertyFormViewStateLoading = PropertyFormViewState.LoadingState
-
-    private val testEmptyPropertyFormViewState = PropertyFormViewState.PropertyForm(
+    private val testEmptyPropertyFormViewState = PropertyFormViewState(
         propertyType = null,
         addressPredictions = listOf(
             PredictionViewState.Prediction(

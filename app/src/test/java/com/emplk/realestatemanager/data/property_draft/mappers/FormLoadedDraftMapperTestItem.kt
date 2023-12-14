@@ -11,7 +11,7 @@ import io.mockk.verify
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class FormDraftMapperTestItem {
+class FormLoadedDraftMapperTestItem {
 
     private val picturePreviewMapper: PicturePreviewMapper = mockk()
 
