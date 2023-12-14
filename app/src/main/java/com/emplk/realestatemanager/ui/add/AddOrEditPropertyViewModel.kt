@@ -154,6 +154,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                     pictureIds = formWithType.formDraftEntity.pictures.map { it.id },
                     featuredPictureId = formWithType.formDraftEntity.pictures.find { it.isFeatured }?.id,
                     entryDate = formWithType.formDraftEntity.entryDate,
+                    lastEditionDate = formWithType.formDraftEntity.lastEditionDate,
                     isSold = formWithType.formDraftEntity.saleDate != null,
                     soldDate = formWithType.formDraftEntity.saleDate,
                 )
@@ -173,6 +174,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                     isFormCompletedAsFlowUseCase.invoke(),
                     isInternetEnabledFlowUseCase.invoke(),
                 ) { form, picturePreviews, predictionWrapper, isAddingInDatabase, isFormCompleted, isInternetEnabled ->
+
                     isLoadingMutableStateFlow.tryEmit(false)
 
                     val currencyType = getCurrencyTypeUseCase.invoke()
@@ -267,6 +269,22 @@ class AddOrEditPropertyViewModel @Inject constructor(
                                 FormatStyle.SHORT
                             )
                         ),
+                        soldStatusText = if (form.formType == FormType.EDIT) {
+                            if (form.isSold) NativeText.Resource(R.string.form_sold_text)
+                            else  NativeText.Resource(R.string.form_for_sale_text)
+                        } else null,
+                        entryDateText = if (form.formType == FormType.ADD) {
+                            form.lastEditionDate?.let {
+                                NativeText.Argument(
+                                    R.string.form_entry_date_tv,
+                                    it.format(
+                                        DateTimeFormatter.ofLocalizedDate(
+                                            FormatStyle.MEDIUM
+                                        )
+                                    )
+                                )
+                            }
+                        } else null,
                         isAddressValid = if (isInternetEnabled) form.isAddressValid else false,
                         areEditItemsVisible = form.formType == FormType.EDIT,
                         isInternetEnabled = isInternetEnabled,

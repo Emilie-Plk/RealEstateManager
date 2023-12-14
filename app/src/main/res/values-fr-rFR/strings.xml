@@ -98,4 +98,13 @@
     <string name="no_property_to_display_empty">Pas de bien enregistré\nSouhaitez-vous en créer un?</string>
     <string name="add_property_btn">Ajouter un bien</string>
     <string name="form_address_helper_text">Merci de choisir une adresse parmi les suggestions</string>
+    <string name="close_bottom_sheet_iv">Fermer le bottom sheet</string>
+    <string name="calculate_loan_btn">Calculer</string>
+    <string name="sold_switch">Vendu</string>
+    <string name="form_entry_date_tv">Brouillon créé le\n%s</string>
+    <string name="form_sold_text">Vendu</string>
+    <string name="form_for_sale_text">À vendre</string>
+    <string name="loan_amount_hint">Prêt en %s</string>
+    <string name="interest_rate_hint">Taux d\'intérêt en %s</string>
+    <string name="loan_duration_in_years_hint">Durée du prêt en années (max 30 ans)</string>
 </resources>

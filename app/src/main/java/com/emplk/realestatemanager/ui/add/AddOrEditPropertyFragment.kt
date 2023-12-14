@@ -8,10 +8,8 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
-import android.view.Gravity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -72,18 +70,23 @@ class AddOrEditPropertyFragment : Fragment(R.layout.form_fragment) {
             viewModel.onAddPropertyClicked()
         }
 
+        binding.formTypeActv.setOnItemClickListener { _, _, position, _ ->
+            typeAdapter.getItem(position)?.let {
+                viewModel.onPropertyTypeSelected(it.name)
+            }
+        }
+
+        binding.formAgentActv.setOnItemClickListener { _, _, position, _ ->
+            agentAdapter.getItem(position)?.let {
+                viewModel.onAgentSelected(it.name)
+            }
+        }
+
         viewModel.viewEventLiveData.observeEvent(viewLifecycleOwner) { event ->
             when (event) {
-                is FormEvent.Loading -> binding.formViewSwitcher.displayedChild = 0
+                is FormEvent.Loading -> binding.formViewSwitcher.displayedChild = 1
 
-                is FormEvent.FormLoaded -> {
-                    // resetting gravity of viewSwitcher to default
-                    val params = binding.formViewSwitcher.layoutParams as FrameLayout.LayoutParams
-                    params.gravity = Gravity.NO_GRAVITY
-                    binding.formViewSwitcher.layoutParams = params
-
-                    binding.formViewSwitcher.displayedChild = 1
-                }
+                is FormEvent.FormLoaded -> binding.formViewSwitcher.displayedChild = 0
 
                 is FormEvent.Toast -> Toast.makeText(
                     requireContext(),
@@ -112,18 +115,9 @@ class AddOrEditPropertyFragment : Fragment(R.layout.form_fragment) {
             binding.formSoldStatusTv.isVisible = viewState.areEditItemsVisible
             binding.formInfoTv.isVisible = viewState.areEditItemsVisible
             binding.formInfoTv.text = viewState.propertyCreationDate?.toCharSequence(requireContext())
+            binding.formDraftDateTv?.text = viewState.entryDateText?.toCharSequence(requireContext())
 
-            binding.formTypeActv.setOnItemClickListener { _, _, position, _ ->
-                typeAdapter.getItem(position)?.let {
-                    viewModel.onPropertyTypeSelected(it.name)
-                }
-            }
-
-            binding.formAgentActv.setOnItemClickListener { _, _, position, _ ->
-                agentAdapter.getItem(position)?.let {
-                    viewModel.onAgentSelected(it.name)
-                }
-            }
+            binding.formSoldStatusTv.text = viewState.soldStatusText?.toCharSequence(requireContext())
 
             binding.formSubmitButton.isEnabled = viewState.isSubmitButtonEnabled
             binding.formProgressBar.isVisible = viewState.isProgressBarVisible

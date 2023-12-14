@@ -107,4 +107,7 @@
     <string name="loan_duration_in_years_hint">Loan duration in years (max 30 y.)</string>
     <string name="calculate_loan_btn">Calculate</string>
     <string name="sold_switch">Sold</string>
+    <string name="form_entry_date_tv">Draft created on:\n%s</string>
+    <string name="form_sold_text">Sold</string>
+    <string name="form_for_sale_text">For sale</string>
 </resources>

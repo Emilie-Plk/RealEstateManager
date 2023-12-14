@@ -67,6 +67,7 @@ import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -243,6 +244,28 @@ class AddOrEditPropertyViewModelTest {
                 // Then 2
                 assertEquals(Event(FormEvent.Loading), event.value)
             }
+        }
+    }
+
+    @Test
+    fun `edit form - nominal case`() = testCoroutineRule.runTest {
+        // Given
+        caseFormFilled()
+        coEvery { initPropertyFormUseCase.invoke(TEST_PROPERTY_ID) } returns testFilledFormTypeEntity.copy(
+            formType = FormType.EDIT,
+            formDraftEntity = testFilledFormTypeEntity.formDraftEntity.copy(
+                entryDate = LocalDateTime.of(2023, 1, 1, 12, 0),
+            )
+        )
+
+        viewModel.viewStateLiveData.observeForTesting(this) {
+            // When
+            advanceTimeBy(400)
+            runCurrent()
+
+            // Then
+            assertNotNull(it.value!!.soldStatusText)
+            assertTrue(it.value!!.areEditItemsVisible)
         }
     }
 
@@ -789,6 +812,8 @@ class AddOrEditPropertyViewModelTest {
         propertyTypes = getTestPropertyTypesMap().map { PropertyTypeViewStateItem(it.key, it.value) },
         isSold = false,
         soldDate = null,
+        soldStatusText = null,
+        entryDateText = null,
         areEditItemsVisible = false,
         isInternetEnabled = true,
     )

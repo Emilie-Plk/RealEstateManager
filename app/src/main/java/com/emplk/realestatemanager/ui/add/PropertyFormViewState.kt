@@ -32,7 +32,9 @@ data class PropertyFormViewState(
     val propertyTypes: List<PropertyTypeViewStateItem>,
     val propertyCreationDate: NativeText?,
     val isSold: Boolean? = false,
+    val soldStatusText: NativeText?,
     val soldDate: String? = null,
+    val entryDateText: NativeText?,
     val areEditItemsVisible: Boolean,
     val isInternetEnabled: Boolean,
 )
