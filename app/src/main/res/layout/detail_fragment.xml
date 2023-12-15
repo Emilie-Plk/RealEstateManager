@@ -72,7 +72,7 @@
             android:text="@string/detail_location_tv"
             app:drawableStartCompat="@drawable/baseline_location_on_24"
             app:drawableTint="@color/lighter_gray"
-
+            app:layout_constraintBottom_toBottomOf="@+id/detail_agent_name_tv"
             app:layout_constraintEnd_toStartOf="@id/detail_entry_date_tv"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/detail_type_tv"
@@ -97,8 +97,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/detail_manager_agent_name"
+            app:layout_constraintBottom_toTopOf="@id/detail_description_tv"
+
             android:textAlignment="textEnd"
-            app:layout_constraintBottom_toBottomOf="@+id/detail_sold_date_tv"
             app:layout_constraintEnd_toEndOf="@id/detail_entry_date_tv"
             app:layout_constraintStart_toStartOf="@+id/detail_entry_date_tv"
             app:layout_constraintTop_toBottomOf="@id/detail_entry_date_tv"
@@ -166,6 +167,7 @@
             android:id="@+id/detail_description_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+
             android:layout_marginTop="12dp"
             android:layout_marginEnd="12dp"
             android:layout_marginStart="12dp"
@@ -175,7 +177,6 @@
             android:maxLines="14"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/vertical_divider"
-
             app:layout_constraintTop_toBottomOf="@+id/detail_agent_name_tv"
             tools:text="A beautiful villa with a pool and a garden. The house is located in a quiet neighborhood. Lucrative investment." />
 

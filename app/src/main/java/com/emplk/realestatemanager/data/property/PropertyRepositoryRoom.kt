@@ -1,6 +1,7 @@
 package com.emplk.realestatemanager.data.property
 
 import android.database.sqlite.SQLiteException
+import android.util.Log
 import com.emplk.realestatemanager.data.property.location.LocationDao
 import com.emplk.realestatemanager.data.property.location.LocationMapper
 import com.emplk.realestatemanager.data.property.picture.PictureDao
@@ -143,7 +144,17 @@ class PropertyRepositoryRoom @Inject constructor(
         withContext(coroutineDispatcherProvider.io) {
             try {
                 propertyDao.update(propertyMapper.mapToDto(propertyEntity))
-                locationDao.update(locationMapper.mapToDto(propertyEntity.location, propertyEntity.id))
+                val locationUpdate = locationDao.update(
+                    propertyEntity.location.address,
+                    propertyEntity.location.miniatureMapUrl,
+                    propertyEntity.location.latLng?.latitude,
+                    propertyEntity.location.latLng?.longitude,
+                    propertyEntity.id
+                )
+                Log.d(
+                    "COUCOU",
+                    "update: ${propertyEntity.location} for property ${propertyEntity.id} and result: $locationUpdate"
+                )
                 propertyEntity.pictures.map {
                     pictureDao.upsert(pictureMapper.mapToDtoEntity(it, propertyEntity.id))
                 }

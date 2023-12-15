@@ -6,7 +6,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.RewriteQueriesToDropUnusedColumns
-import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -22,6 +21,12 @@ interface LocationDao {
     @Query("SELECT * FROM locations")
     fun getAllLocationsWithCursor(): Cursor
 
-    @Update
-    suspend fun update(locationDto: LocationDto): Int
+    @Query("UPDATE locations SET address = :updatedAddress, miniature_map_url = :updatedMiniatureUrl, latitude = :updatedLatitude, longitude = :updatedLongitude WHERE property_id = :propertyId")
+    suspend fun update(
+        updatedAddress: String,
+        updatedMiniatureUrl: String,
+        updatedLatitude: Double?,
+        updatedLongitude: Double?,
+        propertyId: Long
+    ): Int
 }

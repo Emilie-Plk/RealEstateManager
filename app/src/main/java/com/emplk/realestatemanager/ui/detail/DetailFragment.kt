@@ -49,6 +49,9 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
                 }
 
                 is DetailViewState.PropertyDetail -> {
+                    binding.root.isVisible = true
+                    binding.detailProgressBar.isVisible = false
+
                     if (viewState.pictures.size > 1) {
                         binding.detailPhotoCarouselRv.apply {
                             set3DItem(true)
