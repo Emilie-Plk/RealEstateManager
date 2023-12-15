@@ -62,7 +62,6 @@ class DetailViewModel @Inject constructor(
                                 R.string.banner_pic_number,
                                 listOf((index + 1).toString(), property.pictures.size.toString())
                             ),
-                            isFeatured = picture.isFeatured
                         )
                     }.sortedBy { it.picturePosition },
                 mapMiniature = NativePhoto.Uri(

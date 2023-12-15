@@ -126,17 +126,31 @@ class DetailViewModelTest {
             PictureBannerViewState(
                 pictureUri = NativePhoto.Uri("https://www.google.com/front_view"),
                 description = "Front view",
-                isFeatured = true,
-            ),
+                picturePosition = 1,
+                pictureNumberText = NativeText.Arguments(
+                    R.string.banner_pic_number,
+                    listOf("1", "3")
+                ),
+
+                ),
             PictureBannerViewState(
                 pictureUri = NativePhoto.Uri("https://www.google.com/garden"),
                 description = "Garden",
-                isFeatured = false,
-            ),
+                picturePosition = 2,
+                pictureNumberText = NativeText.Arguments(
+                    R.string.banner_pic_number,
+                    listOf("2", "3")
+                ),
+
+                ),
             PictureBannerViewState(
                 pictureUri = NativePhoto.Uri("https://www.google.com/swimming_pool"),
                 description = "Swimming pool",
-                isFeatured = false,
+                picturePosition = 3,
+                pictureNumberText = NativeText.Arguments(
+                    R.string.banner_pic_number,
+                    listOf("3", "3")
+                ),
             ),
         ),
         mapMiniature = NativePhoto.Uri("https://www.google.com/maps/123456789"),

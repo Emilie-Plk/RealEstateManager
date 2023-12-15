@@ -8,5 +8,4 @@ data class PictureBannerViewState(
     val description: String?,
     val picturePosition: Int,
     val pictureNumberText: NativeText,
-    val isFeatured: Boolean,
 )
