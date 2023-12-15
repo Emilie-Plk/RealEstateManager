@@ -32,6 +32,9 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.detailProgressBar.isVisible = false
+        binding.root.isVisible = true
+
         val pictureBannerAdapter = PictureBannerListAdapter()
         binding.detailPhotoCarouselRv.adapter = pictureBannerAdapter
 
@@ -46,14 +49,19 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
                 }
 
                 is DetailViewState.PropertyDetail -> {
-                    binding.detailPhotoCarouselRv.apply {
-                        set3DItem(true)
-                        setInfinite(true)
-                        setAlpha(true)
-                    }
+                    if (viewState.pictures.size > 1) {
+                        binding.detailPhotoCarouselRv.apply {
+                            set3DItem(true)
+                            setInfinite(true)
+                            setAlpha(true)
+                        }
+                    } else
+                        binding.detailPhotoCarouselRv.apply {
+                            set3DItem(false)
+                            setInfinite(false)
+                            setAlpha(false)
+                        }
                     pictureBannerAdapter.submitList(viewState.pictures)
-                    binding.detailProgressBar.isVisible = false
-                    binding.root.isVisible = true
 
                     amenityAdapter.submitList(viewState.amenities)
 

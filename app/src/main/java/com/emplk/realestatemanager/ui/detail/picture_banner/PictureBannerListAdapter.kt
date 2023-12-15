@@ -43,13 +43,15 @@ class PictureBannerListAdapter :
                 binding.tvBanner.text = item.description
                 binding.tvBanner.contentDescription = item.description
             }
+
+            binding.tvBannerPicNumber.text = item.pictureNumberText.toCharSequence(binding.root.context)
         }
     }
 }
 
 object PictureDiffCallback : DiffUtil.ItemCallback<PictureBannerViewState>() {
     override fun areItemsTheSame(oldItem: PictureBannerViewState, newItem: PictureBannerViewState): Boolean =
-        oldItem.pictureUri == newItem.pictureUri && oldItem.description == newItem.description
+        oldItem.pictureUri == newItem.pictureUri && oldItem.description == newItem.description && oldItem.pictureNumberText == newItem.pictureNumberText
 
 
     override fun areContentsTheSame(oldItem: PictureBannerViewState, newItem: PictureBannerViewState): Boolean =

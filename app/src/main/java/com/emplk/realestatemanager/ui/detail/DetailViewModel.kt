@@ -51,13 +51,20 @@ class DetailViewModel @Inject constructor(
             emit(DetailViewState.PropertyDetail(
                 id = property.id,
                 propertyType = property.type,
-                pictures = property.pictures.map { picture ->
-                    PictureBannerViewState(
-                        pictureUri = NativePhoto.Uri(picture.uri),
-                        description = picture.description,
-                        isFeatured = picture.isFeatured
-                    )
-                }.sortedByDescending { it.isFeatured },
+                pictures = property.pictures
+                    .sortedByDescending { it.isFeatured }
+                    .mapIndexed { index, picture ->
+                        PictureBannerViewState(
+                            pictureUri = NativePhoto.Uri(picture.uri),
+                            description = picture.description,
+                            picturePosition = index + 1,
+                            pictureNumberText = NativeText.Arguments(
+                                R.string.banner_pic_number,
+                                listOf((index + 1).toString(), property.pictures.size.toString())
+                            ),
+                            isFeatured = picture.isFeatured
+                        )
+                    }.sortedBy { it.picturePosition },
                 mapMiniature = NativePhoto.Uri(
                     generateMapUrlWithApiKeyUseCase.invoke(
                         property.location.miniatureMapUrl
