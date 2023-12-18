@@ -42,7 +42,7 @@ import com.emplk.realestatemanager.domain.property_type.GetPropertyTypeUseCase
 import com.emplk.realestatemanager.fixtures.getTestAgentsMap
 import com.emplk.realestatemanager.fixtures.getTestAmenities
 import com.emplk.realestatemanager.fixtures.getTestPicturePreviewEntities
-import com.emplk.realestatemanager.fixtures.getTestPropertyTypesMap
+import com.emplk.realestatemanager.fixtures.getTestPropertyTypes
 import com.emplk.realestatemanager.ui.add.address_predictions.PredictionViewState
 import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem
 import com.emplk.realestatemanager.ui.add.amenity.AmenityViewState
@@ -155,7 +155,7 @@ class AddOrEditPropertyViewModelTest {
         )
         coJustRun { updateOnAddressClickedUseCase.invoke(any(), any()) }
         justRun { setHasAddressFocusUseCase.invoke(any()) }
-        every { getPropertyTypeUseCase.invoke() } returns getTestPropertyTypesMap()
+        every { getPropertyTypeUseCase.invoke() } returns getTestPropertyTypes()
         coEvery { getCurrentPredictionAddressesFlowWithDebounceUseCase.invoke() } returns flowOf(
             testPredictionSuccessWrapper
         )
@@ -355,12 +355,12 @@ class AddOrEditPropertyViewModelTest {
             runCurrent()
 
             // When
-            viewModel.onPropertyTypeSelected(getTestPropertyTypesMap().values.toList()[1])
+            viewModel.onPropertyTypeSelected(getTestPropertyTypes().get(1).databaseName)
             runCurrent()
 
             // Then
             assertEquals(
-                getTestPropertyTypesMap().values.toList()[1],
+                getTestPropertyTypes().get(1).stringRes,
                 it.value!!.propertyType
             )
             // 1st initial, 2nd nominal
@@ -809,7 +809,11 @@ class AddOrEditPropertyViewModelTest {
                 stringRes = it.stringRes,
             )
         },
-        propertyTypes = getTestPropertyTypesMap().map { PropertyTypeViewStateItem(it.key, it.value) },
+        propertyTypes = getTestPropertyTypes().map { PropertyTypeViewStateItem(
+            id = it.id,
+            name = NativeText.Resource(it.stringRes),
+            databaseName = it.databaseName,
+        ) },
         isSold = false,
         soldDate = null,
         soldStatusText = null,

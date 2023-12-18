@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.ui.add.type
 
+import android.content.Context
 import android.database.DataSetObservable
 import android.database.DataSetObserver
 import android.view.LayoutInflater
@@ -9,8 +10,11 @@ import android.widget.Filter
 import android.widget.Filterable
 import android.widget.ListAdapter
 import com.emplk.realestatemanager.databinding.AddPropertySpinnerItemBinding
+import dagger.hilt.android.qualifiers.ApplicationContext
 
-class PropertyTypeSpinnerAdapter : ListAdapter, Filterable {
+class PropertyTypeSpinnerAdapter(
+    @ApplicationContext private val context: Context,
+) : ListAdapter, Filterable {
     private val dataSetObservable = DataSetObservable()
     private var items = emptyList<PropertyTypeViewStateItem>()
 
@@ -38,7 +42,7 @@ class PropertyTypeSpinnerAdapter : ListAdapter, Filterable {
             AddPropertySpinnerItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         }
         getItem(position)?.let { item ->
-            binding.formSpinnerItemTvName.text = item.name
+            binding.formSpinnerItemTvName.text = item.name.toCharSequence(context)
         }
         return binding.root
     }
@@ -57,7 +61,7 @@ class PropertyTypeSpinnerAdapter : ListAdapter, Filterable {
         override fun performFiltering(constraint: CharSequence) = FilterResults()
         override fun publishResults(constraint: CharSequence?, results: FilterResults?) = Unit
         override fun convertResultToString(resultValue: Any): CharSequence =
-            (resultValue as PropertyTypeViewStateItem).name
+            (resultValue as PropertyTypeViewStateItem).name.toCharSequence(context)
     }
 
     fun setData(items: List<PropertyTypeViewStateItem>) {

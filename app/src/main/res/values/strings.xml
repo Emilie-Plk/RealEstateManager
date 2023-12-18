@@ -111,4 +111,12 @@
     <string name="form_sold_text">Sold</string>
     <string name="form_for_sale_text">For sale</string>
     <string name="banner_pic_number" translatable="false">%1s/%2s</string>
+    <string name="type_house">House</string>
+    <string name="type_flat">Flat</string>
+    <string name="type_duplex" translatable="false">Duplex</string>
+    <string name="type_penthouse" translatable="false">Penthouse</string>
+    <string name="type_villa" translatable="false">Villa</string>
+    <string name="type_manor">Manor</string>
+    <string name="type_other">Other</string>
+    <string name="type_all">All</string>
 </resources>

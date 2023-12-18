@@ -17,7 +17,7 @@ class UpdatePropertyFormUseCase @Inject constructor(
         formDraftRepository.update(
             FormDraftEntity(
                 id = form.id,
-                type = form.propertyType,
+                type = form.typeDatabaseName,
                 title = form.draftTitle,
                 price = convertToUsdDependingOnLocaleUseCase.invoke(form.price),
                 surface = if (form.surface > BigDecimal.ZERO) {

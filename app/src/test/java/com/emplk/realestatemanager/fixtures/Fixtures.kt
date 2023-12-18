@@ -5,6 +5,7 @@ import com.emplk.realestatemanager.data.property.PropertyWithDetails
 import com.emplk.realestatemanager.data.property.location.LocationDto
 import com.emplk.realestatemanager.data.property.picture.PictureDto
 import com.emplk.realestatemanager.data.property_draft.FormDraftDto
+import com.emplk.realestatemanager.data.property_type.PropertyType
 import com.emplk.realestatemanager.domain.property.PropertyEntity
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.location.LocationEntity
@@ -220,7 +221,7 @@ fun mapPropertyEntityToDto(property: PropertyEntity) = PropertyDto(
 // region FormDraftParams
 fun getTestFormDraftParams(id: Long) = FormDraftParams(
     id = id,
-    propertyType = "House",
+    typeDatabaseName = "House",
     draftTitle = "House for sale in Dummy City",
     address = "1st, Dummy Street, 12345, Dummy City",
     isAddressValid = true,
@@ -316,14 +317,25 @@ fun getTestAgentsMap() = mapOf(
     6L to "Jane Wayne",
 )
 
-fun getTestPropertyTypesMap() = mapOf(
-    1L to "House",
-    2L to "Flat",
-    3L to "Duplex",
-    4L to "Penthouse",
-    5L to "Villa",
-    6L to "Manor",
-    7L to "Other",
+fun getTestPropertyTypes() = listOf(
+    PropertyType.HOUSE,
+    PropertyType.FLAT,
+    PropertyType.DUPLEX,
+    PropertyType.PENTHOUSE,
+    PropertyType.VILLA,
+    PropertyType.MANOR,
+    PropertyType.OTHER,
+)
+
+fun getTestPropertyTypesForFilter() = listOf(
+    PropertyType.ALL,
+    PropertyType.HOUSE,
+    PropertyType.FLAT,
+    PropertyType.DUPLEX,
+    PropertyType.PENTHOUSE,
+    PropertyType.VILLA,
+    PropertyType.MANOR,
+    PropertyType.OTHER,
 )
 
 fun getTestAmenities() = listOf(

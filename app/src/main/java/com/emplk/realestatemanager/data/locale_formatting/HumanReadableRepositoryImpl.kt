@@ -1,6 +1,6 @@
 package com.emplk.realestatemanager.data.locale_formatting
 
-import com.emplk.realestatemanager.domain.locale_formatting.LocaleFormattingRepository
+import com.emplk.realestatemanager.domain.locale_formatting.HumanReadableRepository
 import com.emplk.realestatemanager.domain.locale_formatting.currency.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.surface.SurfaceUnitType
 import java.math.BigDecimal
@@ -9,9 +9,9 @@ import java.text.NumberFormat
 import java.util.Locale
 import javax.inject.Inject
 
-class LocaleFormattingRepositoryImpl @Inject constructor(
+class HumanReadableRepositoryImpl @Inject constructor(
     private val locale: Locale,
-) : LocaleFormattingRepository {
+) : HumanReadableRepository {
 
     companion object {
         private const val SQUARE_FEET_TO_SQUARE_METERS = 10.764

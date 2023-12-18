@@ -11,7 +11,7 @@ import com.emplk.realestatemanager.data.filter.PropertiesFilterRepositoryImpl
 import com.emplk.realestatemanager.data.geocoding.GeocodingRepositoryGoogle
 import com.emplk.realestatemanager.data.geolocation.GeolocationRepositoryFusedLocationProvider
 import com.emplk.realestatemanager.data.loan_simulator.LoanSimulatorRepositoryImpl
-import com.emplk.realestatemanager.data.locale_formatting.LocaleFormattingRepositoryImpl
+import com.emplk.realestatemanager.data.locale_formatting.HumanReadableRepositoryImpl
 import com.emplk.realestatemanager.data.navigation.FormRepositoryImpl
 import com.emplk.realestatemanager.data.navigation.NavigationRepositoryImpl
 import com.emplk.realestatemanager.data.permission.PermissionRepositoryImpl
@@ -36,7 +36,7 @@ import com.emplk.realestatemanager.domain.filter.PropertiesFilterRepository
 import com.emplk.realestatemanager.domain.geocoding.GeocodingRepository
 import com.emplk.realestatemanager.domain.geolocation.GeolocationRepository
 import com.emplk.realestatemanager.domain.loan_simulator.LoanSimulatorRepository
-import com.emplk.realestatemanager.domain.locale_formatting.LocaleFormattingRepository
+import com.emplk.realestatemanager.domain.locale_formatting.HumanReadableRepository
 import com.emplk.realestatemanager.domain.navigation.NavigationRepository
 import com.emplk.realestatemanager.domain.navigation.draft.FormRepository
 import com.emplk.realestatemanager.domain.permission.PermissionRepository
@@ -136,7 +136,7 @@ abstract class DataBindingModule {
 
     @Singleton
     @Binds
-    abstract fun bindCurrencyRepository(implementation: LocaleFormattingRepositoryImpl): LocaleFormattingRepository
+    abstract fun bindCurrencyRepository(implementation: HumanReadableRepositoryImpl): HumanReadableRepository
 
     @Singleton
     @Binds

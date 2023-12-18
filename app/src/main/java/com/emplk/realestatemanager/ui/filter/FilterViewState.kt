@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.ui.filter
 
+import androidx.annotation.StringRes
 import com.emplk.realestatemanager.domain.filter.SearchedEntryDateRange
 import com.emplk.realestatemanager.ui.add.amenity.AmenityViewState
 import com.emplk.realestatemanager.ui.add.type.PropertyTypeViewStateItem
@@ -7,7 +8,7 @@ import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.NativeText
 
 data class FilterViewState(
-    val propertyType: String?,
+    @StringRes val propertyType: Int?,
     val priceRange: NativeText,
     val minPrice: String,
     val maxPrice: String,

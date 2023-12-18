@@ -49,7 +49,7 @@ class AddOrEditPropertyUseCase @Inject constructor(
     suspend fun invoke(form: FormDraftParams): FormEvent {
         require(
             form.id > 0 &&
-                    form.propertyType != null &&
+                    form.typeDatabaseName != null &&
                     form.address != null &&
                     form.price > BigDecimal.ZERO &&
                     form.surface > BigDecimal.ZERO &&
@@ -85,7 +85,7 @@ class AddOrEditPropertyUseCase @Inject constructor(
                 val updateSuccess = propertyRepository.update(
                     PropertyEntity(
                         id = form.id,
-                        type = form.propertyType,
+                        type = form.typeDatabaseName,
                         price = convertToUsdDependingOnLocaleUseCase.invoke(form.price),
                         surface = convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(form.surface),
                         description = form.description,
@@ -133,7 +133,7 @@ class AddOrEditPropertyUseCase @Inject constructor(
                 val addSuccess = propertyRepository.addPropertyWithDetails(
                     PropertyEntity(
                         id = form.id,
-                        type = form.propertyType,
+                        type = form.typeDatabaseName,
                         price = convertToUsdDependingOnLocaleUseCase.invoke(form.price),
                         surface = convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(form.surface),
                         description = form.description,

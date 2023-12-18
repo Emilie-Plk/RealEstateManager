@@ -8,7 +8,6 @@ import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.filter.ConvertSearchedEntryDateRangeToEpochMilliUseCase
 import com.emplk.realestatemanager.domain.filter.GetFilteredPropertiesCountAsFlowUseCase
 import com.emplk.realestatemanager.domain.filter.GetMinMaxPriceAndSurfaceConvertedUseCase
-import com.emplk.realestatemanager.domain.filter.GetPropertyTypeForFilterUseCase
 import com.emplk.realestatemanager.domain.filter.SearchedEntryDateRange
 import com.emplk.realestatemanager.domain.filter.SetPropertiesFilterUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.currency.FormatPriceToHumanReadableUseCase
@@ -20,6 +19,7 @@ import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.amenity.type.GetAmenityTypeUseCase
+import com.emplk.realestatemanager.domain.property_type.GetPropertyTypeUseCase
 import com.emplk.realestatemanager.ui.add.amenity.AmenityViewState
 import com.emplk.realestatemanager.ui.add.type.PropertyTypeViewStateItem
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
@@ -47,7 +47,7 @@ class FilterPropertiesViewModel @Inject constructor(
     private val formatAndRoundSurfaceToHumanReadableUseCase: FormatAndRoundSurfaceToHumanReadableUseCase,
     private val convertToUsdDependingOnLocaleUseCase: ConvertToUsdDependingOnLocaleUseCase,
     private val convertSurfaceToSquareFeetDependingOnLocaleUseCase: ConvertSurfaceToSquareFeetDependingOnLocaleUseCase,
-    private val getPropertyTypeForFilterUseCase: GetPropertyTypeForFilterUseCase,
+    private val getPropertyTypeUseCase: GetPropertyTypeUseCase,
     private val getAmenityTypeUseCase: GetAmenityTypeUseCase,
     private val setPropertiesFilterUseCase: SetPropertiesFilterUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
@@ -71,12 +71,12 @@ class FilterPropertiesViewModel @Inject constructor(
         }.collectLatest { filteredPropertiesCount ->
             val minMaxPriceAndSurface = getMinMaxPriceAndSurfaceConvertedUseCase.invoke()
 
-            val propertyTypes = getPropertyTypeForFilterUseCase.invoke()
+            val propertyTypes = getPropertyTypeUseCase.invoke()
             val amenityTypes = getAmenityTypeUseCase.invoke()
 
             emit(
                 FilterViewState(
-                    propertyType = filterParamsMutableStateFlow.value.propertyType,
+                    propertyType = propertyTypes.find { it.databaseName == filterParamsMutableStateFlow.value.propertyType }?.stringRes,
                     priceRange = NativeText.Arguments(
                         R.string.surface_or_price_range,
                         listOf(
@@ -122,8 +122,9 @@ class FilterPropertiesViewModel @Inject constructor(
                     amenities = mapAmenityTypesToViewStates(amenityTypes),
                     propertyTypes = propertyTypes.map { propertyType ->
                         PropertyTypeViewStateItem(
-                            id = propertyType.key,
-                            name = propertyType.value,
+                            id = propertyType.id,
+                            name = NativeText.Resource(propertyType.stringRes),
+                            databaseName = propertyType.databaseName
                         )
                     },
                     entryDate = filterParamsMutableStateFlow.value.searchedEntryDateRange,

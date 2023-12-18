@@ -83,7 +83,7 @@ class PropertyRepositoryRoomTest {
 
         every { locationMapper.mapToDto(any(), TEST_PROPERTY_ID) } returns testLocationDto
         coEvery {
-            locationDao.update(testLocationDto)
+            locationDao.update(any(), any(), any(), any(), TEST_PROPERTY_ID)
         } returns 1
 
         every { pictureMapper.mapToDtoEntity(any(), TEST_PROPERTY_ID) } returnsMany testPictureDtos.map { it }
@@ -249,7 +249,7 @@ class PropertyRepositoryRoomTest {
         assertThat(result).isNotNull()
         assertThat(result).isTrue()
         coVerify(exactly = 1) { propertyDao.update(getTestPropertyDto(TEST_PROPERTY_ID)) }
-        coVerify(exactly = 1) { locationDao.update(getTestLocationDto(TEST_PROPERTY_ID)) }
+        coVerify(exactly = 1) { locationDao.update(any(), any(), any(), any(), TEST_PROPERTY_ID) }
         coVerify(exactly = 1) { pictureDao.upsert(getPictureDtos(TEST_PROPERTY_ID)[0]) }
         coVerify(exactly = 1) { pictureDao.upsert(getPictureDtos(TEST_PROPERTY_ID)[1]) }
         coVerify(exactly = 1) { pictureDao.upsert(getPictureDtos(TEST_PROPERTY_ID)[2]) }

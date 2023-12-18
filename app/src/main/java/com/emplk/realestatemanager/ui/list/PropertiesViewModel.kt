@@ -14,6 +14,7 @@ import com.emplk.realestatemanager.domain.locale_formatting.surface.FormatAndRou
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.GetPropertiesAsFlowUseCase
+import com.emplk.realestatemanager.domain.property_type.GetStringResourceForTypeUseCase
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.NativePhoto
 import com.emplk.realestatemanager.ui.utils.NativeText
@@ -31,6 +32,7 @@ class PropertiesViewModel @Inject constructor(
     private val getRoundedHumanReadableSurfaceUseCase: FormatAndRoundSurfaceToHumanReadableUseCase,
     private val formatPriceToHumanReadableUseCase: FormatPriceToHumanReadableUseCase,
     private val getPropertiesFilterFlowUseCase: GetPropertiesFilterFlowUseCase,
+    private val getStringResourceForTypeUseCase: GetStringResourceForTypeUseCase,
     private val isPropertyMatchingFiltersUseCase: IsPropertyMatchingFiltersUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
 ) : ViewModel() {
@@ -83,7 +85,7 @@ class PropertiesViewModel @Inject constructor(
                             ?: NativePhoto.Resource(R.drawable.baseline_villa_24)
                         PropertiesViewState.Properties(
                             id = property.id,
-                            propertyType = property.type,
+                            propertyType = getStringResourceForTypeUseCase.invoke(property.type),
                             featuredPicture = featuredPicture,
                             address = property.location.address,
                             humanReadablePrice = formatPriceToHumanReadableUseCase.invoke(property.price),

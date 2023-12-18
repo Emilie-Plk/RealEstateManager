@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.ui.detail
 
+import androidx.annotation.StringRes
 import com.emplk.realestatemanager.ui.add.amenity.AmenityViewState
 import com.emplk.realestatemanager.ui.detail.picture_banner.PictureBannerViewState
 import com.emplk.realestatemanager.ui.utils.NativePhoto
@@ -14,7 +15,7 @@ sealed class DetailViewState(val type: Type) {
 
     data class PropertyDetail(
         val id: Long,
-        val propertyType: String,
+        @StringRes val propertyType: Int,
         val pictures: List<PictureBannerViewState>,
         val mapMiniature: NativePhoto,
         val price: String,

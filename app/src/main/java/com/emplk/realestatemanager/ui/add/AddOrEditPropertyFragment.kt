@@ -52,7 +52,7 @@ class AddOrEditPropertyFragment : Fragment(R.layout.form_fragment) {
         setNumberPickersListeners()
         initFormFieldsTextWatchers()
 
-        val typeAdapter = PropertyTypeSpinnerAdapter()
+        val typeAdapter = PropertyTypeSpinnerAdapter(requireContext())
         val agentAdapter = AddPropertyAgentSpinnerAdapter()
         val picturePreviewAdapter = PropertyPicturePreviewListAdapter()
         val amenityAdapter = AmenityListAdapter()
@@ -72,7 +72,7 @@ class AddOrEditPropertyFragment : Fragment(R.layout.form_fragment) {
 
         binding.formTypeActv.setOnItemClickListener { _, _, position, _ ->
             typeAdapter.getItem(position)?.let {
-                viewModel.onPropertyTypeSelected(it.name)
+                viewModel.onPropertyTypeSelected(it.databaseName)
             }
         }
 
@@ -185,7 +185,7 @@ class AddOrEditPropertyFragment : Fragment(R.layout.form_fragment) {
 
             binding.formSurfaceTextInputLayout.hint = viewState.surfaceUnit.toCharSequence(requireContext())
 
-            binding.formTypeActv.setText(viewState.propertyType, false)
+            binding.formTypeActv.setText(viewState.propertyType?.let { getString(it) }, false)
             binding.formAgentActv.setText(viewState.selectedAgent, false)
         }
 

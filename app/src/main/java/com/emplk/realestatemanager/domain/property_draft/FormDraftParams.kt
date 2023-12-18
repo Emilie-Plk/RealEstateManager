@@ -11,7 +11,7 @@ import java.time.LocalDateTime
  */
 data class FormDraftParams(
     val id: Long = 0L,
-    val propertyType: String? = null,
+    val typeDatabaseName: String? = null,
     val draftTitle: String? = null,
     val address: String? = null,
     val isAddressValid: Boolean = false,

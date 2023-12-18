@@ -14,6 +14,7 @@ import com.emplk.realestatemanager.domain.map_picture.GenerateMapUrlWithApiKeyUs
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.GetCurrentPropertyUseCase
+import com.emplk.realestatemanager.domain.property_type.GetStringResourceForTypeUseCase
 import com.emplk.realestatemanager.fixtures.getTestPropertyEntity
 import com.emplk.realestatemanager.ui.add.amenity.AmenityViewState
 import com.emplk.realestatemanager.ui.detail.picture_banner.PictureBannerViewState
@@ -55,6 +56,7 @@ class DetailViewModelTest {
     private val formatAndRoundSurfaceToHumanReadableUseCase: FormatAndRoundSurfaceToHumanReadableUseCase = mockk()
     private val convertToSquareFeetDependingOnLocaleUseCase: ConvertToSquareFeetDependingOnLocaleUseCase = mockk()
     private val generateMapUrlWithApiKeyUseCase: GenerateMapUrlWithApiKeyUseCase = mockk()
+    private val getStringResourceForTypeUseCase: GetStringResourceForTypeUseCase = mockk()
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase = mockk()
 
     private lateinit var viewModel: DetailViewModel
@@ -69,6 +71,7 @@ class DetailViewModelTest {
         coEvery { getLastUpdatedCurrencyRateDateUseCase.invoke() } coAnswers { null }
         every { formatAndRoundSurfaceToHumanReadableUseCase.invoke(BigDecimal(500)) } returns "500 m²"
         coEvery { convertToSquareFeetDependingOnLocaleUseCase.invoke(BigDecimal(500)) } returns BigDecimal(500)
+        every { getStringResourceForTypeUseCase.invoke("House") } returns R.string.type_house
         every { generateMapUrlWithApiKeyUseCase.invoke(any()) } returns "https://www.google.com/maps/123456789"
         justRun { setNavigationTypeUseCase.invoke(any()) }
 
@@ -80,6 +83,7 @@ class DetailViewModelTest {
             getLocaleUseCase = getLocaleUseCase,
             formatAndRoundSurfaceToHumanReadableUseCase = formatAndRoundSurfaceToHumanReadableUseCase,
             convertToSquareFeetDependingOnLocaleUseCase = convertToSquareFeetDependingOnLocaleUseCase,
+            getStringResourceForTypeUseCase = getStringResourceForTypeUseCase,
             generateMapUrlWithApiKeyUseCase = generateMapUrlWithApiKeyUseCase,
             setNavigationTypeUseCase = setNavigationTypeUseCase,
         )
@@ -121,7 +125,7 @@ class DetailViewModelTest {
 
     private val testDetailViewStateDetails = DetailViewState.PropertyDetail(
         id = TEST_PROPERTY_ID,
-        propertyType = "House",
+        propertyType =  R.string.type_house,
         pictures = listOf(
             PictureBannerViewState(
                 pictureUri = NativePhoto.Uri("https://www.google.com/front_view"),

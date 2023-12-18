@@ -54,7 +54,7 @@
         style="@style/Theme.RealEstateManager.OutlinedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Discard"
+        android:text="@string/discard_draft_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/add_draft_dialog_save_button"
         app:layout_constraintStart_toStartOf="parent" />

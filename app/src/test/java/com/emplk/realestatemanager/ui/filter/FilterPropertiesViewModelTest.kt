@@ -5,7 +5,6 @@ import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.filter.ConvertSearchedEntryDateRangeToEpochMilliUseCase
 import com.emplk.realestatemanager.domain.filter.GetFilteredPropertiesCountAsFlowUseCase
 import com.emplk.realestatemanager.domain.filter.GetMinMaxPriceAndSurfaceConvertedUseCase
-import com.emplk.realestatemanager.domain.filter.GetPropertyTypeForFilterUseCase
 import com.emplk.realestatemanager.domain.filter.PropertyMinMaxStatsEntity
 import com.emplk.realestatemanager.domain.filter.SearchedEntryDateRange
 import com.emplk.realestatemanager.domain.filter.SetPropertiesFilterUseCase
@@ -17,6 +16,8 @@ import com.emplk.realestatemanager.domain.locale_formatting.surface.FormatAndRou
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.amenity.type.GetAmenityTypeUseCase
+import com.emplk.realestatemanager.domain.property_type.GetPropertyTypeUseCase
+import com.emplk.realestatemanager.fixtures.getTestPropertyTypesForFilter
 import com.emplk.realestatemanager.ui.add.amenity.AmenityViewState
 import com.emplk.realestatemanager.ui.add.type.PropertyTypeViewStateItem
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
@@ -53,7 +54,7 @@ class FilterPropertiesViewModelTest {
     private val convertToUsdDependingOnLocaleUseCase: ConvertToUsdDependingOnLocaleUseCase = mockk()
     private val convertSurfaceToSquareFeetDependingOnLocaleUseCase: ConvertSurfaceToSquareFeetDependingOnLocaleUseCase =
         mockk()
-    private val getPropertyTypeForFilterUseCase: GetPropertyTypeForFilterUseCase = mockk()
+    private val getPropertyTypeUseCase: GetPropertyTypeUseCase = mockk()
     private val getAmenityTypeUseCase: GetAmenityTypeUseCase = mockk()
     private val setPropertiesFilterUseCase: SetPropertiesFilterUseCase = mockk()
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase = mockk()
@@ -83,7 +84,7 @@ class FilterPropertiesViewModelTest {
         every { formatAndRoundSurfaceToHumanReadableUseCase.invoke(minMaxPriceAndSurface.minSurface) } returns "100 sq ft"
         every { formatAndRoundSurfaceToHumanReadableUseCase.invoke(minMaxPriceAndSurface.maxSurface) } returns "200 sq ft"
         coEvery { convertToUsdDependingOnLocaleUseCase.invoke(any()) } returns BigDecimal(100000)
-        every { getPropertyTypeForFilterUseCase.invoke() } returns propertyTypeMap
+        every { getPropertyTypeUseCase.invoke() } returns getTestPropertyTypesForFilter()
         every { getAmenityTypeUseCase.invoke() } returns amenityTypes
         justRun { setPropertiesFilterUseCase.invoke(any(), any(), any(), any(), any(), any(), any(), any()) }
         justRun { setNavigationTypeUseCase.invoke(any()) }
@@ -97,7 +98,7 @@ class FilterPropertiesViewModelTest {
             formatAndRoundSurfaceToHumanReadableUseCase,
             convertToUsdDependingOnLocaleUseCase,
             convertSurfaceToSquareFeetDependingOnLocaleUseCase,
-            getPropertyTypeForFilterUseCase,
+            getPropertyTypeUseCase,
             getAmenityTypeUseCase,
             setPropertiesFilterUseCase,
             setNavigationTypeUseCase
@@ -166,16 +167,6 @@ class FilterPropertiesViewModelTest {
         }
     }
 
-
-    private val propertyTypeMap = mapOf(
-        1L to "House",
-        2L to "Flat",
-        3L to "Duplex",
-        4L to "Penthouse",
-        5L to "Villa",
-        6L to "Manor",
-        7L to "Other",
-    )
     private val amenityTypes = AmenityType.values().toList()
 
     private val minMaxPriceAndSurface = PropertyMinMaxStatsEntity(
@@ -185,7 +176,7 @@ class FilterPropertiesViewModelTest {
         maxSurface = BigDecimal(200),
     )
     private val testFilterViewState: FilterViewState = FilterViewState(
-        propertyType = "House",
+        propertyType = R.string.type_house,
         priceRange = NativeText.Arguments(
             R.string.surface_or_price_range,
             listOf(
@@ -215,10 +206,11 @@ class FilterPropertiesViewModelTest {
                 stringRes = amenityType.stringRes,
             )
         },
-        propertyTypes = propertyTypeMap.map {
+        propertyTypes = getTestPropertyTypesForFilter().map {
             PropertyTypeViewStateItem(
-                it.key,
-                it.value
+                id = it.id,
+                name = NativeText.Resource(it.stringRes),
+                databaseName = it.databaseName
             )
         },
         entryDate = SearchedEntryDateRange.ALL,
@@ -262,11 +254,11 @@ class FilterPropertiesViewModelTest {
                 stringRes = amenityType.stringRes,
             )
         },
-        propertyTypes =
-        propertyTypeMap.map { (id, name) ->
+        propertyTypes = getTestPropertyTypesForFilter().map {
             PropertyTypeViewStateItem(
-                id,
-                name
+                id = it.id,
+                name = NativeText.Resource(it.stringRes),
+                databaseName = it.databaseName
             )
         },
         entryDate = null,

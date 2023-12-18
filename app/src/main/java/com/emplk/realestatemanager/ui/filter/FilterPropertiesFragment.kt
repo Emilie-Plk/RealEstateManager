@@ -33,7 +33,7 @@ class FilterPropertiesFragment : DialogFragment(R.layout.filter_properties_fragm
         val height = ViewGroup.LayoutParams.MATCH_PARENT
         dialog?.window?.setLayout(width, height)
 
-        val propertyTypeAdapter = PropertyTypeSpinnerAdapter()
+        val propertyTypeAdapter = PropertyTypeSpinnerAdapter(requireContext())
         binding.filterPropertyTypeActv.setAdapter(propertyTypeAdapter)
 
         val amenityAdapter = AmenityListAdapter()
@@ -58,10 +58,10 @@ class FilterPropertiesFragment : DialogFragment(R.layout.filter_properties_fragm
 
             binding.filterPropertyTypeActv.setOnItemClickListener { _, _, position, _ ->
                 propertyTypeAdapter.getItem(position)?.let {
-                    viewModel.onPropertyTypeSelected(it.name)
+                    viewModel.onPropertyTypeSelected(it.databaseName)
                 }
             }
-            binding.filterPropertyTypeActv.setText(viewState.propertyType, false)
+            binding.filterPropertyTypeActv.setText(viewState.propertyType?.let { getString(it) }, false)
 
             binding.filterPropertyPriceRangeTv.text = viewState.priceRange.toCharSequence(requireContext())
 

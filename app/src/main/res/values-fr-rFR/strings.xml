@@ -107,4 +107,9 @@
     <string name="loan_amount_hint">Prêt en %s</string>
     <string name="interest_rate_hint">Taux d\'intérêt en %s</string>
     <string name="loan_duration_in_years_hint">Durée du prêt en années (max 30 ans)</string>
+    <string name="type_house">Maison</string>
+    <string name="type_flat">Appartement</string>
+    <string name="type_manor">Manoir</string>
+    <string name="type_other">Autre</string>
+    <string name="type_all">Tous</string>
 </resources>

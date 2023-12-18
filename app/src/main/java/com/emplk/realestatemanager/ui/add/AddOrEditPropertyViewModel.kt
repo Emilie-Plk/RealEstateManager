@@ -139,7 +139,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                 form.copy(
                     id = formWithType.formDraftEntity.id,
                     formType = formWithType.formType,
-                    propertyType = formWithType.formDraftEntity.type,
+                    typeDatabaseName = formWithType.formDraftEntity.type,
                     draftTitle = formWithType.formDraftEntity.title,
                     address = formWithType.formDraftEntity.address,
                     isAddressValid = formWithType.formDraftEntity.isAddressValid,
@@ -183,7 +183,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                     val agents = getAgentsMapUseCase.invoke()
 
                     setPropertyFormProgressUseCase.invoke(
-                        !form.propertyType.isNullOrBlank() ||
+                        !form.typeDatabaseName.isNullOrBlank() ||
                                 !form.address.isNullOrBlank() ||
                                 form.price > BigDecimal.ZERO ||
                                 form.surface > BigDecimal.ZERO ||
@@ -198,7 +198,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                     )
 
                     setFormCompletionUseCase.invoke(
-                        form.propertyType != null &&
+                        form.typeDatabaseName != null &&
                                 form.address != null &&
                                 (isInternetEnabled && form.isAddressValid || !isInternetEnabled) &&
                                 form.price > BigDecimal.ZERO &&
@@ -214,7 +214,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                     )
 
                     PropertyFormViewState(
-                        propertyType = form.propertyType,
+                        propertyType = propertyTypes.find { it.databaseName == form.typeDatabaseName }?.stringRes ?: null,
                         address = form.address,
                         price = if (form.price == BigDecimal.ZERO) "" else form.price.toString(),
                         surface = if (form.surface == BigDecimal.ZERO) "" else form.surface.toString(),
@@ -250,10 +250,13 @@ class AddOrEditPropertyViewModel @Inject constructor(
                         else NativeText.Resource(R.string.form_edit_button),
                         isProgressBarVisible = isAddingInDatabase == true,
                         amenities = mapAmenityTypesToViewStates(amenityTypes),
-                        propertyTypes = propertyTypes.map { propertyType ->
+                        propertyTypes = propertyTypes
+                            .filterNot { it.id == 0L }
+                            .map { propertyType ->
                             PropertyTypeViewStateItem(
-                                id = propertyType.key,
-                                name = propertyType.value,
+                                id = propertyType.id,
+                                name = NativeText.Resource(propertyType.stringRes),
+                                databaseName = propertyType.databaseName
                             )
                         },
                         agents = agents.map { agent ->
@@ -271,7 +274,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                         ),
                         soldStatusText = if (form.formType == FormType.EDIT) {
                             if (form.isSold) NativeText.Resource(R.string.form_sold_text)
-                            else  NativeText.Resource(R.string.form_for_sale_text)
+                            else NativeText.Resource(R.string.form_for_sale_text)
                         } else null,
                         entryDateText = if (form.formType == FormType.ADD) {
                             form.lastEditionDate?.let {
@@ -464,9 +467,11 @@ class AddOrEditPropertyViewModel @Inject constructor(
             )
         }
 
-    fun onPropertyTypeSelected(propertyType: String) {
+    fun onPropertyTypeSelected(databaseName: String) {
         formMutableStateFlow.update {
-            it.copy(propertyType = propertyType)
+            it.copy(
+                typeDatabaseName = databaseName,
+            )
         }
     }
 

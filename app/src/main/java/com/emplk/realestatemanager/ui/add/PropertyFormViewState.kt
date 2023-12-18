@@ -1,6 +1,7 @@
 package com.emplk.realestatemanager.ui.add
 
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import com.emplk.realestatemanager.ui.add.address_predictions.PredictionViewState
 import com.emplk.realestatemanager.ui.add.agent.AddPropertyAgentViewStateItem
 import com.emplk.realestatemanager.ui.add.amenity.AmenityViewState
@@ -9,7 +10,7 @@ import com.emplk.realestatemanager.ui.add.type.PropertyTypeViewStateItem
 import com.emplk.realestatemanager.ui.utils.NativeText
 
 data class PropertyFormViewState(
-    val propertyType: String?,
+    @StringRes val propertyType: Int?,
     val addressPredictions: List<PredictionViewState>,
     val isAddressValid: Boolean,
     val address: String?,

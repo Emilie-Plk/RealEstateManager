@@ -14,6 +14,7 @@ import com.emplk.realestatemanager.domain.map_picture.GenerateMapUrlWithApiKeyUs
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.GetCurrentPropertyUseCase
+import com.emplk.realestatemanager.domain.property_type.GetStringResourceForTypeUseCase
 import com.emplk.realestatemanager.ui.add.amenity.AmenityViewState
 import com.emplk.realestatemanager.ui.detail.picture_banner.PictureBannerViewState
 import com.emplk.realestatemanager.ui.utils.NativePhoto
@@ -33,6 +34,7 @@ class DetailViewModel @Inject constructor(
     private val getLocaleUseCase: GetLocaleUseCase,
     private val formatAndRoundSurfaceToHumanReadableUseCase: FormatAndRoundSurfaceToHumanReadableUseCase,
     private val convertToSquareFeetDependingOnLocaleUseCase: ConvertToSquareFeetDependingOnLocaleUseCase,
+    private val getStringResourceForTypeUseCase: GetStringResourceForTypeUseCase,
     private val generateMapUrlWithApiKeyUseCase: GenerateMapUrlWithApiKeyUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
 ) : ViewModel() {
@@ -50,7 +52,7 @@ class DetailViewModel @Inject constructor(
         getCurrentPropertyUseCase.invoke().collect { property ->
             emit(DetailViewState.PropertyDetail(
                 id = property.id,
-                propertyType = property.type,
+                propertyType = getStringResourceForTypeUseCase.invoke(property.type),
                 pictures = property.pictures
                     .sortedByDescending { it.isFeatured }
                     .mapIndexed { index, picture ->

@@ -1,14 +1,14 @@
 package com.emplk.realestatemanager.domain.locale_formatting.surface
 
 import com.emplk.realestatemanager.domain.locale_formatting.GetLocaleUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.LocaleFormattingRepository
+import com.emplk.realestatemanager.domain.locale_formatting.HumanReadableRepository
 import java.math.BigDecimal
 import java.util.Locale
 import javax.inject.Inject
 
 
 class ConvertSurfaceDependingOnLocaleUseCase @Inject constructor(
-    private val localeFormattingRepository: LocaleFormattingRepository,
+    private val humanReadableRepository: HumanReadableRepository,
     private val getLocaleUseCase: GetLocaleUseCase,
 ) {
     /**
@@ -17,7 +17,7 @@ class ConvertSurfaceDependingOnLocaleUseCase @Inject constructor(
     fun invoke(surface: BigDecimal): BigDecimal =
         when (getLocaleUseCase.invoke()) {
             Locale.US -> surface
-            Locale.FRANCE -> localeFormattingRepository.convertSquareFeetToSquareMetersRoundedHalfUp(surface)
+            Locale.FRANCE -> humanReadableRepository.convertSquareFeetToSquareMetersRoundedHalfUp(surface)
             else -> surface
         }
 }

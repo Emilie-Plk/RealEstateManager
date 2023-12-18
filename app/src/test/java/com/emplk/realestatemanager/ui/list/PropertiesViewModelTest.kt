@@ -15,6 +15,7 @@ import com.emplk.realestatemanager.domain.locale_formatting.surface.FormatAndRou
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.property.GetPropertiesAsFlowUseCase
+import com.emplk.realestatemanager.domain.property_type.GetStringResourceForTypeUseCase
 import com.emplk.realestatemanager.fixtures.getPropertyEntities
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.NativePhoto
@@ -27,6 +28,7 @@ import io.mockk.justRun
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runCurrent
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -46,6 +48,7 @@ class PropertiesViewModelTest {
     private val getRoundedHumanReadableSurfaceUseCase: FormatAndRoundSurfaceToHumanReadableUseCase = mockk()
     private val formatPriceToHumanReadableUseCase: FormatPriceToHumanReadableUseCase = mockk()
     private val getPropertiesFilterFlowUseCase: GetPropertiesFilterFlowUseCase = mockk()
+    private val getStringResourceForTypeUseCase: GetStringResourceForTypeUseCase = mockk()
     private val isPropertyMatchingFiltersUseCase: IsPropertyMatchingFiltersUseCase = mockk()
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase = mockk()
 
@@ -59,6 +62,8 @@ class PropertiesViewModelTest {
         every { getRoundedHumanReadableSurfaceUseCase.invoke(BigDecimal(500)) } returns "500 sq ft"
         every { formatPriceToHumanReadableUseCase.invoke(BigDecimal(1000000)) } returns "$1,000,000"
         every { getPropertiesFilterFlowUseCase.invoke() } returns flowOf(null)
+        every { getStringResourceForTypeUseCase.invoke("House") } returns R.string.type_house
+        every { getStringResourceForTypeUseCase.invoke("Villa") } returns R.string.type_villa
         every { isPropertyMatchingFiltersUseCase.invoke(any(), any(), any(), any(), any(), any(), any()) } returns true
         justRun { setNavigationTypeUseCase.invoke(any()) }
 
@@ -70,6 +75,7 @@ class PropertiesViewModelTest {
             getRoundedHumanReadableSurfaceUseCase,
             formatPriceToHumanReadableUseCase,
             getPropertiesFilterFlowUseCase,
+            getStringResourceForTypeUseCase,
             isPropertyMatchingFiltersUseCase,
             setNavigationTypeUseCase
         )
@@ -131,10 +137,11 @@ class PropertiesViewModelTest {
 
     @Test
     fun `5 properties with type filtering give 2 view states`() = testCoroutineRule.runTest {
+        // Given
         val testPropertyEntity = getPropertyEntities(3).first().copy(
             type = "Villa",
         )
-        val testPropertyEntity2 = getPropertyEntities(3).first().copy(
+        val testPropertyEntity2 = getPropertyEntities(3)[1].copy(
             type = "Villa",
         )
         coEvery { getPropertiesAsFlowUseCase.invoke() } returns flowOf(getPropertyEntities(3) + testPropertyEntity + testPropertyEntity2)
@@ -150,11 +157,12 @@ class PropertiesViewModelTest {
                 any(),
                 any()
             )
-        } returns false andThen false andThen false andThen true
+        } returns false andThen false andThen false andThen true andThen true
+
         viewModel.viewState.observeForTesting(this) {
             assertThat(it.value!!.size).isEqualTo(2)
-            assertThat((it.value!![0] as PropertiesViewState.Properties).propertyType).isEqualTo("Villa")
-            assertThat((it.value!![1] as PropertiesViewState.Properties).propertyType).isEqualTo("Villa")
+            assertThat((it.value!![0] as PropertiesViewState.Properties).propertyType).isEqualTo(R.string.type_villa)
+            assertThat((it.value!![1] as PropertiesViewState.Properties).propertyType).isEqualTo(R.string.type_villa)
         }
     }
 
@@ -178,7 +186,7 @@ class PropertiesViewModelTest {
         getPropertyEntities(3).forEach {
             add(PropertiesViewState.Properties(
                 id = it.id,
-                propertyType = it.type,
+                propertyType = R.string.type_house,
                 featuredPicture = it.pictures.firstOrNull()?.let { featuredPic -> NativePhoto.Uri(featuredPic.uri) }
                     ?: NativePhoto.Resource(R.drawable.baseline_villa_24),
                 address = it.location.address,

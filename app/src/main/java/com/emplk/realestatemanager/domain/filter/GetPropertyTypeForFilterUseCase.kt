@@ -6,5 +6,6 @@ import javax.inject.Inject
 class GetPropertyTypeForFilterUseCase @Inject constructor(
     private val propertyTypeRepository: PropertyTypeRepository
 ) {
-    fun invoke(): Map<Long, String> = propertyTypeRepository.getPropertyTypes() + (8L to "All")
+    // TODO: got rid?..
+    fun invoke(): Map<Long, String> = mapOf()
 }

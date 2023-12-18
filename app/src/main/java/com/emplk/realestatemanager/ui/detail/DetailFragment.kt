@@ -81,7 +81,7 @@ class DetailFragment : Fragment(R.layout.detail_fragment) {
                         binding.detailSoldDateTv.visibility = View.GONE
                     }
 
-                    binding.detailTypeTv.text = viewState.propertyType
+                    binding.detailTypeTv.text = resources.getString(viewState.propertyType)
                     binding.detailPriceTv.text = viewState.price
                     binding.detailLastUpdatedCurrencyRateTv.isVisible =
                         viewState.isCurrencyLastUpdatedCurrencyRateVisible

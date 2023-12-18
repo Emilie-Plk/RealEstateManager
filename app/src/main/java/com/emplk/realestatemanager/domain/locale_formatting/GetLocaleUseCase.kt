@@ -4,7 +4,7 @@ import java.util.Locale
 import javax.inject.Inject
 
 class GetLocaleUseCase @Inject constructor(
-    private val localeFormattingRepository: LocaleFormattingRepository
+    private val humanReadableRepository: HumanReadableRepository
 ) {
-    fun invoke(): Locale = localeFormattingRepository.getLocale()
+    fun invoke(): Locale = humanReadableRepository.getLocale()
 }

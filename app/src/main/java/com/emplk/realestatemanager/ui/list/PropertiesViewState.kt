@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.ui.list
 
+import androidx.annotation.StringRes
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.NativePhoto
@@ -16,7 +17,7 @@ sealed class PropertiesViewState(val type: Type) {
 
     data class Properties(
         val id: Long,
-        val propertyType: String,
+        @StringRes val propertyType: Int,
         val featuredPicture: NativePhoto,
         val address: String,
         val humanReadablePrice: String,

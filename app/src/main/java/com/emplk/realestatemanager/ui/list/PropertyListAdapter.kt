@@ -52,7 +52,7 @@ class PropertyListAdapter :
 
             fun bind(item: PropertiesViewState.Properties) {
                 binding.root.setOnClickListener { item.onClickEvent.invoke() }
-                binding.propertyItemTypeTextView.text = item.propertyType
+                binding.propertyItemTypeTextView.text = binding.root.context.resources.getString(item.propertyType)
                 binding.propertyItemLocationTextView.text = item.address
                 binding.propertyItemPriceTextView.text = item.humanReadablePrice
                 binding.propertyItemRoomTextView?.text = item.room.toCharSequence(binding.root.context)
