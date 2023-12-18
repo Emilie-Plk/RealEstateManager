@@ -1,6 +1,5 @@
 package com.emplk.realestatemanager.ui.drafts
 
-import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
@@ -23,7 +22,6 @@ class DraftsViewModel @Inject constructor(
     private val getAllDraftsWithTitleAndDateUseCase: GetAllDraftsWithTitleAndDateUseCase,
     private val setCurrentPropertyIdUseCase: SetCurrentPropertyIdUseCase,
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase,
-    private val resources: Resources,
 ) : ViewModel() {
 
     val viewStates: LiveData<List<DraftViewState>> = liveData {
@@ -34,7 +32,8 @@ class DraftsViewModel @Inject constructor(
                         DraftViewState.DraftItem(
                             id = form.id,
                             title = mapTitleToNativeText(form.title),
-                            lastEditionDate = mapToString(form.lastEditionDate),
+                            lastEditionDate = mapLastEditionDateToNativeText(form.lastEditionDate),
+                            lastEditionDateLocaleDateTime = form.lastEditionDate,
                             featuredPicture = form.featuredPicture?.let { NativePhoto.Uri(it) }
                                 ?: NativePhoto.Resource(R.drawable.baseline_image_24),
                             featuredPictureDescription = form.featuredPictureDescription?.let { NativeText.Simple(it) },
@@ -54,19 +53,29 @@ class DraftsViewModel @Inject constructor(
                         }
                     )
                 )
-            }.sortedWith(compareBy<DraftViewState> { it.type != DraftViewState.Type.ADD_NEW_DRAFT }
-                .thenByDescending { (it as DraftViewState.DraftItem).lastEditionDate })
+            }.sortedWith(
+                compareBy<DraftViewState> { it.type != DraftViewState.Type.ADD_NEW_DRAFT }
+                    .thenByDescending { draftViewState ->
+                        when (draftViewState) {
+                            is DraftViewState.DraftItem -> draftViewState.lastEditionDateLocaleDateTime
+                                ?: LocalDateTime.MAX
+
+                            else -> null
+                        }
+                    },
+            )
         )
     }
 
     private fun mapTitleToNativeText(title: String?): NativeText = if (title != null) NativeText.Simple(title)
     else NativeText.Resource(R.string.draft_no_title)
 
-    private fun mapToString(lastEditionDate: LocalDateTime?): String =
-        if (lastEditionDate != null) {
-            resources.getString(
-                R.string.draft_date_last_edition,
+    private fun mapLastEditionDateToNativeText(lastEditionDate: LocalDateTime?): NativeText =
+        if (lastEditionDate != null) NativeText.Argument(
+            R.string.draft_date_last_edition,
+            listOf(
                 lastEditionDate.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
             )
-        } else resources.getString(R.string.draft_date_error)
+        )
+        else NativeText.Resource(R.string.draft_date_error)
 }

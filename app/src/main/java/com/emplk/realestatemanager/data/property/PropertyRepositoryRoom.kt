@@ -1,7 +1,6 @@
 package com.emplk.realestatemanager.data.property
 
 import android.database.sqlite.SQLiteException
-import android.util.Log
 import com.emplk.realestatemanager.data.property.location.LocationDao
 import com.emplk.realestatemanager.data.property.location.LocationMapper
 import com.emplk.realestatemanager.data.property.picture.PictureDao
@@ -41,19 +40,19 @@ class PropertyRepositoryRoom @Inject constructor(
         withContext(coroutineDispatcherProvider.io) {
             val propertyId = add(propertyEntity) ?: return@withContext false
 
-            val locationAsync = async {
+            val locationDeferred = async {
                 val locationDtoEntity = locationMapper.mapToDto(propertyEntity.location, propertyId)
                 locationDao.insert(locationDtoEntity)
             }
 
-            val picturesAsync = propertyEntity.pictures.map {
+            val picturesDeferred = propertyEntity.pictures.map {
                 async {
                     val pictureDtoEntity = pictureMapper.mapToDtoEntity(it, propertyId)
                     pictureDao.insert(pictureDtoEntity)
                 }
             }
 
-            (listOf(locationAsync) + picturesAsync).all { it.await() != null }
+            (listOf(locationDeferred) + picturesDeferred).all { it.await() != null }
         }
 
 
@@ -144,17 +143,15 @@ class PropertyRepositoryRoom @Inject constructor(
         withContext(coroutineDispatcherProvider.io) {
             try {
                 propertyDao.update(propertyMapper.mapToDto(propertyEntity))
-                val locationUpdate = locationDao.update(
+
+                locationDao.update(
                     propertyEntity.location.address,
                     propertyEntity.location.miniatureMapUrl,
                     propertyEntity.location.latLng?.latitude,
                     propertyEntity.location.latLng?.longitude,
                     propertyEntity.id
                 )
-                Log.d(
-                    "COUCOU",
-                    "update: ${propertyEntity.location} for property ${propertyEntity.id} and result: $locationUpdate"
-                )
+
                 propertyEntity.pictures.map {
                     pictureDao.upsert(pictureMapper.mapToDtoEntity(it, propertyEntity.id))
                 }

@@ -43,7 +43,7 @@ class DraftsAdapter : ListAdapter<DraftViewState, DraftsAdapter.DraftViewHolder>
 
             fun bind(item: DraftViewState.DraftItem) {
                 binding.draftItemTitleTv.text = item.title.toCharSequence(binding.root.context)
-                binding.draftItemDateTv.text = item.lastEditionDate
+                binding.draftItemDateTv.text = item.lastEditionDate?.toCharSequence(binding.root.context)
                 binding.root.setOnClickListener {
                     item.onClick.invoke()
                 }

@@ -214,7 +214,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                     )
 
                     PropertyFormViewState(
-                        propertyType = propertyTypes.find { it.databaseName == form.typeDatabaseName }?.stringRes ?: null,
+                        propertyType = propertyTypes.find { it.databaseName == form.typeDatabaseName }?.stringRes,
                         address = form.address,
                         price = if (form.price == BigDecimal.ZERO) "" else form.price.toString(),
                         surface = if (form.surface == BigDecimal.ZERO) "" else form.surface.toString(),
@@ -238,9 +238,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                                 NativeText.Argument(
                                     R.string.form_creation_date_tv,
                                     it.format(
-                                        DateTimeFormatter.ofLocalizedDateTime(
-                                            FormatStyle.SHORT
-                                        )
+                                        DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
                                     )
                                 )
                             }
@@ -253,12 +251,12 @@ class AddOrEditPropertyViewModel @Inject constructor(
                         propertyTypes = propertyTypes
                             .filterNot { it.id == 0L }
                             .map { propertyType ->
-                            PropertyTypeViewStateItem(
-                                id = propertyType.id,
-                                name = NativeText.Resource(propertyType.stringRes),
-                                databaseName = propertyType.databaseName
-                            )
-                        },
+                                PropertyTypeViewStateItem(
+                                    id = propertyType.id,
+                                    name = NativeText.Resource(propertyType.stringRes),
+                                    databaseName = propertyType.databaseName
+                                )
+                            },
                         agents = agents.map { agent ->
                             AddPropertyAgentViewStateItem(
                                 id = agent.key,

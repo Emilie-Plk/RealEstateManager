@@ -43,7 +43,6 @@ class InternetConnectivityRepositoryBroadcastReceiver @Inject constructor(
         }
     }.distinctUntilChanged()
 
-
     private fun hasInternetConnection(): Boolean {
         if (connectivityManager == null) {
             return false

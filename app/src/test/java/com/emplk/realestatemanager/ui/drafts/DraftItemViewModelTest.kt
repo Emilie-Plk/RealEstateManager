@@ -1,6 +1,5 @@
 package com.emplk.realestatemanager.ui.drafts
 
-import android.content.res.Resources
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.current_property.SetCurrentPropertyIdUseCase
@@ -15,15 +14,16 @@ import com.emplk.utils.observeForTesting
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.confirmVerified
-import io.mockk.every
 import io.mockk.justRun
 import io.mockk.mockk
-import kotlinx.coroutines.test.runCurrent
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 class DraftItemViewModelTest {
 
@@ -36,7 +36,6 @@ class DraftItemViewModelTest {
     private val getAllDraftsWithTitleAndDateUseCase: GetAllDraftsWithTitleAndDateUseCase = mockk()
     private val setCurrentPropertyIdUseCase: SetCurrentPropertyIdUseCase = mockk()
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase = mockk()
-    private val resources: Resources = mockk()
 
     private lateinit var viewModel: DraftsViewModel
 
@@ -45,36 +44,19 @@ class DraftItemViewModelTest {
         coEvery { getAllDraftsWithTitleAndDateUseCase.invoke() } returns formsWithDetails
         justRun { setCurrentPropertyIdUseCase.invoke(any()) }
         justRun { setNavigationTypeUseCase.invoke(any()) }
-        every { resources.getString(R.string.draft_add_new_draft) } returns "Add new draft"
-        every {
-            resources.getString(
-                R.string.draft_date_last_edition,
-                "01/01/2023 01:01"
-            )
-        } returns "Last edited on: 01/01/2023 01:01"
-        every {
-            resources.getString(
-                R.string.draft_date_last_edition,
-                "03/03/2023 03:03"
-            )
-        } returns "Last edited on: 03/03/2023 03:03"
-        every { resources.getString(R.string.draft_date_last_edition, null) } returns "No date recorded"
-        every { resources.getString(R.string.draft_date_error) } returns "No date recorded"
-
         viewModel = DraftsViewModel(
             getAllDraftsWithTitleAndDateUseCase,
             setCurrentPropertyIdUseCase,
             setNavigationTypeUseCase,
-            resources
         )
     }
 
-    // TODO: NINO pourquoi ça marche en isolé mais pas en groupé ???
     @Test
     fun `nominal case`() = testCoroutineRule.runTest {
         viewModel.viewStates.observeForTesting(this) {
-            runCurrent()
             assertEquals(draftItemViewStates, it.value)
+            // First item is the "Add new draft" item
+            assertTrue(it.value!!.first() is DraftViewState.AddNewDraftItem)
             coVerify(exactly = 1) { getAllDraftsWithTitleAndDateUseCase.invoke() }
             confirmVerified(getAllDraftsWithTitleAndDateUseCase)
         }
@@ -113,7 +95,8 @@ class DraftItemViewModelTest {
         DraftViewState.DraftItem(
             id = 2,
             title = NativeText.Simple("Title 2"),
-            lastEditionDate = "No date recorded",
+            lastEditionDate = NativeText.Resource(R.string.draft_date_error),
+            lastEditionDateLocaleDateTime = null,
             featuredPicture = NativePhoto.Uri("featuredPicture 2"),
             featuredPictureDescription = NativeText.Simple("featuredPictureDescription 2"),
             onClick = EquatableCallback {}
@@ -121,7 +104,15 @@ class DraftItemViewModelTest {
         DraftViewState.DraftItem(
             id = 3,
             title = NativeText.Simple("Title 3"),
-            lastEditionDate = "Last edited on: 03/03/2023 03:03",
+            lastEditionDate = NativeText.Argument(
+                R.string.draft_date_last_edition,
+                listOf(
+                    LocalDateTime.of(2023, 3, 3, 3, 3).format(
+                        DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
+                    )
+                )
+            ),
+            lastEditionDateLocaleDateTime = LocalDateTime.of(2023, 3, 3, 3, 3),
             featuredPicture = NativePhoto.Resource(R.drawable.baseline_image_24),
             featuredPictureDescription = null,
             onClick = EquatableCallback {}
@@ -129,7 +120,14 @@ class DraftItemViewModelTest {
         DraftViewState.DraftItem(
             id = 1,
             title = NativeText.Simple("Title 1"),
-            lastEditionDate = "Last edited on: 01/01/2023 01:01",
+            lastEditionDate = NativeText.Argument(
+                R.string.draft_date_last_edition, listOf(
+                    LocalDateTime.of(2023, 1, 1, 1, 1).format(
+                        DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
+                    )
+                )
+            ),
+            lastEditionDateLocaleDateTime = LocalDateTime.of(2023, 1, 1, 1, 1),
             featuredPicture = NativePhoto.Uri("featuredPicture 1"),
             featuredPictureDescription = NativeText.Simple("featuredPictureDescription 1"),
             onClick = EquatableCallback {}

@@ -125,7 +125,7 @@ class DetailViewModelTest {
 
     private val testDetailViewStateDetails = DetailViewState.PropertyDetail(
         id = TEST_PROPERTY_ID,
-        propertyType =  R.string.type_house,
+        propertyType = R.string.type_house,
         pictures = listOf(
             PictureBannerViewState(
                 pictureUri = NativePhoto.Uri("https://www.google.com/front_view"),

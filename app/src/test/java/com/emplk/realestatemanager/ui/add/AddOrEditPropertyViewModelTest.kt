@@ -809,11 +809,13 @@ class AddOrEditPropertyViewModelTest {
                 stringRes = it.stringRes,
             )
         },
-        propertyTypes = getTestPropertyTypes().map { PropertyTypeViewStateItem(
-            id = it.id,
-            name = NativeText.Resource(it.stringRes),
-            databaseName = it.databaseName,
-        ) },
+        propertyTypes = getTestPropertyTypes().map {
+            PropertyTypeViewStateItem(
+                id = it.id,
+                name = NativeText.Resource(it.stringRes),
+                databaseName = it.databaseName,
+            )
+        },
         isSold = false,
         soldDate = null,
         soldStatusText = null,

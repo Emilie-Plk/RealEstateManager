@@ -3,6 +3,7 @@ package com.emplk.realestatemanager.ui.drafts
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.NativePhoto
 import com.emplk.realestatemanager.ui.utils.NativeText
+import java.time.LocalDateTime
 
 sealed class DraftViewState(val type: Type) {
 
@@ -16,7 +17,8 @@ sealed class DraftViewState(val type: Type) {
         val title: NativeText,
         val featuredPicture: NativePhoto,
         val featuredPictureDescription: NativeText?,
-        val lastEditionDate: String,
+        val lastEditionDate: NativeText?,
+        val lastEditionDateLocaleDateTime: LocalDateTime?,
         val onClick: EquatableCallback,
     ) : DraftViewState(Type.DRAFTS)
 
