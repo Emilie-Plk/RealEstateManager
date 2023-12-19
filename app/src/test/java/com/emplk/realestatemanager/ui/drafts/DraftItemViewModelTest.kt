@@ -57,6 +57,14 @@ class DraftItemViewModelTest {
             assertEquals(draftItemViewStates, it.value)
             // First item is the "Add new draft" item
             assertTrue(it.value!!.first() is DraftViewState.AddNewDraftItem)
+            assertTrue(it.value!![1] is DraftViewState.DraftItem)
+            assertTrue(it.value!![2] is DraftViewState.DraftItem)
+            assertTrue(it.value!![3] is DraftViewState.DraftItem)
+
+            assertEquals(2L, (it.value!![1] as DraftViewState.DraftItem).id)
+            assertEquals(3L, (it.value!![2] as DraftViewState.DraftItem).id)
+            assertEquals(1L, (it.value!![3] as DraftViewState.DraftItem).id)
+
             coVerify(exactly = 1) { getAllDraftsWithTitleAndDateUseCase.invoke() }
             confirmVerified(getAllDraftsWithTitleAndDateUseCase)
         }
@@ -106,10 +114,8 @@ class DraftItemViewModelTest {
             title = NativeText.Simple("Title 3"),
             lastEditionDate = NativeText.Argument(
                 R.string.draft_date_last_edition,
-                listOf(
-                    LocalDateTime.of(2023, 3, 3, 3, 3).format(
-                        DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
-                    )
+                LocalDateTime.of(2023, 3, 3, 3, 3).format(
+                    DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
                 )
             ),
             lastEditionDateLocaleDateTime = LocalDateTime.of(2023, 3, 3, 3, 3),
@@ -121,11 +127,11 @@ class DraftItemViewModelTest {
             id = 1,
             title = NativeText.Simple("Title 1"),
             lastEditionDate = NativeText.Argument(
-                R.string.draft_date_last_edition, listOf(
-                    LocalDateTime.of(2023, 1, 1, 1, 1).format(
-                        DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
-                    )
+                R.string.draft_date_last_edition,
+                LocalDateTime.of(2023, 1, 1, 1, 1).format(
+                    DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
                 )
+
             ),
             lastEditionDateLocaleDateTime = LocalDateTime.of(2023, 1, 1, 1, 1),
             featuredPicture = NativePhoto.Uri("featuredPicture 1"),

@@ -29,6 +29,7 @@ class InitPropertyFormUseCaseTestLoaded {
     fun setUp() {
         coEvery { addPropertyFormWithDetailsUseCase.invoke(any()) } returns 1L
         coEvery { formDraftRepository.getFormDraftEntityById(any()) } returns getTestFormDraftEntity(1L)
+        coEvery { formDraftRepository.getEmptyFormId() } returns null
     }
 
     @Test
@@ -45,9 +46,27 @@ class InitPropertyFormUseCaseTestLoaded {
     }
 
     @Test
+    fun `case add new draft with existing empty form in db`() = testCoroutineRule.runTest {
+        //  Given
+        coEvery { formDraftRepository.getEmptyFormId() } returns 2L
+        coEvery { formDraftRepository.getFormDraftEntityById(2L) } returns getTestFormDraftEntity(2L)
+
+        // When
+        val result = initPropertyFormUseCase.invoke(null)
+
+        // Then
+        assertEquals(FormWithTypeEntity(getTestFormDraftEntity(2L), FormType.ADD), result)
+        coVerify(exactly = 1) {
+            formDraftRepository.getEmptyFormId()
+            formDraftRepository.getFormDraftEntityById(2L)
+        }
+        confirmVerified(formDraftRepository)
+    }
+
+    @Test
     fun `case add draft already exists`() = testCoroutineRule.runTest {
         // Given
-        coEvery { formDraftRepository.doesDraftExist(1L) } returns true
+        coEvery { formDraftRepository.doesFormExist(1L) } returns true
         coEvery { formDraftRepository.doesPropertyExist(1L) } returns false
 
         // When
@@ -58,7 +77,7 @@ class InitPropertyFormUseCaseTestLoaded {
         assertEquals(FormType.ADD, result.formType)
         coVerify(exactly = 1) {
             formDraftRepository.getFormDraftEntityById(1L)
-            formDraftRepository.doesDraftExist(1L)
+            formDraftRepository.doesFormExist(1L)
             formDraftRepository.doesPropertyExist(1L)
         }
         confirmVerified(formDraftRepository)
@@ -67,7 +86,7 @@ class InitPropertyFormUseCaseTestLoaded {
     @Test
     fun `case edit new draft`() = testCoroutineRule.runTest {
         // Given
-        coEvery { formDraftRepository.doesDraftExist(1L) } returns false
+        coEvery { formDraftRepository.doesFormExist(1L) } returns false
         coEvery { formDraftRepository.doesPropertyExist(1L) } returns true
 
         // When
@@ -84,7 +103,7 @@ class InitPropertyFormUseCaseTestLoaded {
         coVerify(exactly = 1) {
             addPropertyFormWithDetailsUseCase.invoke(1L)
             formDraftRepository.getFormDraftEntityById(1L)
-            formDraftRepository.doesDraftExist(1L)
+            formDraftRepository.doesFormExist(1L)
             formDraftRepository.doesPropertyExist(1L)
         }
         confirmVerified(formDraftRepository, addPropertyFormWithDetailsUseCase)
@@ -93,7 +112,7 @@ class InitPropertyFormUseCaseTestLoaded {
     @Test
     fun `case edit draft already existing`() = testCoroutineRule.runTest {
         // Given
-        coEvery { formDraftRepository.doesDraftExist(1L) } returns true
+        coEvery { formDraftRepository.doesFormExist(1L) } returns true
         coEvery { formDraftRepository.doesPropertyExist(1L) } returns true
 
         // When
@@ -104,7 +123,7 @@ class InitPropertyFormUseCaseTestLoaded {
         assertEquals(FormType.EDIT, result.formType)
         coVerify(exactly = 1) {
             formDraftRepository.getFormDraftEntityById(1L)
-            formDraftRepository.doesDraftExist(1L)
+            formDraftRepository.doesFormExist(1L)
             formDraftRepository.doesPropertyExist(1L)
         }
         confirmVerified(formDraftRepository)
@@ -113,7 +132,7 @@ class InitPropertyFormUseCaseTestLoaded {
     @Test(expected = Exception::class)
     fun `case id is not null or 0L, and doesn't exist in database`() = testCoroutineRule.runTest {
         // Given
-        coEvery { formDraftRepository.doesDraftExist(5L) } returns false
+        coEvery { formDraftRepository.doesFormExist(5L) } returns false
         coEvery { formDraftRepository.doesPropertyExist(5L) } returns false
 
         // When
@@ -125,7 +144,7 @@ class InitPropertyFormUseCaseTestLoaded {
         }
         coVerify(exactly = 1) {
             formDraftRepository.getFormDraftEntityById(5L)
-            formDraftRepository.doesDraftExist(5L)
+            formDraftRepository.doesFormExist(5L)
             formDraftRepository.doesPropertyExist(5L)
         }
         confirmVerified(formDraftRepository)

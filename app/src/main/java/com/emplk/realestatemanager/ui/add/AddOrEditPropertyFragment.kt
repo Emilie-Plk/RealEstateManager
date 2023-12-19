@@ -235,11 +235,7 @@ class AddOrEditPropertyFragment : Fragment(R.layout.form_fragment) {
     private fun initFormFieldsTextWatchers() {
 
         binding.formPriceTextInputEditText.doAfterTextChanged {
-            if (it.isNullOrBlank()) {
-                viewModel.onPriceChanged(BigDecimal.ZERO)
-                return@doAfterTextChanged
-            }
-            viewModel.onPriceChanged(BigDecimal(it.toString()))
+            viewModel.onPriceChanged(it?.toString())
         }
 
         binding.formSurfaceTextInputEditText.doAfterTextChanged {

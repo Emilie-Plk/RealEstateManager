@@ -82,7 +82,7 @@ class FormDraftRepositoryRoomTestItem {
         val testFormDraftEntity = getTestFormDraftEntity(TEST_PROPERTY_ID)
 
         // When
-        val result = repository.addFormDraftWithDetails(testFormDraftEntity)
+        val result = repository.addFormWithDetails(testFormDraftEntity)
 
         // Then
         assertEquals(1L, result)
@@ -100,7 +100,7 @@ class FormDraftRepositoryRoomTestItem {
         coEvery { formDraftDao.doesDraftExist(testPropertyId) } returns true
 
         // When
-        val result = repository.doesDraftExist(testPropertyId)
+        val result = repository.doesFormExist(testPropertyId)
 
         // Then
         assertEquals(true, result)
@@ -114,7 +114,7 @@ class FormDraftRepositoryRoomTestItem {
         val testPropertyId: Long? = null
 
         // When
-        val result = repository.doesDraftExist(testPropertyId)
+        val result = repository.doesFormExist(testPropertyId)
 
         // Then
         assertEquals(false, result)
@@ -127,7 +127,7 @@ class FormDraftRepositoryRoomTestItem {
         coEvery { formDraftDao.doesDraftExist(TEST_PROPERTY_ID) } throws SQLiteException()
 
         // When
-        val result = repository.doesDraftExist(TEST_PROPERTY_ID)
+        val result = repository.doesFormExist(TEST_PROPERTY_ID)
 
         // Then
         assertFalse(result)
@@ -209,7 +209,7 @@ class FormDraftRepositoryRoomTestItem {
         coEvery { formDraftDao.getAddPropertyDraftsCount() } returns 4
 
         // When
-        val result = repository.getDraftsCount()
+        val result = repository.getFormsCount()
 
         // Then
         assertEquals(4, result)

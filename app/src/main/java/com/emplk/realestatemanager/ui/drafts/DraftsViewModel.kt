@@ -73,9 +73,7 @@ class DraftsViewModel @Inject constructor(
     private fun mapLastEditionDateToNativeText(lastEditionDate: LocalDateTime?): NativeText =
         if (lastEditionDate != null) NativeText.Argument(
             R.string.draft_date_last_edition,
-            listOf(
                 lastEditionDate.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
-            )
         )
         else NativeText.Resource(R.string.draft_date_error)
 }

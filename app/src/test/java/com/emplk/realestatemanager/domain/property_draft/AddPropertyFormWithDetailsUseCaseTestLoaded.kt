@@ -30,14 +30,14 @@ class AddPropertyFormWithDetailsUseCaseTestLoaded {
 
     @Before
     fun setUp() {
-        coEvery { formDraftRepository.addFormDraftWithDetails(any()) } returns TEST_PROPERTY_ID
+        coEvery { formDraftRepository.addFormWithDetails(any()) } returns TEST_PROPERTY_ID
         coEvery { mapPropertyToDraftUseCase.invoke(any()) } returns testEmptyFormDraftEntity
     }
 
     @Test
     fun `invoke() calls addFormDraftWithDetails() with expected parameters`() = testCoroutineRule.runTest {
         // Given
-        coEvery { formDraftRepository.addFormDraftWithDetails(any()) } returns TEST_PROPERTY_ID
+        coEvery { formDraftRepository.addFormWithDetails(any()) } returns TEST_PROPERTY_ID
 
         // When
         val result = addPropertyFormWithDetailsUseCase.invoke(TEST_PROPERTY_ID)
@@ -45,7 +45,7 @@ class AddPropertyFormWithDetailsUseCaseTestLoaded {
         // Then
         assertEquals(TEST_PROPERTY_ID, result)
         coVerify(exactly = 1) {
-            formDraftRepository.addFormDraftWithDetails(any())
+            formDraftRepository.addFormWithDetails(any())
             mapPropertyToDraftUseCase.invoke(TEST_PROPERTY_ID)
         }
         confirmVerified(formDraftRepository, mapPropertyToDraftUseCase)
@@ -55,7 +55,7 @@ class AddPropertyFormWithDetailsUseCaseTestLoaded {
     fun `invoke() with id 0L calls addFormDraftWithDetails() with expected parameters`() =
         testCoroutineRule.runTest {
             // Given
-            coEvery { formDraftRepository.addFormDraftWithDetails(any()) } returns TEST_PROPERTY_ID
+            coEvery { formDraftRepository.addFormWithDetails(any()) } returns TEST_PROPERTY_ID
             coEvery { mapPropertyToDraftUseCase.invoke(0L) } returns getTestFormDraftEntity(0L)
 
             // When
@@ -64,7 +64,7 @@ class AddPropertyFormWithDetailsUseCaseTestLoaded {
             // Then
             assertEquals(TEST_PROPERTY_ID, result)
             coVerify(exactly = 1) {
-                formDraftRepository.addFormDraftWithDetails(testEmptyFormDraftEntity)
+                formDraftRepository.addFormWithDetails(testEmptyFormDraftEntity)
             }
 
             confirmVerified(formDraftRepository, mapPropertyToDraftUseCase)
@@ -74,7 +74,7 @@ class AddPropertyFormWithDetailsUseCaseTestLoaded {
     fun `invoke() with id null calls addFormDraftWithDetails() with expected parameters`() =
         testCoroutineRule.runTest {
             // Given
-            coEvery { formDraftRepository.addFormDraftWithDetails(any()) } returns TEST_PROPERTY_ID
+            coEvery { formDraftRepository.addFormWithDetails(any()) } returns TEST_PROPERTY_ID
             coEvery { mapPropertyToDraftUseCase.invoke(0L) } returns getTestFormDraftEntity(0L)
 
             // When
@@ -83,7 +83,7 @@ class AddPropertyFormWithDetailsUseCaseTestLoaded {
             // Then
             assertEquals(TEST_PROPERTY_ID, result)
             coVerify(exactly = 1) {
-                formDraftRepository.addFormDraftWithDetails(testEmptyFormDraftEntity)
+                formDraftRepository.addFormWithDetails(testEmptyFormDraftEntity)
             }
 
             confirmVerified(formDraftRepository, mapPropertyToDraftUseCase)
@@ -92,18 +92,18 @@ class AddPropertyFormWithDetailsUseCaseTestLoaded {
 
 private val testEmptyFormDraftEntity = FormDraftEntity(
     id = 0L,
-    type = "",
+    type = null,
     title = null,
     price = BigDecimal.ZERO,
     surface = BigDecimal.ZERO,
     rooms = 0,
     bedrooms = 0,
     bathrooms = 0,
-    description = "",
+    description = null,
     amenities = emptyList(),
-    address = "",
+    address = null,
     isAddressValid = false,
-    agentName = "",
+    agentName = null,
     entryDate = null,
     saleDate = null,
     lastEditionDate = null,

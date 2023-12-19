@@ -199,15 +199,15 @@ class AddOrEditPropertyViewModel @Inject constructor(
 
                     setFormCompletionUseCase.invoke(
                         form.typeDatabaseName != null &&
-                                form.address != null &&
+                                !form.address.isNullOrBlank() &&
                                 (isInternetEnabled && form.isAddressValid || !isInternetEnabled) &&
                                 form.price > BigDecimal.ZERO &&
                                 form.surface > BigDecimal.ZERO &&
-                                form.description != null &&
+                                !form.description.isNullOrBlank() &&
                                 form.nbRooms > 0 &&
                                 form.nbBathrooms > 0 &&
                                 form.nbBedrooms > 0 &&
-                                form.agent != null &&
+                                !form.agent.isNullOrBlank() &&
                                 form.selectedAmenities.isNotEmpty() &&
                                 form.pictureIds.isNotEmpty() &&
                                 form.featuredPictureId != null
@@ -501,7 +501,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
         }
         viewModelScope.launch { setSelectedAddressStateUseCase.invoke(input) }
         formMutableStateFlow.update {
-            it.copy(address = input)
+            it.copy(address = input?.ifBlank { null })
         }
     }
 
@@ -509,18 +509,15 @@ class AddOrEditPropertyViewModel @Inject constructor(
         setHasAddressFocusUseCase.invoke(hasFocus)
     }
 
-    fun onPriceChanged(price: BigDecimal) {
-        if (price > BigDecimal.ZERO) {
-            formMutableStateFlow.update {
-                it.copy(price = price)
-            }
+    fun onPriceChanged(price: String?) {
+        formMutableStateFlow.update { form ->
+            form.copy(price = if (price.isNullOrBlank()) BigDecimal.ZERO else BigDecimal(price))
         }
     }
 
     fun onSurfaceChanged(surface: String?) {
-        if (surface.isNullOrBlank()) return
-        formMutableStateFlow.update {
-            it.copy(surface = surface.toBigDecimal())
+        formMutableStateFlow.update { form ->
+            form.copy(surface = if (surface.isNullOrBlank()) BigDecimal.ZERO else BigDecimal(surface))
         }
     }
 
@@ -548,15 +545,11 @@ class AddOrEditPropertyViewModel @Inject constructor(
 
     fun onDescriptionChanged(description: String) {
         updateDescription = viewModelScope.launch {
-            println("Before job's cancelation with ${formMutableStateFlow.value.description}")
             updateDescription?.cancel()
-            println("Before delay with ${formMutableStateFlow.value.description}")
             delay(1.seconds)
-            println("After delay with ${formMutableStateFlow.value.description}")
             formMutableStateFlow.update {
-                it.copy(description = description)
+                it.copy(description = description.ifBlank { null })
             }
-            println("After update with ${formMutableStateFlow.value.description}")
         }
     }
 

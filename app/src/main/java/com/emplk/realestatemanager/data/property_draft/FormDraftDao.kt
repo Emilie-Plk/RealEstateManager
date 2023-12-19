@@ -31,6 +31,28 @@ interface FormDraftDao {
     @Query("SELECT EXISTS(SELECT * FROM properties WHERE id = :propertyFormId)")
     suspend fun doesPropertyExist(propertyFormId: Long): Boolean
 
+    @Query("SELECT id FROM base_form_drafts WHERE type IS NULL " +
+            "AND title IS NULL " +
+            "AND price = '0.0' " +
+            "AND surface = '0.0' " +
+            "AND address IS NULL " +
+            "AND rooms = 0 AND bedrooms = 0 " +
+            "AND bathrooms = 0 " +
+            "AND description IS NULL " +
+            "AND amenity_school = 0 " +
+            "AND amenity_park = 0 " +
+            "AND amenity_shopping = 0 " +
+            "AND amenity_restaurant = 0 " +
+            "AND amenity_concierge = 0 " +
+            "AND amenity_gym = 0 " +
+            "AND amenity_transportation = 0 " +
+            "AND amenity_hospital = 0 " +
+            "AND amenity_library = 0 " +
+            "AND agent_name IS NULL " +
+            "AND entry_date IS NULL " +
+            "LIMIT 1")
+    suspend fun getEmptyDraftId(): Long?
+
     @Query(
         "UPDATE base_form_drafts SET type = :newType," +
                 " title = :newTitle," +

@@ -27,7 +27,7 @@ class FormDraftRepositoryRoom @Inject constructor(
             formDraftDao.insert(formDraftMapper.mapToFormDraftDto(formDraftEntity))
         }
 
-    override suspend fun addFormDraftWithDetails(formDraftEntity: FormDraftEntity): Long =
+    override suspend fun addFormWithDetails(formDraftEntity: FormDraftEntity): Long =
         withContext(coroutineDispatcherProvider.io) {
             add(formDraftEntity).also { propertyFormId ->
                 buildList {
@@ -45,7 +45,7 @@ class FormDraftRepositoryRoom @Inject constructor(
         }
 
 
-    override suspend fun doesDraftExist(formId: Long?): Boolean =
+    override suspend fun doesFormExist(formId: Long?): Boolean =
         withContext(coroutineDispatcherProvider.io) {
             if (formId == null) return@withContext false
             try {
@@ -76,7 +76,7 @@ class FormDraftRepositoryRoom @Inject constructor(
             )
         }
 
-    override suspend fun getDraftsCount(): Int = withContext(coroutineDispatcherProvider.io) {
+    override suspend fun getFormsCount(): Int = withContext(coroutineDispatcherProvider.io) {
         formDraftDao.getAddPropertyDraftsCount()
     }
 
@@ -87,6 +87,10 @@ class FormDraftRepositoryRoom @Inject constructor(
                 formWithTitleDateAndFeaturedPictures
             )
         }
+
+    override suspend fun getEmptyFormId(): Long? = withContext(coroutineDispatcherProvider.io) {
+        formDraftDao.getEmptyDraftId()
+    }
 
     override suspend fun update(formDraftEntity: FormDraftEntity) =
         withContext(coroutineDispatcherProvider.io) {
