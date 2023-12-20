@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.domain.locale_formatting.surface
 
+import android.util.Log
 import com.emplk.realestatemanager.domain.locale_formatting.GetLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.HumanReadableRepository
 import java.math.BigDecimal
@@ -18,5 +19,5 @@ class ConvertToSquareFeetDependingOnLocaleUseCase @Inject constructor(
             Locale.US -> surface
             Locale.FRANCE -> humanReadableRepository.convertSquareFeetToSquareMetersRoundedHalfUp(surface)
             else -> surface
-        }
+        }.also { Log.d("COUCOU", "invoke of ConvertToSquareFeetDependingOnLocaleUseCase : $surface") }
 }

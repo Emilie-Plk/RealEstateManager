@@ -9,6 +9,7 @@ class AddPropertyFormWithDetailsUseCase @Inject constructor(
 ) {
     suspend fun invoke(id: Long?): Long =
         if (id == null || id == 0L) {
+            // case insert new draft in db (ADD)
             formDraftRepository.addFormWithDetails(
                 FormDraftEntity(
                     id = 0L,
@@ -30,6 +31,7 @@ class AddPropertyFormWithDetailsUseCase @Inject constructor(
                 )
             )
         } else {
+            // case insert new draft in db (EDIT)
             formDraftRepository.addFormWithDetails(mapPropertyToDraftUseCase.invoke(id))
         }
 }

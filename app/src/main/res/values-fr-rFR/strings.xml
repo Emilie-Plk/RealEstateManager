@@ -30,7 +30,7 @@
     <string name="iv_preview_delete_property_btn">Supprimer le bien</string>
     <string name="price_currency_in_n">(en %s)</string>
     <string name="surface_area_unit_in_n">Surface (%s)</string>
-    <string name="rooms_nb_short_version">%s PC</string>
+    <string name="rooms_nb_short_version">%s P</string>
     <string name="bathrooms_nb_short_version">%s SDB</string>
     <string name="bedrooms_nb_short_version">%s CHB</string>
     <string name="form_create_button">Créer le bien</string>

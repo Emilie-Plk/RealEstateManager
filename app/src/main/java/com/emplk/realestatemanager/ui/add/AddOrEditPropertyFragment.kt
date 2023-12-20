@@ -31,7 +31,6 @@ import com.emplk.realestatemanager.ui.utils.Event.Companion.observeEvent
 import com.emplk.realestatemanager.ui.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
-import java.math.BigDecimal
 
 
 @AndroidEntryPoint

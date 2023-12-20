@@ -86,7 +86,7 @@ class FilterPropertiesFragment : DialogFragment(R.layout.filter_properties_fragm
                 binding.filterPropertyMinSurfaceEditText.setText(viewState.minSurface)
             }
             binding.filterPropertyMinSurfaceEditText.doAfterTextChanged {
-                viewModel.onMinSurfaceChanged(it?.toString() ?: "")
+                viewModel.onMinSurfaceChanged(it?.toString())
             }
 
             if (binding.filterPropertyMaxSurfaceEditText.text.toString() != viewState.maxSurface) {

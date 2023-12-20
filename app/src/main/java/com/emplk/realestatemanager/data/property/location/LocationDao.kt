@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.RewriteQueriesToDropUnusedColumns
+import androidx.room.RoomWarnings
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -15,6 +16,7 @@ interface LocationDao {
     suspend fun insert(locationDto: LocationDto): Long?
 
     @RewriteQueriesToDropUnusedColumns
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM locations INNER JOIN properties ON locations.property_id = properties.id")
     fun getAllPropertyLatLongAsFlow(): Flow<List<PropertyWithLatLongAndSaleDateDto>>
 

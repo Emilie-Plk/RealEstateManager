@@ -36,13 +36,19 @@ class UtilsTest {
 
     @Test
     fun `dollar to euro conversion`() {
+        // When
         val result = convertDollarToEuro(TEST_DOLLAR_AMOUNT)
+
+        // Then
         assertEquals(TEST_EURO_RESULT, result)
     }
 
     @Test
     fun `euro to dollar conversion`() {
+        // When
         val result = convertEuroToDollar(TEST_EURO_AMOUNT)
+
+        // Then
         assertEquals(TEST_DOLLAR_RESULT, result)
     }
 

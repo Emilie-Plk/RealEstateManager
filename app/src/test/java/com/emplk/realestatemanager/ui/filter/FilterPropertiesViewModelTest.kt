@@ -9,7 +9,6 @@ import com.emplk.realestatemanager.domain.filter.PropertyMinMaxStatsEntity
 import com.emplk.realestatemanager.domain.filter.SearchedEntryDateRange
 import com.emplk.realestatemanager.domain.filter.SetPropertiesFilterUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.currency.FormatPriceToHumanReadableUseCase
-import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertSurfaceDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertSurfaceToSquareFeetDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertToUsdDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.surface.FormatAndRoundSurfaceToHumanReadableUseCase
@@ -49,7 +48,6 @@ class FilterPropertiesViewModelTest {
         mockk()
     private val getMinMaxPriceAndSurfaceConvertedUseCase: GetMinMaxPriceAndSurfaceConvertedUseCase = mockk()
     private val formatPriceToHumanReadableUseCase: FormatPriceToHumanReadableUseCase = mockk()
-    private val convertSurfaceDependingOnLocaleUseCase: ConvertSurfaceDependingOnLocaleUseCase = mockk()
     private val formatAndRoundSurfaceToHumanReadableUseCase: FormatAndRoundSurfaceToHumanReadableUseCase = mockk()
     private val convertToUsdDependingOnLocaleUseCase: ConvertToUsdDependingOnLocaleUseCase = mockk()
     private val convertSurfaceToSquareFeetDependingOnLocaleUseCase: ConvertSurfaceToSquareFeetDependingOnLocaleUseCase =
@@ -78,8 +76,6 @@ class FilterPropertiesViewModelTest {
         coEvery { getMinMaxPriceAndSurfaceConvertedUseCase.invoke() } returns minMaxPriceAndSurface
         every { formatPriceToHumanReadableUseCase.invoke(minMaxPriceAndSurface.minPrice) } returns "$100000"
         every { formatPriceToHumanReadableUseCase.invoke(minMaxPriceAndSurface.maxPrice) } returns "$200000"
-        every { convertSurfaceDependingOnLocaleUseCase.invoke(minMaxPriceAndSurface.minSurface) } returns BigDecimal(100)
-        every { convertSurfaceDependingOnLocaleUseCase.invoke(minMaxPriceAndSurface.maxSurface) } returns BigDecimal(200)
         every { convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(any()) } returns BigDecimal(100)
         every { formatAndRoundSurfaceToHumanReadableUseCase.invoke(minMaxPriceAndSurface.minSurface) } returns "100 sq ft"
         every { formatAndRoundSurfaceToHumanReadableUseCase.invoke(minMaxPriceAndSurface.maxSurface) } returns "200 sq ft"
@@ -94,7 +90,6 @@ class FilterPropertiesViewModelTest {
             convertSearchedEntryDateRangeToEpochMilliUseCase,
             getMinMaxPriceAndSurfaceConvertedUseCase,
             formatPriceToHumanReadableUseCase,
-            convertSurfaceDependingOnLocaleUseCase,
             formatAndRoundSurfaceToHumanReadableUseCase,
             convertToUsdDependingOnLocaleUseCase,
             convertSurfaceToSquareFeetDependingOnLocaleUseCase,

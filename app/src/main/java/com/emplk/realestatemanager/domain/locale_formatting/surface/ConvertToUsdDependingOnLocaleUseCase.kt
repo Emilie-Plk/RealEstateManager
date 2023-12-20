@@ -15,7 +15,7 @@ class ConvertToUsdDependingOnLocaleUseCase @Inject constructor(
 ) {
     /**
      * @return BigDecimal of the price converted to USD depending on locale
-     * (used to save USD in database)
+     * (price saved in database is in USD)
      */
     suspend fun invoke(price: BigDecimal): BigDecimal {
         val locale = getLocaleUseCase.invoke()
