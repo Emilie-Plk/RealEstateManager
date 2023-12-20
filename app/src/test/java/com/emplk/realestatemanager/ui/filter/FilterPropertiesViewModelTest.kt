@@ -5,6 +5,7 @@ import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.filter.ConvertSearchedEntryDateRangeToEpochMilliUseCase
 import com.emplk.realestatemanager.domain.filter.GetFilteredPropertiesCountAsFlowUseCase
 import com.emplk.realestatemanager.domain.filter.GetMinMaxPriceAndSurfaceConvertedUseCase
+import com.emplk.realestatemanager.domain.filter.OptimizeValuesForFilteringUseCase
 import com.emplk.realestatemanager.domain.filter.PropertyMinMaxStatsEntity
 import com.emplk.realestatemanager.domain.filter.SearchedEntryDateRange
 import com.emplk.realestatemanager.domain.filter.SetPropertiesFilterUseCase
@@ -55,6 +56,7 @@ class FilterPropertiesViewModelTest {
     private val getPropertyTypeUseCase: GetPropertyTypeUseCase = mockk()
     private val getAmenityTypeUseCase: GetAmenityTypeUseCase = mockk()
     private val setPropertiesFilterUseCase: SetPropertiesFilterUseCase = mockk()
+    private val optimizeValuesForFilteringUseCase: OptimizeValuesForFilteringUseCase = mockk()
     private val setNavigationTypeUseCase: SetNavigationTypeUseCase = mockk()
     private lateinit var viewModel: FilterPropertiesViewModel
 
@@ -72,14 +74,32 @@ class FilterPropertiesViewModelTest {
                 any()
             )
         } returns flowOf(3)
+        // Price
+        every { optimizeValuesForFilteringUseCase.invoke(BigDecimal(100000), BigDecimal(200000)) } returns Pair(
+            BigDecimal(100000),
+            BigDecimal(200000)
+        )
+        // Surface
+        every { optimizeValuesForFilteringUseCase.invoke(BigDecimal(100), BigDecimal(200)) } returns Pair(
+            BigDecimal(100),
+            BigDecimal(200)
+        )
+        every { optimizeValuesForFilteringUseCase.invoke(BigDecimal.ZERO, BigDecimal.ZERO) } returns Pair(
+            BigDecimal.ZERO,
+            BigDecimal.ZERO
+        )
         every { convertSearchedEntryDateRangeToEpochMilliUseCase.invoke(any()) } returns 1698758555
         coEvery { getMinMaxPriceAndSurfaceConvertedUseCase.invoke() } returns minMaxPriceAndSurface
         every { formatPriceToHumanReadableUseCase.invoke(minMaxPriceAndSurface.minPrice) } returns "$100000"
         every { formatPriceToHumanReadableUseCase.invoke(minMaxPriceAndSurface.maxPrice) } returns "$200000"
-        every { convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(any()) } returns BigDecimal(100)
+        every { convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(BigDecimal(100)) } returns BigDecimal(100)
+        every { convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(BigDecimal(200)) } returns BigDecimal(200)
+        every { convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(BigDecimal.ZERO) } returns BigDecimal.ZERO
         every { formatAndRoundSurfaceToHumanReadableUseCase.invoke(minMaxPriceAndSurface.minSurface) } returns "100 sq ft"
         every { formatAndRoundSurfaceToHumanReadableUseCase.invoke(minMaxPriceAndSurface.maxSurface) } returns "200 sq ft"
-        coEvery { convertToUsdDependingOnLocaleUseCase.invoke(any()) } returns BigDecimal(100000)
+        coEvery { convertToUsdDependingOnLocaleUseCase.invoke(BigDecimal(100000)) } returns BigDecimal(100000)
+        coEvery { convertToUsdDependingOnLocaleUseCase.invoke(BigDecimal(200000)) } returns BigDecimal(200000)
+        coEvery { convertToUsdDependingOnLocaleUseCase.invoke(BigDecimal.ZERO) } returns BigDecimal.ZERO
         every { getPropertyTypeUseCase.invoke() } returns getTestPropertyTypesForFilter()
         every { getAmenityTypeUseCase.invoke() } returns amenityTypes
         justRun { setPropertiesFilterUseCase.invoke(any(), any(), any(), any(), any(), any(), any(), any()) }
@@ -96,6 +116,7 @@ class FilterPropertiesViewModelTest {
             getPropertyTypeUseCase,
             getAmenityTypeUseCase,
             setPropertiesFilterUseCase,
+            optimizeValuesForFilteringUseCase,
             setNavigationTypeUseCase
         )
     }
