@@ -147,8 +147,6 @@ class AddOrEditPropertyUseCaseTest {
         assertThat { result is FormEvent.Toast }
     }
 
-    // TODO: tester case où le propertyId est null, et où le propertyId est non null
-
     @Test
     fun `edge case - incorrect FormDraftParams properties throws IllegalArgumentException`() =
         testCoroutineRule.runTest {

@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.emplk.realestatemanager.R
-import com.emplk.realestatemanager.domain.agent.GetAgentsMapUseCase
+import com.emplk.realestatemanager.domain.agent.GetRealEstateAgentsUseCase
 import com.emplk.realestatemanager.domain.autocomplete.GetCurrentPredictionAddressesFlowWithDebounceUseCase
 import com.emplk.realestatemanager.domain.autocomplete.PredictionWrapper
 import com.emplk.realestatemanager.domain.connectivity.IsInternetEnabledFlowUseCase
@@ -84,7 +84,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
     private val savePictureToLocalAppFilesAndToLocalDatabaseUseCase: SavePictureToLocalAppFilesAndToLocalDatabaseUseCase,
     private val getPicturePreviewsAsFlowUseCase: GetPicturePreviewsAsFlowUseCase,
     private val deletePicturePreviewUseCase: DeletePicturePreviewUseCase,
-    private val getAgentsMapUseCase: GetAgentsMapUseCase,
+    private val getRealEstateAgents: GetRealEstateAgentsUseCase,
     private val getCurrencyTypeUseCase: GetCurrencyTypeUseCase,
     private val convertPriceDependingOnLocaleUseCase: ConvertPriceDependingOnLocaleUseCase,
     private val convertToSquareFeetDependingOnLocaleUseCase: ConvertToSquareFeetDependingOnLocaleUseCase,
@@ -180,7 +180,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
                     val currencyType = getCurrencyTypeUseCase.invoke()
                     val amenityTypes = getAmenityTypeUseCase.invoke()
                     val propertyTypes = getPropertyTypeUseCase.invoke()
-                    val agents = getAgentsMapUseCase.invoke()
+                    val agents = getRealEstateAgents.invoke()
 
                     setPropertyFormProgressUseCase.invoke(
                         !form.typeDatabaseName.isNullOrBlank() ||
@@ -259,8 +259,8 @@ class AddOrEditPropertyViewModel @Inject constructor(
                             },
                         agents = agents.map { agent ->
                             AddPropertyAgentViewStateItem(
-                                id = agent.key,
-                                name = agent.value
+                                id = agent.id,
+                                name = agent.agentName,
                             )
                         },
                         addressPredictions = mapPredictionsToViewState(predictionWrapper, isInternetEnabled),

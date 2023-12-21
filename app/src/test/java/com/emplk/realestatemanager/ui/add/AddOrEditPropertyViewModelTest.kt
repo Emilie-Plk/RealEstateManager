@@ -3,7 +3,7 @@ package com.emplk.realestatemanager.ui.add
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.data.property_draft.FormTypeAndTitleEntity
-import com.emplk.realestatemanager.domain.agent.GetAgentsMapUseCase
+import com.emplk.realestatemanager.domain.agent.GetRealEstateAgentsUseCase
 import com.emplk.realestatemanager.domain.autocomplete.GetCurrentPredictionAddressesFlowWithDebounceUseCase
 import com.emplk.realestatemanager.domain.autocomplete.PredictionWrapper
 import com.emplk.realestatemanager.domain.connectivity.IsInternetEnabledFlowUseCase
@@ -104,7 +104,7 @@ class AddOrEditPropertyViewModelTest {
         mockk()
     private val getPicturePreviewsAsFlowUseCase: GetPicturePreviewsAsFlowUseCase = mockk()
     private val deletePicturePreviewUseCase: DeletePicturePreviewUseCase = mockk()
-    private val getAgentsMapUseCase: GetAgentsMapUseCase = mockk()
+    private val getRealEstateAgentsUseCase: GetRealEstateAgentsUseCase = mockk()
     private val getCurrencyTypeUseCase: GetCurrencyTypeUseCase = mockk()
     private val convertPriceDependingOnLocaleUseCase: ConvertPriceDependingOnLocaleUseCase = mockk()
     private val convertToSquareFeetDependingOnLocaleUseCase: ConvertToSquareFeetDependingOnLocaleUseCase = mockk()
@@ -141,7 +141,7 @@ class AddOrEditPropertyViewModelTest {
         coEvery { savePictureToLocalAppFilesAndToLocalDatabaseUseCase.invoke(any(), any(), any()) } returns 1L
         coEvery { getPicturePreviewsAsFlowUseCase.invoke(any()) } returns flowOf(listOf())
         coJustRun { deletePicturePreviewUseCase.invoke(any(), any()) }
-        every { getAgentsMapUseCase.invoke() } returns getTestAgentsMap()
+        every { getRealEstateAgentsUseCase.invoke() } returns getTestAgentsMap()
         every { getCurrencyTypeUseCase.invoke() } returns CurrencyType.DOLLAR
         coEvery { convertPriceDependingOnLocaleUseCase.invoke(any()) } returns BigDecimal.ZERO
         every { convertToSquareFeetDependingOnLocaleUseCase.invoke(any()) } returns BigDecimal.ZERO
@@ -179,7 +179,7 @@ class AddOrEditPropertyViewModelTest {
             savePictureToLocalAppFilesAndToLocalDatabaseUseCase,
             getPicturePreviewsAsFlowUseCase,
             deletePicturePreviewUseCase,
-            getAgentsMapUseCase,
+            getRealEstateAgentsUseCase,
             getCurrencyTypeUseCase,
             convertPriceDependingOnLocaleUseCase,
             convertToSquareFeetDependingOnLocaleUseCase,

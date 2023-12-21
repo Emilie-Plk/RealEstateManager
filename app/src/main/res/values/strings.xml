@@ -27,10 +27,7 @@
     <string name="logo_slogan_tv">Where dreams find their address</string>
     <string name="realestatemanager_logo_a11y" translatable="false">RealEstateManager logo</string>
     <string name="iv_preview_delete_property_btn">Delete property</string>
-    <string name="price_currency_in_n">(in %s)</string>
     <string name="price_hint">Price (%s)</string>
-    <string name="dollar_symbol" translatable="false">\\u0024</string>
-    <string name="euro_symbol" translatable="false">\\u20ac</string>
     <string name="surface_area_unit_in_n">Area (%s)</string>
     <string name="rooms_nb_short_version">%s RM</string>
     <string name="bathrooms_nb_short_version">%s BA</string>
@@ -49,7 +46,6 @@
     <string name="draft_date_error">No date recorded</string>
     <string name="draft_no_title">Unnamed draft</string>
     <string name="draft_add_new_draft">Add new property</string>
-    <string name="form_title_untitled">Untitled</string>
     <string name="submit_title_btn_text">Submit Title</string>
     <string name="save_draft_btn_text">Save</string>
     <string name="enter_draft_title_textInputLayout">Please enter draft title</string>
@@ -63,7 +59,6 @@
     <string name="filter_button_one">1 property</string>
     <string name="filter_button_nb_properties">%s properties</string>
     <string name="geolocation_error_no_location_found">Can\'t find geolocation, try again later!</string>
-    <string name="geolocation_error_no_internet">Please check your internet connexion and try later!</string>
     <string name="geolocation_error_no_gps">Please enable GPS and try again!</string>
     <string name="permission_rationale_message">Location permission is asked to display properties on the map, yet you can browse the map with the properties without your geolocation info.</string>
     <string name="permission_rationale_ok_btn">Got it</string>

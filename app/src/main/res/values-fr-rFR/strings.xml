@@ -28,7 +28,6 @@
     <string name="menu_reset_filter_property">Enlever filtres</string>
     <string name="logo_slogan_tv">Et vos rêves trouvent leur adresse</string>
     <string name="iv_preview_delete_property_btn">Supprimer le bien</string>
-    <string name="price_currency_in_n">(en %s)</string>
     <string name="surface_area_unit_in_n">Surface (%s)</string>
     <string name="rooms_nb_short_version">%s P</string>
     <string name="bathrooms_nb_short_version">%s SDB</string>
@@ -47,7 +46,6 @@
     <string name="draft_date_error">Pas d\'info de date</string>
     <string name="draft_no_title">Brouillon sans nom</string>
     <string name="draft_add_new_draft">Ajouter un nouveau bien</string>
-    <string name="form_title_untitled">Sans titre</string>
     <string name="submit_title_btn_text">Soumettre le titre</string>
     <string name="save_draft_btn_text">Enregistrer</string>
     <string name="enter_draft_title_textInputLayout">Merci d\'entrer un titre pour ce brouillon</string>
@@ -61,7 +59,6 @@
     <string name="filter_button_one">1 résultat</string>
     <string name="filter_button_nb_properties">%s résultats</string>
     <string name="geolocation_error_no_location_found">Aucune info de géolocalisation, essayez plus tard</string>
-    <string name="geolocation_error_no_internet">Merci de vérifier votre connexion internet et essayez plus tard</string>
     <string name="geolocation_error_no_gps">Merci d\'activer votre GPS et essayez plus tard</string>
     <string name="permission_rationale_message">La permission est requise pour vous géolocaliser sur la carte, toutefois vous pouvez naviguer sur la carte et situer les biens sans être géolocalisé·e.</string>
     <string name="permission_rationale_ok_btn">Ok</string>

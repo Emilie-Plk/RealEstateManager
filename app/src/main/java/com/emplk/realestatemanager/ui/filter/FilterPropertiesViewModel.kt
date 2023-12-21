@@ -106,7 +106,6 @@ class FilterPropertiesViewModel @Inject constructor(
                             ),
                         )
                     ),
-                    // TODO: only convert viewstates
                     minSurface = if (filterParamsMutableStateFlow.value.minSurface == BigDecimal.ZERO) ""
                     else filterParamsMutableStateFlow.value.minSurface.toString(),
                     maxSurface = if (filterParamsMutableStateFlow.value.maxSurface == BigDecimal.ZERO) ""

@@ -96,17 +96,9 @@
         <item name="android:background">@color/secondary_translucent</item>
     </style>
 
-    <style name="Theme.RealEstateManager.FilledTextInputLayout" parent="Widget.Material3.TextInputLayout.FilledBox">
-        <item name="android:layout_marginStart">8dp</item>
-        <item name="android:layout_marginEnd">8dp</item>
-        <item name="boxBackgroundColor">@color/secondary_translucent</item>
-        <item name="android:background">@color/secondary_translucent</item>
-    </style>
-
     <style name="Theme.RealEstateManager.SubmitButton" parent="ThemeOverlay.Material3.Button">
         <item name="android:backgroundTint">@drawable/submit_btn_selector</item>
     </style>
-
 
     <!-- FILTER PROPERTY-->
 
@@ -137,6 +129,4 @@
         <item name="android:textColor">@color/button_group_text_color</item>
         <item name="checkedIconTint">@color/secondary</item>
     </style>
-
-
 </resources>
