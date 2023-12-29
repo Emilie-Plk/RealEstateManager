@@ -1,12 +1,14 @@
 package com.emplk.realestatemanager.data.property
 
 import android.database.sqlite.SQLiteException
+import androidx.sqlite.db.SimpleSQLiteQuery
 import com.emplk.realestatemanager.data.property.location.LocationDao
 import com.emplk.realestatemanager.data.property.location.LocationMapper
 import com.emplk.realestatemanager.data.property.picture.PictureDao
 import com.emplk.realestatemanager.data.property.picture.PictureMapper
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.filter.PropertyMinMaxStatsEntity
+import com.emplk.realestatemanager.domain.filter.model.SearchEntity
 import com.emplk.realestatemanager.domain.property.PropertyEntity
 import com.emplk.realestatemanager.domain.property.PropertyRepository
 import kotlinx.coroutines.async
@@ -14,7 +16,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
-import java.math.BigDecimal
 import javax.inject.Inject
 
 class PropertyRepositoryRoom @Inject constructor(
@@ -100,44 +101,88 @@ class PropertyRepositoryRoom @Inject constructor(
             propertyDao.getMinMaxPricesAndSurfaces()
         }
 
-    override fun getFilteredPropertiesCount(
-        propertyType: String?,
-        minPrice: BigDecimal,
-        maxPrice: BigDecimal,
-        minSurface: BigDecimal,
-        maxSurface: BigDecimal,
-        amenitySchool: Boolean?,
-        amenityPark: Boolean?,
-        amenityShopping: Boolean?,
-        amenityRestaurant: Boolean?,
-        amenityConcierge: Boolean?,
-        amenityGym: Boolean?,
-        amenityTransport: Boolean?,
-        amenityHospital: Boolean?,
-        amenityLibrary: Boolean?,
-        entryDateEpochMin: Long?,
-        entryDateEpochMax: Long?,
-        isSold: Boolean?
-    ): Flow<Int> = propertyDao.getFilteredPropertiesCount(
-        propertyType,
-        minPrice,
-        maxPrice,
-        minSurface,
-        maxSurface,
-        amenitySchool,
-        amenityPark,
-        amenityShopping,
-        amenityRestaurant,
-        amenityConcierge,
-        amenityGym,
-        amenityTransport,
-        amenityHospital,
-        amenityLibrary,
-        entryDateEpochMin,
-        entryDateEpochMax,
-        isSold
-    )
+    override fun getFilteredPropertiesCountRawQuery(searchEntity: SearchEntity): Flow<Int> {
+        val queryStringBuilder = StringBuilder("SELECT COUNT(*) FROM properties")
+        val args = mutableListOf<Any>()
 
+        val whereClauses = mutableListOf<String>()
+
+        searchEntity.propertyType?.let {
+            whereClauses.add("type = ?")
+            args.add(it)
+        }
+
+        if (!searchEntity.minPrice.toDouble().equals(0.0) && !searchEntity.maxPrice.toDouble().equals(0.0)) { // range
+            whereClauses.add("price BETWEEN ? AND ?")
+            args.add(searchEntity.minPrice.toDouble())
+            args.add(searchEntity.maxPrice.toDouble())
+        } else if (!searchEntity.minPrice.toDouble().equals(0.0) && searchEntity.maxPrice.toDouble().equals(0.0)) {
+            whereClauses.add("price >= ?")
+            args.add(searchEntity.minPrice.toDouble())
+        } else if (!searchEntity.maxPrice.toDouble().equals(0.0) && searchEntity.minPrice.toDouble().equals(0.0)) {
+            whereClauses.add("price <= ?")
+            args.add(searchEntity.maxPrice.toDouble())
+        }
+
+        if (!searchEntity.minSurface.toDouble().equals(0.0) && !searchEntity.maxSurface.toDouble().equals(0.0)) {
+            whereClauses.add("surface BETWEEN ? AND ?")
+            args.add(searchEntity.minSurface.toDouble())
+            args.add(searchEntity.maxSurface.toDouble())
+        } else if (!searchEntity.minSurface.toDouble().equals(0.0) && searchEntity.maxSurface.toDouble().equals(0.0)) {
+            whereClauses.add("surface >= ?")
+            args.add(searchEntity.minSurface.toDouble())
+        } else if (!searchEntity.maxSurface.toDouble().equals(0.0) && searchEntity.minSurface.toDouble().equals(0.0)) {
+            whereClauses.add("surface <= ?")
+            args.add(searchEntity.maxSurface.toDouble())
+        }
+
+        if (searchEntity.amenitySchool == true) {
+            whereClauses.add("amenity_school = 1")
+        }
+        if (searchEntity.amenityPark == true) {
+            whereClauses.add("amenity_park = 1")
+        }
+        if (searchEntity.amenityShopping == true) {
+            whereClauses.add("amenity_shopping = 1")
+        }
+        if (searchEntity.amenityRestaurant == true) {
+            whereClauses.add("amenity_restaurant = 1")
+        }
+        if (searchEntity.amenityConcierge == true) {
+            whereClauses.add("amenity_concierge = 1")
+        }
+        if (searchEntity.amenityGym == true) {
+            whereClauses.add("amenity_gym = 1")
+        }
+        if (searchEntity.amenityTransport == true) {
+            whereClauses.add("amenity_transportation = 1")
+        }
+        if (searchEntity.amenityHospital == true) {
+            whereClauses.add("amenity_hospital = 1")
+        }
+        if (searchEntity.amenityLibrary == true) {
+            whereClauses.add("amenity_library = 1")
+        }
+
+        if (searchEntity.entryDateEpochMin != null && searchEntity.entryDateEpochMax != null) {
+            whereClauses.add("entry_date_epoch BETWEEN ? AND ?")
+            args.add(searchEntity.entryDateEpochMin)
+            args.add(searchEntity.entryDateEpochMax)
+        }
+
+        if (searchEntity.isSold != null) {
+            whereClauses.add("(:isSold = 0 AND sale_date IS NULL) OR (:isSold = 1 AND sale_date IS NOT NULL)")
+            args.add(searchEntity.isSold)
+        }
+
+        if (whereClauses.isNotEmpty()) {
+            queryStringBuilder.append(" WHERE ")
+            queryStringBuilder.append(whereClauses.joinToString(" AND "))
+        }
+
+        val query = SimpleSQLiteQuery(queryStringBuilder.toString(), args.toTypedArray())
+        return propertyDao.getFilteredPropertiesCountRawQuery(query)
+    }
 
     override suspend fun update(propertyEntity: PropertyEntity): Boolean =
         withContext(coroutineDispatcherProvider.io) {

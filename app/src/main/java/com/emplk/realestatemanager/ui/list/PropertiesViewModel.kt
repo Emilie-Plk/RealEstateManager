@@ -39,7 +39,9 @@ class PropertiesViewModel @Inject constructor(
 
     val viewState: LiveData<List<PropertiesViewState>> = liveData {
         if (latestValue == null) {
-            emit(listOf(PropertiesViewState.LoadingState))
+            emit(
+                listOf(PropertiesViewState.LoadingState)
+            )
         }
 
         combine(

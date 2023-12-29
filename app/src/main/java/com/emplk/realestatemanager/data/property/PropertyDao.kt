@@ -4,11 +4,12 @@ import android.database.Cursor
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.RawQuery
 import androidx.room.Transaction
 import androidx.room.Update
+import androidx.sqlite.db.SupportSQLiteQuery
 import com.emplk.realestatemanager.domain.filter.PropertyMinMaxStatsEntity
 import kotlinx.coroutines.flow.Flow
-import java.math.BigDecimal
 
 @Dao
 interface PropertyDao {
@@ -41,48 +42,8 @@ interface PropertyDao {
     )
     suspend fun getMinMaxPricesAndSurfaces(): PropertyMinMaxStatsEntity
 
-    @Query(
-        "SELECT COUNT(*) FROM properties WHERE " +
-                "(:propertyType IS NULL OR type = :propertyType) AND " +
-                "((:minPrice = 0 AND :maxPrice = 0) OR " +
-                "(:minPrice > 0 AND :maxPrice = 0 AND price >= :minPrice) OR " +
-                "(:minPrice = 0 AND :maxPrice > 0 AND price <= :maxPrice) OR " +
-                "(:minPrice > 0 AND :maxPrice > 0 AND price BETWEEN :minPrice AND :maxPrice)) AND " +
-                "((:minSurface = 0 AND :maxSurface = 0) OR " +
-                "(:minSurface > 0 AND :maxSurface = 0 AND surface >= :minSurface) OR " +
-                "(:minSurface = 0 AND :maxSurface > 0 AND surface <= :maxSurface) OR " +
-                "(:minSurface > 0 AND :maxSurface > 0 AND surface BETWEEN :minSurface AND :maxSurface)) AND " +  // Both
-                "(:amenitySchool IS NULL OR :amenitySchool = 0 OR amenity_school = 1) AND " +
-                "(:amenityPark IS NULL OR :amenityPark = 0 OR amenity_park = 1) AND " +
-                "(:amenityShopping IS NULL OR :amenityShopping = 0 OR amenity_shopping = 1) AND " +
-                "(:amenityRestaurant IS NULL OR :amenityRestaurant = 0 OR amenity_restaurant = 1) AND " +
-                "(:amenityConcierge IS NULL OR :amenityConcierge = 0 OR amenity_concierge = 1) AND " +
-                "(:amenityGym IS NULL OR :amenityGym = 0 OR amenity_gym = 1) AND " +
-                "(:amenityTransportation IS NULL OR :amenityTransportation = 0 OR amenity_transportation = 1) AND " +
-                "(:amenityHospital IS NULL OR :amenityHospital = 0 OR amenity_hospital = 1) AND " +
-                "(:amenityLibrary IS NULL OR :amenityLibrary = 0 OR amenity_library = 1) AND " +
-                "((:entryDateMin IS NULL OR entry_date_epoch >= :entryDateMin) AND (:entryDateMax IS NULL OR entry_date_epoch <= :entryDateMax)) AND " +
-                "(:isSold IS NULL OR (:isSold = 0 AND sale_date IS NULL) OR (:isSold = 1 AND sale_date IS NOT NULL))"
-    )
-    fun getFilteredPropertiesCount(
-        propertyType: String?,
-        minPrice: BigDecimal,
-        maxPrice: BigDecimal,
-        minSurface: BigDecimal,
-        maxSurface: BigDecimal,
-        amenitySchool: Boolean?,
-        amenityPark: Boolean?,
-        amenityShopping: Boolean?,
-        amenityRestaurant: Boolean?,
-        amenityConcierge: Boolean?,
-        amenityGym: Boolean?,
-        amenityTransportation: Boolean?,
-        amenityHospital: Boolean?,
-        amenityLibrary: Boolean?,
-        entryDateMin: Long?,
-        entryDateMax: Long?,
-        isSold: Boolean?
-    ): Flow<Int>
+    @RawQuery(observedEntities = [PropertyDto::class])
+    fun getFilteredPropertiesCountRawQuery(query: SupportSQLiteQuery): Flow<Int>
 
     @Query("SELECT * FROM properties")
     fun getAllPropertiesWithCursor(): Cursor

@@ -65,6 +65,7 @@ class FilterPropertiesViewModel @Inject constructor(
                 minValue = convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(filterParams.minSurface),
                 maxValue = convertSurfaceToSquareFeetDependingOnLocaleUseCase.invoke(filterParams.maxSurface)
             )
+
             getFilteredPropertiesCountAsFlowUseCase.invoke(
                 propertyType = filterParams.propertyType,
                 minPrice = minMaxPrice.first,

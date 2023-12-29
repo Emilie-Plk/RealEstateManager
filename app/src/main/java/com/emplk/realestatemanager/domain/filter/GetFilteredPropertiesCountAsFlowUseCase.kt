@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.domain.filter
 
+import com.emplk.realestatemanager.domain.filter.model.SearchEntity
 import com.emplk.realestatemanager.domain.property.PropertyRepository
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.ui.filter.PropertySaleState
@@ -25,29 +26,31 @@ class GetFilteredPropertiesCountAsFlowUseCase @Inject constructor(
         propertySaleState: PropertySaleState?,
     ): Flow<Int> {
         val now = LocalDateTime.now(clock).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-        return propertyRepository.getFilteredPropertiesCount(
-            if (propertyType == "All") null else propertyType,
-            minPrice,
-            maxPrice,
-            minSurface,
-            maxSurface,
-            amenities.contains(AmenityType.SCHOOL),
-            amenities.contains(AmenityType.PARK),
-            amenities.contains(AmenityType.SHOPPING_MALL),
-            amenities.contains(AmenityType.RESTAURANT),
-            amenities.contains(AmenityType.CONCIERGE),
-            amenities.contains(AmenityType.GYM),
-            amenities.contains(AmenityType.PUBLIC_TRANSPORTATION),
-            amenities.contains(AmenityType.HOSPITAL),
-            amenities.contains(AmenityType.LIBRARY),
-            entryDateMin,
-            now,
-            when (propertySaleState) {
-                PropertySaleState.SOLD -> true
-                PropertySaleState.FOR_SALE -> false
-                PropertySaleState.ALL -> null
-                else -> null
-            },
+        return propertyRepository.getFilteredPropertiesCountRawQuery(
+            SearchEntity(
+                propertyType = if (propertyType == "All") null else propertyType,
+                minPrice = minPrice,
+                maxPrice = maxPrice,
+                minSurface = minSurface,
+                maxSurface = maxSurface,
+                amenitySchool = amenities.contains(AmenityType.SCHOOL),
+                amenityPark = amenities.contains(AmenityType.PARK),
+                amenityShopping = amenities.contains(AmenityType.SHOPPING_MALL),
+                amenityRestaurant = amenities.contains(AmenityType.RESTAURANT),
+                amenityConcierge = amenities.contains(AmenityType.CONCIERGE),
+                amenityGym = amenities.contains(AmenityType.GYM),
+                amenityTransport = amenities.contains(AmenityType.PUBLIC_TRANSPORTATION),
+                amenityHospital = amenities.contains(AmenityType.HOSPITAL),
+                amenityLibrary = amenities.contains(AmenityType.LIBRARY),
+                entryDateEpochMin = entryDateMin,
+                entryDateEpochMax = now,
+                isSold = when (propertySaleState) {
+                    PropertySaleState.SOLD -> true
+                    PropertySaleState.FOR_SALE -> false
+                    PropertySaleState.ALL -> null
+                    else -> null
+                },
+            )
         )
     }
 }
