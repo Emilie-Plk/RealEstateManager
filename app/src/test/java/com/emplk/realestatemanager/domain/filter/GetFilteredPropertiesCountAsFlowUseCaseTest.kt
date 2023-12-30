@@ -1,6 +1,7 @@
 package com.emplk.realestatemanager.domain.filter
 
 import app.cash.turbine.test
+import com.emplk.realestatemanager.domain.filter.model.SearchEntity
 import com.emplk.realestatemanager.domain.property.PropertyRepository
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.fixtures.testFixedClock
@@ -32,25 +33,27 @@ class GetFilteredPropertiesCountAsFlowUseCaseTest {
     @Before
     fun setUp() {
         coEvery {
-            propertyRepository.getFilteredPropertiesCount(
-                propertyType = "House",
-                minPrice = BigDecimal.ZERO,
-                maxPrice = BigDecimal(1000000),
-                minSurface = BigDecimal.ZERO,
-                maxSurface = BigDecimal(1000),
-                amenitySchool = true,
-                amenityPark = false,
-                amenityShopping = false,
-                amenityRestaurant = false,
-                amenityConcierge = false,
-                amenityGym = false,
-                amenityTransport = false,
-                amenityHospital = false,
-                amenityLibrary = false,
-                entryDateEpochMin = null,
-                entryDateEpochMax = LocalDateTime.now(testFixedClock).atZone(ZoneId.systemDefault()).toInstant()
-                    .toEpochMilli(),
-                isSold = null,
+            propertyRepository.getFilteredPropertiesCountRawQuery(
+                SearchEntity(
+                    propertyType = "House",
+                    minPrice = BigDecimal.ZERO,
+                    maxPrice = BigDecimal(1000000),
+                    minSurface = BigDecimal.ZERO,
+                    maxSurface = BigDecimal(1000),
+                    amenitySchool = true,
+                    amenityPark = false,
+                    amenityShopping = false,
+                    amenityRestaurant = false,
+                    amenityConcierge = false,
+                    amenityGym = false,
+                    amenityTransport = false,
+                    amenityHospital = false,
+                    amenityLibrary = false,
+                    entryDateEpochMin = null,
+                    entryDateEpochMax = LocalDateTime.now(testFixedClock).atZone(ZoneId.systemDefault()).toInstant()
+                        .toEpochMilli(),
+                    isSold = null,
+                )
             )
         } returns flowOf(5)
     }

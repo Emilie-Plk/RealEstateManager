@@ -22,6 +22,7 @@ import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.justRun
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runCurrent
 import org.junit.Before
@@ -92,6 +93,7 @@ class MapViewModelTest {
                 runCurrent()
 
                 // Then
+                verify { setCurrentPropertyIdUseCase.invoke(1L) } // TODO: change that
                 assertThat(event.value).isEqualTo(Event(MapEvent.OnMarkerClicked))
             }
         }

@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.fixtures
 
+import com.emplk.realestatemanager.data.agent.RealEstateAgent
 import com.emplk.realestatemanager.data.property.PropertyDto
 import com.emplk.realestatemanager.data.property.PropertyWithDetails
 import com.emplk.realestatemanager.data.property.location.LocationDto
@@ -308,13 +309,13 @@ fun getTestFormDraftDto(id: Long) = FormDraftDto(
 // endregion FormDraftDto
 
 
-fun getTestAgentsMap() = mapOf(
-    1L to "John Doe",
-    2L to "Jane Doe",
-    3L to "John Smith",
-    4L to "Jane Smith",
-    5L to "John Wayne",
-    6L to "Jane Wayne",
+fun getTestAgents() = listOf(
+    RealEstateAgent.JOHN_DOE,
+    RealEstateAgent.JANE_DOE,
+    RealEstateAgent.JOHN_SMITH,
+    RealEstateAgent.JANE_SMITH,
+    RealEstateAgent.JOHN_WAYNE,
+    RealEstateAgent.JANE_WAYNE,
 )
 
 fun getTestPropertyTypes() = listOf(

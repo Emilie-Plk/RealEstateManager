@@ -199,7 +199,11 @@ class AddOrEditPropertyFragment : Fragment(R.layout.form_fragment) {
         }
 
         binding.formPicturesFromStorageButton.setOnClickListener {
-            importPictureCallback.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            importPictureCallback.launch(
+                PickVisualMediaRequest(
+                    ActivityResultContracts.PickVisualMedia.ImageOnly
+                )
+            )
         }
 
         binding.formFromCameraButton.setOnClickListener {

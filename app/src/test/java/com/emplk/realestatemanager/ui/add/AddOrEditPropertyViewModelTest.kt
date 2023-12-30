@@ -39,7 +39,7 @@ import com.emplk.realestatemanager.domain.property_draft.picture_preview.SavePic
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.UpdatePicturePreviewUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.id.AddAllPicturePreviewsIdsUseCase
 import com.emplk.realestatemanager.domain.property_type.GetPropertyTypeUseCase
-import com.emplk.realestatemanager.fixtures.getTestAgentsMap
+import com.emplk.realestatemanager.fixtures.getTestAgents
 import com.emplk.realestatemanager.fixtures.getTestAmenities
 import com.emplk.realestatemanager.fixtures.getTestPicturePreviewEntities
 import com.emplk.realestatemanager.fixtures.getTestPropertyTypes
@@ -141,7 +141,7 @@ class AddOrEditPropertyViewModelTest {
         coEvery { savePictureToLocalAppFilesAndToLocalDatabaseUseCase.invoke(any(), any(), any()) } returns 1L
         coEvery { getPicturePreviewsAsFlowUseCase.invoke(any()) } returns flowOf(listOf())
         coJustRun { deletePicturePreviewUseCase.invoke(any(), any()) }
-        every { getRealEstateAgentsUseCase.invoke() } returns getTestAgentsMap()
+        every { getRealEstateAgentsUseCase.invoke() } returns getTestAgents()
         every { getCurrencyTypeUseCase.invoke() } returns CurrencyType.DOLLAR
         coEvery { convertPriceDependingOnLocaleUseCase.invoke(any()) } returns BigDecimal.ZERO
         every { convertToSquareFeetDependingOnLocaleUseCase.invoke(any()) } returns BigDecimal.ZERO
@@ -355,7 +355,7 @@ class AddOrEditPropertyViewModelTest {
             runCurrent()
 
             // When
-            viewModel.onPropertyTypeSelected(getTestPropertyTypes().get(1).databaseName)
+            viewModel.onPropertyTypeSelected(getTestPropertyTypes()[1].databaseName)
             runCurrent()
 
             // Then
@@ -378,12 +378,12 @@ class AddOrEditPropertyViewModelTest {
             runCurrent()
 
             // When
-            viewModel.onAgentSelected(getTestAgentsMap().values.toList()[1])
+            viewModel.onAgentSelected(getTestAgents()[1].agentName)
             runCurrent()
 
             // Then
             assertEquals(
-                getTestAgentsMap().values.toList()[1],
+                getTestAgents()[1].agentName,
                 it.value!!.selectedAgent
             )
         }
@@ -577,7 +577,7 @@ class AddOrEditPropertyViewModelTest {
     }
 
     @Test
-    fun `set currency type to EURO - should display prices in €`() = testCoroutineRule.runTest {
+    fun `set currency type to EURO - should display prices in EURO`() = testCoroutineRule.runTest {
         every { getCurrencyTypeUseCase.invoke() } returns CurrencyType.EURO
         viewModel.viewStateLiveData.observeForTesting(this) {
             // Given
@@ -733,7 +733,7 @@ class AddOrEditPropertyViewModelTest {
             pictures = getTestPicturePreviewEntities(),
             address = "1st, Dummy Street, 12345, Dummy City",
             isAddressValid = true,
-            agentName = getTestAgentsMap().values.toList()[1],
+            agentName = getTestAgents()[1].agentName,
             entryDate = LocalDateTime.of(2023, 1, 1, 12, 0),
             saleDate = null,
             lastEditionDate = null,
@@ -784,7 +784,7 @@ class AddOrEditPropertyViewModelTest {
         nbBathrooms = 0,
         nbBedrooms = 0,
         pictures = listOf(),
-        agents = getTestAgentsMap().map { AddPropertyAgentViewStateItem(it.key, it.value) },
+        agents = getTestAgents().map { AddPropertyAgentViewStateItem(it.id, it.agentName) },
         selectedAgent = null,
         priceCurrencyHint = NativeText.Argument(
             R.string.price_hint,

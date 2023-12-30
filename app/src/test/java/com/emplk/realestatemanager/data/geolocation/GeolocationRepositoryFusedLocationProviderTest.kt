@@ -84,7 +84,7 @@ class GeolocationRepositoryFusedLocationProviderTest {
                 val result = awaitItem()
 
                 // Then
-                //  assertEquals(expected, result)  // TODO: NINO Why returns Success(0.0, 0.0) instead of Success(12.3, 45.6)?
+                //  assertEquals(expected, result)  // Why returns Success(0.0, 0.0) instead of Success(12.3, 45.6)?
                 verify {
                     fusedLocationProviderClient.requestLocationUpdates(
                         any(),
