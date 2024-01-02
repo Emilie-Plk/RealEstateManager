@@ -2,7 +2,6 @@ package com.emplk.realestatemanager.ui.add
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.emplk.realestatemanager.R
-import com.emplk.realestatemanager.data.property_draft.FormTypeAndTitleEntity
 import com.emplk.realestatemanager.domain.agent.GetRealEstateAgentsUseCase
 import com.emplk.realestatemanager.domain.autocomplete.GetCurrentPredictionAddressesFlowWithDebounceUseCase
 import com.emplk.realestatemanager.domain.autocomplete.PredictionWrapper
@@ -22,8 +21,6 @@ import com.emplk.realestatemanager.domain.navigation.draft.SetFormCompletionUseC
 import com.emplk.realestatemanager.domain.property.AddOrEditPropertyUseCase
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.amenity.type.GetAmenityTypeUseCase
-import com.emplk.realestatemanager.domain.property_draft.FormDraftEntity
-import com.emplk.realestatemanager.domain.property_draft.FormWithTypeEntity
 import com.emplk.realestatemanager.domain.property_draft.GetFormTypeAndTitleAsFlowUseCase
 import com.emplk.realestatemanager.domain.property_draft.InitPropertyFormUseCase
 import com.emplk.realestatemanager.domain.property_draft.ResetPropertyFormUseCase
@@ -33,6 +30,9 @@ import com.emplk.realestatemanager.domain.property_draft.UpdatePropertyFormUseCa
 import com.emplk.realestatemanager.domain.property_draft.address.SetHasAddressFocusUseCase
 import com.emplk.realestatemanager.domain.property_draft.address.SetSelectedAddressStateUseCase
 import com.emplk.realestatemanager.domain.property_draft.address.UpdateOnAddressClickedUseCase
+import com.emplk.realestatemanager.domain.property_draft.model.FormDraftEntity
+import com.emplk.realestatemanager.domain.property_draft.model.FormTypeAndTitleEntity
+import com.emplk.realestatemanager.domain.property_draft.model.FormWithTypeEntity
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.DeletePicturePreviewUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.GetPicturePreviewsAsFlowUseCase
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.SavePictureToLocalAppFilesAndToLocalDatabaseUseCase

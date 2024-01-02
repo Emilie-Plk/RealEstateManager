@@ -1,7 +1,7 @@
 package com.emplk.realestatemanager.data.filter
 
 import app.cash.turbine.test
-import com.emplk.realestatemanager.domain.filter.PropertiesFilterEntity
+import com.emplk.realestatemanager.domain.filter.model.PropertiesFilterEntity
 import com.emplk.utils.TestCoroutineRule
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull

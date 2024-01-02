@@ -9,9 +9,9 @@ import com.emplk.realestatemanager.data.DataModule
 import com.emplk.realestatemanager.data.api.FixerApi
 import com.emplk.realestatemanager.data.currency_rate.response.FixerCurrencyRateResponse
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
-import com.emplk.realestatemanager.domain.currency_rate.CurrencyRateEntity
 import com.emplk.realestatemanager.domain.currency_rate.CurrencyRateRepository
 import com.emplk.realestatemanager.domain.currency_rate.CurrencyRateWrapper
+import com.emplk.realestatemanager.domain.currency_rate.model.CurrencyRateEntity
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch

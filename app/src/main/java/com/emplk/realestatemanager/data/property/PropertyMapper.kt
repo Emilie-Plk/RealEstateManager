@@ -4,8 +4,8 @@ import com.emplk.realestatemanager.data.property.location.LocationDto
 import com.emplk.realestatemanager.data.property.location.LocationMapper
 import com.emplk.realestatemanager.data.property.picture.PictureDto
 import com.emplk.realestatemanager.data.property.picture.PictureMapper
-import com.emplk.realestatemanager.domain.property.PropertyEntity
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
+import com.emplk.realestatemanager.domain.property.model.PropertyEntity
 import java.math.RoundingMode
 import java.time.ZoneId
 import javax.inject.Inject

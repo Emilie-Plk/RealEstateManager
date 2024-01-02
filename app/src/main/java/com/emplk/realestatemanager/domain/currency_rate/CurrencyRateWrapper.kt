@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.domain.currency_rate
 
+import com.emplk.realestatemanager.domain.currency_rate.model.CurrencyRateEntity
 import java.math.BigDecimal
 
 sealed class CurrencyRateWrapper {

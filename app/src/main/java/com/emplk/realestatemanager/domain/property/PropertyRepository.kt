@@ -1,7 +1,8 @@
 package com.emplk.realestatemanager.domain.property
 
-import com.emplk.realestatemanager.domain.filter.PropertyMinMaxStatsEntity
+import com.emplk.realestatemanager.domain.filter.model.PropertyMinMaxStatsEntity
 import com.emplk.realestatemanager.domain.filter.model.SearchEntity
+import com.emplk.realestatemanager.domain.property.model.PropertyEntity
 import kotlinx.coroutines.flow.Flow
 
 interface PropertyRepository {

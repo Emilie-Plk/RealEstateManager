@@ -1,6 +1,7 @@
 package com.emplk.realestatemanager.domain.filter
 
 import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceDependingOnLocaleUseCase
+import com.emplk.realestatemanager.domain.filter.model.PropertyMinMaxStatsEntity
 import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertToSquareFeetDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.property.PropertyRepository
 import javax.inject.Inject

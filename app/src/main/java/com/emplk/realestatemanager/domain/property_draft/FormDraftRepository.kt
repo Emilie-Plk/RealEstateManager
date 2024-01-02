@@ -1,5 +1,8 @@
 package com.emplk.realestatemanager.domain.property_draft
 
+import com.emplk.realestatemanager.domain.property_draft.model.FormDraftEntity
+import com.emplk.realestatemanager.domain.property_draft.model.FormWithDetailEntity
+
 interface FormDraftRepository {
     suspend fun add(formDraftEntity: FormDraftEntity): Long
 

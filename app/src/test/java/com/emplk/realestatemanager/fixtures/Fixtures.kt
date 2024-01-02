@@ -7,12 +7,12 @@ import com.emplk.realestatemanager.data.property.location.LocationDto
 import com.emplk.realestatemanager.data.property.picture.PictureDto
 import com.emplk.realestatemanager.data.property_draft.FormDraftDto
 import com.emplk.realestatemanager.data.property_type.PropertyType
-import com.emplk.realestatemanager.domain.property.PropertyEntity
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.location.LocationEntity
+import com.emplk.realestatemanager.domain.property.model.PropertyEntity
 import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
-import com.emplk.realestatemanager.domain.property_draft.FormDraftEntity
 import com.emplk.realestatemanager.domain.property_draft.FormDraftParams
+import com.emplk.realestatemanager.domain.property_draft.model.FormDraftEntity
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.PicturePreviewEntity
 import com.google.android.gms.maps.model.LatLng
 import java.math.BigDecimal

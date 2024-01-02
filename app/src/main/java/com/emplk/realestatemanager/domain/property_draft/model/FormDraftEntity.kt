@@ -1,4 +1,4 @@
-package com.emplk.realestatemanager.domain.property_draft
+package com.emplk.realestatemanager.domain.property_draft.model
 
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.PicturePreviewEntity

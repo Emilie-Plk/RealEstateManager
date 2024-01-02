@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.domain.filter
 
+import com.emplk.realestatemanager.domain.filter.model.PropertiesFilterEntity
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.fixtures.testFixedClock
 import com.emplk.realestatemanager.ui.filter.PropertySaleState

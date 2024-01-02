@@ -1,6 +1,7 @@
-package com.emplk.realestatemanager.data.property_draft
+package com.emplk.realestatemanager.data.property_draft.mappers
 
-import com.emplk.realestatemanager.domain.property_draft.FormWithDetailEntity
+import com.emplk.realestatemanager.data.property_draft.FormWithTitleDateAndFeaturedPicture
+import com.emplk.realestatemanager.domain.property_draft.model.FormWithDetailEntity
 import javax.inject.Inject
 
 class FormWithTitleDateAndFeaturedPictureMapper @Inject constructor() {

@@ -4,8 +4,8 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.current_property.SetCurrentPropertyIdUseCase
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
-import com.emplk.realestatemanager.domain.property_draft.FormWithDetailEntity
 import com.emplk.realestatemanager.domain.property_draft.GetAllDraftsWithTitleAndDateUseCase
+import com.emplk.realestatemanager.domain.property_draft.model.FormWithDetailEntity
 import com.emplk.realestatemanager.ui.utils.EquatableCallback
 import com.emplk.realestatemanager.ui.utils.NativePhoto
 import com.emplk.realestatemanager.ui.utils.NativeText

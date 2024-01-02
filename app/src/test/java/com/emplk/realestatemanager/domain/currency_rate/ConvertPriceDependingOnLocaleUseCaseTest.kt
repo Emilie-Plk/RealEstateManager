@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.domain.currency_rate
 
+import com.emplk.realestatemanager.domain.currency_rate.model.CurrencyRateEntity
 import com.emplk.realestatemanager.domain.locale_formatting.GetLocaleUseCase
 import com.emplk.utils.TestCoroutineRule
 import io.mockk.coEvery

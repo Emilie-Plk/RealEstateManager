@@ -9,8 +9,8 @@ import assertk.assertions.isEqualTo
 import com.emplk.realestatemanager.data.api.FixerApi
 import com.emplk.realestatemanager.data.currency_rate.response.FixerCurrencyRateResponse
 import com.emplk.realestatemanager.data.currency_rate.response.RateResponse
-import com.emplk.realestatemanager.domain.currency_rate.CurrencyRateEntity
 import com.emplk.realestatemanager.domain.currency_rate.CurrencyRateWrapper
+import com.emplk.realestatemanager.domain.currency_rate.model.CurrencyRateEntity
 import com.emplk.realestatemanager.fixtures.testFixedClock
 import com.emplk.utils.TestCoroutineRule
 import io.mockk.coEvery

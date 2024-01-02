@@ -1,5 +1,6 @@
-package com.emplk.realestatemanager.domain.filter
+package com.emplk.realestatemanager.domain.filter.model
 
+import com.emplk.realestatemanager.domain.filter.SearchedEntryDateRange
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.ui.filter.PropertySaleState
 import java.math.BigDecimal

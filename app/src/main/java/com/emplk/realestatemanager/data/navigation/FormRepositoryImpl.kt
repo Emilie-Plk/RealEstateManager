@@ -1,7 +1,7 @@
 package com.emplk.realestatemanager.data.navigation
 
-import com.emplk.realestatemanager.data.property_draft.FormTypeAndTitleEntity
 import com.emplk.realestatemanager.domain.navigation.draft.FormRepository
+import com.emplk.realestatemanager.domain.property_draft.model.FormTypeAndTitleEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

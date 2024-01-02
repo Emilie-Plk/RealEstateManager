@@ -8,7 +8,7 @@ import com.emplk.realestatemanager.domain.currency_rate.ConvertPriceDependingOnL
 import com.emplk.realestatemanager.domain.current_property.SetCurrentPropertyIdUseCase
 import com.emplk.realestatemanager.domain.filter.GetPropertiesFilterFlowUseCase
 import com.emplk.realestatemanager.domain.filter.IsPropertyMatchingFiltersUseCase
-import com.emplk.realestatemanager.domain.filter.PropertiesFilterEntity
+import com.emplk.realestatemanager.domain.filter.model.PropertiesFilterEntity
 import com.emplk.realestatemanager.domain.locale_formatting.currency.FormatPriceToHumanReadableUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertToSquareFeetDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.surface.FormatAndRoundSurfaceToHumanReadableUseCase

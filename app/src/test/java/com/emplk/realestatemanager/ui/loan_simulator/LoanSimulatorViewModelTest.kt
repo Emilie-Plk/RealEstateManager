@@ -7,9 +7,9 @@ import assertk.assertions.isNull
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.loan_simulator.GetLoanDataAsFlowUseCase
 import com.emplk.realestatemanager.domain.loan_simulator.GetLoanYearlyAndMonthlyPaymentUseCase
-import com.emplk.realestatemanager.domain.loan_simulator.LoanDataEntity
 import com.emplk.realestatemanager.domain.loan_simulator.ResetLoanDataUseCase
 import com.emplk.realestatemanager.domain.loan_simulator.SetLoanDataUseCase
+import com.emplk.realestatemanager.domain.loan_simulator.model.LoanDataEntity
 import com.emplk.realestatemanager.domain.locale_formatting.currency.CurrencyType
 import com.emplk.realestatemanager.domain.locale_formatting.currency.FormatPriceToHumanReadableUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.currency.GetCurrencyTypeUseCase
