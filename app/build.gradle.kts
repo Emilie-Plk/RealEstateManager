@@ -102,7 +102,7 @@ dependencies {
 
     // HILT
     implementation("com.google.dagger:hilt-android:2.48.1")
-    ksp("com.google.dagger:hilt-compiler:2.48")
+    kapt("com.google.dagger:hilt-compiler:2.48")
 
     // ROOM
     implementation("androidx.room:room-runtime:2.6.1")
