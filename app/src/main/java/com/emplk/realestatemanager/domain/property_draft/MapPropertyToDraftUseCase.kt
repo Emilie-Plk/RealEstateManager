@@ -1,6 +1,7 @@
 package com.emplk.realestatemanager.domain.property_draft
 
 import com.emplk.realestatemanager.domain.property.PropertyRepository
+import com.emplk.realestatemanager.domain.property_draft.model.FormDraftEntity
 import com.emplk.realestatemanager.domain.property_draft.picture_preview.PicturePreviewEntity
 import javax.inject.Inject
 

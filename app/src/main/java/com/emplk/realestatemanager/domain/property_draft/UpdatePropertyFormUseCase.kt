@@ -2,6 +2,7 @@ package com.emplk.realestatemanager.domain.property_draft
 
 import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertSurfaceToSquareFeetDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertToUsdDependingOnLocaleUseCase
+import com.emplk.realestatemanager.domain.property_draft.model.FormDraftEntity
 import java.math.BigDecimal
 import java.time.Clock
 import java.time.LocalDateTime

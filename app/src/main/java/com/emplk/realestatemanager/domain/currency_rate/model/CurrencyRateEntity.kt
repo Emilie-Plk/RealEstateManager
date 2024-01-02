@@ -1,4 +1,4 @@
-package com.emplk.realestatemanager.domain.currency_rate
+package com.emplk.realestatemanager.domain.currency_rate.model
 
 import java.math.BigDecimal
 import java.time.LocalDateTime

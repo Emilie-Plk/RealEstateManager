@@ -8,7 +8,7 @@ import androidx.room.RawQuery
 import androidx.room.Transaction
 import androidx.room.Update
 import androidx.sqlite.db.SupportSQLiteQuery
-import com.emplk.realestatemanager.domain.filter.PropertyMinMaxStatsEntity
+import com.emplk.realestatemanager.domain.filter.model.PropertyMinMaxStatsEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

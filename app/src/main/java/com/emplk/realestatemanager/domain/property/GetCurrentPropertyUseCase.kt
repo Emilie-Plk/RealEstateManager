@@ -1,6 +1,7 @@
 package com.emplk.realestatemanager.domain.property
 
 import com.emplk.realestatemanager.domain.current_property.GetCurrentPropertyIdFlowUseCase
+import com.emplk.realestatemanager.domain.property.model.PropertyEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest

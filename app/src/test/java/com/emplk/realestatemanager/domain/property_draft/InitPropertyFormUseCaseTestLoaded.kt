@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.domain.property_draft
 
+import com.emplk.realestatemanager.domain.property_draft.model.FormWithTypeEntity
 import com.emplk.realestatemanager.fixtures.getTestFormDraftEntity
 import com.emplk.realestatemanager.ui.add.FormType
 import com.emplk.utils.TestCoroutineRule

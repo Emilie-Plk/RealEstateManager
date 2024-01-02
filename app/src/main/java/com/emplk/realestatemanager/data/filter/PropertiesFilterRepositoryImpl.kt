@@ -1,7 +1,7 @@
 package com.emplk.realestatemanager.data.filter
 
-import com.emplk.realestatemanager.domain.filter.PropertiesFilterEntity
 import com.emplk.realestatemanager.domain.filter.PropertiesFilterRepository
+import com.emplk.realestatemanager.domain.filter.model.PropertiesFilterEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject

@@ -1,4 +1,4 @@
-package com.emplk.realestatemanager.domain.property
+package com.emplk.realestatemanager.domain.property.model
 
 import com.emplk.realestatemanager.domain.property.amenity.AmenityType
 import com.emplk.realestatemanager.domain.property.location.LocationEntity

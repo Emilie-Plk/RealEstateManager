@@ -7,10 +7,10 @@ import com.emplk.realestatemanager.data.property.location.LocationMapper
 import com.emplk.realestatemanager.data.property.picture.PictureDao
 import com.emplk.realestatemanager.data.property.picture.PictureMapper
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
-import com.emplk.realestatemanager.domain.filter.PropertyMinMaxStatsEntity
+import com.emplk.realestatemanager.domain.filter.model.PropertyMinMaxStatsEntity
 import com.emplk.realestatemanager.domain.filter.model.SearchEntity
-import com.emplk.realestatemanager.domain.property.PropertyEntity
 import com.emplk.realestatemanager.domain.property.PropertyRepository
+import com.emplk.realestatemanager.domain.property.model.PropertyEntity
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn

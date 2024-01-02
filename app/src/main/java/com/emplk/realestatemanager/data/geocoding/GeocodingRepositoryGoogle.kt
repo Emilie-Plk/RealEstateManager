@@ -6,8 +6,8 @@ import com.emplk.realestatemanager.data.api.GoogleApi
 import com.emplk.realestatemanager.data.geocoding.response.GeocodingResponse
 import com.emplk.realestatemanager.data.utils.CoroutineDispatcherProvider
 import com.emplk.realestatemanager.domain.geocoding.GeocodingRepository
-import com.emplk.realestatemanager.domain.geocoding.GeocodingResultEntity
 import com.emplk.realestatemanager.domain.geocoding.GeocodingWrapper
+import com.emplk.realestatemanager.domain.geocoding.model.GeocodingResultEntity
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext

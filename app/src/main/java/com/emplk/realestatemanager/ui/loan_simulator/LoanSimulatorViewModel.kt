@@ -7,9 +7,9 @@ import androidx.lifecycle.liveData
 import com.emplk.realestatemanager.R
 import com.emplk.realestatemanager.domain.loan_simulator.GetLoanDataAsFlowUseCase
 import com.emplk.realestatemanager.domain.loan_simulator.GetLoanYearlyAndMonthlyPaymentUseCase
-import com.emplk.realestatemanager.domain.loan_simulator.LoanParams
 import com.emplk.realestatemanager.domain.loan_simulator.ResetLoanDataUseCase
 import com.emplk.realestatemanager.domain.loan_simulator.SetLoanDataUseCase
+import com.emplk.realestatemanager.domain.loan_simulator.model.LoanParamsEntity
 import com.emplk.realestatemanager.domain.locale_formatting.currency.FormatPriceToHumanReadableUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.currency.GetCurrencyTypeUseCase
 import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
@@ -37,7 +37,8 @@ class LoanSimulatorViewModel @Inject constructor(
     private val resetLoanDataUseCase: ResetLoanDataUseCase,
 ) : ViewModel() {
 
-    private val loanParamsMutableStateFlow: MutableStateFlow<LoanParams> = MutableStateFlow(LoanParams())
+    private val loanParamsEntityMutableStateFlow: MutableStateFlow<LoanParamsEntity> =
+        MutableStateFlow(LoanParamsEntity())
     private val errorMessageMutableSharedFlow: MutableStateFlow<LoanErrorMessages> =
         MutableStateFlow(LoanErrorMessages())
 
@@ -45,7 +46,7 @@ class LoanSimulatorViewModel @Inject constructor(
         coroutineScope {
             launch {
                 getLoanDataAsFlowUseCase.invoke().collect { loanData ->
-                    loanParamsMutableStateFlow.update {
+                    loanParamsEntityMutableStateFlow.update {
                         it.copy(
                             loanAmount = loanData.loanAmount,
                             interestRate = loanData.interestRate,
@@ -58,9 +59,9 @@ class LoanSimulatorViewModel @Inject constructor(
                 }
             }
 
-            setLoanDataUseCase.invoke(loanParamsMutableStateFlow.value)
+            setLoanDataUseCase.invoke(loanParamsEntityMutableStateFlow.value)
 
-            loanParamsMutableStateFlow.collectLatest { loanParams ->
+            loanParamsEntityMutableStateFlow.collectLatest { loanParams ->
                 emit(
                     LoanSimulatorViewState(
                         loanAmount = if (loanParams.loanAmount == BigDecimal.ZERO) "" else loanParams.loanAmount.toString(),
@@ -102,13 +103,13 @@ class LoanSimulatorViewModel @Inject constructor(
                                 return@EquatableCallback
                             }
                             val result = getLoanYearlyAndMonthlyPaymentUseCase.invoke(
-                                loanParamsMutableStateFlow.value.loanAmount,
-                                loanParamsMutableStateFlow.value.interestRate,
-                                loanParamsMutableStateFlow.value.loanDuration
+                                loanParamsEntityMutableStateFlow.value.loanAmount,
+                                loanParamsEntityMutableStateFlow.value.interestRate,
+                                loanParamsEntityMutableStateFlow.value.loanDuration
                             )
                             if (result != null) {
-                                setLoanDataUseCase.invoke(loanParamsMutableStateFlow.value)
-                                loanParamsMutableStateFlow.update {
+                                setLoanDataUseCase.invoke(loanParamsEntityMutableStateFlow.value)
+                                loanParamsEntityMutableStateFlow.update {
                                     it.copy(
                                         yearlyPayment = result.yearlyPayment,
                                         monthlyPayment = result.monthlyPayment
@@ -137,7 +138,7 @@ class LoanSimulatorViewModel @Inject constructor(
 
         if (loanAmount.isBlank() || loanAmount.startsWith("0")) return
 
-        loanParamsMutableStateFlow.update {
+        loanParamsEntityMutableStateFlow.update {
             it.copy(
                 loanAmount = BigDecimal(loanAmount)
             )
@@ -149,7 +150,7 @@ class LoanSimulatorViewModel @Inject constructor(
             errorMessageMutableSharedFlow.tryEmit(LoanErrorMessages(interestRateErrorMessage = null))
         if (interestRate.isBlank() || interestRate.startsWith("0")) return
 
-        loanParamsMutableStateFlow.update {
+        loanParamsEntityMutableStateFlow.update {
             it.copy(
                 interestRate = BigDecimal(interestRate)
             )
@@ -161,7 +162,7 @@ class LoanSimulatorViewModel @Inject constructor(
             errorMessageMutableSharedFlow.tryEmit(LoanErrorMessages(loanDurationErrorMessage = null))
         if (loanDuration.isBlank() || loanDuration.startsWith("0")) return
 
-        loanParamsMutableStateFlow.update {
+        loanParamsEntityMutableStateFlow.update {
             it.copy(
                 loanDuration = BigDecimal(loanDuration)
             )
@@ -169,11 +170,11 @@ class LoanSimulatorViewModel @Inject constructor(
     }
 
     fun onResume() {
-        setLoanDataUseCase.invoke(loanParamsMutableStateFlow.value)
+        setLoanDataUseCase.invoke(loanParamsEntityMutableStateFlow.value)
     }
 
     fun onLoanAmountReset() {
-        loanParamsMutableStateFlow.update {
+        loanParamsEntityMutableStateFlow.update {
             it.copy(
                 interestRate = BigDecimal.ZERO
             )
@@ -181,7 +182,7 @@ class LoanSimulatorViewModel @Inject constructor(
     }
 
     fun onInterestRateReset() {
-        loanParamsMutableStateFlow.update {
+        loanParamsEntityMutableStateFlow.update {
             it.copy(
                 interestRate = BigDecimal.ZERO
             )
@@ -189,7 +190,7 @@ class LoanSimulatorViewModel @Inject constructor(
     }
 
     fun onLoanDurationReset() {
-        loanParamsMutableStateFlow.update {
+        loanParamsEntityMutableStateFlow.update {
             it.copy(
                 loanDuration = BigDecimal.ZERO
             )

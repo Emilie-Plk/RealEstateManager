@@ -1,5 +1,6 @@
 package com.emplk.realestatemanager.domain.property_draft
 
+import com.emplk.realestatemanager.domain.property_draft.model.FormDraftEntity
 import java.math.BigDecimal
 import javax.inject.Inject
 

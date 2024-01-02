@@ -13,7 +13,6 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
-import androidx.work.WorkManager
 import com.emplk.realestatemanager.BuildConfig
 import com.emplk.realestatemanager.data.api.FixerApi
 import com.emplk.realestatemanager.data.api.GoogleApi
@@ -51,11 +50,6 @@ class DataModule {
     companion object {
         private const val DATASTORE_NAME: String = "com.emplk.realestatemanager.currency_rate"
     }
-
-    @Singleton
-    @Provides
-    fun provideWorkManager(application: Application): WorkManager =
-        WorkManager.getInstance(application)
 
     @Singleton
     @Provides

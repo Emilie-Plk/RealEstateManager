@@ -12,6 +12,7 @@ import com.emplk.realestatemanager.domain.navigation.NavigationFragmentType
 import com.emplk.realestatemanager.domain.navigation.SetNavigationTypeUseCase
 import com.emplk.realestatemanager.domain.navigation.draft.SetPropertyInsertingInDatabaseUseCase
 import com.emplk.realestatemanager.domain.property.location.LocationEntity
+import com.emplk.realestatemanager.domain.property.model.PropertyEntity
 import com.emplk.realestatemanager.domain.property.pictures.PictureEntity
 import com.emplk.realestatemanager.domain.property.pictures.PictureRepository
 import com.emplk.realestatemanager.domain.property_draft.FormDraftParams

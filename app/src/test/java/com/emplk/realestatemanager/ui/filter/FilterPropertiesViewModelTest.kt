@@ -6,9 +6,9 @@ import com.emplk.realestatemanager.domain.filter.ConvertSearchedEntryDateRangeTo
 import com.emplk.realestatemanager.domain.filter.GetFilteredPropertiesCountAsFlowUseCase
 import com.emplk.realestatemanager.domain.filter.GetMinMaxPriceAndSurfaceConvertedUseCase
 import com.emplk.realestatemanager.domain.filter.OptimizeValuesForFilteringUseCase
-import com.emplk.realestatemanager.domain.filter.PropertyMinMaxStatsEntity
 import com.emplk.realestatemanager.domain.filter.SearchedEntryDateRange
 import com.emplk.realestatemanager.domain.filter.SetPropertiesFilterUseCase
+import com.emplk.realestatemanager.domain.filter.model.PropertyMinMaxStatsEntity
 import com.emplk.realestatemanager.domain.locale_formatting.currency.FormatPriceToHumanReadableUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertSurfaceToSquareFeetDependingOnLocaleUseCase
 import com.emplk.realestatemanager.domain.locale_formatting.surface.ConvertToUsdDependingOnLocaleUseCase

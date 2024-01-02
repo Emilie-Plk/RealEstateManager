@@ -1,4 +1,4 @@
-package com.emplk.realestatemanager.domain.filter
+package com.emplk.realestatemanager.domain.filter.model
 
 import java.math.BigDecimal
 

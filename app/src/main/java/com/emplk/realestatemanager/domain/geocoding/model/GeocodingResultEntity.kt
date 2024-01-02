@@ -1,4 +1,4 @@
-package com.emplk.realestatemanager.domain.geocoding
+package com.emplk.realestatemanager.domain.geocoding.model
 
 data class GeocodingResultEntity(
     val lat: String,

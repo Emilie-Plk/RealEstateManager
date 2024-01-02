@@ -1,7 +1,7 @@
 package com.emplk.realestatemanager.data.loan_simulator
 
-import com.emplk.realestatemanager.domain.loan_simulator.LoanDataEntity
 import com.emplk.realestatemanager.domain.loan_simulator.LoanSimulatorRepository
+import com.emplk.realestatemanager.domain.loan_simulator.model.LoanDataEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject

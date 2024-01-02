@@ -1,4 +1,4 @@
-package com.emplk.realestatemanager.data.property_draft
+package com.emplk.realestatemanager.domain.property_draft.model
 
 import com.emplk.realestatemanager.ui.add.FormType
 

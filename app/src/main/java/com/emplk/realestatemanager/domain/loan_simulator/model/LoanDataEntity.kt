@@ -1,9 +1,8 @@
-package com.emplk.realestatemanager.domain.loan_simulator
+package com.emplk.realestatemanager.domain.loan_simulator.model
 
 import java.math.BigDecimal
 
-
-data class LoanParams(
+data class LoanDataEntity(
     val loanAmount: BigDecimal = BigDecimal.ZERO,
     val interestRate: BigDecimal = BigDecimal.ZERO,
     val loanDuration: BigDecimal = BigDecimal.ZERO,
