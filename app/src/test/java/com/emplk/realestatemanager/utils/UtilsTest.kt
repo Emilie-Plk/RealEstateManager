@@ -7,8 +7,8 @@ import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 
 
@@ -56,9 +56,9 @@ class UtilsTest {
     fun `date should be parsed according to locale - US`() {
         // Given
         Locale.setDefault(Locale.US)
-        val today = Date()
-        val expectedDateFormatUs = SimpleDateFormat("MM/dd/yy", Locale.US)
-        val expected = expectedDateFormatUs.format(today)
+        val testDate = SimpleDateFormat("MM/dd/yyyy", Locale.US).parse("01/03/2024")!!
+        val expectedDateFormatUs = SimpleDateFormat.getDateInstance(DateFormat.SHORT, Locale.US)
+        val expected = expectedDateFormatUs.format(testDate)
 
         // When
         val result = getTodayDate()
@@ -71,9 +71,9 @@ class UtilsTest {
     fun `date should be parsed according to locale - FR`() {
         // Given
         Locale.setDefault(Locale.FRANCE)
-        val today = Date()
-        val expectedDateFormatFr = SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE)
-        val expected = expectedDateFormatFr.format(today)
+        val testDate = SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE).parse("03/01/2024")!!
+        val expectedDateFormatUs = SimpleDateFormat.getDateInstance(DateFormat.SHORT, Locale.FRANCE)
+        val expected = expectedDateFormatUs.format(testDate)
 
         // When
         val result = getTodayDate()

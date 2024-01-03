@@ -110,14 +110,25 @@ class AddOrEditPropertyViewModel @Inject constructor(
         coroutineScope {
             launch {
                 isLoadingMutableStateFlow.collect { isLoading ->
-                    if (isLoading) emit(Event(FormEvent.Loading))
-                    else emit(Event(FormEvent.FormLoaded))
+                    if (isLoading) emit(
+                        Event(
+                            FormEvent.Loading
+                        )
+                    ) else emit(
+                        Event(
+                            FormEvent.Form
+                        )
+                    )
                 }
             }
 
             launch {
                 onSubmitButtonClickedMutableSharedFlow.collectLatest {
-                    emit(Event(addOrEditPropertyUseCase.invoke(formMutableStateFlow.value)))
+                    emit(
+                        Event(
+                            addOrEditPropertyUseCase.invoke(formMutableStateFlow.value)
+                        )
+                    )
                 }
             }
         }
@@ -299,7 +310,7 @@ class AddOrEditPropertyViewModel @Inject constructor(
             launch {
                 formMutableStateFlow.transform {
                     emit(it)
-                    delay(10.seconds)
+                    delay(5.seconds)
                 }.collect {
                     updatePropertyFormUseCase.invoke(it)
                 }

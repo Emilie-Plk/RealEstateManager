@@ -85,7 +85,7 @@ class AddOrEditPropertyFragment : Fragment(R.layout.form_fragment) {
             when (event) {
                 is FormEvent.Loading -> binding.formViewSwitcher.displayedChild = 1
 
-                is FormEvent.FormLoaded -> binding.formViewSwitcher.displayedChild = 0
+                is FormEvent.Form -> binding.formViewSwitcher.displayedChild = 0
 
                 is FormEvent.Toast -> Toast.makeText(
                     requireContext(),

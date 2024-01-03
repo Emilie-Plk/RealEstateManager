@@ -281,7 +281,7 @@ class AddOrEditPropertyViewModelTest {
                 assertEquals(testEmptyPropertyFormViewState, viewState.value)
 
                 // Then 2
-                assertEquals(Event(FormEvent.FormLoaded), event.value)
+                assertEquals(Event(FormEvent.Form), event.value)
             }
         }
     }
