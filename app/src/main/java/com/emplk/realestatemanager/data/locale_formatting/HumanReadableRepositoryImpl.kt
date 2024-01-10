@@ -31,15 +31,6 @@ class HumanReadableRepositoryImpl @Inject constructor(
     override fun convertEuroToDollarRoundedHalfUp(euro: BigDecimal, currencyRate: BigDecimal): BigDecimal =
         euro.multiply(currencyRate).setScale(0, RoundingMode.HALF_UP)
 
-    // TODO: formatRoundedSurfaceToHumanReadable?
-    fun formatRoundedSurfaceToHumanReadable(surface: BigDecimal): String {
-        val unitOfmeasure = getLocaleSurfaceUnitFormatting()
-        return when (unitOfmeasure) {
-            SurfaceUnitType.SQUARE_METER -> "$surface m²"
-            SurfaceUnitType.SQUARE_FOOT -> "${convertSquareMetersToSquareFeetRoundedHalfUp(surface)} ft²"
-        }
-    }
-
     override fun formatRoundedPriceToHumanReadable(price: BigDecimal): String {
         val roundedPrice = price.setScale(0, RoundingMode.HALF_UP)
 
