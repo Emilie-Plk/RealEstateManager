@@ -42,7 +42,7 @@ class PredictionListAdapter :
             }
 
             fun bind(item: PredictionViewState.Prediction) {
-                binding.root.setOnClickListener {
+                binding.formSuggestionTextView.setOnClickListener {
                     item.onClickEvent.invoke(item.address)
                 }
                 binding.formSuggestionTextView.text = item.address
