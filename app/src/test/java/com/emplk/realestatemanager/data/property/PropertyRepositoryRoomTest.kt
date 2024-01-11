@@ -232,7 +232,6 @@ class PropertyRepositoryRoomTest {
         assertThrows(IllegalStateException::class.java) {
             throw IllegalStateException("Property with id $TEST_PROPERTY_ID not found")
         }
-
         coVerify(exactly = 1) { propertyDao.getPropertyById(TEST_PROPERTY_ID) }
         confirmVerified(propertyDao)
     }

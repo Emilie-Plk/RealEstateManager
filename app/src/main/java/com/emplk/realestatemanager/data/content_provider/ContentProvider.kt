@@ -22,7 +22,7 @@ class ContentProvider : ContentProvider() {
 
     companion object {
         private const val AUTHORITY =
-            "com.emplk.realestatemanager.data.content_provider.com.emplk.realestatemanager.data.content_provider.ContentProvider"
+            "com.emplk.realestatemanager.data.content_provider.ContentProvider"
         private const val TABLE_NAME = "RealEstateManager_database"
         private const val MIME_TYPE_PREFIX = "vnd.android.cursor.dir/vnd."
 
