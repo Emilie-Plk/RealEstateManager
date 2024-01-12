@@ -136,6 +136,9 @@ dependencies {
     // mockk
     api("io.mockk:mockk:1.13.4")
 
+    // Robolectric
+    testImplementation("org.robolectric:robolectric:4.9")
+
     // Android tests
     androidTestImplementation("androidx.arch.core:core-testing:2.2.0") {
         exclude("org.mockito", "mockito-core") // excludes redundant mockito dependency bundled with arch core

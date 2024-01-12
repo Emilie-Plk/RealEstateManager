@@ -20,6 +20,16 @@ import javax.inject.Inject
 
 class ContentProvider : ContentProvider() {
 
+
+    private val uriMatcher = UriMatcher(UriMatcher.NO_MATCH)
+
+    init {
+        uriMatcher.addURI(AUTHORITY, "properties", PROPERTIES)
+        uriMatcher.addURI(AUTHORITY, "pictures", PICTURES)
+        uriMatcher.addURI(AUTHORITY, "locations", LOCATIONS)
+        uriMatcher.addURI(AUTHORITY, "properties/#", PROPERTY_BY_ID)
+    }
+
     companion object {
         private const val AUTHORITY =
             "com.emplk.realestatemanager.data.content_provider.ContentProvider"
@@ -32,18 +42,11 @@ class ContentProvider : ContentProvider() {
         private const val PROPERTY_BY_ID = 4
     }
 
-    private val uriMatcher = UriMatcher(UriMatcher.NO_MATCH).apply {
-        addURI(AUTHORITY, "properties", PROPERTIES)
-        addURI(AUTHORITY, "pictures", PICTURES)
-        addURI(AUTHORITY, "locations", LOCATIONS)
-        addURI(AUTHORITY, "properties/#", PROPERTY_BY_ID)
-    }
-
     @Inject
     lateinit var entryPoint: ContentProviderEntryPoint
-    private lateinit var propertyDao: PropertyDao
-    private lateinit var pictureDao: PictureDao
-    private lateinit var locationDao: LocationDao
+    lateinit var propertyDao: PropertyDao
+    lateinit var pictureDao: PictureDao
+    lateinit var locationDao: LocationDao
 
     override fun onCreate(): Boolean {
         val appContext = context?.applicationContext ?: throw IllegalStateException("PropertyDao is null")
